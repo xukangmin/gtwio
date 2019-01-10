@@ -1,0 +1,81 @@
+a {
+	 cursor: pointer; 
+}
+
+.clickable:hover{
+	opacity: 0.2;
+	text-decoration: none;
+}
+
+.card {
+    box-shadow: 1px 1px 1px grey;
+}
+
+.card:hover {
+	box-shadow: 5px 5px 5px grey;
+	-webkit-transition: all 0.4s; /* Safari */
+	transition: all 0.4s;
+}
+
+.card:hover .device-delete-icon {
+	display: block;
+	cursor: pointer;
+}
+
+.card-header {
+	font-size: medium;
+	font-weight: bold;
+	background: linear-gradient(to bottom, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 0%, rgba(188,224,238,1) 100%);
+}
+
+.circle-blink {
+    animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.NewCardBox { 
+	border-width:1px;  
+    border-style:dashed;
+}
+
+.NewCardBox:hover {
+	color: rgb(0, 0, 0);
+}
+
+.AddNewDevice {
+	background: #CCC;
+    color: #FFFFFF;
+    border-radius: 50%;
+	font-size: 30px;
+	width: 50px;
+	height: 50px;
+}
+
+.card:hover .AddNewDevice {
+	background: rgb(150, 149, 149);
+}
+
+.device-delete-icon {
+	display: none;
+}
+
+.react-grid-item {
+	box-sizing: border-box;
+}
+
+.react-grid-item:not(.react-grid-placeholder) {
+background: #ffffff;
+border: 1px solid black;
+}
+
+.dashboard-toolbar-icon {
+	color: #a0a0a0;
+}
+
+.dashboard-toolbar-icon:hover {
+	color: #0c0c0c;
+}

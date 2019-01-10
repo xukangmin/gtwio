@@ -1,0 +1,1241 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: GTW IOT API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+  
+tags:
+- name: asset
+  description: Get Asset Info
+  externalDocs:
+    description: Find out more  
+    url: http://swagger.io
+- name: data
+  description: retrieve data from database
+- name: device
+  description: device info
+- name: variable
+  description: variable info
+- name: user
+  description: Operations about user
+  externalDocs:
+    description: Find out more about our store
+    url: http://swagger.io
+
+#securityDefinitions:
+ # UserSecurity:
+ #   type: apiKey
+  #  in: header
+  #  name: x-api-key
+    
+#security:
+ # - UserSecurity: []
+  
+paths:
+  /asset/getAssetByUser:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: asset
+    get:
+      tags:
+      - asset
+      summary: Retrieve list of assets
+      description: Return list of assets by user id
+      # used as the method name of the controller
+      operationId: getAssetByUser
+      parameters:
+        - name: userID
+          in: query
+          description: input user ID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/AssetModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/getAssetAttributes:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: asset
+    get:
+      tags:
+      - asset
+      description: Return list of asset's attributes for a given AssetID
+      # used as the method name of the controller
+      operationId: getAssetAttributes
+      parameters:
+        - name: AssetID
+          in: query
+          description: AssetID 
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/createAsset:
+    x-swagger-router-controller: asset
+    post:
+      tags:
+      - asset
+      description: Create a new asset and add it to User list
+      # used as the method name of the controller
+      operationId: createAsset
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/updateAsset:
+    x-swagger-router-controller: asset
+    put:
+      tags:
+      - asset
+      summary: update an existing Asset
+      description: update an existing Asset 
+      # used as the method name of the controller
+      operationId: updateAsset
+      parameters:
+      - in: body
+        name: body
+        description: Asset object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/deleteAsset:
+    x-swagger-router-controller: asset
+    delete:
+      tags:
+      - asset
+      description: delete an existing Asset 
+      # used as the method name of the controller
+      operationId: deleteAsset
+      parameters:
+      - name: AssetID
+        in: query
+        required: true
+        type: string
+      - name: UserID
+        in: query
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/login:
+    x-swagger-router-controller: userManage
+    post:
+      tags:
+      - user
+      security: []
+      summary: log in
+      description: logIn user
+      # used as the method name of the controller
+      operationId: logIn
+      parameters:
+      - in: body
+        name: body
+        description: User object thats need to be added
+        required: true
+        schema:
+          $ref: '#/definitions/LogInModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/resetUser:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      security: []
+      summary: resetUser in
+      description: resetUser user
+      # used as the method name of the controller
+      operationId: resetUser
+      parameters:
+      - name: EmailAddress
+        in: query
+        description: EmailAddress to reset
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"   
+  /user/validateResetPasswordLink:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      security: []
+      summary: resetUser in
+      description: resetUser user
+      # used as the method name of the controller
+      operationId: validateResetPasswordLink
+      parameters:
+      - name: EmailAddress
+        in: query
+        description: EmailAddress to reset
+        required: true
+        type: string
+      - name: VerificationCode
+        in: query
+        description: VerificationCode to reset
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"   
+  /user/updatePassword:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      security: []
+      summary: updatePassword in
+      description: updatePassword user
+      # used as the method name of the controller
+      operationId: updatePassword
+      parameters:
+      - name: EmailAddress
+        in: query
+        description: EmailAddress to reset
+        required: true
+        type: string
+      - name: Password
+        in: query
+        description: VerificationCode to reset
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"   
+  /user/createUser:
+    x-swagger-router-controller: userManage
+    post:
+      tags:
+      - user
+      security: []
+      summary: create a new user
+      description: create a new user
+      # used as the method name of the controller
+      operationId: createUser
+      parameters:
+      - in: body
+        name: body
+        description: User object thats need to be added
+        required: true
+        schema:
+          $ref: '#/definitions/UserModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/updateUser:
+    x-swagger-router-controller: userManage
+    put:
+      tags:
+      - user
+      summary: update a user
+      description: update a user
+      # used as the method name of the controller
+      operationId: updateUser
+      parameters:
+      - in: body
+        name: body
+        description: User object thats need to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UserModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/deleteUser:
+    x-swagger-router-controller: userManage
+    delete:
+      tags:
+      - user
+      summary: delete a user
+      description: delete a user
+      # used as the method name of the controller
+      operationId: deleteUser
+      parameters:
+      - name: userID
+        in: query
+        description: User object thats need to be deleted
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/getSettings:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      summary: get all user settings
+      description: get all user gettings
+      # used as the method name of the controller
+      operationId: getSettings
+      parameters:
+      - name: userID
+        in: query
+        description: get all user settings
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserSettings"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/updateSettings:
+    x-swagger-router-controller: userManage
+    post:
+      tags:
+      - user
+      summary: update all user settings
+      description: update all user gettings
+      # used as the method name of the controller
+      operationId: updateSettings
+      parameters:
+      - in: body
+        name: body
+        description: User object thats need to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UserModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/activate:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      security: []
+      summary: activate user
+      description: activate user
+      # used as the method name of the controller
+      operationId: activate
+      parameters:
+      - name: UserID
+        in: query
+        description: User ID
+        required: true
+        type: string
+      - name: ActivateKey
+        in: query
+        description: ActivateKey
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/getUserIDbyApiKey:
+    x-swagger-router-controller: userManage
+    get:
+      tags:
+      - user
+      description: get the UserID using the Api-Key
+      operationId: getUserbyApiKey
+      parameters:
+      - name: ApiKey
+        description: bf
+        required: true
+        in: query
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/UserModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/getDeviceByAsset:
+    x-swagger-router-controller: deviceManage
+    get:
+      tags:
+      - device
+      description: get all device by AssetID
+      # used as the method name of the controller
+      operationId: getDeviceByAsset
+      parameters:
+      - name: AssetID
+        in: query
+        description: AssetID in which the device is
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/DeviceModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/getDeviceByUser:
+    x-swagger-router-controller: deviceManage
+    get:
+      tags:
+      - device
+      description: get all device by UserID
+      # used as the method name of the controller
+      operationId: getDeviceByUser
+      parameters:
+      - name: UserID
+        in: query
+        description: UserID in which the device is
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/DeviceModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/getDeviceAttributes:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: deviceManage
+    get:
+      tags:
+      - device
+      description: Return list of device's attributes for a given DeviceID
+      # used as the method name of the controller
+      operationId: getDeviceAttributes
+      parameters:
+        - name: DeviceID
+          in: query
+          description: DeviceID 
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DeviceModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/createDevice:
+    x-swagger-router-controller: deviceManage
+    post:
+      tags:
+      - device
+      description: create a new device
+      # used as the method name of the controller
+      operationId: createDevice
+      parameters:
+      - in: body
+        name: body
+        description: Device object thats need to be created
+        required: true
+        schema:
+          $ref: '#/definitions/DeviceModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/addDeviceToAsset:
+    x-swagger-router-controller: deviceManage
+    put:
+      tags:
+      - device
+      description: Add an existing Device to an Asset by AssetID and DeviceID
+      # used as the method name of the controller
+      operationId: addDeviceToAsset
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/removeDeviceFromAsset:
+    x-swagger-router-controller: deviceManage
+    put:
+      tags:
+      - device
+      description: Remove a device from Asset's list of Devices by AssetID and DeviceID
+      # used as the method name of the controller
+      operationId: removeDeviceFromAsset
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/updateDevice:
+    x-swagger-router-controller: deviceManage
+    put:
+      tags:
+      - device
+      summary: update a Device
+      description: update a Device
+      # used as the method name of the controller
+      operationId: updateDevice
+      parameters:
+      - in: body
+        name: body
+        description: User object thats need to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateDeviceModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/deleteDevice:
+    x-swagger-router-controller: deviceManage
+    delete:
+      tags:
+      - device
+      summary: delete a Device
+      description: Delete a Device, remove Device from User and Asset and delete all Variables that are in it. Need ApiKey to succeed
+      # used as the method name of the controller
+      operationId: deleteDevice
+      parameters:
+      - name: DeviceID
+        in: query
+        description: DeviceID to be deleted
+        required: true
+        type: string
+      - name: UserID
+        in: query
+        type: string
+        required: true
+      - name: AssetID
+        in: query
+        description: device's AssetID
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /variable/getVariableByDevice:
+    x-swagger-router-controller: variableManage
+    get:
+      tags:
+      - variable
+      summary: get all variable
+      description: get all variable by DeviceID
+      # used as the method name of the controller
+      operationId: getVariablebyDevice
+      parameters:
+      - name: DeviceID
+        in: query
+        description: DeviceID of the variable
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/VariableModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /variable/getVariableByAsset:
+    x-swagger-router-controller: variableManage
+    get:
+      tags:
+      - variable
+      description: get all variables in an Asset
+      operationId: getVariableByAsset
+      parameters:
+      - name: AssetID
+        in: query
+        type: string
+        required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/VariableModel"
+              Count:
+                type: integer
+        default:
+          description: Error
+          schema: 
+            $ref: "#/definitions/ErrorResponse"
+  /variable/getVariableAttributes:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: variableManage
+    get:
+      tags:
+      - variable
+      summary: Retrieve list of attributes
+      description: Return list of variable's attributes for a given VariableID
+      # used as the method name of the controller
+      operationId: getVariableAttributes
+      parameters:
+        - name: VariableID
+          in: query
+          description: VariableID 
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/VariableModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /variable/createVariable:
+    x-swagger-router-controller: variableManage
+    post:
+      tags:
+      - variable
+      description: create a new variable and add it to a device
+      # used as the method name of the controller
+      operationId: createVariable
+      parameters:
+      - name: DeviceID
+        in: query
+        type: string
+      - in: body
+        name: body
+        description: Variable object thats needs to be added
+        required: true
+        schema:
+          $ref: '#/definitions/VariableModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /variable/updateVariable:
+    x-swagger-router-controller: variableManage
+    put:
+      tags:
+      - variable
+      summary: update a Variable
+      description: update a Variable
+      # used as the method name of the controller
+      operationId: updateVariable
+      parameters:
+      - in: body
+        name: body
+        description: Variable object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateVariableModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /variable/deleteVariable:
+    x-swagger-router-controller: variableManage
+    delete:
+      tags:
+      - variable
+      summary: delete a Variable
+      description: delete a Variable
+      # used as the method name of the controller
+      operationId: deleteVariable
+      parameters:
+      - name: VariableID
+        in: query
+        description: VariableID to be deleted
+        required: true
+        type: string
+      - name: DeviceID
+        in: query
+        description: Variable's DeviceID
+        required: false
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/getSingleDataByVariableID:
+    x-swagger-router-controller: dataManage
+    get:
+      tags:
+      - data
+      description:  get a single data by variable id and timestamp
+      # used as the method name of the controller
+      operationId: getSingleDataByVariableID
+      parameters:
+      - name: VariableID
+        in: query
+        required: true
+        type: string
+      - name: TimeStamp
+        in: query
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DataModel"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/getMultipleDataByVariableID:
+    x-swagger-router-controller: dataManage
+    get:
+      tags:
+      - data
+      description:  get multiple data by variableID and timestamp
+      # used as the method name of the controller
+      operationId: getMultipleDataByVariableID
+      parameters:
+      - name: VariableID
+        in: query
+        required: true
+        type: string
+      - name: StartTimeStamp
+        in: query
+        required: true
+        type: integer
+      - name: EndTimeStamp
+        in: query
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/DataModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/addDataByVariableID:
+    x-swagger-router-controller: dataManage
+    put:
+      tags:
+      - data
+      description: push data to Data table using VarID and timestamp
+      # used as the method name of the controller
+      operationId: addDataByVariableID
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            Data:
+              type: array
+              items:
+                $ref: '#/definitions/AddDataModel'
+            Timestamp:
+              type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/addDataByDeviceID:
+    x-swagger-router-controller: dataManage
+    post:
+      tags:
+      - data
+      description:  Add Data by device id and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName
+      # used as the method name of the controller
+      operationId: addDataByDeviceID
+      parameters:
+      - name: DeviceID
+        in: query
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema: 
+          properties:
+            Data:
+            # type: object
+              #items: 
+              $ref: '#/definitions/AddDataByVarNameModel'
+            Timestamp:
+              type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/addDataByDeviceName:
+    x-swagger-router-controller: dataManage
+    post:
+      tags:
+      - data
+      description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName. ApiKey of user is needed in header of request
+      # used as the method name of the controller
+      operationId: addDataByDeviceName
+      parameters:
+      - name: DeviceName
+        in: query
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema: 
+          properties:
+            Data:
+            # type: object
+              #items: 
+              $ref: '#/definitions/AddDataByVarNameModel'
+            Timestamp:
+              type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/addDataBySerialNumber:
+    x-swagger-router-controller: dataManage
+    post:
+      tags:
+      - data
+      description:  Add Data by serial number of the device and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName.ApiKey of user is needed in header of request
+      # used as the method name of the controller
+      operationId: addDataBySerialNumber
+      parameters:
+      - name: SerialNumber
+        in: query
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema: 
+          properties:
+            Data:
+            # type: object
+              #items: 
+              $ref: '#/definitions/AddDataByVarNameModel'
+            Timestamp:
+              type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+
+definitions:
+  AssetModel:
+    type: object
+    properties:
+      UserID:
+        type: string
+      AssetID:
+        type: string
+      AddTimeStamp:
+        type: integer
+      DisplayName:
+        type: string
+      LastestTimeStamp:
+        type: integer
+  UpdateAssetModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      DeviceID:
+       type: string
+  LogInModel:
+    type: object
+    properties:
+      EmailAddress:
+        type: string
+      Password:
+        type: string
+  UserModel:
+    type: object
+    properties:
+      UserID:
+        type: string
+      Active:
+        type: number
+      EmailAddress:
+        type: string
+      Password:
+        type: string
+  DataModel:
+    type: object
+    properties:
+      VariableID:
+        type: string
+      EpochTimeStamp:
+        type: integer
+      Data:
+        type: number
+  DeviceModel:
+    type: object
+    properties:
+      UserID:
+        type: string
+      AssetID:
+        type: string
+      DeviceID:
+        type: string
+      DisplayName:
+        type: string
+      AddTimeStamp:
+        type: integer
+      SerialNumber:
+        type: string
+      VerificationCode:
+        type: string
+  UpdateDeviceModel:
+    type: object
+    properties:
+      UserID:
+        type: string
+      DeviceID:
+        type: string
+      DisplayName:
+        type: string
+  AddDataModel:
+    type: object
+    properties:
+      VariableID:
+        type: string
+      Value:
+        type: string
+  AddDataByVarNameModel:
+    type: object
+    properties:
+      Data:
+        type: array
+        items:
+          type: object
+          properties:
+            VariableName:
+              type: string
+  VariableModel:
+    type: object
+    properties:
+      VariableID:
+        type: string
+      CurrentValue: 
+        type: string
+      VariableName: 
+        type: string
+      VariableTag:
+        type: string
+      VariableType:
+        type: string
+      VariableUnit:
+        type: string
+      Equation:
+        type: string
+  UpdateVariableModel:
+    type: object
+    properties:
+      DeviceID:
+        type: string
+      VariableID:
+        type: string
+      CurrentValue: 
+        type: string
+      VariableName: 
+        type: string
+      VariableTag:
+        type: string
+      VariableType:
+        type: string
+      VariableUnit:
+        type: string
+      Equation:
+        type: string
+  UserSettings:
+    type: object
+    properties:
+      SettingName:
+        type: string
+  SuccessResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string

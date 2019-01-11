@@ -44,7 +44,7 @@ class AssetDevice extends React.Component {
               varName: "Hum",
               varID: "12346",
               LastTimeStamp: 12345
-            } 
+            }
           ],
           Status: "Active"
         },
@@ -65,7 +65,7 @@ class AssetDevice extends React.Component {
               varName: "Test",
               varID: "12349",
               LastTimeStamp: 12345
-            } 
+            }
           ],
           Status: "Inactive"
         },
@@ -82,7 +82,7 @@ class AssetDevice extends React.Component {
               varName: "Hum",
               varID: "12351",
               LastTimeStamp: 12345
-            } 
+            }
           ],
           Status: "Inactive"
         }
@@ -119,7 +119,7 @@ class AssetDevice extends React.Component {
       this.setState({errors: {DisplayName: "Name cannot be empty"}});
       return;
     }
-    
+
     this.props.dispatch(deviceActions.addNewDevice(this.user, this.state.AssetID, this.state.NewDevice));
     this.AddNewDeviceModalClose();
     toastr.info("Adding Device " + this.state.NewDevice.DisplayName);
@@ -132,7 +132,7 @@ class AssetDevice extends React.Component {
   SelectDelDeviceID(deviceid) {
     this.setState({DeivceIDSelect: deviceid});
   }
-  
+
   AddNewDeviceModalOpen() {
     this.setState({
       addNewDeviceModalOpen: true,
@@ -149,7 +149,7 @@ class AssetDevice extends React.Component {
   render() {
     const { AssetID } = this.state;
     const { devices } = this.props;
-    
+
     if (!this.user)
     {
       return (<Redirect to='/login' />);
@@ -158,9 +158,9 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
-               {devices ? 
+               {devices ?
                 <div className="row">
-                  {devices.Items.map((item,i) => 
+                  {devices.map((item,i) => 
                     <DeviceCard key={i} device={item} assetid={AssetID} onSelDel={this.SelectDelDeviceID} />
                   )}
                   <NewDeviceCard onAddNewDevice={this.AddNewDeviceModalOpen}/>
@@ -168,7 +168,7 @@ class AssetDevice extends React.Component {
                 <Loader />
               }
             </div>
-            <AddNewDeviceModal 
+            <AddNewDeviceModal
               device={this.state.NewDevice}
               onChange={this.updateDeviceState}
               errors={this.state.errors}
@@ -176,7 +176,7 @@ class AssetDevice extends React.Component {
               isOpen={this.state.addNewDeviceModalOpen}
               onClose={this.AddNewDeviceModalClose}
             />
-            <DeleteDeviceModal 
+            <DeleteDeviceModal
               onDel={this.DeleteSelectedDevice}
             />
           </div>

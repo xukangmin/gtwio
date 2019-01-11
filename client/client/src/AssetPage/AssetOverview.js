@@ -18,7 +18,7 @@ class AssetOverview extends React.Component {
 
     this.state = {
         AssetID : props.match.params.assetID,
-        CurrentAsset : this.assets.Items.filter(item => item.AssetID === props.match.params.assetID)[0],
+        CurrentAsset : this.assets.filter(item => item.AssetID === props.match.params.assetID)[0],
         Settings: {
           ShellInlet: "23.5",
           ShellOutlet: "12.5",
@@ -53,7 +53,7 @@ class AssetOverview extends React.Component {
       return (
         <div className="mt-5" >
           <Samy svgXML={svgcontents} >
-            {Object.keys(this.state.Settings).map((item,i) => 
+            {Object.keys(this.state.Settings).map((item,i) =>
               <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)} onClick={(e) => this.HandleModalClick(e)}/>
             )}
           </Samy>

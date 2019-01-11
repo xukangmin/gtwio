@@ -1,21 +1,8 @@
 
 var shareUtil = require('./shareUtil.js');
-var levelup = require('levelup');
-var leveldown = require('leveldown');
 const User = require('../db/user.js');
 var dbTest = shareUtil.dbTest;
-/*
- Once you 'require' a module you can reference the things that it exports.  These are defined in module.exports.
 
- For a controller in a127 (which this is) you should export the functions referenced in your Swagger document by name.
-
- Either:
-  - The HTTP Verb of the corresponding operation (get, put, post, delete, etc)
-  - Or the operationId associated with the operation in your Swagger document
-
-  In the starter/skeleton project the 'get' operation on the '/hello' path has an operationId named 'hello'.  Here,
-  we specify that in the exports of this module that 'hello' maps to the function named 'hello'
- */
 
 var functions = {
   createUser: createUser,
@@ -30,57 +17,12 @@ var functions = {
   validateResetPasswordLink: validateResetPasswordLink,
   updatePassword: updatePassword,
   updateUserAsset: updateUserAsset,
-  getDevicesFromUser: getDevicesFromUser,
   getUserbyApiKey: getUserbyApiKey,
   getUserbyApiKeyQuery: getUserbyApiKeyQuery
 }
 // use of this technique instead of traditionnal module.exports to avoid problem due to circular dependencies
 for (var key in functions) {
   module.exports[key] = functions[key];
-}
-
-
-/*module.exports = {
-  createUser: createUser,
-  updateUser: updateUser,
-  authenticate: authenticate,
-  getSettings: getSettings,
-  updateSettings: updateSettings,
-  logIn: logIn,
-  activate: activate,
-  deleteUser: deleteUser,
-  resetUser: resetUser,
-  validateResetPasswordLink: validateResetPasswordLink,
-  updatePassword: updatePassword,
-  updateUserAsset: updateUserAsset,
-  getDevicesFromUser: getDevicesFromUser,
-  getUserbyApiKey: getUserbyApiKey,
-  getUserbyApiKeyQuery: getUserbyApiKeyQuery
-};*/
-
-function getDevicesFromUser(userid, callback) {
-  var usersParams = {
-    TableName : shareUtil.tables.users,
-    KeyConditionExpression : "UserID = :V1",
-    ExpressionAttributeValues :  { ':V1' : userid },
-    ProjectionExpression : "Devices"
-  };
-  shareUtil.awsclient.query(usersParams, onQuery);
-  function onQuery(err, data) {
-    if (err) {
-    var msg = "Error in getDevicesFromUser:" + JSON.stringify(err, null, 2);
-    callback(false, msg);
-    } else {
-      //console.log(JSON.stringify(data, null ,2));
-      //if (typeof data.Items[0].length == "undefined" )//|| data.Items[0].length == 0 )
-      if (data.Count == 0) {
-        var msg = "UserID does not exist or User does not contain any Device";
-        callback(false, data.Items[0]);
-      } else {
-        callback(true, data.Items[0]);
-      }
-    }
-  }
 }
 
 function createUser(req, res) {
@@ -430,18 +372,15 @@ function activate(req, res) {
     shareUtil.SendInvalidInput(res, shareUtil.constants.INVALID_INPUT);
   } else {
 
-    User.find({UserID: userid, VerificationCode: actkey}, function(err, data)
+    User.findOne({UserID: userid, VerificationCode: actkey}, function(err, data)
     {
       if (err) {
         var msg = "Error: " + JSON.stringify(err, null, 2);
         shareUtil.SendInternalErr(res, msg);
       }
       else {
-        if (data.length == 0)
+        if (data)
         {
-          var msg = "Error: activation info doesn't match";
-          shareUtil.SendInvalidInput(res,msg);
-        } else {
           var epochtime = (new Date).getTime() / 1000;
           console.log(epochtime);
           console.log(data[0].VerificationCodeExpire);
@@ -458,6 +397,9 @@ function activate(req, res) {
             // delete user here
             shareUtil.SendInvalidInput(res,msg);
           }
+        } else {
+          var msg = "Error: activation info doesn't match";
+          shareUtil.SendInvalidInput(res,msg);
         }
       }
     });
@@ -547,18 +489,18 @@ function activateUser(userid, callback) {
 }
 
 function IsEmailExist(email, callback) {
-    User.find({EmailAddress: email}, function(err, data)
+    User.findOne({EmailAddress: email}, function(err, data)
     {
       if (err) {
         var msg = "Error: " + JSON.stringify(err, null, 2);
         shareUtil.SendInternalErr(res, msg);
       }
       else {
-        if (data.length == 0)
+        if (data)
         {
-          callback(false,data);
+          callback(true, data);
         } else {
-          callback(true, data[0]);
+          callback(false,data);
         }
       }
     });

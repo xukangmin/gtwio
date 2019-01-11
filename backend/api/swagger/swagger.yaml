@@ -525,37 +525,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /device/getDeviceByUser:
-    x-swagger-router-controller: deviceManage
-    get:
-      tags:
-      - device
-      description: get all device by UserID
-      # used as the method name of the controller
-      operationId: getDeviceByUser
-      parameters:
-      - name: UserID
-        in: query
-        description: UserID in which the device is
-        required: true
-        type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            type: object
-            properties:
-              Items:
-                type: array
-                items:
-                  $ref: "#/definitions/DeviceModel"
-              Count:
-                type: integer
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /device/getDeviceAttributes:
     # binds a127 app logic to a route
     x-swagger-router-controller: deviceManage
@@ -614,52 +583,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /device/addDeviceToAsset:
-    x-swagger-router-controller: deviceManage
-    put:
-      tags:
-      - device
-      description: Add an existing Device to an Asset by AssetID and DeviceID
-      # used as the method name of the controller
-      operationId: addDeviceToAsset
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateAssetModel'
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/SuccessResponse"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /device/removeDeviceFromAsset:
-    x-swagger-router-controller: deviceManage
-    put:
-      tags:
-      - device
-      description: Remove a device from Asset's list of Devices by AssetID and DeviceID
-      # used as the method name of the controller
-      operationId: removeDeviceFromAsset
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateAssetModel'
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: "#/definitions/SuccessResponse"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /device/updateDevice:
     x-swagger-router-controller: deviceManage
     put:
@@ -701,13 +624,10 @@ paths:
         description: DeviceID to be deleted
         required: true
         type: string
-      - name: UserID
-        in: query
-        type: string
-        required: true
       - name: AssetID
         in: query
         description: device's AssetID
+        required: true
         type: string
       responses:
         200:
@@ -1107,15 +1027,8 @@ definitions:
         type: integer
       DisplayName:
         type: string
-      LastestTimeStamp:
+      LatestTimeStamp:
         type: integer
-  UpdateAssetModel:
-    type: object
-    properties:
-      AssetID:
-        type: string
-      DeviceID:
-       type: string
   LogInModel:
     type: object
     properties:
@@ -1146,8 +1059,6 @@ definitions:
   DeviceModel:
     type: object
     properties:
-      UserID:
-        type: string
       AssetID:
         type: string
       DeviceID:

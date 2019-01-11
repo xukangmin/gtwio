@@ -9,22 +9,18 @@
   "main": "app.js",
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
-    "aws-sdk": "^2.384.0",
-    "express": "^4.12.3",
-    "leveldown": "^4.0.1",
-    "levelup": "^4.0.0",
-    "mathjs": "^5.4.0",
-    "mongoose": "^5.4.2",
+    "express": "^4.16.4",
+    "mathjs": "^5.4.1",
+    "mongoose": "^5.4.3",
     "npm": "^6.5.0",
     "os": "^0.1.1",
     "swagger-express-mw": "^0.7.0",
-    "swagger-parser": "^6.0.2",
+    "swagger-parser": "^6.0.3",
     "swagger-stats": "^0.95.6",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "should": "^7.1.0"
   },
   "scripts": {
     "start": "node app.js",

@@ -4,12 +4,10 @@ import { gConstants } from '../_components/constants'
 const getAssetsOverview = (user) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
-                   'x-api-key' : user.ApiKey,
-                   'Access-Control-Allow-Origin': '*'},
+                   'x-api-key' : user.ApiKey},
         method: 'GET'
     };
 
-    console.log(requestOptions);
     return fetch(gConstants.API_ROOT + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
@@ -62,7 +60,7 @@ const addAsset = (user, displayname) => {
         })
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/addAsset', requestOptions)
+    return fetch(gConstants.API_ROOT + '/asset/createAsset', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

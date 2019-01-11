@@ -53,7 +53,7 @@ class RootLayout extends Component {
               <main role="main" className ="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     {renderRoutes(this.props.route.routes, {store : this.props.store})}
                     {/*<MainArea assets={assets_display} />
-                    <AddNewAssets user={this.user} dispatch={this.props.dispatch} />*/} 
+                    <AddNewAssets user={this.user} dispatch={this.props.dispatch} />*/}
               </main>
             </div>
             : <Loader />
@@ -72,6 +72,6 @@ class RootLayout extends Component {
         msg: msg
     };
   }
-  
+
   const connectedPage = connect(mapStateToProps)(RootLayout);
   export { connectedPage as RootLayout };

@@ -19,4 +19,4 @@ const UserSchema = new Schema(
 );
 
 // export the new Schema so we could modify it using Node.js
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema, "users");

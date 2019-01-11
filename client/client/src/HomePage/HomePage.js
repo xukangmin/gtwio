@@ -45,10 +45,13 @@ class HomePage extends React.Component {
     {
       this.props.dispatch(assetActions.getAssetsOverview(this.user));
     }
+    console.log("called!!!!!!!!!!!!!!");
+
   }
 
   componentDidMount() {
-   this.startTimer(); 
+   //this.props.dispatch(assetActions.getAssetsOverview(this.user));
+    this.startTimer();
   }
 
   componentWillUnmount () {
@@ -65,22 +68,26 @@ class HomePage extends React.Component {
   }
 
   tick () {
+    //this.props.dispatch(assetActions.getAssetsOverview(this.user));
     //this.props.dispatch();
+    //this.props.dispatch(assetActions.getAssetsOverview(this.user));
   }
 
-  
+
 
   render() {
     //const { assets } = this.state;
     const { assets, msg } = this.props;
 
     let assets_display = null;
-    if (this.assets_local)
+
+    if (assets)
+    {
+      assets_display = assets;
+    }
+    else if (this.assets_local)
     {
       assets_display = this.assets_local;
-    }
-    else{
-      assets_display = assets;
     }
 
     if (!this.user)
@@ -90,8 +97,12 @@ class HomePage extends React.Component {
     else{
       return (
           <div>
-            <MainArea assets={assets_display} />
-            <AddNewAssets user={this.user} dispatch={this.props.dispatch} /> 
+          {assets_display ?
+           <div>
+              <MainArea assets={assets_display} />
+              <AddNewAssets user={this.user} dispatch={this.props.dispatch} />
+          </div> :
+          <div></div>}
           </div>
       );
     }

@@ -32,7 +32,7 @@ class SideNav extends React.Component {
                                 Assets
                             </a>
                             <ul className ="collapse list-unstyled" id="assetSubMenu">
-                                {this.props.assets.Items.map((singleAsset,index) => 
+                                {this.props.assets.map((singleAsset,index) => 
                                     <AssetSubMenu key={index} singleAsset={singleAsset} />
                                 )}
                             </ul>

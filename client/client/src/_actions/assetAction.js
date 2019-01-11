@@ -8,6 +8,7 @@ const addAsset = (user, displayname) => {
         assetServices.addAsset(user, displayname)
             .then(
                 info => {
+                    dispatch(success(info));
                     dispatch(getAssetsOverview(user));
                 },
                 error => {
@@ -56,7 +57,7 @@ const getSingleAssetData = (user, assetid) => {
 
         userService.login(username, password)
             .then(
-                user => { 
+                user => {
                     dispatch(success(user));
                     history.push('/');
                 },
@@ -88,7 +89,7 @@ const getAllDeviceData = (user, assetid) => {
 
         userService.login(username, password)
             .then(
-                user => { 
+                user => {
                     dispatch(success(user));
                     history.push('/');
                 },

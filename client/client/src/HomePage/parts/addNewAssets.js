@@ -20,7 +20,6 @@ class AddNewAssets extends React.Component {
         e.preventDefault();
         this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname));
         $(this.modal).modal('hide');
-
     }
 
     handleChange(event) {
@@ -65,7 +64,7 @@ class AddNewAssets extends React.Component {
             </div>
         );
     }
-    
+
 }
 
 export default AddNewAssets

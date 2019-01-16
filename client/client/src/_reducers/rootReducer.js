@@ -9,6 +9,7 @@ import { device } from './deviceReducer'
 import { variable } from './variableReducer'
 import { parameter } from './parameterReducer'
 import { asset } from './assetReducer'
+import { dashboard } from './dashboardReducer'
 
 const rootReducer = combineReducers({
   reg,
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   device,
   variable,
   parameter,
-  asset
+  asset,
+  dashboard
 });
 
 export default rootReducer;

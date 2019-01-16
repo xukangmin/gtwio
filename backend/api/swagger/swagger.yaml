@@ -28,8 +28,10 @@ tags:
   description: retrieve data from database
 - name: device
   description: device info
-- name: variable
-  description: variable info
+- name: parameter
+  description: parameter info
+- name: dashboard
+  description: dashboard info
 - name: user
   description: Operations about user
   externalDocs:
@@ -615,7 +617,7 @@ paths:
       tags:
       - device
       summary: delete a Device
-      description: Delete a Device, remove Device from User and Asset and delete all Variables that are in it. Need ApiKey to succeed
+      description: Delete a Device, remove Device from User and Asset and delete all Parameters that are in it. Need ApiKey to succeed
       # used as the method name of the controller
       operationId: deleteDevice
       parameters:
@@ -639,19 +641,18 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /variable/getVariableByDevice:
-    x-swagger-router-controller: variableManage
+  /dashboard/getDashboardByAsset:
+    x-swagger-router-controller: dashboardManage
     get:
       tags:
-      - variable
-      summary: get all variable
-      description: get all variable by DeviceID
+      - dashboard
+      description: get all dashboard by AssetID
       # used as the method name of the controller
-      operationId: getVariablebyDevice
+      operationId: getDashboardByAsset
       parameters:
-      - name: DeviceID
+      - name: AssetID
         in: query
-        description: DeviceID of the variable
+        description: AssetID in which the dashboard is
         required: true
         type: string
       responses:
@@ -663,7 +664,7 @@ paths:
               Items:
                 type: array
                 items:
-                  $ref: "#/definitions/VariableModel"
+                  $ref: "#/definitions/DashboardModel"
               Count:
                 type: integer
         # responses may fall through to errors
@@ -671,13 +672,159 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /variable/getVariableByAsset:
-    x-swagger-router-controller: variableManage
+  /dashboard/getSingleDashboard:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: dashboardManage
     get:
       tags:
-      - variable
-      description: get all variables in an Asset
-      operationId: getVariableByAsset
+      - dashboard
+      description: Return list of device's attributes for a given DashboardID
+      # used as the method name of the controller
+      operationId: getSingleDashboard
+      parameters:
+        - name: DashboardID
+          in: query
+          description: DashboardID 
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DashboardModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /dashboard/createDashboard:
+    x-swagger-router-controller: dashboardManage
+    post:
+      tags:
+      - dashboard
+      description: create a new dashboard
+      # used as the method name of the controller
+      operationId: createDashboard
+      parameters:
+      - in: body
+        name: body
+        description: dashboard object thats need to be created
+        required: true
+        schema:
+          $ref: '#/definitions/DashboardModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /dashboard/updateDashboard:
+    x-swagger-router-controller: dashboardManage
+    put:
+      tags:
+      - dashboard
+      summary: update a dashboard
+      description: update a dashboard
+      # used as the method name of the controller
+      operationId: updateDashboard
+      parameters:
+      - in: body
+        name: body
+        description: dashboard object thats need to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/DashboardModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /dashboard/deleteDashboard:
+    x-swagger-router-controller: dashboardManage
+    delete:
+      tags:
+      - device
+      summary: delete a Device
+      description: Delete a Device, remove Device from User and Asset and delete all Parameters that are in it. Need ApiKey to succeed
+      # used as the method name of the controller
+      operationId: deleteDashboard
+      parameters:
+      - name: DashboardID
+        in: query
+        description: DashboardID to be deleted
+        required: true
+        type: string
+      - name: AssetID
+        in: query
+        description: AssetID of the Dashboard
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /parameter/getParameterByDevice:
+    x-swagger-router-controller: parameterManage
+    get:
+      tags:
+      - parameter
+      summary: get all parameter
+      description: get all parameter by DeviceID
+      # used as the method name of the controller
+      operationId: getParameterbyDevice
+      parameters:
+      - name: DeviceID
+        in: query
+        description: DeviceID of the parameter
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/ParameterModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /parameter/getParameterByAsset:
+    x-swagger-router-controller: parameterManage
+    get:
+      tags:
+      - parameter
+      description: get all parameters in an Asset
+      operationId: getParameterByAsset
       parameters:
       - name: AssetID
         in: query
@@ -692,34 +839,34 @@ paths:
               Items:
                 type: array
                 items:
-                  $ref: "#/definitions/VariableModel"
+                  $ref: "#/definitions/ParameterModel"
               Count:
                 type: integer
         default:
           description: Error
           schema: 
             $ref: "#/definitions/ErrorResponse"
-  /variable/getVariableAttributes:
+  /parameter/getParameterAttributes:
     # binds a127 app logic to a route
-    x-swagger-router-controller: variableManage
+    x-swagger-router-controller: parameterManage
     get:
       tags:
-      - variable
+      - parameter
       summary: Retrieve list of attributes
-      description: Return list of variable's attributes for a given VariableID
+      description: Return list of parameter's attributes for a given ParameterID
       # used as the method name of the controller
-      operationId: getVariableAttributes
+      operationId: getParameterAttributes
       parameters:
-        - name: VariableID
+        - name: ParameterID
           in: query
-          description: VariableID 
+          description: ParameterID 
           required: true
           type: string
       responses:
         200:
           description: Success
           schema:
-            $ref: "#/definitions/VariableModel"
+            $ref: "#/definitions/ParameterModel"
         # responses may fall through to errors
         400:
           description: Invalid Input
@@ -733,24 +880,24 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /variable/createVariable:
-    x-swagger-router-controller: variableManage
+  /parameter/createParameter:
+    x-swagger-router-controller: parameterManage
     post:
       tags:
-      - variable
-      description: create a new variable and add it to a device
+      - parameter
+      description: create a new parameter and add it to a device
       # used as the method name of the controller
-      operationId: createVariable
+      operationId: createParameter
       parameters:
       - name: DeviceID
         in: query
         type: string
       - in: body
         name: body
-        description: Variable object thats needs to be added
+        description: Parameter object thats needs to be added
         required: true
         schema:
-          $ref: '#/definitions/VariableModel'
+          $ref: '#/definitions/ParameterModel'
       responses:
         200:
           description: Success
@@ -761,22 +908,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /variable/updateVariable:
-    x-swagger-router-controller: variableManage
+  /parameter/updateParameter:
+    x-swagger-router-controller: parameterManage
     put:
       tags:
-      - variable
-      summary: update a Variable
-      description: update a Variable
+      - parameter
+      summary: update a Parameter
+      description: update a Parameter
       # used as the method name of the controller
-      operationId: updateVariable
+      operationId: updateParameter
       parameters:
       - in: body
         name: body
-        description: Variable object thats needs to be updated
+        description: Parameter object thats needs to be updated
         required: true
         schema:
-          $ref: '#/definitions/UpdateVariableModel'
+          $ref: '#/definitions/UpdateParameterModel'
       responses:
         200:
           description: Success
@@ -787,24 +934,24 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /variable/deleteVariable:
-    x-swagger-router-controller: variableManage
+  /parameter/deleteParameter:
+    x-swagger-router-controller: parameterManage
     delete:
       tags:
-      - variable
-      summary: delete a Variable
-      description: delete a Variable
+      - parameter
+      summary: delete a Parameter
+      description: delete a Parameter
       # used as the method name of the controller
-      operationId: deleteVariable
+      operationId: deleteParameter
       parameters:
-      - name: VariableID
+      - name: ParameterID
         in: query
-        description: VariableID to be deleted
+        description: ParameterID to be deleted
         required: true
         type: string
       - name: DeviceID
         in: query
-        description: Variable's DeviceID
+        description: Parameter's DeviceID
         required: false
         type: string
       responses:
@@ -817,16 +964,16 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/getSingleDataByVariableID:
+  /data/getSingleDataByParameterID:
     x-swagger-router-controller: dataManage
     get:
       tags:
       - data
-      description:  get a single data by variable id and timestamp
+      description:  get a single data by parameter id and timestamp
       # used as the method name of the controller
-      operationId: getSingleDataByVariableID
+      operationId: getSingleDataByParameterID
       parameters:
-      - name: VariableID
+      - name: ParameterID
         in: query
         required: true
         type: string
@@ -844,16 +991,16 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/getMultipleDataByVariableID:
+  /data/getMultipleDataByParameterID:
     x-swagger-router-controller: dataManage
     get:
       tags:
       - data
-      description:  get multiple data by variableID and timestamp
+      description:  get multiple data by parameterID and timestamp
       # used as the method name of the controller
-      operationId: getMultipleDataByVariableID
+      operationId: getMultipleDataByParameterID
       parameters:
-      - name: VariableID
+      - name: ParameterID
         in: query
         required: true
         type: string
@@ -882,14 +1029,14 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/addDataByVariableID:
+  /data/addDataByParameterID:
     x-swagger-router-controller: dataManage
     put:
       tags:
       - data
       description: push data to Data table using VarID and timestamp
       # used as the method name of the controller
-      operationId: addDataByVariableID
+      operationId: addDataByParameterID
       parameters:
       - in: body
         name: body
@@ -917,7 +1064,7 @@ paths:
     post:
       tags:
       - data
-      description:  Add Data by device id and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName
+      description:  Add Data by device id and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName
       # used as the method name of the controller
       operationId: addDataByDeviceID
       parameters:
@@ -950,7 +1097,7 @@ paths:
     post:
       tags:
       - data
-      description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName. ApiKey of user is needed in header of request
+      description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName. ApiKey of user is needed in header of request
       # used as the method name of the controller
       operationId: addDataByDeviceName
       parameters:
@@ -983,7 +1130,7 @@ paths:
     post:
       tags:
       - data
-      description:  Add Data by serial number of the device and timestamp. Have to be tested with Postman and replace VariableName in JSON by actual VariableName.ApiKey of user is needed in header of request
+      description:  Add Data by serial number of the device and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName.ApiKey of user is needed in header of request
       # used as the method name of the controller
       operationId: addDataBySerialNumber
       parameters:
@@ -1050,7 +1197,7 @@ definitions:
   DataModel:
     type: object
     properties:
-      VariableID:
+      ParameterID:
         type: string
       EpochTimeStamp:
         type: integer
@@ -1071,6 +1218,17 @@ definitions:
         type: string
       VerificationCode:
         type: string
+  DashboardModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      DashboardID:
+        type: string
+      DisplayName:
+        type: string
+      AddTimeStamp:
+        type: integer
   UpdateDeviceModel:
     type: object
     properties:
@@ -1083,7 +1241,7 @@ definitions:
   AddDataModel:
     type: object
     properties:
-      VariableID:
+      ParameterID:
         type: string
       Value:
         type: string
@@ -1095,41 +1253,41 @@ definitions:
         items:
           type: object
           properties:
-            VariableName:
+            ParameterName:
               type: string
-  VariableModel:
+  ParameterModel:
     type: object
     properties:
-      VariableID:
+      ParameterID:
         type: string
       CurrentValue: 
         type: string
-      VariableName: 
+      ParameterName: 
         type: string
-      VariableTag:
+      ParameterTag:
         type: string
-      VariableType:
+      ParameterType:
         type: string
-      VariableUnit:
+      ParameterUnit:
         type: string
       Equation:
         type: string
-  UpdateVariableModel:
+  UpdateParameterModel:
     type: object
     properties:
       DeviceID:
         type: string
-      VariableID:
+      ParameterID:
         type: string
       CurrentValue: 
         type: string
-      VariableName: 
+      ParameterName: 
         type: string
-      VariableTag:
+      ParameterTag:
         type: string
-      VariableType:
+      ParameterType:
         type: string
-      VariableUnit:
+      ParameterUnit:
         type: string
       Equation:
         type: string

@@ -16,7 +16,6 @@ class Widget extends React.Component {
   }
 
   widgetType(){
-     console.log(this.props);
     switch (this.props.type){
         case "linechart":
           return(<Line

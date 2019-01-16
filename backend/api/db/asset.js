@@ -8,10 +8,11 @@ const AssetSchema = new Schema(
     AssetID: String,
     AddTimeStamp: Number,
     AssetType: String,
-    Devices: [{DeviceID: String}],
     DisplayName: String,
     LatestTimeStamp: Number,
-    Variables: [{VariableID: String}]
+    Parameters: [{ParameterID: String}],
+    Devices: [{DeviceID: String}],
+    Dashboards: [{DashboardID: String}]
   },
   { timestamps: true }
 );

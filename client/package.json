@@ -32,6 +32,7 @@
     "query-string": "^5.1.1",
     "raw-loader": "^0.5.1",
     "react-grid-layout": "^0.16.6",
+    "react-icons": "^3.3.0",
     "react-redux": "^5.0.7",
     "react-router-config": "^1.0.0-beta.4",
     "react-samy-svg": "^3.0.6",

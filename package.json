@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "postinstall": "cd backend && npm install && cd .. && cd client && npm install",
-	"start": "concurrently \"npm:start-api\" \"npm:start-api-editor\" \"npm:start-web\"",
-	"start-api": "cd backend && swagger project start",
-	"start-api-editor": "cd backend && swagger project edit",
-	"start-web": "cd client && npm start"
+    "start": "concurrently \"npm:start-api\" \"npm:start-api-editor\" \"npm:start-web\"",
+    "start-api": "cd backend && swagger project start",
+    "start-api-editor": "cd backend && swagger project edit",
+    "start-web": "cd client && npm start"
   },
   "author": "Kangmin",
   "license": "ISC",

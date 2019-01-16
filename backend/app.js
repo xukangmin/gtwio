@@ -20,8 +20,8 @@ mongoose.connect(
 
 let db = mongoose.connection;
 
-db.once("open", () => console.log("connected to the database"));
-
+db.once("open", () => console.log("connected to the database!!"));
+// some changes
 // checks if connection with the database is successful
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 

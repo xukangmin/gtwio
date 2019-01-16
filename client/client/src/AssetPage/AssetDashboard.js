@@ -31,8 +31,7 @@ class AssetDashboard extends React.Component {
                 VarID: "12354",
                 StartTimeStamp: 1,
                 EndTimeStamp: 5
-              },
-              resizeStatus: 0,
+              }
             },
             {
               name: "Humidity",
@@ -42,8 +41,7 @@ class AssetDashboard extends React.Component {
                 VarID: "12354",
                 StartTimeStamp: 1,
                 EndTimeStamp: 5
-              },
-              resizeStatus: 0,
+              }
             },
             {
               name: "Test",
@@ -53,8 +51,17 @@ class AssetDashboard extends React.Component {
                 VarID: "12354",
                 StartTimeStamp: 1,
                 EndTimeStamp: 5
-              },
-              resizeStatus: 0,
+              }
+            },
+            {
+              name: "Hx",
+              layoutdata: {x: 0, y: 18, w: 4, h: 7},
+              type: "hx",
+              datasource: {
+                VarID: "12354",
+                StartTimeStamp: 1,
+                EndTimeStamp: 5
+              }
             }
           ]
         }
@@ -64,8 +71,9 @@ class AssetDashboard extends React.Component {
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
     this.onResizeStop = this.onResizeStop.bind(this);
-    this.onDragStartHanlde = this.onDragStartHanlde.bind(this);
+    this.onDragStartHandle = this.onDragStartHandle.bind(this);
     this.onResizeStart = this.onResizeStart.bind(this);
+    this.updateCursor = this.updateCursor.bind(this);
     this.onLock = this.onLock.bind(this);
     this.AddNewWidgetModalOpen = this.AddNewWidgetModalOpen.bind(this);
     this.AddNewWidgetModalClose = this.AddNewWidgetModalClose.bind(this);
@@ -75,10 +83,15 @@ class AssetDashboard extends React.Component {
   componentDidMount() {
   }
 
-  onDragStartHanlde(layout, oldItem, newItem,
+  onDragStartHandle(layout, oldItem, newItem,
     placeholder, e, element) {
   }
-  
+
+  onDragStopHandle(layout, oldItem, newItem,
+    placeholder, e, element) {
+
+  }
+
   onResizeStop(layout, oldItem, newItem,
     placeholder, e, element) {
       /*
@@ -97,7 +110,7 @@ class AssetDashboard extends React.Component {
 
       const widgets = this.state.dashboarddata.widgets;
       widgets[el_index].resizeStatus = 0;
-      
+
       this.forceUpdate();
 
   }
@@ -108,8 +121,12 @@ class AssetDashboard extends React.Component {
 
     const widgets = this.state.dashboarddata.widgets;
     widgets[el_index].resizeStatus = 1;
-    
+
     this.forceUpdate();
+  }
+
+  updateCursor(event){
+    event.type === "mouseenter"? document.documentElement.style.cursor = "move" : document.documentElement.style.cursor = "default"
   }
 
   onLock() {
@@ -141,7 +158,7 @@ class AssetDashboard extends React.Component {
         {dashboarddata ?
           <div className="container-fluid">
             <div className="row m-auto">
-              <div className="float-left m-1"> 
+              <div className="float-left m-1">
                 <a onClick={this.onLock}>
                     <span className={ lock ? 'd-none' : '' }>{ unlockIcon }</span>
                     <span className={ lock ? '' : 'd-none' }>{ lockIcon }</span>
@@ -155,16 +172,16 @@ class AssetDashboard extends React.Component {
               <div className="float-left m-1"> <i className="dashboard-toolbar-icon fas fa-trash-alt"></i></div>
             </div>
             <div className="row">
-              <ReactGridLayout className="layout" cols={12} rowHeight={30} width={this.state.totalwidth} onDragStart={this.onDragStartHanlde} onResizeStop={this.onResizeStop} onResizeStart={this.onResizeStart} draggableCancel=".NonDraggableAreaPlot" isDraggable={!this.state.lock} >
-                  {dashboarddata.widgets.map((item,i) => 
-                    <Widget key={i} data-grid={item.layoutdata} index={i} name={item.name} curw={item.height} curh={item.width} totalwidth={this.state.totalwidth} resizestatus={item.resizeStatus} />
+              <ReactGridLayout className="layout" cols={12} rowHeight={30} width={this.state.totalwidth} onDragStart={this.onDragStartHandle} onDragStop={this.onDragStopHandle} onResizeStop={this.onResizeStop} onResizeStart={this.onResizeStart} draggableCancel=".NonDraggableAreaPlot" isDraggable={!this.state.lock} >
+                  {dashboarddata.widgets.map((item,i) =>
+                    <Widget key={i} data-grid={item.layoutdata} index={i} name={item.name} type={item.type} curw={item.height} curh={item.width} totalwidth={this.state.totalwidth} resizestatus={0} onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor}/>
                   )}
               </ReactGridLayout>
             </div>
           </div>
           :
           <Loader />}
-          <AddNewWidgetModal  
+          <AddNewWidgetModal
               isOpen={this.state.addNewWidgetModalOpen}
               onClose={this.AddNewWidgetModalClose}
           />

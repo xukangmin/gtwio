@@ -38,12 +38,12 @@ class Line extends React.Component {
         this.plot();
     }
 
-    
+
 
   render() {
     return (
-        <div 
-            className="col NonDraggableAreaPlot" 
+        <div
+            className="col NonDraggableAreaPlot"
             id={"plot" + this.props.index.toString()} >
         </div>
     );

@@ -20,7 +20,7 @@ class AssetMain extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
     // data will update every 1 minute on this page
-    
+
 
   }
 
@@ -33,20 +33,17 @@ class AssetMain extends React.Component {
     }
     else{
       return (
-        <div>
-          <ul className="nav nav-pills">
-            <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/overview"} activeClassName="active" >Overview</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/dashboard"} activeClassName="active" >Dashboard</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/device"} activeClassName="active" >Devices</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/report"} activeClassName="active" >Reports</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/alert"} activeClassName="active" >Alerts</NavLink></li>
-          </ul>
-
           <div className ="tab-content">
             {renderRoutes(this.props.route.routes, {store : this.props.store})}
           </div>
-        </div>
       );
+      // <ul className="nav nav-pills">
+      //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/overview"} activeClassName="active" >Overview</NavLink></li>
+      //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/dashboard"} activeClassName="active" >Dashboard</NavLink></li>
+      //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/device"} activeClassName="active" >Devices</NavLink></li>
+      //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/report"} activeClassName="active" >Reports</NavLink></li>
+      //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/alert"} activeClassName="active" >Alerts</NavLink></li>
+      // </ul>
     }
 
   }

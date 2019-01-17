@@ -1,4 +1,7 @@
 import React from 'react';
+import { Collapse, Button, CardBody, Card } from 'reactstrap';
+import { FaHome } from 'react-icons/fa';
+
 
 const AssetSubMenu = (props) => {
     return (
@@ -13,12 +16,30 @@ const AssetSubMenu = (props) => {
 class SideNav extends React.Component {
     constructor(props) {
         super(props);
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+          collapse: false,
+          status: 'Closed',
+          navWidth: 'col-md-2',
+          iconSize: '1em'
+         };
       }
+
+      toggle() {
+      console.log(this.state.iconSize)
+      this.setState({
+        collapse: !this.state.collapse,
+        navWidth: this.state.collapse? 'col-md-2' : 'col-md-1',
+        iconSize: this.state.collapse? '1em' : '3em',
+      });
+    }
 
     render() {
         return (
-            <nav className ="col-md-2 d-none d-md-block bg-light sidebar" id="sidebar">
+          <nav className ={this.state.navWidth + " d-none d-md-block bg-light sidebar"} id="sidebar">
+
                 <div className ="sidebar-sticky">
+                    <Button color="primary" onClick={this.toggle} style={{ marginBottom: '1rem' }}>Toggle</Button>
                     <ul className ="nav flex-column">
                         <li className ="nav-item">
                             <a className ="nav-link" href="/">
@@ -32,7 +53,7 @@ class SideNav extends React.Component {
                                 Assets
                             </a>
                             <ul className ="collapse list-unstyled" id="assetSubMenu">
-                                {this.props.assets.map((singleAsset,index) => 
+                                {this.props.assets.map((singleAsset,index) =>
                                     <AssetSubMenu key={index} singleAsset={singleAsset} />
                                 )}
                             </ul>

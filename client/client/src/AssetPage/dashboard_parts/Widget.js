@@ -9,7 +9,7 @@ import Hx from './widget_parts/Hx';
 class Widget extends React.Component {
   constructor(props) {
     super(props);
-
+    console.log(props)
   }
 
   componentDidMount () {
@@ -18,6 +18,7 @@ class Widget extends React.Component {
   widgetType(){
     switch (this.props.type){
         case "linechart":
+          console.log(this.props)
           return(<Line
               index={this.props.index}
               pTotalWidth={this.props.totalwidth}
@@ -29,14 +30,17 @@ class Widget extends React.Component {
         }
   }
 
+  updateCursor(event){
+    event.type === "mouseenter"? document.documentElement.style.cursor = "move" : document.documentElement.style.cursor = "default"
+  }
+
   render() {
     return (
     <div  {...this.props} >
 
         <div className="container-fluid">
-            <div className="row mt-2">
-                <div className="col">{this.props.name}</div>
-                <div className="col">Toolbar</div>
+            <div className="row pt-1" onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor} style={{backgroundColor:"gray", color:"white"}}>
+                <div className="col"><h3>{this.props.name}</h3></div>
             </div>
             {this.props.resizestatus === 0 &&
               <div className="row" >

@@ -6,9 +6,17 @@ import { FaHome } from 'react-icons/fa';
 const AssetSubMenu = (props) => {
     return (
         <li className="nav-item">
-            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/overview"}  >
+            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}  >
                 <i className="fas fa-align-justify mr-2"></i>{props.singleAsset.DisplayName}
             </a>
+            <ul className ="list-unstyled" id="devicesSubMenu">
+              <li className ="nav-item">
+                  <a className ="ml-3 nav-link" href={"/asset/" + props.singleAsset.AssetID + "/device"}>
+                      <i className ="fas fa-cogs mr-1"></i>
+                      Devices
+                  </a>
+              </li>
+            </ul>
         </li>
     );
 };
@@ -57,12 +65,7 @@ class SideNav extends React.Component {
                                 )}
                             </ul>
                         </li>
-                        <li className ="nav-item">
-                            <a className ="nav-link" href="/devices">
-                                <i className ="fas fa-cogs mr-1"></i>
-                                Devices
-                            </a>
-                        </li>
+
                         <li className ="nav-item">
                             <a className ="nav-link" href="/settings">
                                 <i className ="fas fa-cog mr-2"></i>

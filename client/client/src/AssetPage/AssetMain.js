@@ -33,10 +33,11 @@ class AssetMain extends React.Component {
     }
     else{
       return (
-          <div className ="tab-content">
-            {renderRoutes(this.props.route.routes, {store : this.props.store})}
-          </div>
+        <div></div>
       );
+      // <div className ="tab-content">
+      //   {renderRoutes(this.props.route.routes, {store : this.props.store})}
+      // </div>
       // <ul className="nav nav-pills">
       //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/overview"} activeClassName="active" >Overview</NavLink></li>
       //   <li className="nav-item"><NavLink className="nav-link" to={"/asset/" + AssetID + "/dashboard"} activeClassName="active" >Dashboard</NavLink></li>

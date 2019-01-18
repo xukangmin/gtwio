@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import Loader from '../../_components/loader';
 import { renderRoutes } from 'react-router-config';
 import { NavLink } from 'react-router-dom';
@@ -37,10 +38,13 @@ class Widget extends React.Component {
     <div  {...this.props} >
 
         <div className="container-fluid">
-            <div className="row pt-1" onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor} style={{backgroundColor:"gray", color:"white"}}>
-                <div className="col"><h3>{this.props.name}</h3></div>
-                <div><h5 className="float-right"><i className="far fa-ellipsis-h"></i></h5></div>
+            <div className="row pt-1" style={{backgroundColor:"gray", color:"white"}}>
+                <div className="col" onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor} ><h3>{this.props.name}</h3></div>
+                <div>
+
+                </div>
             </div>
+
             {this.props.resizestatus === 0 &&
               <div className="row" >
                   {this.widgetType()}

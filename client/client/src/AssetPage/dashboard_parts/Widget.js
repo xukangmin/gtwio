@@ -9,7 +9,6 @@ import Hx from './widget_parts/Hx';
 class Widget extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
   }
 
   componentDidMount () {
@@ -18,7 +17,6 @@ class Widget extends React.Component {
   widgetType(){
     switch (this.props.type){
         case "linechart":
-          console.log(this.props)
           return(<Line
               index={this.props.index}
               pTotalWidth={this.props.totalwidth}
@@ -41,6 +39,7 @@ class Widget extends React.Component {
         <div className="container-fluid">
             <div className="row pt-1" onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor} style={{backgroundColor:"gray", color:"white"}}>
                 <div className="col"><h3>{this.props.name}</h3></div>
+                <div><h5 className="float-right"><i className="far fa-ellipsis-h"></i></h5></div>
             </div>
             {this.props.resizestatus === 0 &&
               <div className="row" >

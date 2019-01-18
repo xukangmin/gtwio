@@ -27,7 +27,12 @@ class AssetDashboard extends React.Component {
         AssetID : props.match.params.assetID,
         totalwidth: 1500,
         lock: false,
-        addNewWidgetModalOpen: false
+        addNewWidgetModalOpen: false,
+        newWidget: {
+          Title: "new widget test",
+          Layoutdata: {},
+          Type: "hx"
+        }
     }
 
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -125,6 +130,8 @@ class AssetDashboard extends React.Component {
           <AddNewWidgetModal
               isOpen={this.state.addNewWidgetModalOpen}
               onClose={this.AddNewWidgetModalClose}
+              assetID={this.state.AssetID}
+              widgetData={this.state.newWidget}
           />
       </div>
       );

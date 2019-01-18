@@ -32,6 +32,7 @@
     "popper.js": "^1.14.1",
     "query-string": "^5.1.1",
     "raw-loader": "^0.5.1",
+    "react-fontawesome": "^1.6.1",
     "react-grid-layout": "^0.16.6",
     "react-icons": "^3.3.0",
     "react-redux": "^5.0.7",

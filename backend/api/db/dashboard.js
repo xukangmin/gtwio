@@ -9,6 +9,7 @@ const DashboardSchema = new Schema(
     AddTimeStamp: Number,
     DisplayName: String,
     Widgets: [{
+      WidgetID: String,
       Title: String,
       Layoutdata: {x: Number, y: Number, w: Number, h: Number},
       Type: String,

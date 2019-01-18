@@ -25,8 +25,7 @@ class SideNav extends React.Component {
          };
       }
 
-      toggle() {
-      console.log(this.state.iconSize)
+    toggle() {
       this.setState({
         collapse: !this.state.collapse,
         navWidth: this.state.collapse? 'col-md-2' : 'col-md-1',

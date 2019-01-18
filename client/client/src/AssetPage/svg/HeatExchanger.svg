@@ -572,7 +572,7 @@
        x="373.96671"
        y="51.811485"
        style="font-size:20.00017929px;text-align:center;text-anchor:middle"
-       ><a class="openSettingModal" data-id="aaa" id="ShellInlet" href="#" data-toggle="modal" data-target="#dataModal">N/A</a></tspan></text>
+       ><a onClick="this.OpenHxDetail" class="openSettingModal" data-id="aaa" id="ShellInlet" href="#" data-toggle="modal" data-target="#dataModal">N/A</a></tspan></text>
 
 
 

@@ -159,6 +159,7 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
+              <h3>AssetID: {AssetID}</h3>
                {devices ?
                 <div className="row">
                   {devices.map((item,i) =>

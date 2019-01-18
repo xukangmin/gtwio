@@ -22,7 +22,8 @@ function createDefaultDashboard(assetid, dispatch) {
 class AssetDashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.props.dispatch(dashboardActions.getDashboards(props.match.params.assetID));
+    // this.props.dispatch(dashboardActions.getDashboards(props.match.params.assetID));
+    console.log(this.state)
     this.state = {
         AssetID : props.match.params.assetID,
         totalwidth: 1500,
@@ -30,8 +31,14 @@ class AssetDashboard extends React.Component {
         addNewWidgetModalOpen: false,
         newWidget: {
           Title: "new widget test",
-          Layoutdata: {},
+          Layoutdata: {
+            minW: 4,
+            minH: 8
+          },
           Type: "hx"
+        },
+        dashboardData:{
+
         }
     }
 
@@ -40,11 +47,14 @@ class AssetDashboard extends React.Component {
 
     this.onResizeStop = this.onResizeStop.bind(this);
     this.onDragStartHandle = this.onDragStartHandle.bind(this);
+    this.onDragStopHandle = this.onDragStopHandle.bind(this);
     this.onResizeStart = this.onResizeStart.bind(this);
     this.onLock = this.onLock.bind(this);
     this.AddNewWidgetModalOpen = this.AddNewWidgetModalOpen.bind(this);
     this.AddNewWidgetModalClose = this.AddNewWidgetModalClose.bind(this);
   }
+
+
 
   componentDidMount() {
   }
@@ -55,7 +65,19 @@ class AssetDashboard extends React.Component {
 
   onDragStopHandle(layout, oldItem, newItem,
     placeholder, e, element) {
-
+      const newLayout = layout;
+      // console.log(layout[0])
+      let widgets = this.props.dashboardData[0].Widgets;
+      // console.log(widgets.length)
+      for(var i=0;i<widgets.length;i++){
+        widgets[i].Layoutdata=layout[i]
+      }
+      // for (var singleLayout in layout){
+        console.log(widgets)
+      // }
+      // let newDashboardData = this.props.dashboardData;
+      // this.props.dashboardData[0].Widgets = Widgets;
+      // this.props.dispatch(dashboardActions.updateDashboard(newDashboardData[0]));
   }
 
   onResizeStop(layout, oldItem, newItem,
@@ -70,6 +92,7 @@ class AssetDashboard extends React.Component {
     placeholder, e, element) {
     const el_index = parseInt(element.parentElement.getAttribute("index"));
     const widgets = this.props.dashboardData[0].Widgets;
+
     widgets[el_index].resizeStatus = 1;
     this.forceUpdate();
   }

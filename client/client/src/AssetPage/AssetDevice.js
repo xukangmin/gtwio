@@ -19,6 +19,7 @@ import toastr from 'toastr';
 
 class AssetDevice extends React.Component {
   constructor(props) {
+    console.log('asset device')
     super(props);
     this.state = {
         AssetID : props.match.params.assetID,
@@ -158,9 +159,10 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
+              <h3>AssetID: {AssetID}</h3>
                {devices ?
                 <div className="row">
-                  {devices.map((item,i) => 
+                  {devices.map((item,i) =>
                     <DeviceCard key={i} device={item} assetid={AssetID} onSelDel={this.SelectDelDeviceID} />
                   )}
                   <NewDeviceCard onAddNewDevice={this.AddNewDeviceModalOpen}/>

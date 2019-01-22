@@ -54,10 +54,6 @@ const routes = [
         component: HomePage
       },
       {
-        path: '/asset/:assetID',
-        component: AssetDashboard,
-        routes: [
-          {
             path: '/asset/:assetID/overview',
             component: AssetOverview
           },
@@ -81,8 +77,7 @@ const routes = [
             path: '/asset/:assetID/alert',
             component: AssetAlert
           }
-        ]
-      },
+        ,
       {
         path: '*',
         component: NotFound

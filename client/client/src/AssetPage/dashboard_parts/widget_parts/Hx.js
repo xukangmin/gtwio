@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import svgcontents from 'raw-loader!../../svg/HeatExchanger.svg';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 class Hx extends React.Component {
   constructor(props){
@@ -15,11 +16,16 @@ class Hx extends React.Component {
       }
     }
     this.HandleText = this.HandleText.bind(this);
+    this.OpenHxDetail = this.OpenHxDetail.bind(this);
   }
 
   HandleText(elem){
     const { Settings } = this.state;
     elem.innerHTML = Settings[elem.id];
+  }
+
+  OpenHxDetail(){
+    console.log(123);
   }
 
   render(){

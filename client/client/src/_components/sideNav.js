@@ -46,7 +46,7 @@ class SideNav extends React.Component {
           <nav className ={this.state.navWidth + " d-none d-md-block bg-light sidebar"} id="sidebar">
 
                 <div className ="sidebar-sticky">
-                    <Button color="primary" onClick={this.toggle} style={{ marginBottom: '1rem' }}>Toggle</Button>
+                    
                     <ul className ="nav flex-column">
                         <li className ="nav-item">
                             <a className ="nav-link" href="/">

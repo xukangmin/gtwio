@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
+import { Button, Popover, PopoverHeader, PopoverBody, ListGroup, ListGroupItem } from 'reactstrap';
 import Loader from '../../_components/loader';
 import { renderRoutes } from 'react-router-config';
 import { NavLink } from 'react-router-dom';
@@ -10,6 +10,7 @@ import Hx from './widget_parts/Hx';
 class Widget extends React.Component {
   constructor(props) {
     super(props);
+    this.toggleWidgetMenu= this.toggleWidgetMenu.bind(this);
   }
 
   componentDidMount () {
@@ -33,6 +34,10 @@ class Widget extends React.Component {
     event.type === "mouseenter"? document.documentElement.style.cursor = "move" : document.documentElement.style.cursor = "default"
   }
 
+  toggleWidgetMenu(element){
+    console.log(element)
+  }
+
   render() {
     return (
     <div  {...this.props} >
@@ -41,7 +46,7 @@ class Widget extends React.Component {
             <div className="row pt-1" style={{backgroundColor:"gray", color:"white"}}>
                 <div className="col" onMouseEnter={this.updateCursor} onMouseLeave={this.updateCursor} ><h3>{this.props.name}</h3></div>
                 <div>
-
+                  
                 </div>
             </div>
 

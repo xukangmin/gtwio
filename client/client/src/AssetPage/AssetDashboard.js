@@ -55,6 +55,16 @@ class AssetDashboard extends React.Component {
   }
 
 
+  updateLayout(layout){
+    const newLayout = layout;
+    let widgets = this.props.dashboardData[0].Widgets;
+    for(var i=0;i<widgets.length;i++){
+      widgets[i].Layoutdata=layout[i]
+    }
+    let newDashboardData = this.props.dashboardData;
+    this.props.dashboardData[0].Widgets = widgets;
+    this.props.dispatch(dashboardActions.updateDashboard(newDashboardData[0]));
+  }
 
   componentDidMount() {
   }
@@ -65,19 +75,7 @@ class AssetDashboard extends React.Component {
 
   onDragStopHandle(layout, oldItem, newItem,
     placeholder, e, element) {
-      const newLayout = layout;
-      // console.log(layout[0])
-      let widgets = this.props.dashboardData[0].Widgets;
-      // console.log(widgets.length)
-      for(var i=0;i<widgets.length;i++){
-        widgets[i].Layoutdata=layout[i]
-      }
-      // for (var singleLayout in layout){
-        console.log(widgets)
-      // }
-      // let newDashboardData = this.props.dashboardData;
-      // this.props.dashboardData[0].Widgets = Widgets;
-      // this.props.dispatch(dashboardActions.updateDashboard(newDashboardData[0]));
+      this.updateLayout(layout);
   }
 
   onResizeStop(layout, oldItem, newItem,
@@ -86,6 +84,7 @@ class AssetDashboard extends React.Component {
       const widgets = this.props.dashboardData[0].Widgets;
       widgets[el_index].resizeStatus = 0;
       this.forceUpdate();
+      this.updateLayout(layout);
   }
 
   onResizeStart(layout, oldItem, newItem,

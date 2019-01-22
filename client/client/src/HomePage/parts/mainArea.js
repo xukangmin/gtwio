@@ -4,11 +4,12 @@ const MainTableRow = (props) => {
     return(
         <tr>
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}>{props.singleAsset.DisplayName}</a></td>
-            <td>Running</td>
+            <td style={props.status==="Running"?{color:'#08D800'}:{color:'red'}}>{props.status}</td>
             <td>{props.singleAsset.LatestTimeStamp}</td>
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
-            <td>0</td>
-            <td>OK</td>
+            <td></td>
+            <td style={props.alerts===0?{color:'#08D800'}:{color:'red'}}>{props.alerts}</td>
+            <td style={props.health==="OK"?{color:'#08D800'}:{color:'red'}}>{props.health}</td>
         </tr>
     );
 };
@@ -22,20 +23,21 @@ class MainArea extends React.Component {
         return (
             <div id="MainArea">
                 <div className="table-responsive">
-                    <table className="table table-striped">
+                    <table className="table table-striped" style={{textAlign:'center'}}>
                         <thead>
                             <tr>
                                 <th>Asset</th>
                                 <th>Status</th>
                                 <th>Latest Time Stamp</th>
                                 <th>Device Count</th>
+                                <th>Location</th>
                                 <th>Alerts</th>
                                 <th>Health</th>
                             </tr>
                         </thead>
                         <tbody id="main-table-content">
                             {this.props.assets.map((singleAsset,i) =>
-                                <MainTableRow singleAsset={singleAsset} key={i}/>
+                                <MainTableRow singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
                             )}
                         </tbody>
                     </table>

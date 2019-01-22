@@ -9,6 +9,7 @@ import { AssetDevice } from '../AssetPage/AssetDevice'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
+import {AssetStatic} from '../AssetPage/AssetStatic'
 
 // const routes = [
 //   { component: AppRoot,
@@ -59,7 +60,7 @@ const routes = [
           },
           {
             path: '/asset/:assetID/dashboard',
-            component: AssetDashboard
+            component: AssetStatic
           },
           {
             path: '/asset/:assetID/device',

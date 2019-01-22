@@ -9,7 +9,8 @@ import { AssetDevice } from '../AssetPage/AssetDevice'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
-import {AssetStatic} from '../AssetPage/AssetStatic'
+import { AssetStatic } from '../AssetPage/AssetStatic'
+import { Temperature } from '../AssetPage/dashboard_parts/widget_parts/Temperature'
 
 // const routes = [
 //   { component: AppRoot,
@@ -69,6 +70,10 @@ const routes = [
           {
             path: '/asset/:assetID/detail/:deviceID',
             component: AssetDeviceDetail
+          },
+          {
+            path: '/asset/:assetID/tag',
+            component: Temperature
           },
           {
             path: '/asset/:assetID/report',

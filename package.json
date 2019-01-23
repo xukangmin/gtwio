@@ -8,7 +8,10 @@
     "start": "concurrently \"npm:start-api\" \"npm:start-api-editor\" \"npm:start-web\"",
     "start-api": "cd backend && swagger project start",
     "start-api-editor": "cd backend && swagger project edit",
-    "start-web": "cd client && npm start"
+    "start-web": "cd client && npm start",
+    "server": "concurrently \"npm:start-server-api\" \"npm:start-server-web\"",
+    "start-server-api": "cd backend && npm start",
+    "start-server-web": "cd client && npm run build && npm run server"
   },
   "author": "Kangmin",
   "license": "ISC",

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Radar } from './Radar';
-import { Table } from './Table';
+import { TempTable } from './TempTable';
 
 class Tag extends React.Component {
   constructor(props){
@@ -12,7 +12,7 @@ class Tag extends React.Component {
 
   render(){
     return(
-      <Container>
+      <div>
         <Breadcrumb>
           <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
           <BreadcrumbItem><a href="#">Asset: </a></BreadcrumbItem>
@@ -23,10 +23,10 @@ class Tag extends React.Component {
             <Radar className="col"/>
           </Col>
           <Col>
-            <Table className="col"/>
+            <TempTable className="col"/>
           </Col>
         </Row>
-      </Container>
+      </div>
     );
   }
 }

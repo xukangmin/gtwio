@@ -30,6 +30,7 @@ class Radar extends React.Component {
 plot() {
     Plotly.newPlot('plot' + this.state.type, this.state.data, this.state.layout, {displayModeBar: false});
 }
+
 componentDidMount () {
     this.plot();
 }

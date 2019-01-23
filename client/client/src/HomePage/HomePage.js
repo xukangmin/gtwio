@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { Container, Row, Col } from 'reactstrap';
 import SideNav from '../_components/sideNav'
 import HeaderNav from '../_components/headerNav'
 import MainArea from './parts/mainArea'

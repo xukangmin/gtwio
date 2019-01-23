@@ -11,17 +11,15 @@ class Progressbar extends React.Component {
 
   }
 
-
-
   render() {
     const percentage = 66;
-
     return(
-      <div style={{maxWidth: "150px", marginRight: "10px"}}>
+      <div style={{maxWidth: "200px", marginRight: "50px", textAlign: "center"}}>
         <CircularProgressbar
           percentage={percentage}
           text={`${percentage}%`}
         />
+        <h5>Heat Transfer Rate</h5>
       </div>)
       }
     }

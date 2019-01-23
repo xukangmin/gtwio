@@ -10,11 +10,11 @@ class AssetNav extends React.Component {
         return (
           <ul style={{display:this.props.id===null?"none":"block"}} className ="nav flex-column">
             <li className ="nav-item">
-              <a className ="nav-link ml-3" href="/">
+              <a className ="nav-link ml-3" href={"/asset/"+this.props.id+"/dashboard"}>
                 <i className ="fas fa-industry mr-2"></i>
                 {this.props.assetname}
               </a>
-              <a className ="nav-link ml-3" href="/">
+              <a className ="nav-link ml-3" href={"/asset/"+this.props.id+"/device"}>
                 <i className ="fas fa-temperature-low mr-2"></i>
                 Devices
               </a>

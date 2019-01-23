@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Radar } from './Radar';
+import { TempRadar } from './TempRadar';
+import { TempPlot } from './TempPlot';
 import { TempTable } from './TempTable';
 
 class Tag extends React.Component {
@@ -19,12 +20,11 @@ class Tag extends React.Component {
           <BreadcrumbItem><a href="#">Tag: </a></BreadcrumbItem>
         </Breadcrumb>
         <Row>
-          <Col>
-            <Radar className="col"/>
-          </Col>
-          <Col>
-            <TempTable className="col"/>
-          </Col>
+          <Col><TempRadar/></Col>
+          <Col><TempPlot/></Col>
+        </Row>
+        <Row>
+          <Col><TempTable/></Col>
         </Row>
       </div>
     );
@@ -33,9 +33,9 @@ class Tag extends React.Component {
 
 function mapStateToProps(state) {
   // const { data } = state.dashboard;
-  return {
+  return ({
 
-  };
+  });
 }
 
 const connectedPage = connect(mapStateToProps)(Tag);

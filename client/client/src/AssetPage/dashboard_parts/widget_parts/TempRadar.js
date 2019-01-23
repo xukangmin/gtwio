@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-class Radar extends React.Component {
+class TempRadar extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -50,5 +50,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(Radar);
-export { connectedPage as Radar };
+const connectedPage = connect(mapStateToProps)(TempRadar);
+export { connectedPage as TempRadar };

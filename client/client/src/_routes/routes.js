@@ -9,8 +9,8 @@ import { AssetDevice } from '../AssetPage/AssetDevice'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
-import { AssetStatic } from '../AssetPage/AssetStatic'
-import { Temperature } from '../AssetPage/dashboard_parts/widget_parts/Temperature'
+import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
+import { Radar } from '../AssetPage/dashboard_parts/widget_parts/Radar'
 
 // const routes = [
 //   { component: AppRoot,
@@ -61,7 +61,7 @@ const routes = [
           },
           {
             path: '/asset/:assetID/dashboard',
-            component: AssetStatic
+            component: HxStatic
           },
           {
             path: '/asset/:assetID/device',
@@ -73,7 +73,7 @@ const routes = [
           },
           {
             path: '/asset/:assetID/tag',
-            component: Temperature
+            component: Radar
           },
           {
             path: '/asset/:assetID/report',

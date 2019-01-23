@@ -2,21 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { dataActions } from '../_actions/dataAction';
-import './asset.css';
-import Loader from '../_components/loader';
-import SideNav from '../_components/sideNav';
-import HeaderNav from '../_components/headerNav';
+import { dataActions } from '../../../_actions/dataAction';
+import '../../asset.css';
+import Loader from '../../../_components/loader';
+import SideNav from '../../../_components/sideNav';
+import HeaderNav from '../../../_components/headerNav';
 import update from 'immutability-helper';
-import { dashboardActions } from '../_actions/dashboardAction';
+// import { dashboardActions } from '../../../_actions/dashboardAction';
+import { assetActions} from '../../../_actions/assetAction';
 import { Samy, SvgProxy } from 'react-samy-svg';
-import svgcontents from 'raw-loader!../AssetPage/svg/HeatExchanger_new.svg';
+import svgcontents from 'raw-loader!../../svg/HeatExchanger_new.svg';
 
-class AssetStatic extends React.Component {
+class HxStatic extends React.Component {
   constructor(props) {
     super(props);
-    this.props.dispatch(dashboardActions.getDashboards(props.match.params.assetID));
-    
+    // this.props.dispatch(dashboardActions.getDashboards(props.match.params.assetID));
+    this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
+
     console.log(props)
     this.state = {
          AssetID: props.match.params.assetID,
@@ -43,6 +45,7 @@ class AssetStatic extends React.Component {
            }
          }
     }
+
     this.HandleText = this.HandleText.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
@@ -50,17 +53,16 @@ class AssetStatic extends React.Component {
 
   HandleText(elem){
     const { Settings } = this.state;
-    console.log(document.getElementById(elem.id+'_flow'))
     elem.children[0].innerHTML = Settings[elem.id].temperature;
+    elem.setAttribute('href', "/tag");
     document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
-    if(document.getElementById(elem.id+'_flow')){
-      document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
-    }
+    document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
+
   }
 
   render() {
     const { AssetID} = this.state;
-    const { dashboardData } = this.props;
+    const { assetData } = this.props;
     if (!this.user)
     {
       return (<Redirect to='/login' />);
@@ -69,9 +71,9 @@ class AssetStatic extends React.Component {
 
       return (
         <div>
-        {dashboardData ?
+        {assetData ?
           <div className="container-fluid">
-            <h1>Asset: {AssetID}</h1>
+            <h1>Asset: {assetData.DisplayName}</h1>
             <div style={{maxWidth: "1000px"}}>
             <Samy svgXML={svgcontents} >
                 {Object.keys(this.state.Settings).map((item,i) =>
@@ -91,11 +93,12 @@ class AssetStatic extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.dashboard;
+  const { data } = state.asset;
+  console.log(data)
   return {
-      dashboardData : data
+      assetData : data
   };
 }
 
-const connectedPage = connect(mapStateToProps)(AssetStatic);
-export { connectedPage as AssetStatic };
+const connectedPage = connect(mapStateToProps)(HxStatic);
+export { connectedPage as HxStatic };

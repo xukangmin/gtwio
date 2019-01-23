@@ -44,7 +44,7 @@ const getAssetsOverview = (user) => {
 const getSingleAssetData = (user, assetid) => {
     return dispatch => {
         dispatch(request());
-        assetServices.getAssetsOverview(user)
+        assetServices.getSingleAsset(user, assetid)
             .then(
                 assetdata => {
                     dispatch(success(assetdata));

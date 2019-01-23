@@ -21,12 +21,12 @@
 	.st13{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;stroke:#FFFFFF;}
 
 	.st14{opacity:0.847;fill:none;stroke:#0000FF;stroke-width:2.5739;stroke-linecap:round;stroke-dasharray:2.5739,7.7216;enable-background:new    ;}
-	.st15{font-size:15.5449px;}
+	.st15{fill:white;font-size:15.5449px;}
 	.st16{font-size:13.6018px;}
 	.st17{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
 	.st18{fill:#FF8080;stroke:#FF0000;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st19{fill:#3F0700;}
-	.st20{font-size:24px;}
+	.st20{fill:white;font-size:24px;}
 	.st21{fill:#3C94FA;stroke:#0000FF;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st22{fill:none;stroke:#FFFFFF;stroke-width:1.6908;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6908,5.0725;}
 	.st23{opacity:0.44;fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}
@@ -161,18 +161,22 @@
 	</g>
 </g>
 <g>
-	<rect id="rect9030-1-1" x="594.6" y="207.4" class="st22" width="72.8" height="24.7"/>
-	<g>
-		<rect id="rect9030-1-1_1_" x="597.5" y="210.4" class="st23" width="67.5" height="19.1"/>
-		<text transform="matrix(1 0 0 1 624.3043 226.2827)" class="st24 st25 st20">+</text>
-	</g>
+	<a id="TubeInlet_flow">
+		<rect id="rect9030-1-1" x="594.6" y="207.4" class="st22" width="72.8" height="24.7"/>
+		<g>
+			<rect id="rect9030-1-1_1_" x="597.5" y="210.4" class="st23" width="67.5" height="19.1"/>
+			<text transform="matrix(1 0 0 1 624.3043 226.2827)" class="st24 st25 st20">+</text>
+		</g>
+	</a>
 </g>
 <g>
-	<rect id="rect9030-2" x="492.3" y="269.5" class="st22" width="74.8" height="26.7"/>
-	<g>
-		<rect id="rect9030-1-1_2_" x="495.7" y="273.3" class="st23" width="67.5" height="19.1"/>
-		<text transform="matrix(1 0 0 1 522.5308 291.217)" class="st24 st25 st20">+</text>
-	</g>
+	<a id="ShellOutlet_flow">
+		<rect id="rect9030-2" x="492.3" y="269.5" class="st22" width="74.8" height="26.7"/>
+		<g>
+			<rect id="rect9030-1-1_2_" x="495.7" y="273.3" class="st23" width="67.5" height="19.1"/>
+			<text transform="matrix(1 0 0 1 522.5308 289.217)" class="st24 st25 st20">+</text>
+		</g>
+	</a>
 </g>
 <g>
 	<rect id="rect9030" x="248.7" y="142.8" class="st26" width="87.4" height="26.7"/>

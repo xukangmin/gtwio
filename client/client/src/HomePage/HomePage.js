@@ -99,11 +99,11 @@ class HomePage extends React.Component {
           <div>
           {assets_display ?
            <div>
-              <div>
-              <AddNewAssets user={this.user} dispatch={this.props.dispatch}/>
+              <div style={{marginBottom: "15px"}}>
+                <AddNewAssets user={this.user} dispatch={this.props.dispatch}/>
               </div>
               <div>
-              <MainArea assets={assets_display} />
+                <MainArea assets={assets_display} />
               </div>
 
           </div> :

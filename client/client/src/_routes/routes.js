@@ -10,7 +10,7 @@ import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
 import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
-import { Radar } from '../AssetPage/dashboard_parts/widget_parts/Radar'
+import { Tag } from '../AssetPage/dashboard_parts/widget_parts/Tag'
 
 // const routes = [
 //   { component: AppRoot,
@@ -73,7 +73,7 @@ const routes = [
           },
           {
             path: '/asset/:assetID/tag',
-            component: Radar
+            component: Tag
           },
           {
             path: '/asset/:assetID/report',

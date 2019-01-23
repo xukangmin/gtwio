@@ -6,7 +6,7 @@ class Radar extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      name: "radar",
+      type: "radar",
       data : [{
         type: 'scatterpolar',
         r: [39, 28, 8, 7],
@@ -28,7 +28,7 @@ class Radar extends React.Component {
 }
 
 plot() {
-    Plotly.newPlot('plot' + this.state.name, this.state.data, this.state.layout, {displayModeBar: false});
+    Plotly.newPlot('plot' + this.state.type, this.state.data, this.state.layout, {displayModeBar: false});
 }
 componentDidMount () {
     this.plot();
@@ -36,8 +36,9 @@ componentDidMount () {
 
   render(){
     return(
-      <div id={"plot" + this.state.name} >
-      </div>);
+        <div id={"plot" + this.state.type} >
+        </div>
+    );
   }
 }
 

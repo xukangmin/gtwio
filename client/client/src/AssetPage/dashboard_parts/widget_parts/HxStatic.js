@@ -12,6 +12,7 @@ import update from 'immutability-helper';
 import { assetActions} from '../../../_actions/assetAction';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import svgcontents from 'raw-loader!../../svg/HeatExchanger_new.svg';
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 class HxStatic extends React.Component {
   constructor(props) {
@@ -54,38 +55,41 @@ class HxStatic extends React.Component {
   HandleText(elem){
     const { Settings } = this.state;
     elem.children[0].innerHTML = Settings[elem.id].temperature;
-    elem.setAttribute('href', "/tag");
+    elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag");
     document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
     document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
-
   }
 
   render() {
-    const { AssetID} = this.state;
+    const { AssetID } = this.state;
     const { assetData } = this.props;
     if (!this.user)
     {
       return (<Redirect to='/login' />);
     }
     else{
-
       return (
         <div>
-        {assetData ?
-          <div className="container-fluid">
-            <h1>Asset: {assetData.DisplayName}</h1>
-            <div style={{maxWidth: "1000px"}}>
-            <Samy svgXML={svgcontents} >
-                {Object.keys(this.state.Settings).map((item,i) =>
-                  <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
-                )}
-            </Samy>
+          {assetData ?
+            <div className="container-fluid">
+              <div>
+                <Breadcrumb>
+                  <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
+                  <BreadcrumbItem><a href="#">Asset: {assetData.DisplayName}</a></BreadcrumbItem>
+                </Breadcrumb>
+              </div>
+              <div style={{maxWidth: "1000px"}}>
+                <Samy svgXML={svgcontents} >
+                    {Object.keys(this.state.Settings).map((item,i) =>
+                      <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
+                    )}
+                </Samy>
+              </div>
             </div>
-          </div>
-          :
-          <Loader />}
+            :
+            <Loader />}
+        </div>
 
-      </div>
       );
     }
 

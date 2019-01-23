@@ -1,6 +1,7 @@
 export const gConstants = {
     API_ROOT: 'http://192.168.1.30:10010',
-    SERVER_ROOT: 'http://localhost:3000',
+    SERVER_ROOT: 'http://localhost',
+
     SUCCESS: 'ALERT_SUCCESS',
     ERROR: 'ALERT_ERROR',
     CLEAR: 'ALERT_CLEAR',

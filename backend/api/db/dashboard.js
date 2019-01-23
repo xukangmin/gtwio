@@ -11,7 +11,7 @@ const DashboardSchema = new Schema(
     Widgets: [{
       WidgetID: String,
       Title: String,
-      Layoutdata: {x: Number, y: Number, w: Number, h: Number},
+      Layoutdata: {x: Number, y: Number, w: Number, h: Number, minW: Number, minH: Number},
       Type: String,
       DataSource: {
         ParameterID: String,

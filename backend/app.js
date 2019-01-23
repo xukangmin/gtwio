@@ -3,6 +3,7 @@
 const DBHOST = require('./config/constants.js').DBHOST;
 const CLIENT_HOST = require('./config/constants.js').CLIENT_HOST;
 const API_PORT =  require('./config/constants.js').API_PORT;
+const Simulation = require("./simulation/temp_data_simulation.js");
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
@@ -24,6 +25,8 @@ db.once("open", () => console.log("connected to the database!!"));
 // some changes
 // checks if connection with the database is successful
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
+
+//Simulation.simualte(1500);
 
 var config = {
   appRoot: __dirname, // required config

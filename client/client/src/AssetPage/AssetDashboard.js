@@ -32,6 +32,10 @@ class AssetDashboard extends React.Component {
         newWidget: {
           Title: "new widget test",
           Layoutdata: {
+            x: 0,
+            y: 0,
+            w: 4,
+            h: 6,
             minW: 4,
             minH: 8
           },

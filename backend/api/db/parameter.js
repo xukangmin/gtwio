@@ -10,7 +10,6 @@ const ParameterSchema = new Schema(
     DisplayName: String,
     CurrentValue: Number,
     Unit: String,
-    Tag: String,
     Type: String,
     Equation: String
   },

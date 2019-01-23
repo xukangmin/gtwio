@@ -9,6 +9,8 @@ const DeviceSchema = new Schema(
     AddTimeStamp: Number,
     DisplayName: String,
     SerialNumber: String,
+    MetaInfo: Object,
+    Tag: String, // group id
     Parameters: [{ParameterID: String}]
   },
   { timestamps: true }

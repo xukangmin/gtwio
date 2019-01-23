@@ -89,7 +89,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /asset/getAssetAttributes:
+  /asset/getSingleAsset:
     # binds a127 app logic to a route
     x-swagger-router-controller: asset
     get:
@@ -97,7 +97,7 @@ paths:
       - asset
       description: Return list of asset's attributes for a given AssetID
       # used as the method name of the controller
-      operationId: getAssetAttributes
+      operationId: getSingleAsset
       parameters:
         - name: AssetID
           in: query
@@ -978,7 +978,7 @@ paths:
         description: Parameter object thats needs to be added
         required: true
         schema:
-          $ref: '#/definitions/ParameterModel'
+          $ref: '#/definitions/CreateParameterModel'
       responses:
         200:
           description: Success
@@ -1209,20 +1209,11 @@ paths:
       # used as the method name of the controller
       operationId: addDataBySerialNumber
       parameters:
-      - name: SerialNumber
-        in: query
-        type: string
       - name: body
         in: body
         required: true
         schema: 
-          properties:
-            Data:
-            # type: object
-              #items: 
-              $ref: '#/definitions/AddDataByVarNameModel'
-            Timestamp:
-              type: integer
+          $ref: '#/definitions/AddDataByVarNameModel'
       responses:
         200:
           description: Success
@@ -1323,13 +1314,23 @@ definitions:
   AddDataByVarNameModel:
     type: object
     properties:
-      Data:
-        type: array
-        items:
-          type: object
-          properties:
-            ParameterName:
-              type: string
+      SerialNumber: 
+        type: string
+      Value:
+        type: number
+      DataType:
+        type: string
+  CreateParameterModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      DeviceID: 
+        type: string
+      Unit: 
+        type: string
+      DataType:
+        type: string
   ParameterModel:
     type: object
     properties:

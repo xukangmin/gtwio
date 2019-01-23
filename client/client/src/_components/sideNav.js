@@ -1,22 +1,15 @@
 import React from 'react';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { FaHome } from 'react-icons/fa';
+import AssetNav from './AssetNav';
 
 
 const AssetSubMenu = (props) => {
     return (
         <li className="nav-item">
-            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}  >
-                <i className="fas fa-align-justify mr-2"></i>{props.singleAsset.DisplayName}
+            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"} onClick={()=>props.assetClick(props.singleAsset.AssetID,props.singleAsset.DisplayName)}>
+                <i className="fas fa-industry mr-2"></i>{props.singleAsset.DisplayName}
             </a>
-            <ul className ="list-unstyled" id="devicesSubMenu">
-              <li className ="nav-item">
-                  <a className ="ml-3 nav-link" href={"/asset/" + props.singleAsset.AssetID + "/device"}>
-                      <i className ="fas fa-cogs mr-1"></i>
-                      Devices
-                  </a>
-              </li>
-            </ul>
         </li>
     );
 };
@@ -24,29 +17,25 @@ const AssetSubMenu = (props) => {
 class SideNav extends React.Component {
     constructor(props) {
         super(props);
-        this.toggle = this.toggle.bind(this);
+        this.assetSelected = this.assetSelected.bind(this);
         this.state = {
-          collapse: false,
-          status: 'Closed',
-          navWidth: 'col-md-2',
-          iconSize: '1em'
-         };
-      }
+          selectedAssetID: null,
+          selectedAssetName: null
+        }
+    }
 
-    toggle() {
-      this.setState({
-        collapse: !this.state.collapse,
-        navWidth: this.state.collapse? 'col-md-2' : 'col-md-1',
-        iconSize: this.state.collapse? '1em' : '3em',
-      });
+    assetSelected(assetid,assetname){
+      this.setState(
+        {
+          selectedAssetID: assetid,
+          selectedAssetName: assetname
+        });
     }
 
     render() {
         return (
-          <nav className ={this.state.navWidth + " d-none d-md-block bg-light sidebar"} id="sidebar">
-
+          <nav className ="d-none d-md-block bg-light sidebar col-sm-3 col-md-2" id="sidebar">
                 <div className ="sidebar-sticky">
-                    
                     <ul className ="nav flex-column">
                         <li className ="nav-item">
                             <a className ="nav-link" href="/">
@@ -56,12 +45,12 @@ class SideNav extends React.Component {
                         </li>
                         <li className ="nav-item">
                             <a className ="nav-link" data-toggle="collapse" href="#assetSubMenu">
-                                <i className ="fas fa-suitcase mr-2"></i>
+                                <i className ="fas fa-city mr-2"></i>
                                 Assets
                             </a>
                             <ul className ="collapse list-unstyled" id="assetSubMenu">
                                 {this.props.assets.map((singleAsset,index) =>
-                                    <AssetSubMenu key={index} singleAsset={singleAsset} />
+                                    <AssetSubMenu key={index} singleAsset={singleAsset} assetClick={this.assetSelected}/>
                                 )}
                             </ul>
                         </li>
@@ -72,12 +61,15 @@ class SideNav extends React.Component {
                                 Parameters
                             </a>
                         </li>
+
+
                     </ul>
+                    <hr/>
+                    <AssetNav id={this.state.selectedAssetID} assetname={this.state.selectedAssetName}/>
                 </div>
             </nav>
         );
     }
-
 }
 
 

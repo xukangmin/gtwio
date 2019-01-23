@@ -16,7 +16,7 @@ class Hx extends React.Component {
       }
     }
     this.HandleText = this.HandleText.bind(this);
-    this.OpenHxDetail = this.OpenHxDetail.bind(this);
+    this.HandleModalClick = this.HandleModalClick.bind(this);
   }
 
   HandleText(elem){
@@ -24,8 +24,15 @@ class Hx extends React.Component {
     elem.innerHTML = Settings[elem.id];
   }
 
-  OpenHxDetail(){
-    console.log(123);
+  HandleModalClick(e){
+    console.log('123',e);
+    return(
+      <Modal isOpen={true} toggle={this.props.onClose} >
+        <ModalHeader toggle={this.props.onClose} >Add New Widget</ModalHeader>
+        <ModalBody>
+            <p>modal body</p>
+        </ModalBody>
+    </Modal>)
   }
 
   render(){
@@ -33,8 +40,8 @@ class Hx extends React.Component {
       <div className="col NonDraggableAreaPlot">
         <Samy svgXML={svgcontents} >
           {Object.keys(this.state.Settings).map((item,i) =>
-            // <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)} onClick={(e) => this.HandleModalClick(e)}/>
-            <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
+            <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)} onClick={(e) => this.HandleModalClick(e)}/>
+            // <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
           )}
         </Samy>
       </div>);

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { Container, Row, Col } from 'reactstrap';
 import SideNav from '../_components/sideNav'
 import HeaderNav from '../_components/headerNav'
 import MainArea from './parts/mainArea'
@@ -99,8 +100,13 @@ class HomePage extends React.Component {
           <div>
           {assets_display ?
            <div>
-              <MainArea assets={assets_display} />
-              <AddNewAssets user={this.user} dispatch={this.props.dispatch} />
+              <div style={{marginBottom: "15px"}}>
+                <AddNewAssets user={this.user} dispatch={this.props.dispatch}/>
+              </div>
+              <div>
+                <MainArea assets={assets_display} />
+              </div>
+
           </div> :
           <div></div>}
           </div>

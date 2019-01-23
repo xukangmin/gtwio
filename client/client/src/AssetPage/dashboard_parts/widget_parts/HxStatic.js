@@ -12,7 +12,8 @@ import update from 'immutability-helper';
 import { assetActions} from '../../../_actions/assetAction';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import svgcontents from 'raw-loader!../../svg/HeatExchanger_new.svg';
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Progressbar } from './Progressbar';
 
 class HxStatic extends React.Component {
   constructor(props) {
@@ -78,13 +79,17 @@ class HxStatic extends React.Component {
                   <BreadcrumbItem><a href="#">Asset: {assetData.DisplayName}</a></BreadcrumbItem>
                 </Breadcrumb>
               </div>
-              <div style={{maxWidth: "1000px"}}>
+              <div style={{maxWidth: "1000px", maxHeight: "560px"}}>
                 <Samy svgXML={svgcontents} >
                     {Object.keys(this.state.Settings).map((item,i) =>
                       <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
                     )}
                 </Samy>
               </div>
+              <Row>
+                <Progressbar/>
+                <Progressbar/>
+              </Row>
             </div>
             :
             <Loader />}

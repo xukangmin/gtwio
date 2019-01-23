@@ -8,7 +8,7 @@ class AssetNav extends React.Component {
 
     render() {
         return (
-          <ul style={{display:this.props.id==null?"none":"block"}} className ="nav flex-column">
+          <ul style={{display:this.props.id===null?"none":"block"}} className ="nav flex-column">
             <li className ="nav-item">
               <a className ="nav-link ml-3" href="/">
                 <i className ="fas fa-industry mr-2"></i>

@@ -3,7 +3,10 @@ import React from 'react';
 const MainTableRow = (props) => {
     return(
         <tr>
-            <td><a href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}>{props.singleAsset.DisplayName}</a></td>
+            <td><a href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}
+              onClick=
+                {()=>props.assetClicked(props.singleAsset.AssetID,props.singleAsset.DisplayName)}
+              >{props.singleAsset.DisplayName}</a></td>
             <td style={props.status==="Running"?{color:'#08D800'}:{color:'red'}}>{props.status}</td>
             <td>{props.singleAsset.LatestTimeStamp}</td>
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
@@ -19,6 +22,10 @@ class MainArea extends React.Component {
         super(props);
       }
 
+    assetSelected(id,name){
+      localStorage.setItem("selectedAssetID", id);
+      localStorage.setItem("selectedAssetName", name);
+    }
     render() {
         return (
             <div id="MainArea">
@@ -37,7 +44,7 @@ class MainArea extends React.Component {
                         </thead>
                         <tbody id="main-table-content">
                             {this.props.assets.map((singleAsset,i) =>
-                                <MainTableRow singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
+                                <MainTableRow assetClicked={this.assetSelected} singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
                             )}
                         </tbody>
                     </table>

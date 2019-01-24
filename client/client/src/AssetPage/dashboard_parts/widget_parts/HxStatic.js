@@ -8,7 +8,6 @@ import Loader from '../../../_components/loader';
 import SideNav from '../../../_components/sideNav';
 import HeaderNav from '../../../_components/headerNav';
 import update from 'immutability-helper';
-// import { dashboardActions } from '../../../_actions/dashboardAction';
 import { assetActions} from '../../../_actions/assetAction';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import svgcontents from 'raw-loader!../../svg/HeatExchanger_new.svg';
@@ -18,10 +17,7 @@ import { Progressbar } from './Progressbar';
 class HxStatic extends React.Component {
   constructor(props) {
     super(props);
-    // this.props.dispatch(dashboardActions.getDashboards(props.match.params.assetID));
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
-
-    console.log(props)
     this.state = {
          AssetID: props.match.params.assetID,
          Settings: {
@@ -50,7 +46,7 @@ class HxStatic extends React.Component {
 
     this.HandleText = this.HandleText.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.assets = JSON.parse(localStorage.getItem('assets'));
+    // this.assets = JSON.parse(localStorage.getItem('assets'));
   }
 
   HandleText(elem){
@@ -76,34 +72,36 @@ class HxStatic extends React.Component {
               <div>
                 <Breadcrumb>
                   <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                  <BreadcrumbItem><a href="#">Asset: {assetData.DisplayName}</a></BreadcrumbItem>
+                  <BreadcrumbItem><a href="#">{assetData.DisplayName}</a></BreadcrumbItem>
                 </Breadcrumb>
               </div>
-              <div style={{maxWidth: "1000px", maxHeight: "560px"}}>
+              <div style={{maxWidth: "1200px", maxHeight: "560px"}} className="mx-auto">
                 <Samy svgXML={svgcontents} >
                     {Object.keys(this.state.Settings).map((item,i) =>
                       <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
                     )}
                 </Samy>
+                <Row style={{marginTop: "-150px"}}>
+                  <Progressbar type="Heat Transfer Rate"/>
+                  <Progressbar type="Efficiency"/>
+                </Row>
+                <div style={{float:"right"}}>
+                  <span>Last updated:</span>
+                </div>
               </div>
-              <Row>
-                <Progressbar/>
-                <Progressbar/>
-              </Row>
+
+
             </div>
             :
             <Loader />}
         </div>
-
       );
     }
-
   }
 }
 
 function mapStateToProps(state) {
   const { data } = state.asset;
-  console.log(data)
   return {
       assetData : data
   };

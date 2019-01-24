@@ -9,7 +9,7 @@ class HeaderNav extends React.Component {
     render() {
         return (
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-                <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="/">IIoT Monitor</a>
+                <a className="navbar-brand nav-link col-sm-3 col-md-2 mx-0" style={{textAlign: "center", fontWeight: "bold"}} href="/">IIoT Monitor</a>
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap">
                         <Link to="/login" className="nav-link">Logout</Link>

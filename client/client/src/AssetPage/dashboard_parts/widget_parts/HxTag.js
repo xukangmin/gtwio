@@ -8,7 +8,7 @@ import { TempTable } from './TempTable';
 import { assetActions} from '../../../_actions/assetAction';
 import Loader from '../../../_components/loader';
 
-class Tag extends React.Component {
+class HxTag extends React.Component {
   constructor(props){
     super(props);
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
@@ -49,5 +49,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(Tag);
-export { connectedPage as Tag };
+const connectedPage = connect(mapStateToProps)(HxTag);
+export { connectedPage as HxTag };

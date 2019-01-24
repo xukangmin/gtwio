@@ -10,7 +10,7 @@ import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
 import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
-import { Tag } from '../AssetPage/dashboard_parts/widget_parts/Tag'
+import { HxTag } from '../AssetPage/dashboard_parts/widget_parts/HxTag'
 
 // const routes = [
 //   { component: AppRoot,
@@ -56,34 +56,33 @@ const routes = [
         component: HomePage
       },
       {
-            path: '/asset/:assetID/overview',
-            component: AssetOverview
-          },
-          {
-            path: '/asset/:assetID/dashboard',
-            component: HxStatic
-          },
-          {
-            path: '/asset/:assetID/device',
-            component: AssetDevice
-          },
-          {
-            path: '/asset/:assetID/detail/:deviceID',
-            component: AssetDeviceDetail
-          },
-          {
-            path: '/asset/:assetID/tag',
-            component: Tag
-          },
-          {
-            path: '/asset/:assetID/report',
-            component: AssetReport
-          },
-          {
-            path: '/asset/:assetID/alert',
-            component: AssetAlert
-          }
-        ,
+        path: '/asset/:assetID/overview',
+        component: AssetOverview
+      },
+      {
+        path: '/asset/:assetID/dashboard',
+        component: HxStatic
+      },
+      {
+        path: '/asset/:assetID/device',
+        component: AssetDevice
+      },
+      {
+        path: '/asset/:assetID/detail/:deviceID',
+        component: AssetDeviceDetail
+      },
+      {
+        path: '/asset/:assetID/tag',
+        component: HxTag
+      },
+      {
+        path: '/asset/:assetID/report',
+        component: AssetReport
+      },
+      {
+        path: '/asset/:assetID/alert',
+        component: AssetAlert
+      },
       {
         path: '*',
         component: NotFound

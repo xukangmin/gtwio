@@ -75,20 +75,21 @@ class HxStatic extends React.Component {
                   <BreadcrumbItem><a href="#">{assetData.DisplayName}</a></BreadcrumbItem>
                 </Breadcrumb>
               </div>
-              <div style={{maxWidth: "1000px", maxHeight: "560px"}}>
+              <div style={{maxWidth: "1200px", maxHeight: "560px"}} className="mx-auto">
                 <Samy svgXML={svgcontents} >
                     {Object.keys(this.state.Settings).map((item,i) =>
                       <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
                     )}
                 </Samy>
+                <Row style={{marginTop: "-150px"}}>
+                  <Progressbar type="Heat Transfer Rate"/>
+                  <Progressbar type="Efficiency"/>
+                </Row>
                 <div style={{float:"right"}}>
                   <span>Last updated:</span>
                 </div>
               </div>
-              <Row style={{marginTop: "-150px"}}>
-                <Progressbar type="Heat Transfer Rate"/>
-                <Progressbar type="Efficiency"/>
-              </Row>
+
 
             </div>
             :

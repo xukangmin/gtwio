@@ -33,7 +33,7 @@ class SideNav extends React.Component {
                         <li className ="nav-item">
                             <a className ="nav-link" href="/">
                                 <i className ="fas fa-home mr-2"></i>
-                                Home
+                                Overview
                             </a>
                         </li>
                         <li className ="nav-item">

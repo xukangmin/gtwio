@@ -14,6 +14,7 @@ import { DeviceCard } from './device_parts/DeviceCard';
 import { NewDeviceCard } from './device_parts/NewDeviceCard';
 import { AddNewDeviceModal } from './device_parts/AddNewDeviceModal';
 import { DeleteDeviceModal } from './device_parts/DeleteDeviceModal';
+import { Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import toastr from 'toastr';
 
@@ -148,6 +149,7 @@ class AssetDevice extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     const { AssetID } = this.state;
     const { devices } = this.props;
 
@@ -159,7 +161,11 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
-              <h3>AssetID: {AssetID}</h3>
+              <Breadcrumb>
+                <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
+                <BreadcrumbItem><a href={"/asset/"+AssetID+"/dashboard"}>{localStorage.getItem("selectedAssetName")}</a></BreadcrumbItem>
+                <BreadcrumbItem><a href="#">Devices</a></BreadcrumbItem>
+              </Breadcrumb>
                {devices ?
                 <div className="row">
                   {devices.map((item,i) =>

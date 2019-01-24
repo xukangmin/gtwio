@@ -375,8 +375,6 @@ function getDataBySerialNumber(req, res) {
           .catch(err => {
             shareUtil.SendInternalErr(res,  "serail number search error:" + JSON.stringify(err, null, 2));
           });
-
-
       }
     });
   } else {

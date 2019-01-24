@@ -18,18 +18,11 @@ class SideNav extends React.Component {
     constructor(props) {
         super(props);
         this.assetSelected = this.assetSelected.bind(this);
-        this.state = {
-          selectedAssetID: null,
-          selectedAssetName: null
-        }
     }
 
     assetSelected(assetid,assetname){
-      this.setState(
-        {
-          selectedAssetID: assetid,
-          selectedAssetName: assetname
-        });
+      localStorage.setItem("selectedAssetID", assetid);
+      localStorage.setItem("selectedAssetName", assetname);
     }
 
     render() {
@@ -64,8 +57,36 @@ class SideNav extends React.Component {
 
 
                     </ul>
-                    <hr/>
-                    <AssetNav id={this.state.selectedAssetID} assetname={this.state.selectedAssetName}/>
+                    {localStorage.getItem("selectedAssetID")?
+                    <ul style={{marginTop:"30px"}} className ="nav flex-column">
+                      <li className ="nav-item">
+                        <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/"+localStorage.getItem("selectedAssetID")+"/dashboard"}>
+                          {localStorage.getItem("selectedAssetName")}
+                        </a>
+                      </li>
+                      <li className ="nav-item" style={{marginTop:"15px"}}>
+                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/dashboard"}>
+                          <i className ="fas fa-tachometer-alt mr-2"></i>
+                          Dashboard
+                        </a>
+                      </li>
+                      <li className ="nav-item">
+                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/device"}>
+                          <i className ="fas fa-temperature-low mr-2"></i>
+                          Devices
+                        </a>
+                      </li>
+
+                      <li className ="nav-item">
+                        <a className ="nav-link" href="/">
+                          <i className ="fas fa-sliders-h mr-2"></i>
+                          Parameters
+                        </a>
+                      </li>
+                    </ul>
+                    :<div></div>}
+
+
                 </div>
             </nav>
         );

@@ -1,32 +1,29 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import update from 'immutability-helper';
+import { assetActions } from '../_actions/assetAction';
 
 class AssetNav extends React.Component {
     constructor(props) {
         super(props);
-
+        console.log('hi',props);
+        // this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.id));
       }
 
     render() {
-        return (
-          <ul style={{display:this.props.id===null?"none":"block"}} className ="nav flex-column">
-            <li className ="nav-item">
-              <a className ="nav-link ml-3" href={"/asset/"+this.props.id+"/dashboard"}>
-                <i className ="fas fa-industry mr-2"></i>
-                {this.props.assetname}
-              </a>
-              <a className ="nav-link ml-3" href={"/asset/"+this.props.id+"/device"}>
-                <i className ="fas fa-temperature-low mr-2"></i>
-                Devices
-              </a>
-              <a className ="nav-link ml-3" href="/">
-                <i className ="fas fa-sliders-h mr-2"></i>
-                Parameters
-              </a>
-            </li>
-            </ul>
-        );
+      console.log(this.props)
+        return (<div></div>)
     }
 }
 
+
+function mapStateToProps(state) {
+  const { data } = state.asset;
+  return {
+      assetData : data
+  };
+}
 
 export default AssetNav;

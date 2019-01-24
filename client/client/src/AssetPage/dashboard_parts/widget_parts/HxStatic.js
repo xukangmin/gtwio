@@ -81,11 +81,15 @@ class HxStatic extends React.Component {
                       <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
                     )}
                 </Samy>
+                <div style={{float:"right"}}>
+                  <span>Last updated:</span>
+                </div>
               </div>
               <Row style={{marginTop: "-150px"}}>
                 <Progressbar type="Heat Transfer Rate"/>
                 <Progressbar type="Efficiency"/>
               </Row>
+
             </div>
             :
             <Loader />}

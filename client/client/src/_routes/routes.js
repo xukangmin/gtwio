@@ -55,34 +55,34 @@ const routes = [
         exact: true,
         component: HomePage
       },
-      {
-        path: '/asset/:assetID/overview',
-        component: AssetOverview
-      },
-      {
-        path: '/asset/:assetID/dashboard',
-        component: HxStatic
-      },
-      {
-        path: '/asset/:assetID/device',
-        component: AssetDevice
-      },
-      {
-        path: '/asset/:assetID/detail/:deviceID',
-        component: AssetDeviceDetail
-      },
-      {
-        path: '/asset/:assetID/tag',
-        component: HxTag
-      },
-      {
-        path: '/asset/:assetID/report',
-        component: AssetReport
-      },
-      {
-        path: '/asset/:assetID/alert',
-        component: AssetAlert
-      },
+        {
+          path: '/asset/:assetID/overview',
+          component: AssetOverview
+        },
+        {
+          path: '/asset/:assetID/dashboard',
+          component: HxStatic
+        },
+        {
+          path: '/asset/:assetID/device',
+          component: AssetDevice
+        },
+        {
+          path: '/asset/:assetID/detail/:deviceID',
+          component: AssetDeviceDetail
+        },
+        {
+          path: '/asset/:assetID/tag',
+          component: HxTag
+        },
+        {
+          path: '/asset/:assetID/report',
+          component: AssetReport
+        },
+        {
+          path: '/asset/:assetID/alert',
+          component: AssetAlert
+        },
       {
         path: '*',
         component: NotFound

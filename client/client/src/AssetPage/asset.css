@@ -1,5 +1,5 @@
 a {
-	 cursor: pointer; 
+	 cursor: pointer;
 }
 
 .clickable:hover{
@@ -8,11 +8,13 @@ a {
 }
 
 .card {
-    box-shadow: 1px 1px 1px grey;
+	margin-bottom: 30px !important;
+    /* box-shadow: 1px 1px 1px grey; */
 }
 
 .card:hover {
-	box-shadow: 5px 5px 5px grey;
+	/* box-shadow: 5px 5px 5px grey; */
+	box-shadow: 5px 5px 5px #ddd;
 	-webkit-transition: all 0.4s; /* Safari */
 	transition: all 0.4s;
 }
@@ -25,20 +27,20 @@ a {
 .card-header {
 	font-size: medium;
 	font-weight: bold;
-	background: linear-gradient(to bottom, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 0%, rgba(188,224,238,1) 100%);
+	/* background: linear-gradient(to bottom, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 0%, rgba(188,224,238,1) 100%); */
 }
 
 .circle-blink {
-    animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+    animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
 }
 
-@keyframes blinker {  
+@keyframes blinker {
   from { opacity: 1; }
   to { opacity: 0; }
 }
 
-.NewCardBox { 
-	border-width:1px;  
+.NewCardBox {
+	border-width:1px;
     border-style:dashed;
 }
 
@@ -48,8 +50,8 @@ a {
 
 .AddNewDevice {
 	background: #CCC;
-    color: #FFFFFF;
-    border-radius: 50%;
+  color: #FFFFFF;
+  border-radius: 50%;
 	font-size: 30px;
 	width: 50px;
 	height: 50px;

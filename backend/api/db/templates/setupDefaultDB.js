@@ -3,6 +3,7 @@ const Asset = require('../asset.js');
 const Parameter = require('../parameter.js');
 const Device = require('../device.js');
 const Dashboard = require('../dashboard.js');
+const Data = require('../data.js');
 
 var userid = 'USERID0';
 
@@ -51,6 +52,8 @@ function deleteTempSensors() {
     Device.deleteMany({DeviceID: 'Temp' + i.toString()}, function(err){
     });
     Parameter.deleteMany({ParameterID: 'TempPara' + i.toString()}, function(err){
+    });
+    Data.deleteMany({ParameterID: 'TempPara' + i.toString()}, function(err){
     });
   }
 
@@ -172,6 +175,7 @@ function createTempSensor(assetid, index, tagName, sn) {
             para.CurrentValue = 0;
             para.Type = 'Temperature';
             para.Unit = 'F';
+            para.Tag = tagName + "/" + para.Type; // automatically generated if under device
 
             para.save(err => {
               if(err)

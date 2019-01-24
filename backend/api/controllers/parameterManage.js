@@ -28,18 +28,17 @@ for (var key in functions) {
 function createParameter(req, res) {
   var paraobj = req.body;
 
-  if (paraobj.AssetID && paraobj.DataType && paraobj.DataType) {
+  if (paraobj.AssetID && paraobj.DataType && paraobj.Tag) {
     _addParameter(paraobj.AssetID, null, paraobj.DataType, function(err) {
       if (err)
       {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
-        console.error(msg);
         shareUtil.SendInternalErr(res, msg);
       } else {
           shareUtil.SendSuccess(res);
       }
     });
-  } else if (paraobj.DeviceID && paraobj.DataType && paraobj.DataType) {
+  } else if (paraobj.DeviceID && paraobj.DataType) {
     _addParameter(null, paraobj.DeviceID, paraobj.DataType, function(err) {
       if (err)
       {

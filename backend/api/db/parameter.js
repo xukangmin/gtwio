@@ -11,6 +11,7 @@ const ParameterSchema = new Schema(
     CurrentValue: Number,
     Unit: String,
     Type: String,
+    Tag: String,
     Equation: String
   },
   { timestamps: true }

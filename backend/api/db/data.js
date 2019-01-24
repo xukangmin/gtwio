@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const DataSchema = new Schema(
   {
     ParameterID: String,
-    AddTimeStamp: Number, // with ms accuracy
+    TimeStamp: Number, // with ms accuracy
     Value: Number
   },
   { timestamps: true }

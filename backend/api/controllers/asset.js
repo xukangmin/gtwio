@@ -6,7 +6,7 @@ const Asset = require('../db/asset.js');
 
 var functions = {
   getAssetByUser: getAssetByUser,
-  getAssetAttributes: getAssetAttributes,
+  getSingleAsset: getSingleAsset,
   createAsset: createAsset,
   updateAsset: updateAsset,
   deleteAsset: deleteAsset
@@ -57,7 +57,7 @@ function getSingleAssetInternal(index, assets, assetout, callback) {
 }
 
 
-function getAssetAttributes(req, res) {
+function getSingleAsset(req, res) {
   var assetID = req.swagger.params.AssetID.value;
   Asset.findOne({AssetID: assetID}, function(err, data) {
     if (err) {

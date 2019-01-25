@@ -89,7 +89,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /asset/getAssetAttributes:
+  /asset/getSingleAsset:
     # binds a127 app logic to a route
     x-swagger-router-controller: asset
     get:
@@ -97,7 +97,7 @@ paths:
       - asset
       description: Return list of asset's attributes for a given AssetID
       # used as the method name of the controller
-      operationId: getAssetAttributes
+      operationId: getSingleAsset
       parameters:
         - name: AssetID
           in: query
@@ -978,7 +978,7 @@ paths:
         description: Parameter object thats needs to be added
         required: true
         schema:
-          $ref: '#/definitions/ParameterModel'
+          $ref: '#/definitions/CreateParameterModel'
       responses:
         200:
           description: Success
@@ -1045,20 +1045,24 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/getSingleDataByParameterID:
+  /data/getDataByParameterID:
     x-swagger-router-controller: dataManage
     get:
       tags:
       - data
       description:  get a single data by parameter id and timestamp
       # used as the method name of the controller
-      operationId: getSingleDataByParameterID
+      operationId: getDataByParameterID
       parameters:
       - name: ParameterID
         in: query
         required: true
         type: string
-      - name: TimeStamp
+      - name: StartTimeStamp
+        in: query
+        required: true
+        type: integer
+      - name: EndTimeStamp
         in: query
         required: true
         type: integer
@@ -1072,16 +1076,62 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/getMultipleDataByParameterID:
+  /data/getDataBySerialNumber:
     x-swagger-router-controller: dataManage
     get:
       tags:
       - data
       description:  get multiple data by parameterID and timestamp
       # used as the method name of the controller
-      operationId: getMultipleDataByParameterID
+      operationId: getDataBySerialNumber
       parameters:
-      - name: ParameterID
+      - name: SerialNumber
+        in: query
+        required: true
+        type: string
+      - name: StartTimeStamp
+        in: query
+        required: true
+        type: integer
+      - name: EndTimeStamp
+        in: query
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/DataModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/getDataByTag:
+    x-swagger-router-controller: dataManage
+    get:
+      tags:
+      - data
+      description:  get multiple data by tag
+      # used as the method name of the controller
+      operationId: getDataByTag
+      parameters:
+      - name: AssetID
+        in: query
+        required: true
+        type: string
+      - name: Tag
+        in: query
+        required: true
+        type: string
+      - name: Type
         in: query
         required: true
         type: string
@@ -1112,7 +1162,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /data/addDataByParameterID:
     x-swagger-router-controller: dataManage
-    put:
+    post:
       tags:
       - data
       description: push data to Data table using VarID and timestamp
@@ -1143,20 +1193,11 @@ paths:
       # used as the method name of the controller
       operationId: addDataByDeviceID
       parameters:
-      - name: DeviceID
-        in: query
-        type: string
       - name: body
         in: body
         required: true
         schema: 
-          properties:
-            Data:
-            # type: object
-              #items: 
-              $ref: '#/definitions/AddDataByVarNameModel'
-            Timestamp:
-              type: integer
+          $ref: '#/definitions/AddDataByDeviceIDModel'
       responses:
         200:
           description: Success
@@ -1167,18 +1208,15 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /data/addDataByDeviceName:
+  /data/testFunc:
     x-swagger-router-controller: dataManage
     post:
       tags:
       - data
       description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName. ApiKey of user is needed in header of request
       # used as the method name of the controller
-      operationId: addDataByDeviceName
+      operationId: testFunc
       parameters:
-      - name: DeviceName
-        in: query
-        type: string
       - name: body
         in: body
         required: true
@@ -1187,7 +1225,7 @@ paths:
             Data:
             # type: object
               #items: 
-              $ref: '#/definitions/AddDataByVarNameModel'
+              $ref: '#/definitions/AddDataByDeviceIDModel'
             Timestamp:
               type: integer
       responses:
@@ -1209,20 +1247,11 @@ paths:
       # used as the method name of the controller
       operationId: addDataBySerialNumber
       parameters:
-      - name: SerialNumber
-        in: query
-        type: string
       - name: body
         in: body
         required: true
         schema: 
-          properties:
-            Data:
-            # type: object
-              #items: 
-              $ref: '#/definitions/AddDataByVarNameModel'
-            Timestamp:
-              type: integer
+          $ref: '#/definitions/AddDataBySerialNumberModel'
       responses:
         200:
           description: Success
@@ -1320,16 +1349,41 @@ definitions:
         type: string
       Value:
         type: string
-  AddDataByVarNameModel:
+      TimeStamp:
+        type: number
+  AddDataBySerialNumberModel:
     type: object
     properties:
-      Data:
-        type: array
-        items:
-          type: object
-          properties:
-            ParameterName:
-              type: string
+      SerialNumber: 
+        type: string
+      Value:
+        type: number
+      DataType:
+        type: string
+      TimeStamp:
+        type: number
+  AddDataByDeviceIDModel:
+    type: object
+    properties:
+      DeviceID: 
+        type: string
+      Value:
+        type: number
+      DataType:
+        type: string
+      TimeStamp:
+        type: number      
+  CreateParameterModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      DeviceID: 
+        type: string
+      Unit: 
+        type: string
+      DataType:
+        type: string
   ParameterModel:
     type: object
     properties:

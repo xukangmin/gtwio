@@ -13,24 +13,33 @@ class Progressbar extends React.Component {
 
   render() {
     const percentage = 66;
-    const color = percentage>60? "rgb(8, 216, 0)" : "red";
+    const barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+    const barStyle = {
+      maxWidth: "200px",
+      margin: "0 50px",
+      textAlign: "c"
+    }
+    const titleStyle = {
+      marginTop: "10px",
+      fontWeight: "bold"
+    }
     return(
-      <div style={{maxWidth: "200px", margin: "0 50px", textAlign: "center"}}>
+      <div style={barStyle}>
         <div className="mx-auto" style={{width: "100px"}}>
           <CircularProgressbar
             percentage={percentage}
             text={`${percentage}%`}
             strokeWidth={4}
             styles={{
-              path: { stroke: color, strokeLinecap: 'butt' },
-              text: { fill: color, fontSize: '30px' }
+              path: { stroke: barColor, strokeLinecap: 'butt' },
+              text: { fill: barColor, fontSize: '30px' }
             }}
           />
         </div>
-        <span style={{marginTop: "10px", fontWeight: "bold"}}>{this.props.type}</span>
+        <span style={titleStyle}>{this.props.type}</span>
       </div>)
-      }
-    }
+  }
+}
 
 function mapStateToProps(state) {
   return({});

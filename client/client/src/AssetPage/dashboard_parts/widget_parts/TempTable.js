@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
+const SingleDevice = (props) => {
+  return(
+    <tr>
+      <th scope="row">{props.data.SerialNumber}</th>
+      <td>{props.data.Data[0].Value}</td>
+    </tr>)
+}
+
 class TempTable extends React.Component {
   constructor(props){
     super(props);
-    this.state={
-
-    }
   }
 
   render(){
@@ -21,18 +26,9 @@ class TempTable extends React.Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>95</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>85</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>75</td>
-              </tr>
+              {this.props.data.map((singleDevice,i) =>
+                  <SingleDevice data={singleDevice} key={i}/>
+              )}
             </tbody>
           </table>
           </div>

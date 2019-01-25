@@ -9,20 +9,19 @@ class TempRadar extends React.Component {
       type: "radar",
       data : [{
         type: 'scatterpolar',
-        r: [39, 28, 8, 7],
-        theta: ['A','B','C', 'D'],
+        r: this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value),
+        theta: this.props.data.map((singleDevice,i) => singleDevice.SerialNumber),
         fill: 'toself'
       }],
       layout : {
         polar: {
           radialaxis: {
             visible: true,
-            range: [0, 50]
+            range: [60, 70]
           }
         },
         showlegend: false
-        }
-
+      }
   }
 
 }

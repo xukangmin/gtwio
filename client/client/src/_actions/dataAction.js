@@ -18,7 +18,7 @@ const loadSVGdata = (svgname) => {
 
         userService.login(username, password)
             .then(
-                user => { 
+                user => {
                     dispatch(success(user));
                     history.push('/');
                 },
@@ -34,7 +34,27 @@ const loadSVGdata = (svgname) => {
     function failure(error) { return { type: gConstants.GET_DATA_FAILURE, error } }
 }
 
+const loadTagdata = (user, asset, tag) => {
+    return dispatch => {
+        dispatch(request());
+        dataServices.loadTagdata(user, asset, tag)
+            .then(
+                tagData => {
+                    dispatch(success(tagData));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_DATA_REQUEST } }
+    function success(data) { return { type: gConstants.GET_DATA_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_DATA_FAILURE, error } }
+}
+
 
 export const dataActions = {
-    loadSVGdata
+    loadSVGdata,
+    loadTagdata
 };

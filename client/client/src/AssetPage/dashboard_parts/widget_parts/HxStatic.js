@@ -23,22 +23,26 @@ class HxStatic extends React.Component {
          Settings: {
            ShellInlet: {
              temperature: "50.7",
-             id: "inletID",
+             name: "ShellInlet",
+             id: "OA123",
              flow: '9.89'
            },
            ShellOutlet: {
              temperature: "62.4",
-             id: "outletID",
-             flow: 'N/A'
+             name: "ShellOutlet",
+             id: "OA123",
+             flow: 'N/A',
            },
            TubeInlet: {
              temperature: "92.8",
-             id: "tinletID",
-             flow: 'N/A'
+             name: "TubeInlet",
+             id: "OA123",
+             flow: 'N/A',
            },
            TubeOutlet: {
              temperature: "88.4",
-             id: "toutletID",
+             name: "TubeOutlet",
+             id: "OA123",
              flow: '9.89'
            }
          }
@@ -51,7 +55,7 @@ class HxStatic extends React.Component {
   HandleText(elem){
     const { Settings } = this.state;
     elem.children[0].innerHTML = Settings[elem.id].temperature;
-    elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag");
+    elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + Settings[elem.id].name);
     document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
     document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
   }

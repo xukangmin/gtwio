@@ -5,6 +5,7 @@
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 819.2 454"
 	 style="enable-background:new 0 0 819.2 1024;" xml:space="preserve">
 <style type="text/css">
+	a:hover{text-decoration: none;}
 	.st0{fill:#FF8080;stroke:#000000;stroke-width:2.6337;stroke-linejoin:round;}
 	.st1{fill:#FF8080;stroke:#000000;stroke-width:2.9606;}
 	.st2{fill:#FFFFFF;stroke:#000000;stroke-width:2.6628;stroke-linejoin:round;}
@@ -13,13 +14,11 @@
 	.st5{fill:#FF8080;stroke:#000000;stroke-width:2.6687;stroke-linejoin:round;}
 	.st6{fill:#0073F9;fill-opacity:0.7647;stroke:#000000;stroke-width:2.662;stroke-linejoin:round;}
 	.st7{fill:#3C94FA;stroke:#000000;stroke-width:2.6622;stroke-linejoin:round;}
-	.st8{}
 	.st9{font-size:54.7578px;}
 	.st10{fill-rule:evenodd;clip-rule:evenodd;fill:#3C94FA;}
 	.st11{fill-rule:evenodd;clip-rule:evenodd;fill:#FF8080;}
 	.st12{font-size:11.6586px;}
 	.st13{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;stroke:#FFFFFF;}
-
 	.st14{opacity:0.847;fill:none;stroke:#0000FF;stroke-width:2.5739;stroke-linecap:round;stroke-dasharray:2.5739,7.7216;enable-background:new    ;}
 	.st15{fill:white;font-size:15.5449px;}
 	.st16{font-size:13.6018px;}
@@ -31,7 +30,6 @@
 	.st22{fill:none;stroke:#FFFFFF;stroke-width:1.6908;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6908,5.0725;}
 	.st23{opacity:0.44;fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}
 	.st24{fill:#FFFFFF;}
-	.st25{}
 	.st26{fill:none;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}
 	.st27{font-size:13.8881px;}
 </style>

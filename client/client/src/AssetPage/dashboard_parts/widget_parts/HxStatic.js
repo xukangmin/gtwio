@@ -72,7 +72,8 @@ class HxStatic extends React.Component {
       textAlign: "center"
     }
     const LastUpdate_style={
-      float: "right"
+      float: "right",
+      marginTop: "20px"
     }
 
     if (!this.user)
@@ -80,6 +81,7 @@ class HxStatic extends React.Component {
       return (<Redirect to='/login' />);
     }
     else{
+      const now = new Date().toString();
       return (
         <div>
           {AssetData ?
@@ -101,7 +103,7 @@ class HxStatic extends React.Component {
                   <Progressbar type="Efficiency" percentage="54"/>
                 </Row>
                 <div style={LastUpdate_style}>
-                  <span>Last updated:</span>
+                  <span>Last updated: {now}</span>
                 </div>
               </div>
             </div>

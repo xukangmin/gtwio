@@ -13,7 +13,7 @@ var functions = {
   addDataByDeviceID: addDataByDeviceID,
   getDataByParameterID: getDataByParameterID,
   getDataBySerialNumber: getDataBySerialNumber,
-  getDataByTag: getDataByDeviceTag,
+  getDataByTag: getDataByTag,
   getDataByAssetID: getDataByAssetID,
   getDataByDeviceID: getDataByDeviceID,
   testFunc: testFunc
@@ -141,6 +141,28 @@ function _getParameter(paraobj) {
   );
 }
 
+function _getAllParameterByDeviceIDPromise(deviceobj) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({DeviceID: deviceobj.DeviceID}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          Promise.all(data.Parameters.map(_getParameter))
+            .then(ret => {
+              resolve(ret);
+            })
+            .catch(err => {
+              reject(err);
+            })
+        }
+
+      });
+    }
+  );
+
+}
+
 function _getAllParameterByDeviceID(deviceid, callback) {
   Device.findOne({DeviceID: deviceid}, function(err, data) {
     if (err) {
@@ -174,6 +196,91 @@ function _getAllParameterBySerialNumber(sn, callback) {
     }
 
   });
+}
+
+
+function _getAllParameterByAssetIDPromise(assetid) {
+    return new Promise(
+        (resolve, reject) => {
+          Asset.findOne({AssetID: assetid}, function(err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              Promise.all(data.Parameters.map(_getParameter))
+                .then(ret => {
+                  resolve(ret);
+                })
+                .catch(err => {
+                  reject(err);
+                })
+            }
+          });
+        }
+    );
+}
+
+function _getAllDeviceByAssetID(assetid) {
+    return new Promise(
+        (resolve, reject) => {
+          Asset.findOne({AssetID: assetid}, function(err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data.Devices);
+            }
+          });
+        }
+    );
+}
+
+function _getAllParameterByTagAndType(assetid, tag, type, sTS, eTS, callback) {
+
+  var para = [];
+  console.log("start");
+  console.log(assetid);
+  console.log(tag);
+  _getAllParameterByAssetIDPromise(assetid)
+    .then(
+      data =>
+      {
+        para = para.concat(data);
+        console.log(para);
+        return _getAllDeviceByAssetID(assetid);
+      })
+    .then(
+      devicelist => {
+        console.log(devicelist);
+        return Promise.all(devicelist.map(_getAllParameterByDeviceIDPromise));
+      }
+    )
+    .then(
+      ret => {
+        para = para.concat(ret);
+
+        var paralist = [];
+
+        for (let i in para) {
+          for (let j in para[i]) {
+            paralist = paralist.concat(para[i][j]);
+          }
+        }
+
+        paralist = paralist.filter(item => (item.Tag === tag || item.Tag === tag + "/" + type));
+
+
+        return Promise.all(paralist.map(item => _getDataByParameterID(item, sTS, eTS) ));
+      }
+    )
+    .then(
+      ret => {
+        console.log(ret);
+      }
+    )
+    .catch(
+      err => {
+        console.log(err);
+      }
+    )
 }
 
 function _getParameterByDeviceID(deviceid) {
@@ -384,7 +491,17 @@ function getDataBySerialNumber(req, res) {
 
 
 }
-function getDataByDeviceTag(req, res) {
+function getDataByTag(req, res) {
+  var tag = req.swagger.params.Tag.value;
+  var sTS = req.swagger.params.StartTimeStamp.value;
+  var eTS = req.swagger.params.EndTimeStamp.value;
+
+  if (tag && sTS && eTS) {
+    _getAllParameterByTagAndType('ASSETID0', 'ShellInlet','Temperature', sTS, eTS, null);
+  } else {
+    var msg = "SerialNumber or StartTimeStamp or EndTimeStamp missing";
+    shareUtil.SendInvalidInput(res, msg);
+  }
 
 }
 

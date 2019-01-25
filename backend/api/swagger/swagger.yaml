@@ -1114,6 +1114,44 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /data/getDataByTag:
+    x-swagger-router-controller: dataManage
+    get:
+      tags:
+      - data
+      description:  get multiple data by tag
+      # used as the method name of the controller
+      operationId: getDataByTag
+      parameters:
+      - name: Tag
+        in: query
+        required: true
+        type: string
+      - name: StartTimeStamp
+        in: query
+        required: true
+        type: integer
+      - name: EndTimeStamp
+        in: query
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/DataModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /data/addDataByParameterID:
     x-swagger-router-controller: dataManage
     post:

@@ -5,6 +5,7 @@ const Data = require('../db/data.js');
 const Device = require('../db/device.js');
 const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
+const math = require('mathjs');
 //const Promise = require('bluebird');
 
 var functions = {
@@ -256,6 +257,7 @@ function _cleanDeviceObj(deviceobj) {
 return deviceobj;
 }
 
+
 function _getRawDataByType(deviceobj, type, sTS, eTS) {
     return new Promise(
       (resolve, reject) => {
@@ -279,6 +281,19 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
                   let dev = deviceobj.toObject();
                   dev = _cleanDeviceObj(dev);
                   dev.Data = data;
+                  var dataarr = data.map(item => item.Value);
+                  var stat = {};
+                  var sum = dataarr.reduce((total, p) => total + p, 0);
+                  var avg = sum / dataarr.length;
+                  var min = dataarr.reduce((min, p) => Math.min(min,p));
+                  var max = dataarr.reduce((max, p) => Math.max(max,p));
+                  var stdev = math.std(dataarr);
+                  stat.Sum = sum;
+                  stat.Avg = avg;
+                  stat.Min = min;
+                  stat.Max = max;
+                  stat.STDEV = stdev;
+                  dev.DataStatistics = stat;
                   resolve(dev);
               }
             )
@@ -302,7 +317,6 @@ function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
       devicelist =>
       {
         devicelist = devicelist.filter(item => item.Tag === tag);
-        console.log(devicelist);
         return Promise.all(devicelist.map(item => _getRawDataByType(item, type, sTS, eTS)));
       }
     )
@@ -313,7 +327,6 @@ function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
     )
     .catch(
       err => {
-        console.log(err);
         callback(err, null);
       }
     )

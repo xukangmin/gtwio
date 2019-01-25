@@ -5,32 +5,36 @@ import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { TempRadar } from './TempRadar';
 import { TempPlot } from './TempPlot';
 import { TempTable } from './TempTable';
-import { assetActions} from '../../../_actions/assetAction';
+import { assetActions } from '../../../_actions/assetAction';
 import Loader from '../../../_components/loader';
+import TagData from '../../../data/GetDataByTag.json'
 
 class HxTag extends React.Component {
   constructor(props){
     super(props);
+    this.state={
+      data: TagData
+    }
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
-}
+  }
 
   render(){
-    const { assetData } = this.props;
+    const { AssetData } = this.props;
     return(
       <div>
-        {assetData ?
+        {AssetData ?
           <div>
             <Breadcrumb>
               <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-              <BreadcrumbItem><a href={"/asset/"+assetData.AssetID+"/dashboard"}>{assetData.DisplayName}</a></BreadcrumbItem>
+              <BreadcrumbItem><a href={"/asset/"+AssetData.AssetID+"/dashboard"}>{AssetData.DisplayName}</a></BreadcrumbItem>
               <BreadcrumbItem><a href="#">Tag: </a></BreadcrumbItem>
             </Breadcrumb>
             <Row>
-              <Col><TempPlot/></Col>
-              <Col><TempRadar/></Col>
+              <Col><TempPlot data={this.state.data}/></Col>
+              <Col><TempRadar data={this.state.data}/></Col>
             </Row>
             <Row>
-              <Col><TempTable/></Col>
+              <Col><TempTable data={this.state.data}/></Col>
               <Col></Col>
             </Row>
           </div>
@@ -45,7 +49,7 @@ class HxTag extends React.Component {
 function mapStateToProps(state) {
   const { data } = state.asset;
   return {
-      assetData : data
+      AssetData : data
   };
 }
 

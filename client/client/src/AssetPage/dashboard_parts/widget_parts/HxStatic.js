@@ -46,7 +46,6 @@ class HxStatic extends React.Component {
 
     this.HandleText = this.HandleText.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
-    // this.assets = JSON.parse(localStorage.getItem('assets'));
   }
 
   HandleText(elem){
@@ -59,7 +58,18 @@ class HxStatic extends React.Component {
 
   render() {
     const { AssetID } = this.state;
-    const { assetData } = this.props;
+    const { AssetData } = this.props;
+    const Hx_style = {
+      maxWidth: "1200px",
+      maxHeight: "560px"
+    }
+    const Progressbars_style={
+      marginTop: "-150px"
+    }
+    const LastUpdate_style={
+      float: "right"
+    }
+    
     if (!this.user)
     {
       return (<Redirect to='/login' />);
@@ -67,30 +77,28 @@ class HxStatic extends React.Component {
     else{
       return (
         <div>
-          {assetData ?
+          {AssetData ?
             <div className="container-fluid">
               <div>
                 <Breadcrumb>
                   <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                  <BreadcrumbItem><a href="#">{assetData.DisplayName}</a></BreadcrumbItem>
+                  <BreadcrumbItem><a href="#">{AssetData.DisplayName}</a></BreadcrumbItem>
                 </Breadcrumb>
               </div>
-              <div style={{maxWidth: "1200px", maxHeight: "560px"}} className="mx-auto">
+              <div style={Hx_style} className="mx-auto">
                 <Samy svgXML={svgcontents} >
                     {Object.keys(this.state.Settings).map((item,i) =>
                       <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
                     )}
                 </Samy>
-                <Row style={{marginTop: "-150px"}}>
+                <Row style={Progressbars_style}>
                   <Progressbar type="Heat Transfer Rate"/>
                   <Progressbar type="Efficiency"/>
                 </Row>
-                <div style={{float:"right"}}>
+                <div style={LastUpdate_style}>
                   <span>Last updated:</span>
                 </div>
               </div>
-
-
             </div>
             :
             <Loader />}
@@ -103,7 +111,7 @@ class HxStatic extends React.Component {
 function mapStateToProps(state) {
   const { data } = state.asset;
   return {
-      assetData : data
+      AssetData : data
   };
 }
 

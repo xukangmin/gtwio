@@ -10,7 +10,6 @@ import HeaderNav from '../_components/headerNav'
 class AssetReport extends React.Component {
   constructor(props) {
     super(props);
-    console.log("test");
     this.state = {
         AssetID : props.match.params.assetID
     }
@@ -18,7 +17,7 @@ class AssetReport extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
     // data will update every 1 minute on this page
-    
+
 
   }
 

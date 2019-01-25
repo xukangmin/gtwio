@@ -64,12 +64,13 @@ class HxStatic extends React.Component {
       maxHeight: "560px"
     }
     const Progressbars_style={
-      marginTop: "-150px"
+      marginTop: "-150px",
+      textAlign: "center"
     }
     const LastUpdate_style={
       float: "right"
     }
-    
+
     if (!this.user)
     {
       return (<Redirect to='/login' />);
@@ -92,8 +93,8 @@ class HxStatic extends React.Component {
                     )}
                 </Samy>
                 <Row style={Progressbars_style}>
-                  <Progressbar type="Heat Transfer Rate"/>
-                  <Progressbar type="Efficiency"/>
+                  <Progressbar type="Heat Transfer Rate" percentage="77"/>
+                  <Progressbar type="Efficiency" percentage="54"/>
                 </Row>
                 <div style={LastUpdate_style}>
                   <span>Last updated:</span>

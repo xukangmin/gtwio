@@ -12,7 +12,7 @@ class Progressbar extends React.Component {
   }
 
   render() {
-    const percentage = 66;
+    const percentage = this.props.percentage;
     const barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
     const barStyle = {
       maxWidth: "200px",

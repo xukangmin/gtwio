@@ -74,6 +74,20 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
   });
 }
 
+function _getDeviceInfoByDeviceID(deviceobj) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({DeviceID: deviceobj.DeviceID}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    }
+  );
+}
+
 function _addDataByParameterIDPromise(para, value, timestamp) {
   return new Promise(
       (resolve, reject) => {
@@ -233,6 +247,78 @@ function _getAllDeviceByAssetID(assetid) {
     );
 }
 
+function _cleanDeviceObj(deviceobj) {
+  for(var key in deviceobj){
+    if (!(key == "SerialNumber" || key == "DeviceID" || key == "DisplayName" || key == "Angle" || key == "Tag")){
+      delete deviceobj[key];
+    }
+  }
+return deviceobj;
+}
+
+function _getRawDataByType(deviceobj, type, sTS, eTS) {
+    return new Promise(
+      (resolve, reject) => {
+          Promise.all(deviceobj.Parameters.map(_getParameter))
+            .then(
+              ret => {
+                var parameter = null;
+                ret = ret.filter(item => item.Type === type);
+                if (ret.length === 1)
+                {
+                  parameter = ret[0];
+                }
+                else {
+                  reject('parameter type not unique');
+                }
+                return _getDataByParameterID(parameter, sTS, eTS);
+              }
+            )
+            .then(
+              data => {
+                  let dev = deviceobj.toObject();
+                  dev = _cleanDeviceObj(dev);
+                  dev.Data = data;
+                  resolve(dev);
+              }
+            )
+            .catch(
+              err => {
+                reject(err);
+              }
+            )
+      }
+    );
+}
+
+function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
+  _getAllDeviceByAssetID(assetid)
+    .then(
+      devicelist => {
+        return Promise.all(devicelist.map(_getDeviceInfoByDeviceID));
+      }
+    )
+    .then(
+      devicelist =>
+      {
+        devicelist = devicelist.filter(item => item.Tag === tag);
+        console.log(devicelist);
+        return Promise.all(devicelist.map(item => _getRawDataByType(item, type, sTS, eTS)));
+      }
+    )
+    .then(
+      ret => {
+        callback(null, ret);
+      }
+    )
+    .catch(
+      err => {
+        console.log(err);
+        callback(err, null);
+      }
+    )
+}
+
 function _getAllParameterByTagAndType(assetid, tag, type, sTS, eTS, callback) {
 
   var para = [];
@@ -249,7 +335,6 @@ function _getAllParameterByTagAndType(assetid, tag, type, sTS, eTS, callback) {
       })
     .then(
       devicelist => {
-        console.log(devicelist);
         return Promise.all(devicelist.map(_getAllParameterByDeviceIDPromise));
       }
     )
@@ -274,11 +359,12 @@ function _getAllParameterByTagAndType(assetid, tag, type, sTS, eTS, callback) {
     .then(
       ret => {
         console.log(ret);
+        callback(null, ret);
       }
     )
     .catch(
       err => {
-        console.log(err);
+        callback(err, null);
       }
     )
 }
@@ -426,11 +512,22 @@ function _getSingleParameterInternal(index, parameters, parameterout, callback) 
   }
 }
 
+function _cleanData(dataobj) {
+  for(var key in dataobj){
+  if (!(key == "TimeStamp" || key == "Value")){
+    //console.log("delete key " + key);
+    delete dataobj[key];
+   }
+  }
+  return dataobj;
+}
+
 function _getDataByParameterID(para, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
-      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}}, function(err, data) {
+      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value -_id', function(err, data) {
         if (err) {
+          console.log(err);
           reject(err);
         } else {
           resolve(data);
@@ -492,14 +589,21 @@ function getDataBySerialNumber(req, res) {
 
 }
 function getDataByTag(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
   var tag = req.swagger.params.Tag.value;
   var sTS = req.swagger.params.StartTimeStamp.value;
   var eTS = req.swagger.params.EndTimeStamp.value;
-
-  if (tag && sTS && eTS) {
-    _getAllParameterByTagAndType('ASSETID0', 'ShellInlet','Temperature', sTS, eTS, null);
+  var type = req.swagger.params.Type.value;
+  if (assetid && tag && type && sTS && eTS) {
+    _getRawDataByTagAndType(assetid, tag,type, sTS, eTS, function(err, data) {
+      if (err) {
+        shareUtil.SendInternalErr(res,  "tag search error:" + JSON.stringify(err, null, 2));
+      } else {
+        shareUtil.SendSuccessWithData(res, data);
+      }
+    });
   } else {
-    var msg = "SerialNumber or StartTimeStamp or EndTimeStamp missing";
+    var msg = "assetid or tag or type or StartTimeStamp or EndTimeStamp missing";
     shareUtil.SendInvalidInput(res, msg);
   }
 

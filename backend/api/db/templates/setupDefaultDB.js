@@ -136,7 +136,7 @@ function createDashboard(assetid) {
   });
 }
 
-function createTempSensor(assetid, index, tagName, sn) {
+function createTempSensor(assetid, index, tagName, sn, angle) {
 
     let device = new Device();
 
@@ -145,6 +145,7 @@ function createTempSensor(assetid, index, tagName, sn) {
     device.DisplayName = 'Temperature Sensor ' + index.toString();
     device.Tag = tagName;
     device.SerialNumber = sn;
+    device.Angle = angle;
 
     device.save(err => {
       if (err)
@@ -212,22 +213,22 @@ function createDemoAccount() {
   createUser(userid);
   createAsset(userid, assetid);
   createDashboard(assetid);
-  createTempSensor(assetid, 0, "ShellInlet", "02A001");
-  createTempSensor(assetid, 1, "ShellInlet", "02A002");
-  createTempSensor(assetid, 2, "ShellInlet", "02A003");
-  createTempSensor(assetid, 3, "ShellInlet", "02A004");
-  createTempSensor(assetid, 4, "ShellOutlet", "02A005");
-  createTempSensor(assetid, 5, "ShellOutlet", "02A006");
-  createTempSensor(assetid, 6, "ShellOutlet", "02A007");
-  createTempSensor(assetid, 7, "ShellOutlet", "02A008");
-  createTempSensor(assetid, 8, "TubeInlet", "02A009");
-  createTempSensor(assetid, 9, "TubeInlet", "02A010");
-  createTempSensor(assetid, 10, "TubeInlet", "02A011");
-  createTempSensor(assetid, 11, "TubeInlet", "02A012");
-  createTempSensor(assetid, 12, "TubeOutlet", "02A013");
-  createTempSensor(assetid, 13, "TubeOutlet", "02A014");
-  createTempSensor(assetid, 14, "TubeOutlet", "02A015");
-  createTempSensor(assetid, 15, "TubeOutlet", "02A016");
+  createTempSensor(assetid, 0, "ShellInlet", "02A001", 0);
+  createTempSensor(assetid, 1, "ShellInlet", "02A002", 90);
+  createTempSensor(assetid, 2, "ShellInlet", "02A003", 180);
+  createTempSensor(assetid, 3, "ShellInlet", "02A004", 270);
+  createTempSensor(assetid, 4, "ShellOutlet", "02A005", 0);
+  createTempSensor(assetid, 5, "ShellOutlet", "02A006", 90);
+  createTempSensor(assetid, 6, "ShellOutlet", "02A007", 180);
+  createTempSensor(assetid, 7, "ShellOutlet", "02A008", 270);
+  createTempSensor(assetid, 8, "TubeInlet", "02A009", 0);
+  createTempSensor(assetid, 9, "TubeInlet", "02A010", 90);
+  createTempSensor(assetid, 10, "TubeInlet", "02A011", 180);
+  createTempSensor(assetid, 11, "TubeInlet", "02A012", 270);
+  createTempSensor(assetid, 12, "TubeOutlet", "02A013", 0);
+  createTempSensor(assetid, 13, "TubeOutlet", "02A014", 90);
+  createTempSensor(assetid, 14, "TubeOutlet", "02A015", 180);
+  createTempSensor(assetid, 15, "TubeOutlet", "02A016", 270);
   //createTempSensor(assetid,0,3,'ShellInlet');
   //createTempSensor(assetid,4,7,'ShellOutlet');
   //createTempSensor(assetid,8,11,'TubeInlet');

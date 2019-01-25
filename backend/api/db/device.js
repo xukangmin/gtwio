@@ -11,6 +11,7 @@ const DeviceSchema = new Schema(
     SerialNumber: String,
     MetaInfo: Object,
     Tag: String,
+    Angle: Number,
     Parameters: [{ParameterID: String}]
   },
   { timestamps: true }

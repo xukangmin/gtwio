@@ -1123,7 +1123,15 @@ paths:
       # used as the method name of the controller
       operationId: getDataByTag
       parameters:
+      - name: AssetID
+        in: query
+        required: true
+        type: string
       - name: Tag
+        in: query
+        required: true
+        type: string
+      - name: Type
         in: query
         required: true
         type: string

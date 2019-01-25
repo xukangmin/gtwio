@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 
 class TempPlot extends React.Component {
   constructor(props){
-
     super(props);
-    console.log(this.props.data.length)
-
 
     let temp = []
     for (var i=0; i<4; i++){
@@ -22,8 +19,6 @@ class TempPlot extends React.Component {
     this.state={
       data: temp
     }
-
-
   }
 
   plot() {
@@ -34,10 +29,8 @@ class TempPlot extends React.Component {
   }
 
   render(){
-    console.log(this.state.data)
     return(
-      <div id="plot">
-          </div>
+      <div id="plot"></div>
     );
   }
 }

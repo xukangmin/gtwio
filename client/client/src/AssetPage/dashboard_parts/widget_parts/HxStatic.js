@@ -73,7 +73,8 @@ class HxStatic extends React.Component {
     }
     const LastUpdate_style={
       float: "right",
-      marginTop: "20px"
+      marginTop: "40px",
+      fontSize: "0.9em"
     }
 
     if (!this.user)

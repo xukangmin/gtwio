@@ -17,13 +17,13 @@ class TempRadar extends React.Component {
         polar: {
           radialaxis: {
             visible: true,
-            range: [60, 70]
+            range: [Math.round(Math.min(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value))/10-1)*10, Math.round(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value))/10)*10]
           }
         },
         showlegend: false
       }
   }
-
+  console.log()
 }
 
 plot() {

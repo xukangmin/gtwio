@@ -14,30 +14,16 @@ const loadSVGdata = (svgname) => {
                     dispatch(failure(error));
                 }
             );
-    /*     dispatch(request({ username }));
-
-        userService.login(username, password)
-            .then(
-                user => {
-                    dispatch(success(user));
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error));
-                    dispatch(alertActions.error(error));
-                }
-            );*/
     };
-
     function request() { return { type: gConstants.GET_DATA_REQUEST } }
     function success(data) { return { type: gConstants.GET_DATA_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_DATA_FAILURE, error } }
 }
 
-const loadTagdata = (user, asset, tag) => {
+const getSingleTagData = (user, asset, tag, t1, t2) => {
     return dispatch => {
         dispatch(request());
-        dataServices.loadTagdata(user, asset, tag)
+        dataServices.getSingleTagData(user, asset, tag, t1, t2)
             .then(
                 tagData => {
                     dispatch(success(tagData));
@@ -47,14 +33,12 @@ const loadTagdata = (user, asset, tag) => {
                 }
             );
     };
-
     function request() { return { type: gConstants.GET_DATA_REQUEST } }
     function success(data) { return { type: gConstants.GET_DATA_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_DATA_FAILURE, error } }
 }
 
-
 export const dataActions = {
     loadSVGdata,
-    loadTagdata
+    getSingleTagData
 };

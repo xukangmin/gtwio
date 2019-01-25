@@ -13,7 +13,7 @@ class HxTag extends React.Component {
   constructor(props){
     super(props);
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
-    this.props.dispatch(dataActions.loadTagdata(JSON.parse(localStorage.getItem('user')),props.match.params.assetID, props.match.params.tagID));
+    this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID, props.match.params.tagID, Date.now()-600000, Date.now()));
   }
 
   render(){
@@ -29,7 +29,7 @@ class HxTag extends React.Component {
               <BreadcrumbItem><a href="#">{this.props.match.params.tagID}</a></BreadcrumbItem>
             </Breadcrumb>
             <Row>
-              <Col><TempPlot data={DeviceData}/></Col>
+              <Col md="8"><TempPlot data={DeviceData}/></Col>
               <Col><TempRadar data={DeviceData}/></Col>
             </Row>
             <Row>

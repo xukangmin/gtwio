@@ -22,13 +22,13 @@ const loadSVGdata = (svgname) => {
         });
 }
 
-const loadTagdata = (user, assetid, tag) => {
+const getSingleTagData = (user, assetid, tag, t1, t2) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(gConstants.API_ROOT + '/data/getDataByTag?AssetID=' + assetid +'&Tag=' + tag + '&Type=Temperature&StartTimeStamp=1548431295000&EndTimeStamp=1548432295000', requestOptions)
+    return fetch(gConstants.API_ROOT + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&Type=Temperature&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -47,5 +47,5 @@ const loadTagdata = (user, assetid, tag) => {
 
 export const dataServices = {
     loadSVGdata,
-    loadTagdata
+    getSingleTagData
 };

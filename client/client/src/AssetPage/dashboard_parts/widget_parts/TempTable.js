@@ -6,7 +6,11 @@ const SingleDevice = (props) => {
   return(
     <tr>
       <th scope="row">{props.data.SerialNumber}</th>
-      <td>{props.data.Data[0].Value}</td>
+      <td>{props.data.Data[0].Value.toFixed(2)}</td>
+      <td>{props.data.DataStatistics.Min.toFixed(2)}</td>
+      <td>{props.data.DataStatistics.Max.toFixed(2)}</td>
+      <td>{props.data.DataStatistics.Avg.toFixed(2)}</td>
+      <td>{props.data.DataStatistics.STDEV.toFixed(2)}</td>
     </tr>)
 }
 
@@ -22,7 +26,11 @@ class TempTable extends React.Component {
             <thead>
               <tr>
                 <th>Device</th>
-                <th>Temperature</th>
+                <th>Current</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Average</th>
+                <th>STDEV</th>
               </tr>
             </thead>
             <tbody>

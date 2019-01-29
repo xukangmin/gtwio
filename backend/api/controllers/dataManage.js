@@ -5,6 +5,7 @@ const Data = require('../db/data.js');
 const Device = require('../db/device.js');
 const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
+const math = require('mathjs');
 //const Promise = require('bluebird');
 
 var functions = {
@@ -62,14 +63,142 @@ function testFunc(req, res) {
       });
 
 }
+function _getSingleDataPoint(paraid, currentTimeStamp) {
+    return new Promise(
+      (resolve, reject) => {
+        // get previous 10 minutes data
+        Data.find({ParameterID: paraid,  TimeStamp: {$gte: currentTimeStamp - 600000, $lte: currentTimeStamp}}, 'Value TimeStamp -_id', function(err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+
+        });
+      }
+    );
+}
+
+function _perform_calculation(para_arr, data_arr, equation) {
+  return new Promise(
+    (resolve, reject) => {
+      console.log(para_arr);
+      console.log(data_arr);
+      var new_eval = equation.replace('Avg', 'math.mean');
+      for(var i = 0; i < para_arr.length; i++) {
+        new_eval = new_eval.replace(para_arr[i], data_arr[i].toString());
+      }
+
+      var result = eval(new_eval);
+      console.log(result);
+      resolve(result);
+    }
+  );
+}
+
+function trigger_single_parameter_calculation(paraid) {
+  console.log("trigger paraid=" + paraid);
+
+  Parameter.findOne({ParameterID: paraid}, function(err,data){
+      if (!err) {
+          var currentTimeStamp = Math.floor((new Date).getTime());
+          // do calculation
+          // first gett all data;
+          if (data) {
+            if (data.Require) {
+              if (data.Require.length > 0) {
+
+                Promise.all(data.Require.map(item => _getSingleDataPoint(item, currentTimeStamp)))
+                  .then(
+                    ret => {
+                      var isValid = true;
+                      for(var i in ret)
+                      {
+                         if (ret[i].length === 0) {
+                           isValid = false;
+                         }
+                      }
+                      // all data must exist
+                      var dataarr = [];
+                      if (isValid) {
+                        for(var i in ret)
+                        {
+                          dataarr.push(ret[i][0].Value);
+                        }
+                        return _perform_calculation(data.Require, dataarr, data.Equation)
+                      }
+
+                    }
+                  )
+                  .then(
+                    ret => {
+                      if (ret) {
+                        console.log(ret);
+                        _addDataByParameterID(paraid, ret, currentTimeStamp, function(err) {
+                            if (err) {
+                              console.log(err);
+                            }
+                        })
+                      }
+                    }
+                  )
+                  .catch(
+                    err => {
+                      console.log(err);
+
+                    }
+                  )
+              }
+            }
+            /*
+            if (data.RequiredBy)
+            {
+              for (var i in data.RequiredBy) {
+                // trigger calculation for each para id
+                trigger_single_parameter_calculation(data.RequiredBy[i]);
+              }
+            }*/
+          }
+
+                    //after calculation, trigger other parameters
+
+
+      }
+  });
+}
+
+function trigger_all_parameters(paraID) {
+  Parameter.findOne({ParameterID: paraID}, function(err, data) {
+    if (err)
+    {
+      console.log(err);
+    } else {
+      if (data) {
+        if (data.RequiredBy) {
+          if (data.RequiredBy.length > 0) {
+            for (var i = 0; i < data.RequiredBy.length; i++) {
+              trigger_single_parameter_calculation(data.RequiredBy[i]);
+            }
+          }
+        }
+      }
+
+
+    }
+  });
+}
 
 function _addDataByParameterID(paraID, value, timestamp, callback) {
   let data = new Data();
   data.ParameterID = paraID;
   data.Value = value;
   data.TimeStamp = timestamp;
-
+  console.log("_addDataByParameterID");
+  console.log(paraID);
+  console.log(value);
   data.save(err => {
+    // trigger calculation
+    trigger_all_parameters(paraID);
     callback(err);
   });
 }
@@ -91,16 +220,10 @@ function _getDeviceInfoByDeviceID(deviceobj) {
 function _addDataByParameterIDPromise(para, value, timestamp) {
   return new Promise(
       (resolve, reject) => {
-        let data = new Data();
-        data.ParameterID = para.ParameterID;
-        data.Value = value;
-        data.TimeStamp = timestamp;
-
-        data.save(err => {
+        _addDataByParameterID(para.ParameterID, value, timestamp, function(err){
           if (err) {
             reject(err);
-          }
-          else {
+          } else {
             resolve();
           }
         });
@@ -256,6 +379,7 @@ function _cleanDeviceObj(deviceobj) {
 return deviceobj;
 }
 
+
 function _getRawDataByType(deviceobj, type, sTS, eTS) {
     return new Promise(
       (resolve, reject) => {
@@ -279,6 +403,19 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
                   let dev = deviceobj.toObject();
                   dev = _cleanDeviceObj(dev);
                   dev.Data = data;
+                  var dataarr = data.map(item => item.Value);
+                  var stat = {};
+                  var sum = dataarr.reduce((total, p) => total + p, 0);
+                  var avg = sum / dataarr.length;
+                  var min = dataarr.reduce((min, p) => Math.min(min,p));
+                  var max = dataarr.reduce((max, p) => Math.max(max,p));
+                  var stdev = math.std(dataarr);
+                  stat.Sum = sum;
+                  stat.Avg = avg;
+                  stat.Min = min;
+                  stat.Max = max;
+                  stat.STDEV = stdev;
+                  dev.DataStatistics = stat;
                   resolve(dev);
               }
             )
@@ -302,7 +439,6 @@ function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
       devicelist =>
       {
         devicelist = devicelist.filter(item => item.Tag === tag);
-        console.log(devicelist);
         return Promise.all(devicelist.map(item => _getRawDataByType(item, type, sTS, eTS)));
       }
     )
@@ -313,7 +449,6 @@ function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
     )
     .catch(
       err => {
-        console.log(err);
         callback(err, null);
       }
     )
@@ -432,7 +567,7 @@ function addDataByDeviceID(req, res)  {
         {
           timestamp = dataobj.TimeStamp;
         } else {
-          timestamp = timestamp = Math.floor((new Date).getTime());
+          timestamp = Math.floor((new Date).getTime());
         }
         data = data.filter(item => item.Type === dataobj.DataType);
         if (data.length > 0)
@@ -473,7 +608,7 @@ function addDataBySerialNumber(req, res) {
         {
           timestamp = dataobj.TimeStamp;
         } else {
-          timestamp = timestamp = Math.floor((new Date).getTime());
+          timestamp = Math.floor((new Date).getTime());
         }
         data = data.filter(item => item.Type === dataobj.DataType);
         if (data.length > 0)

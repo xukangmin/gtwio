@@ -14,8 +14,6 @@ var functions = {
   createParameter: createParameter,
   updateParameter: updateParameter,
   deleteParameter: deleteParameter,
-  addParameterToDevice: addParameterToDevice,  // automatically add to asset
-  removeParameterFromDevice: removeParameterFromDevice, // automatically remove from asset
   getParameterByAsset: getParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
   getParameterAttributes: getParameterAttributes
@@ -28,8 +26,8 @@ for (var key in functions) {
 function createParameter(req, res) {
   var paraobj = req.body;
 
-  if (paraobj.AssetID && paraobj.DataType && paraobj.Tag) {
-    _addParameter(paraobj.AssetID, null, paraobj.DataType, function(err) {
+  if (paraobj.AssetID) {
+    _addParameter(paraobj.AssetID, null, paraobj, function(err) {
       if (err)
       {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
@@ -38,8 +36,8 @@ function createParameter(req, res) {
           shareUtil.SendSuccess(res);
       }
     });
-  } else if (paraobj.DeviceID && paraobj.DataType) {
-    _addParameter(null, paraobj.DeviceID, paraobj.DataType, function(err) {
+  } else if (paraobj.DeviceID) {
+    _addParameter(null, paraobj.DeviceID, paraobj, function(err) {
       if (err)
       {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
@@ -87,77 +85,77 @@ function deleteParameter(req, res) {
   var deviceID = req.swagger.params.DeviceID.value;
 
  if (paraID && assetID) {
-
+    // remove parameter in asset
+    _removeParameter(assetID, null, paraID, function(err) {
+      if (err) {
+        shareUtil.SendInternalErr(res);
+      } else {
+        shareUtil.SendSuccess(res);
+      }
+    });
  } else if (paraID && deviceID) {
-
+   _removeParameter(null, deviceID, paraID, function(err) {
+     if (err) {
+       shareUtil.SendInternalErr(res);
+     } else {
+       shareUtil.SendSuccess(res);
+     }
+   });
  } else {
    var msg = "parID or assetid or deviceid missing";
    shareUtil.SendInvalidInput(res, msg);
  }
 
-    if (parID) {
-      // remove in user table and asset
-      Parameter.deleteOne({DeviceID: parID}, function(err) {
-        if (err)
-        {
-          var msg = "Error:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res);
-        }
-        else{
-          shareUtil.SendSuccess(res);
-        }
-      });
-    } else {
-      var msg = "parID missing";
-      shareUtil.SendInvalidInput(res, msg);
-    }
 }
 
 function _removeParameter(assetID, deviceID, paraID, callback) {
 
-  Device.findOneAndUpdate({DeviceID: deviceID},
-      {
-        $pull:  {
-          Parameters: {ParameterID: paraID}
-        }
-      },
-    function(err, data) {
+  Parameter.deleteOne({ParameterID: paraID}, function(err) {
     if (err)
     {
       callback(err);
     }
-    else {
-
-      Asset.findOneAndUpdate({AssetID: assetID},
-          {
-            $pull:  {
-              Parameters: {ParameterID: paraID}
+    else{
+      if (deviceID) {
+        Device.findOneAndUpdate({DeviceID: deviceID},
+            {
+              $pull:  {
+                Parameters: {ParameterID: paraID}
+              }
+            },
+          function(err, data) {
+            if (err)
+            {
+              callback(err);
+            } else {
+              callback(null);
             }
-          },
-        function(err, data) {
-        if (err)
-        {
-          callback(err);
-        }
-        else {
-            Parameter.deleteOne({ParameterID: paraID}, function(err) {
-              if (err)
-              {
-                callback(err);
+          });
+      } else if (assetID) {
+        Asset.findOneAndUpdate({AssetID: assetID},
+            {
+              $pull:  {
+                Parameters: {ParameterID: paraID}
               }
-              else{
-                callback(null);
-              }
-            });
-        }
-      });
-
+            },
+          function(err, data) {
+            if (err)
+            {
+              callback(err);
+            } else {
+              callback(null);
+            }
+          });
+      } else {
+        callback('please input deviceID or assetID');
+      }
     }
   });
+
 }
 
 
-function _addParameter(assetID, deviceID, datatype, callback) {
+function _addParameter(assetID, deviceID, paraobj, callback) {
 
   var uuidv1 = require('uuid/v1');
   var crypto = require('crypto');
@@ -167,7 +165,10 @@ function _addParameter(assetID, deviceID, datatype, callback) {
   para.ParameterID = uuidv1();
   para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
   para.CurrentValue = 0;
-  para.Type = datatype;
+
+  for (var key in paraobj) {
+    para[key] = paraobj[key];
+  }
 
   para.save(err0 => {
     if (err0)
@@ -215,93 +216,6 @@ function _addParameter(assetID, deviceID, datatype, callback) {
     }
 
   });
-}
-
-function addParameterToDevice(req, res) {
-  var parID = req.swagger.params.ParameterID.value;
-  var deviceID =  req.swagger.params.DeviceID.value;
-  var assetID =  req.swagger.params.AssetID.value;
-    if (parID && deviceID && assetID) {
-      // remove in user table and asset
-      Asset.findOneAndUpdate({AssetID: assetID},
-          {
-            $push:  {
-              Parameters: {ParameterID: parID}
-            }
-          },
-        function(err, data) {
-        if (err)
-        {
-          var msg = "par update Error in assets:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res,msg);
-        }
-        else {
-          Device.findOneAndUpdate({DeviceID: deviceID},
-              {
-                $push:  {
-                  Parameters: {ParameterID: parID}
-                }
-              },
-            function(err, data) {
-            if (err)
-            {
-              var msg = "par update Error in devices:" + JSON.stringify(err, null, 2);
-              shareUtil.SendInternalErr(res,msg);
-            }
-            else {
-              shareUtil.SendSuccess(res);
-            }
-          });
-        }
-      });
-
-
-
-    } else {
-      var msg = "parID or deviceid or assetid missing";
-      shareUtil.SendInvalidInput(res, msg);
-    }
-}
-
-function removeParameterFromDevice(req, res) {
-  var parID = req.swagger.params.ParameterID.value;
-  var deviceID =  req.swagger.params.DeviceID.value;
-  var assetID =  req.swagger.params.AssetID.value;
-
-  Device.findOneAndUpdate({DeviceID: deviceID},
-      {
-        $pull:  {
-          Parameters: {ParameterID: parID}
-        }
-      },
-    function(err, data) {
-    if (err)
-    {
-      var msg = "par update Error in devices:" + JSON.stringify(err, null, 2);
-      shareUtil.SendInternalErr(res,msg);
-    }
-    else {
-
-      Asset.findOneAndUpdate({AssetID: assetID},
-          {
-            $pull:  {
-              Parameters: {ParameterID: parID}
-            }
-          },
-        function(err, data) {
-        if (err)
-        {
-          var msg = "par update Error in assets:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res,msg);
-        }
-        else {
-          shareUtil.SendSuccess(res);
-        }
-      });
-
-    }
-  });
-
 }
 
 function getParameterByAsset(req, res) {

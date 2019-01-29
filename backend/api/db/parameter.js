@@ -12,7 +12,9 @@ const ParameterSchema = new Schema(
     Unit: String,
     Type: String,
     Tag: String,
-    Equation: String
+    Equation: String,
+    RequiredBy: [String], // ParameterID List
+    Require: [String] // ParameterID List
   },
   { timestamps: true }
 );

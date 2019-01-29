@@ -12,7 +12,7 @@ const MainTableRow = (props) => {
             <td style={props.status==="Running"?{color:'#08D800'}:{color:'red'}}>{props.status}</td>
             <td>{props.singleAsset.LatestTimeStamp}</td>
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
-            <td></td>
+            <td>{props.singleAsset.Location}</td>
             <td style={props.alerts===0?{color:'#08D800'}:{color:'red'}}>{props.alerts}</td>
             <td style={props.health==="OK"?{color:'#08D800'}:{color:'red'}}>{props.health}</td>
             <td>

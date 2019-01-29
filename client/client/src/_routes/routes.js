@@ -72,7 +72,7 @@ const routes = [
           component: AssetDeviceDetail
         },
         {
-          path: '/asset/:assetID/tag',
+          path: '/asset/:assetID/tag/:tagID',
           component: HxTag
         },
         {

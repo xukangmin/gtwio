@@ -22,7 +22,12 @@ class TempPlot extends React.Component {
   }
 
   plot() {
-      Plotly.newPlot('plot', this.state.data);
+      const layout = {
+        yaxis: {
+          range: [0,100]
+        }
+      }
+      Plotly.newPlot('plot', this.state.data, layout);
   }
   componentDidMount () {
       this.plot();

@@ -17,7 +17,7 @@ class TempRadar extends React.Component {
         polar: {
           radialaxis: {
             visible: true,
-            range: [Math.floor(Math.min(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value))), Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
+            range: [0, Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
           }
         },
         showlegend: false
@@ -25,6 +25,7 @@ class TempRadar extends React.Component {
   }
 }
 
+// range: [Math.floor(Math.min(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value))), Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
 plot() {
     Plotly.newPlot('plot' + this.state.type, this.state.data, this.state.layout, {displayModeBar: false});
 }

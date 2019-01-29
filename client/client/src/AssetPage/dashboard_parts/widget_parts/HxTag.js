@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { TempRadar } from './TempRadar';
 import { TempPlot } from './TempPlot';
 import { TempTable } from './TempTable';
@@ -14,6 +15,17 @@ class HxTag extends React.Component {
     super(props);
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID, props.match.params.tagID, Date.now()-600000, Date.now()));
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      dropdownOpen: false
+    };
+  }
+
+  toggle() {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen
+    }));
   }
 
   render(){
@@ -21,6 +33,17 @@ class HxTag extends React.Component {
     const { DeviceData } = this.props;
     return(
       <div>
+        <div>
+          <span></span>
+          <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+            <DropdownToggle caret>
+              Dropdown
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>10 minutes</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
         {AssetData && DeviceData ?
           <div>
             <Breadcrumb style={{display: "none"}}>

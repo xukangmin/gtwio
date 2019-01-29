@@ -17,25 +17,34 @@ class Progressbar extends React.Component {
     const barStyle = {
       maxWidth: "200px",
       margin: "0 50px",
-      textAlign: "c"
+      textAlign: "center"
     }
     const titleStyle = {
-      marginTop: "10px",
+      position: "relative",
+      top: "-20px",
       fontWeight: "bold"
+    }
+    const unitStyle = {
+      position: "relative",
+      top: "-40px",
+      textAlign: "center"
     }
     return(
       <div style={barStyle}>
         <div className="mx-auto" style={{width: "100px"}}>
           <CircularProgressbar
             percentage={percentage}
-            text={`${percentage}%`}
+            text={`${percentage}`}
             strokeWidth={4}
             styles={{
               path: { stroke: barColor, strokeLinecap: 'butt' },
               text: { fill: barColor, fontSize: '30px' }
             }}
           />
+          <span style={unitStyle}>{this.props.unit}</span>
         </div>
+
+
         <span style={titleStyle}>{this.props.type}</span>
       </div>)
   }

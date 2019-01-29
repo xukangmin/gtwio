@@ -161,7 +161,7 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
-              <Breadcrumb>
+              <Breadcrumb style={{display: "none"}}>
                 <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
                 <BreadcrumbItem><a href={"/asset/"+AssetID+"/dashboard"}>{localStorage.getItem("selectedAssetName")}</a></BreadcrumbItem>
                 <BreadcrumbItem><a href="#">Devices</a></BreadcrumbItem>

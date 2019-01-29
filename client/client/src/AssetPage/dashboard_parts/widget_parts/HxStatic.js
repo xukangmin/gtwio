@@ -52,12 +52,13 @@ class HxStatic extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
   }
 
-  HandleText(elem){
+  HandleText(elem, name){
     const { Settings } = this.state;
     elem.children[0].innerHTML = Settings[elem.id].temperature;
     elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + Settings[elem.id].name);
     document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
     document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
+    document.getElementById("asset_name").innerHTML = name;
   }
 
   render() {
@@ -81,13 +82,15 @@ class HxStatic extends React.Component {
     {
       return (<Redirect to='/login' />);
     }
+
     else{
       const now = new Date().toString();
+
       return (
         <div>
           {AssetData ?
             <div className="container-fluid">
-              <div>
+              <div style={{display: "none"}}>
                 <Breadcrumb>
                   <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
                   <BreadcrumbItem><a href="#">{AssetData.DisplayName}</a></BreadcrumbItem>
@@ -96,12 +99,12 @@ class HxStatic extends React.Component {
               <div style={Hx_style} className="mx-auto">
                 <Samy svgXML={svgcontents} >
                     {Object.keys(this.state.Settings).map((item,i) =>
-                      <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem)}/>
+                      <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem, AssetData.DisplayName)}/>
                     )}
                 </Samy>
                 <Row style={Progressbars_style}>
-                  <Progressbar type="Heat Transfer Rate" percentage="77"/>
-                  <Progressbar type="Efficiency" percentage="54"/>
+                  <Progressbar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
+                  <Progressbar type="Performance Factor" percentage="54" unit="%"/>
                 </Row>
                 <div style={LastUpdate_style}>
                   <span>Last updated: {now}</span>

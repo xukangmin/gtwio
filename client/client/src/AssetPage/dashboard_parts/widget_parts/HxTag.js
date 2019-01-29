@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { TempRadar } from './TempRadar';
 import { TempPlot } from './TempPlot';
 import { TempTable } from './TempTable';
@@ -16,33 +15,34 @@ class HxTag extends React.Component {
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID, props.match.params.tagID, Date.now()-600000, Date.now()));
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      dropdownOpen: false
-    };
+    this.sortDevice = this.sortDevice.bind(this);
   }
 
-  toggle() {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+  sortDevice(data){
+    return(data.sort(
+      function(a,b){
+        var nameA = a.SerialNumber.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.SerialNumber.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      }
+    ))
   }
 
   render(){
     const { AssetData } = this.props;
-    const { DeviceData } = this.props;
+    let { DeviceData } = this.props;
+
     return(
       <div>
         <div>
           <span></span>
-          <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-            <DropdownToggle caret>
-              Dropdown
-            </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem>10 minutes</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+
         </div>
         {AssetData && DeviceData ?
           <div>
@@ -52,11 +52,11 @@ class HxTag extends React.Component {
               <BreadcrumbItem><a href="#">{this.props.match.params.tagID}</a></BreadcrumbItem>
             </Breadcrumb>
             <Row>
-              <Col md="8"><TempPlot data={DeviceData}/></Col>
-              <Col><TempRadar data={DeviceData}/></Col>
+              <Col md="8"><TempPlot data={this.sortDevice(DeviceData)}/></Col>
+              <Col><TempRadar data={this.sortDevice(DeviceData)}/></Col>
             </Row>
             <Row>
-              <Col><TempTable data={DeviceData}/></Col>
+              <Col><TempTable data={this.sortDevice(DeviceData)}/></Col>
               <Col></Col>
             </Row>
           </div>
@@ -71,6 +71,7 @@ class HxTag extends React.Component {
 function mapStateToProps(state) {
   const asset = state.asset.data;
   const device = state.data.data;
+
   return {
       AssetData : asset,
       DeviceData: device

@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/graftel/gtwlabs_iot_website#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.13",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@trendmicro/react-sidenav": "^0.4.5",
     "bootstrap": "^4.0.0",
     "brotli-webpack-plugin": "^1.0.0",

@@ -10,11 +10,8 @@ const MainTableRow = (props) => {
               </a>
             </td>
             <td style={props.status==="Running"?{color:'#08D800'}:{color:'red'}}>{props.status}</td>
-            <td>{props.singleAsset.LatestTimeStamp}</td>
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
             <td>{props.singleAsset.Location}</td>
-            <td style={props.alerts===0?{color:'#08D800'}:{color:'red'}}>{props.alerts}</td>
-            <td style={props.health==="OK"?{color:'#08D800'}:{color:'red'}}>{props.health}</td>
             <td>
               <button style={{marginRight: "10px"}} onClick={()=>props.editAssetTarget(props.singleAsset.DisplayName)} type="button" className="btn btn-info" href="#" data-toggle="modal" data-target="#editAssetModal" id="editAssetModalButton"><i className="fas fa-edit"></i></button>
               <button type="button" className="btn btn-info" href="#" data-toggle="modal" data-target="#deleteAssetModal" id="deleteAssetModalButton"><i className="fas fa-trash-alt"></i></button>
@@ -50,11 +47,8 @@ class MainArea extends React.Component {
                             <tr>
                                 <th>Asset</th>
                                 <th>Status</th>
-                                <th>Latest Time Stamp</th>
                                 <th>Device Count</th>
                                 <th>Location</th>
-                                <th>Alerts</th>
-                                <th>Health</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>

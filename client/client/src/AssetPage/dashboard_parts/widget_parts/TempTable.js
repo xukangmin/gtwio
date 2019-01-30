@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 const SingleDevice = (props) => {
   return(
     <tr>
-      <th scope="row">{props.data.SerialNumber}</th>
+      <th scope="row"><a href={"/asset/ASSETID0/detail/"+props.data.DeviceID}>{props.data.SerialNumber}</a></th>
       <td>{props.data.Data[0].Value.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Min.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Max.toFixed(2)}</td>
@@ -39,10 +39,11 @@ class TempTable extends React.Component {
               )}
             </tbody>
           </table>
-          </div>
+        </div>
     );
   }
 }
+
 
 function mapStateToProps(state) {
   // const { data } = state.dashboard;

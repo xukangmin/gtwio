@@ -14,8 +14,6 @@ class HxTag extends React.Component {
     super(props);
     this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID, props.match.params.tagID, Date.now()-600000, Date.now()));
-
-    this.sortDevice = this.sortDevice.bind(this);
   }
 
   sortDevice(data){

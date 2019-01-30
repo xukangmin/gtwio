@@ -45,7 +45,22 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
         });
 }
 
+const getSingleParameterData = (pid, t1, t2) => {
+    return fetch(gConstants.API_ROOT + '/data/getDataByParameterID?ParameterID=' + pid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        });
+}
+
 export const dataServices = {
     loadSVGdata,
-    getSingleTagData
+    getSingleTagData,
+    getSingleParameterData
 };

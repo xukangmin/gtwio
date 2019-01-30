@@ -21,6 +21,25 @@ const getAllDeviceData = (user, assetid) => {
     function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
 }
 
+const getSingleDeviceData = (deviceid) => {
+    return dispatch => {
+        dispatch(request());
+        deviceServices.getSingleDevice(deviceid)
+            .then(
+                devicedata => {
+                    dispatch(success(devicedata));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_DEVICE_REQUEST } }
+    function success(data) { return { type: gConstants.GET_DEVICE_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
+}
+
 const addNewDevice = (user, assetid, devicedata) => {
     return dispatch => {
         dispatch(request());
@@ -65,5 +84,6 @@ const deleteDevice = (user, assetid, deviceid) => {
 export const deviceActions = {
     addNewDevice,
     deleteDevice,
-    getAllDeviceData
+    getAllDeviceData,
+    getSingleDeviceData
 };

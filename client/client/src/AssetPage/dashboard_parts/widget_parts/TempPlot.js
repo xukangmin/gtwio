@@ -7,7 +7,7 @@ class TempPlot extends React.Component {
     super(props);
 
     let temp = []
-    for (var i=0; i<4; i++){
+    for (var i=0; i<this.props.data.length; i++){
       temp.push({
         x: this.props.data[i].Data.map((item,i)=>new Date(item.TimeStamp).toLocaleTimeString("en-US")),
         y: this.props.data[i].Data.map((item,i)=>item.Value),

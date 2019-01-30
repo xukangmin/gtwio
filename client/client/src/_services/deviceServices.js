@@ -25,6 +25,24 @@ const getAllDevices = (user, assetid) => {
         });
 }
 
+const getSingleDevice = (deviceid) => {
+
+    return fetch(gConstants.API_ROOT + '/device/getSingleDevice?DeviceID=' + deviceid)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        })
+        .then(deviceData => {
+            return deviceData;
+        });
+}
+
 const addNewDevice = (user, assetid, devicedata) => {
 
     const body = {
@@ -47,8 +65,6 @@ const addNewDevice = (user, assetid, devicedata) => {
                  },
         body: JSON.stringify(body)
     };
-
-
 
     return fetch(gConstants.API_ROOT + '/device/createDevice', requestOptions)
     .then(response => {
@@ -91,5 +107,6 @@ const deleteDevice = (assetid, deviceid) => {
 export const deviceServices = {
     addNewDevice,
     deleteDevice,
-    getAllDevices
+    getAllDevices,
+    getSingleDevice
 };

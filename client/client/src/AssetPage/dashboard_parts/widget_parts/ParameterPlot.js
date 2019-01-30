@@ -12,7 +12,7 @@ class ParameterPlot extends React.Component {
       tempY.push(this.props.data[i].Value)
     }
 
-    this.state={
+    this.state = {
       data: {
         x: tempX,
         y: tempY,
@@ -22,12 +22,12 @@ class ParameterPlot extends React.Component {
   }
 
   plot() {
-      const layout = {
-        yaxis: {
-          range: [0,100]
-        }
+    const layout = {
+      yaxis: {
+        range: [0,100]
       }
-      Plotly.newPlot('parameterPlot', [this.state.data], layout);
+    }
+    Plotly.newPlot('parameterPlot', [this.state.data], layout);
   }
 
   componentDidMount () {
@@ -42,9 +42,7 @@ class ParameterPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // const { data } = state.dashboard;
   return {
-
   };
 }
 

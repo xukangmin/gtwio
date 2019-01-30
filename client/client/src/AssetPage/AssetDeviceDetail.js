@@ -10,6 +10,53 @@ import HeaderNav from '../_components/headerNav'
 import { Table } from 'reactstrap';
 import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/ParameterPlot';
 
+const DeviceInfo = (props) => {
+  const device = props.data;
+  return(
+    <div>
+      <h3>{device.DisplayName}</h3>
+      <Table striped>
+        <tbody>
+          <tr>
+            <th scope="row">Device ID</th>
+            <td>{device.DeviceID}</td>
+          </tr>
+          <tr>
+            <th scope="row">Serial Number</th>
+            <td>{device.SerialNumber}</td>
+          </tr>
+          <tr>
+            <th scope="row">Last Calibration Date</th>
+            <td>{device.LastCalibrationDate}</td>
+          </tr>
+        </tbody>
+      </Table>
+    </div>
+  );
+};
+
+const ParameterTable = (props) => {
+  const parameter = props.data;
+  return(
+    <Table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Temperature</th>
+        </tr>
+      </thead>
+      <tbody>
+        {parameter.map((item,i) =>
+            <tr key={i}>
+              <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
+              <td style={{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
+            </tr>
+        )}
+      </tbody>
+    </Table>
+  );
+};
+
 class AssetDeviceDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -35,8 +82,8 @@ class AssetDeviceDetail extends React.Component {
     const { AssetID } = this.state;
     const { deviceData } = this.props;
     const { parameterData } = this.props;
-    let tempParameter;
 
+    let tempParameter;
     if(deviceData){
       tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
     }
@@ -51,47 +98,21 @@ class AssetDeviceDetail extends React.Component {
     }
     else{
       return (
-
         <div className="mt-3">
         {deviceData && parameterData?
           <div>
             <div className="row">
               <div className="col-6">
-                <h3>{deviceData.DisplayName}</h3>
-                <Table striped>
-                  <tbody>
-                    <tr>
-                      <th scope="row">Device ID</th>
-                      <td>{deviceData.DeviceID}</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Serial Number</th>
-                      <td>{deviceData.SerialNumber}</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Last Calibration Date</th>
-                      <td>{deviceData.LastCalibrationDate}</td>
-                    </tr>
-                  </tbody>
-                </Table>
+                <DeviceInfo data={deviceData}/>
               </div>
             </div>
 
             <div className="row mt-3">
-                <div className="col-xl-2 col-sm-6">
+              <div className="col-auto">
                 <h3>History</h3>
-                <Table striped>
-                  <tbody>
-                    {parameterData.map((item,i) =>
-                          <tr key={i}>
-                            <th scope="row">{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</th>
-                            <td>{item.Value.toFixed(2)}</td>
-                          </tr>
-                    )}
-                  </tbody>
-                </Table>
+                <ParameterTable data={parameterData}/>
               </div>
-              <div className="col-10">
+              <div className="col-auto">
                 <ParameterPlot data={parameterData}/>
               </div>
             </div>

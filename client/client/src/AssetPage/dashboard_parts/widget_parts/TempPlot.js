@@ -41,9 +41,7 @@ class TempPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // const { data } = state.dashboard;
   return {
-
   };
 }
 

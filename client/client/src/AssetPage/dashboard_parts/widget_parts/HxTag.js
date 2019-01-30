@@ -38,12 +38,9 @@ class HxTag extends React.Component {
 
     return(
       <div>
-        <div>
-          <span></span>
-
-        </div>
         {AssetData && DeviceData ?
           <div>
+            <h3 className="mt-3">{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
             <Breadcrumb style={{display: "none"}}>
               <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
               <BreadcrumbItem><a href={"/asset/"+AssetData.AssetID+"/dashboard"}>{AssetData.DisplayName}</a></BreadcrumbItem>

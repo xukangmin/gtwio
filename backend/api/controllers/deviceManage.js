@@ -5,7 +5,8 @@ var asset = require('./asset.js');
 var userManage = require('./userManage.js');
 const Device = require('../db/device.js');
 const Asset = require('../db/asset.js');
-
+const Data = require('../db/data.js');
+const Parameter = require('../db/parameter.js');
 /*
  Once you 'require' a module you can reference the things that it exports.  These are defined in module.exports.
 
@@ -23,7 +24,7 @@ var functions = {
   updateDevice: updateDevice,
   deleteDevice: deleteDevice,
   getDeviceByAsset: getDeviceByAsset,
-  getDeviceAttributes: getDeviceAttributes,
+  getSingleDevice: getSingleDevice,
 }
 
 for (var key in functions) {
@@ -184,14 +185,56 @@ function getSingleDeviceInternal(index, devices, deviceout, callback) {
   }
 }
 
-function getDeviceAttributes(req, res) {
-  var deviceid = req.swagger.params.DeviceID.value;
-  Device.findOne({DeviceID: deviceid}, function(err, data) {
-    if (err) {
-      var msg =  "Error:" + JSON.stringify(err, null, 2);
-      shareUtil.SendInternalErr(res,msg);
-    } else {
-      shareUtil.SendSuccessWithData(res, data);
+function _getParameter(paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+        Parameter.findOne({ParameterID: paraobj.ParameterID}, function(err, data){
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
     }
-  });
+  );
+}
+
+function _getAllParameterByDeviceIDPromise(deviceid) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({DeviceID: deviceid}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          Promise.all(data.Parameters.map(_getParameter))
+            .then(ret => {
+              let data_out = data.toObject();
+              data_out.Parameters = ret;
+              resolve(data_out);
+            })
+            .catch(err => {
+              reject(err);
+            })
+        }
+
+      });
+    }
+  );
+
+}
+
+function getSingleDevice(req, res) {
+  var deviceid = req.swagger.params.DeviceID.value;
+  _getAllParameterByDeviceIDPromise(deviceid)
+    .then(
+      ret => {
+        shareUtil.SendSuccessWithData(res, ret);
+      }
+    )
+    .catch(
+      err => {
+        var msg =  "Error:" + JSON.stringify(err, null, 2);
+        shareUtil.SendInternalErr(res,msg);
+      }
+    )
 }

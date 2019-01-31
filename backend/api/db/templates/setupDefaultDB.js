@@ -146,6 +146,9 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
     device.Tag = tagName;
     device.SerialNumber = sn;
     device.Angle = angle;
+    device.LastCalibrationDate = (new Date).getTime();
+    device.CalibrationConstants = {A: 0, B: 1, C: 0};
+    device.CorrectionEquation = 'A * A * data + B * data + C';
 
     device.save(err => {
       if (err)

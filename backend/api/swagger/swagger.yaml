@@ -527,7 +527,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /device/getDeviceAttributes:
+  /device/getSingleDevice:
     # binds a127 app logic to a route
     x-swagger-router-controller: deviceManage
     get:
@@ -535,7 +535,7 @@ paths:
       - device
       description: Return list of device's attributes for a given DeviceID
       # used as the method name of the controller
-      operationId: getDeviceAttributes
+      operationId: getSingleDevice
       parameters:
         - name: DeviceID
           in: query

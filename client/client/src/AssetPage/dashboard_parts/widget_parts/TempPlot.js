@@ -53,6 +53,10 @@ class TempPlot extends React.Component {
               <option value="30">30 minutes</option>
               <option value="60">60 minutes</option>
             </select>
+            {"  from  "}
+            <select value={this.state.time} onChange={this.handleChange}>
+              <option value="10">Now</option>
+            </select>
           </label>
           <input style={{display: "none"}} type="submit" value="Submit" />
         </form>

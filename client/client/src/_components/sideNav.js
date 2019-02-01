@@ -51,7 +51,7 @@ class SideNav extends React.Component {
                         <li className ="nav-item">
                             <a className ="nav-link" href="/settings">
                                 <i className ="fas fa-fw fa-cog mr-2"></i>
-                                Parameters
+                                Settings
                             </a>
                         </li>
 
@@ -80,7 +80,7 @@ class SideNav extends React.Component {
                       <li className ="nav-item">
                         <a className ="nav-link" href="/">
                           <i className ="fas fa-fw fa-sliders-h mr-2"></i>
-                          Parameters
+                          Configurations
                         </a>
                       </li>
                     </ul>

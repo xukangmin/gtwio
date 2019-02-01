@@ -18,15 +18,15 @@ const DeviceInfo = (props) => {
       <Table striped>
         <tbody>
           <tr>
-            <th scope="row">Device ID</th>
+            <th>Device ID</th>
             <td>{device.DeviceID}</td>
           </tr>
           <tr>
-            <th scope="row">Serial Number</th>
+            <th>Serial Number</th>
             <td>{device.SerialNumber}</td>
           </tr>
           <tr>
-            <th scope="row">Last Calibration Date</th>
+            <th>Last Calibration Date</th>
             <td>{device.LastCalibrationDate}</td>
           </tr>
         </tbody>
@@ -36,13 +36,15 @@ const DeviceInfo = (props) => {
 };
 
 const ParameterTable = (props) => {
-  let parameter = props.data;
+  const parameter = props.data;
   return(
     <div>
-      <Table style={{
-        display: "block",
-        height: "50vh",
-        overflowY: "scroll"}}>
+      <Table
+        style={{
+          display: "block",
+          height: "50vh",
+          overflowY: "scroll"
+        }}>
         <thead>
           <tr>
             <th>Time</th>
@@ -51,9 +53,9 @@ const ParameterTable = (props) => {
         </thead>
         <tbody>
           {parameter.map((item,i) =>
-              <tr key={i}>
+              <tr key = {i}>
                 <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
-                <td style={{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
               </tr>
           )}
         </tbody>
@@ -75,8 +77,6 @@ class AssetDeviceDetail extends React.Component {
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
-    // data will update every 1 minute on this page'
-    // this.findTypeTemperature = this.findTypeTemperature.bind(this);
   }
 
   findTypeTemperature(parameter){
@@ -86,8 +86,8 @@ class AssetDeviceDetail extends React.Component {
   sortTime(data){
     return(data.sort(
       function(a,b){
-        var TimeA = a.TimeStamp; // ignore upper and lowercase
-        var TimeB = b.TimeStamp; // ignore upper and lowercase
+        var TimeA = a.TimeStamp;
+        var TimeB = b.TimeStamp;
         if (TimeA > TimeB) {
           return -1;
         }
@@ -110,37 +110,39 @@ class AssetDeviceDetail extends React.Component {
     }
 
     if(!this.props.parameterData && tempParameter){
-      this.interval = setInterval(() => {
+      this.dispatchParameterContinuously = setInterval(() => {
         this.props.dispatch(dataActions.getSingleParameterData(tempParameter, Date.now()-600000, Date.now()));
-      }, 1000);
+      }, 5000);
     }
 
     if (!this.user)
     {
-      return (<Redirect to='/login' />);
+      return (<Redirect to = '/login' />);
     }
     else{
       return (
-        <div className="mt-3">
-        {deviceData && parameterData?
+        <div className = "mt-3">
+        {deviceData && parameterData ?
           <div>
-            <div className="row">
-              <div className="col-6">
+            <div className = "row">
+              <div className = "col-6">
                 <DeviceInfo data={deviceData}/>
               </div>
             </div>
 
-            <div className="row mt-3">
-              <div className="col-auto">
+            <div className = "row mt-3">
+              <div className = "col-auto">
                 <h3>History</h3>
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
-              <div className="col-sm-auto col-lg-8">
+              <div className = "col-sm-auto col-lg-8">
                 <ParameterPlot/>
               </div>
             </div>
           </div>
-        :<Loader/>}
+        :
+          <Loader/>
+        }
       </div>
       );
     }

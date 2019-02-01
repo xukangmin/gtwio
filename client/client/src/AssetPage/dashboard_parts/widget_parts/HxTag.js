@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import { TempRadar } from './TempRadar';
 import { TempPlot } from './TempPlot';
 import { TempTable } from './TempTable';
@@ -19,8 +19,8 @@ class HxTag extends React.Component {
   sortDevice(data){
     return(data.sort(
       function(a,b){
-        var nameA = a.SerialNumber.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.SerialNumber.toUpperCase(); // ignore upper and lowercase
+        var nameA = a.SerialNumber.toUpperCase();
+        var nameB = b.SerialNumber.toUpperCase();
         if (nameA < nameB) {
           return -1;
         }
@@ -32,38 +32,27 @@ class HxTag extends React.Component {
     ))
   }
 
-  componentDidUpdate(){
-    // this.interval = setInterval(() => {
-     // this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.match.params.assetID, this.props.match.params.tagID, Date.now()-600000, Date.now()));
-     // }, 5000);
-
-  }
-
   render(){
     const { AssetData } = this.props;
-    let { DeviceData } = this.props;
+    const { DeviceData } = this.props;
 
     return(
       <div>
         {AssetData && DeviceData ?
           <div>
-            <h3 className="mt-3">{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
-            <Breadcrumb style={{display: "none"}}>
-              <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-              <BreadcrumbItem><a href={"/asset/"+AssetData.AssetID+"/dashboard"}>{AssetData.DisplayName}</a></BreadcrumbItem>
-              <BreadcrumbItem><a href="#">{this.props.match.params.tagID}</a></BreadcrumbItem>
-            </Breadcrumb>
+            <h3 className = "mt-3">{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
+
             <Row>
-              <div className="col-9"><TempPlot asset={AssetData.AssetID} tag={this.props.match.params.tagID}/></div>
-              <div className="col-3"><TempRadar data={this.sortDevice(DeviceData)}/></div>
+              <div className = "col-9"><TempPlot asset = {AssetData.AssetID} tag = {this.props.match.params.tagID}/></div>
+              <div className = "col-3"><TempRadar/></div>
             </Row>
             <Row>
-              <Col className="mt-5"><TempTable data={this.sortDevice(DeviceData)}/></Col>
+              <Col className = "mt-5"><TempTable/></Col>
               <Col></Col>
             </Row>
           </div>
-        :
-        <Loader/>
+          :
+          <Loader/>
       }
       </div>
     );

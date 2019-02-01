@@ -11,12 +11,10 @@ class ParameterPlot extends React.Component {
   sortTime(data){
     return(data.sort(
       function(a,b){
-        var TimeA = a;
-        var TimeB = b;
-        if (TimeA > TimeB) {
+        if (a > b) {
           return 1;
         }
-        if (TimeA < TimeB) {
+        if (a < b) {
           return -1;
         }
         return 0;
@@ -25,30 +23,31 @@ class ParameterPlot extends React.Component {
   }
 
   render(){
-    let {parameterData} = this.props;
+    const { parameterData } = this.props;
     let tempX = [];
     let tempY = [];
-    for (var i=0; i<parameterData.length; i++){
+    for(var i = 0; i < parameterData.length; i++){
       tempX.push(new Date(parameterData[i].TimeStamp).toLocaleTimeString("en-US"));
       tempY.push(parameterData[i].Value)
     }
 
-    let data= {
-        x: this.sortTime(tempX),
-        y: tempY,
-        type: 'scatter'
-      };
-    let layout= {
-        yaxis: {
-          range: [0,100]
-        },
-        xaxis:{
-          showline: false,
-          autotick: false,
-          ticklen: 8,
-          dtick: 9
-        }
-      };
+    const data= {
+      x: this.sortTime(tempX),
+      y: tempY,
+      type: 'scatter'
+    };
+
+    const layout= {
+      yaxis: {
+        range: [0,100]
+      },
+      xaxis:{
+        showline: false,
+        autotick: false,
+        ticklen: 8,
+        dtick: 9
+      }
+    };
 
     return(
       <Plot
@@ -61,9 +60,9 @@ class ParameterPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const parameterdata = state.data.data;
+    const { data } = state.data;
     return {
-        parameterData: parameterdata
+        parameterData: data
     };
 }
 

@@ -9,14 +9,14 @@ class TempRadar extends React.Component {
   }
 
   render(){
-    let { DeviceData } = this.props;
-    let data = [{
+    const { DeviceData } = this.props;
+    const data = [{
       type: 'scatterpolar',
       r: DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value),
       theta: DeviceData.map((singleDevice,i) => singleDevice.SerialNumber),
       fill: 'toself'
     }];
-    let layout = {
+    const layout = {
       polar: {
         radialaxis: {
           visible: true,
@@ -31,18 +31,18 @@ class TempRadar extends React.Component {
     }
     return(
         <Plot
-          data={data}
-          layout={layout}
-          style={{width:"100%"}}
+          data = {data}
+          layout = {layout}
+          style = {{width:"100%"}}
         />
     );
   }
 }
 
 function mapStateToProps(state) {
-  const device = state.data.data;
+  const { data } = state.data;
   return {
-      DeviceData: device
+      DeviceData: data
   };
 }
 

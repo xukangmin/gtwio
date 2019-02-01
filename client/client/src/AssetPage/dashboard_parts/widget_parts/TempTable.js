@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 const SingleDevice = (props) => {
   return(
     <tr>
-      <th scope="row"><a href={"/asset/ASSETID0/detail/"+props.data.DeviceID}>{props.data.SerialNumber}</a></th>
+      <th scope = "row"><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></th>
       <td>{props.data.Data[0].Value.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Min.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Max.toFixed(2)}</td>
@@ -20,9 +20,10 @@ class TempTable extends React.Component {
   }
 
   render(){
+    const { DeviceData } = this.props;
     return(
-      <div className="table-responsive">
-          <table className="table table-striped" style={{textAlign:'center'}}>
+      <div className = "table-responsive">
+          <table className = "table table-striped" style={{textAlign: "center"}}>
             <thead>
               <tr>
                 <th>Device</th>
@@ -34,8 +35,8 @@ class TempTable extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.data.map((singleDevice,i) =>
-                  <SingleDevice data={singleDevice} key={i}/>
+              {DeviceData.map((singleDevice,i) =>
+                  <SingleDevice data = {singleDevice} key = {i}/>
               )}
             </tbody>
           </table>
@@ -46,7 +47,9 @@ class TempTable extends React.Component {
 
 
 function mapStateToProps(state) {
+  const { data } = state.data;
   return {
+      DeviceData: data
   };
 }
 

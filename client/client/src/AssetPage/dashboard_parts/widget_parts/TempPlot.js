@@ -7,15 +7,15 @@ import { dataActions } from '../../../_actions/dataAction';
 class TempPlot extends React.Component {
   constructor(props){
     super(props);
-    this.state={
-      interval: 10
+    this.state = {
+      plot_Interval: 10
     }
-    this.handleChange = this.handleChange.bind(this);
 
-    this.interval = setInterval(() => {
-      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.interval*60*1000, Date.now()));
-      console.log('2sec')
-    }, 1000);
+    this.dispatchTagContinuously = setInterval(() => {
+      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.plot_Interval*60*1000, Date.now()));
+    }, 5000);
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
@@ -23,10 +23,10 @@ class TempPlot extends React.Component {
   }
 
   render(){
-    console.log('render');
-    let { DeviceData } = this.props;
+    const { DeviceData } = this.props;
 
     let formattedData = [];
+
     let layout = {
       yaxis: {
         range: [0,100],
@@ -36,17 +36,18 @@ class TempPlot extends React.Component {
         showline: false,
         autotick: false,
         ticklen: 8,
-        dtick: this.state.interval*0.8
+        dtick: this.state.plot_Interval*0.8
       },
       margin:{
         l: 40,
         t: 30
       }
     }
-    for (var i=0; i<DeviceData.length; i++){
+
+    for (var i = 0; i < DeviceData.length; i++){
       formattedData.push({
-        x: DeviceData[i].Data.map((item,i)=>new Date(item.TimeStamp).toLocaleTimeString("en-US")),
-        y: DeviceData[i].Data.map((item,i)=>item.Value),
+        x: DeviceData[i].Data.map((item,i) => new Date(item.TimeStamp).toLocaleTimeString("en-US")),
+        y: DeviceData[i].Data.map((item,i) => item.Value),
         type: 'scatter',
         name: DeviceData[i].SerialNumber
       })
@@ -54,25 +55,22 @@ class TempPlot extends React.Component {
 
     return(
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            {"Show  "}
-            <select value={this.state.interval} onChange={this.handleChange}>
-              <option value="10">10 minutes</option>
-              <option value="30">30 minutes</option>
-              <option value="60">60 minutes</option>
-            </select>
-            {"  from  "}
-            <select value={this.state.time} onChange={this.handleChange}>
-              <option value="10">Now</option>
-            </select>
-          </label>
-          <input style={{display: "none"}} type="submit" value="Submit" />
-        </form>
+        <label>
+          {"Show  "}
+          <select value = {this.state.interval} onChange = {this.handleChange}>
+            <option value = "10">10 minutes</option>
+            <option value = "30">30 minutes</option>
+            <option value = "60">60 minutes</option>
+          </select>
+          {"  from  "}
+          <select value = {this.state.time} onChange = {this.handleChange}>
+            <option value = "10">Now</option>
+          </select>
+        </label>
         <Plot
-            data={formattedData}
-            layout={layout}
-            style={{width:"100%"}}
+          data = {formattedData}
+          layout = {layout}
+          style = {{width:"100%"}}
         />
       </div>
     );
@@ -80,9 +78,9 @@ class TempPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const device = state.data.data;
+  const { data } = state.data;
   return {
-      DeviceData: device
+      DeviceData: data
   };
 }
 

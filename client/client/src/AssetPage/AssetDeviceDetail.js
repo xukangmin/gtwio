@@ -133,7 +133,7 @@ class AssetDeviceDetail extends React.Component {
                 <h3>History</h3>
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
-              <div className="col-sm-auto col-lg-10">
+              <div className="col-sm-auto col-lg-8">
                 <ParameterPlot data={parameterData}/>
               </div>
             </div>

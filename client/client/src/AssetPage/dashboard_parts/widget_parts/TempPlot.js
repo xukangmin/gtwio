@@ -8,46 +8,41 @@ class TempPlot extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      layout : {
-        yaxis: {
-          range: [0,100]
-        },
-        margin:{
-          l: 30,
-          t: 30
-        }
-      },
       interval: 10
     }
     this.handleChange = this.handleChange.bind(this);
 
     this.interval = setInterval(() => {
       this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.interval*60*1000, Date.now()));
-      // this.forceUpdate();
       console.log('2sec')
     }, 1000);
   }
 
   handleChange(event) {
     this.setState({interval: event.target.value});
-    // this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.interval*60*1000, Date.now()));
   }
-
-  componentDidUpdate(){
-    console.log('update')
-    // this.forceUpdate();
-  }
-
 
   render(){
-    // this.interval = setInterval(() => {
-    //   this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.interval*60*1000, Date.now()));
-    //   this.forceUpdate();
-    //   console.log('20sec')
-    // }, 1000);
     console.log('render');
     let { DeviceData } = this.props;
-    let formattedData = []
+
+    let formattedData = [];
+    let layout = {
+      yaxis: {
+        range: [0,100],
+        ticklen: 8
+      },
+      xaxis: {
+        showline: false,
+        autotick: false,
+        ticklen: 8,
+        dtick: this.state.interval*0.8
+      },
+      margin:{
+        l: 30,
+        t: 30
+      }
+    }
     for (var i=0; i<DeviceData.length; i++){
       formattedData.push({
         x: DeviceData[i].Data.map((item,i)=>new Date(item.TimeStamp).toLocaleTimeString("en-US")),
@@ -76,7 +71,7 @@ class TempPlot extends React.Component {
         </form>
         <Plot
             data={formattedData}
-            layout={this.state.layout}
+            layout={layout}
             style={{width:"100%"}}
         />
       </div>
@@ -86,7 +81,6 @@ class TempPlot extends React.Component {
 
 function mapStateToProps(state) {
   const device = state.data.data;
-  console.log('map')
   return {
       DeviceData: device
   };

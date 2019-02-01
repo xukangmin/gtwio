@@ -22,6 +22,12 @@ class ParameterPlot extends React.Component {
       layout:{
         yaxis: {
           range: [0,100]
+        },
+        xaxis:{
+          showline: false,
+          autotick: false,
+          ticklen: 8,
+          dtick: 5
         }
       }
     }

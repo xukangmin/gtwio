@@ -6,35 +6,33 @@ import Plot from 'react-plotly.js';
 class TempRadar extends React.Component {
   constructor(props){
     super(props);
-    this.state={
-      type: "radar",
-      data : [{
-        type: 'scatterpolar',
-        r: this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value),
-        theta: this.props.data.map((singleDevice,i) => singleDevice.SerialNumber),
-        fill: 'toself'
-      }],
-      layout : {
-        polar: {
-          radialaxis: {
-            visible: true,
-            range: [0, Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
-          }
-        },
-        showlegend: false,
-        margin:{
-          l: 80,
-          t: 80
-        }
-      }
   }
-}
 
   render(){
+    let { DeviceData } = this.props;
+    let data = [{
+      type: 'scatterpolar',
+      r: DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value),
+      theta: DeviceData.map((singleDevice,i) => singleDevice.SerialNumber),
+      fill: 'toself'
+    }];
+    let layout = {
+      polar: {
+        radialaxis: {
+          visible: true,
+          range: [0, Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value)))]
+        }
+      },
+      showlegend: false,
+      margin:{
+        l: 80,
+        t: 80
+      }
+    }
     return(
         <Plot
-          data={this.state.data}
-          layout={this.state.layout}
+          data={data}
+          layout={layout}
           style={{width:"100%"}}
         />
     );
@@ -42,9 +40,9 @@ class TempRadar extends React.Component {
 }
 
 function mapStateToProps(state) {
-  // const { data } = state.dashboard;
+  const device = state.data.data;
   return {
-
+      DeviceData: device
   };
 }
 

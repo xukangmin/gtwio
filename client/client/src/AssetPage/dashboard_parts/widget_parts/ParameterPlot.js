@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import Plot from 'react-plotly.js';
 
 class ParameterPlot extends React.Component {
   constructor(props){
@@ -17,26 +18,22 @@ class ParameterPlot extends React.Component {
         x: tempX,
         y: tempY,
         type: 'scatter'
+      },
+      layout:{
+        yaxis: {
+          range: [0,100]
+        }
       }
     }
-  }
-
-  plot() {
-    const layout = {
-      yaxis: {
-        range: [0,100]
-      }
-    }
-    Plotly.newPlot('parameterPlot', [this.state.data], layout);
-  }
-
-  componentDidMount () {
-      this.plot();
   }
 
   render(){
     return(
-      <div id="parameterPlot"></div>
+      <Plot
+          data={[this.state.data]}
+          layout={this.state.layout}
+          style={{width:"100%"}}
+      />
     );
   }
 }

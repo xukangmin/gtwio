@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import Plot from 'react-plotly.js';
 
 class TempRadar extends React.Component {
   constructor(props){
@@ -20,24 +21,22 @@ class TempRadar extends React.Component {
             range: [0, Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
           }
         },
-        showlegend: false
+        showlegend: false,
+        margin:{
+          l: 80,
+          t: 80
+        }
       }
   }
 }
 
-// range: [Math.floor(Math.min(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value))), Math.ceil(Math.max(...this.props.data.map((singleDevice,i) => singleDevice.Data[0].Value)))]
-plot() {
-    Plotly.newPlot('plot' + this.state.type, this.state.data, this.state.layout, {displayModeBar: false});
-}
-
-componentDidMount () {
-    this.plot();
-}
-
   render(){
     return(
-        <div id={"plot" + this.state.type} >
-        </div>
+        <Plot
+          data={this.state.data}
+          layout={this.state.layout}
+          style={{width:"100%"}}
+        />
     );
   }
 }

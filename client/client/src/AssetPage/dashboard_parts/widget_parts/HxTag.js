@@ -58,7 +58,8 @@ class HxTag extends React.Component {
               <div className="col-3"><TempRadar data={this.sortDevice(DeviceData)}/></div>
             </Row>
             <Row>
-              <Col><TempTable data={this.sortDevice(DeviceData)}/></Col>
+              <Col className="mt-5"><TempTable data={this.sortDevice(DeviceData)}/></Col>
+              <Col></Col>
             </Row>
           </div>
         :

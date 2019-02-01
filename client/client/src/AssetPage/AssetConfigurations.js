@@ -90,6 +90,7 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
+                    <button type="button" className="btn btn-info mb-3" href="#" data-toggle="modal" data-target="#addNewAssetModal" id="addNewAssetModalButton">Add Device</button>
                     <div className="table-responsive">
                         <table className="table table-striped" style={{textAlign:'center'}}>
                             <thead>
@@ -113,6 +114,7 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
+                  <button type="button" className="btn btn-info mb-3" href="#" data-toggle="modal" data-target="#addNewAssetModal" id="addNewAssetModalButton">Add Parameter</button>
                   <div className="table-responsive">
                       <table className="table table-striped" style={{textAlign:'center'}}>
                           <thead>

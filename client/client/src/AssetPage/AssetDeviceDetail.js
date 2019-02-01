@@ -38,22 +38,27 @@ const DeviceInfo = (props) => {
 const ParameterTable = (props) => {
   const parameter = props.data;
   return(
-    <Table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Temperature</th>
-        </tr>
-      </thead>
-      <tbody>
-        {parameter.map((item,i) =>
-            <tr key={i}>
-              <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
-              <td style={{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
-            </tr>
-        )}
-      </tbody>
-    </Table>
+    <div>
+      <Table style={{
+        display: "block",
+        height: "50vh",
+        overflowY: "scroll"}}>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Temperature</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parameter.map((item,i) =>
+              <tr key={i}>
+                <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
+                <td style={{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
+              </tr>
+          )}
+        </tbody>
+      </Table>
+    </div>
   );
 };
 
@@ -76,6 +81,22 @@ class AssetDeviceDetail extends React.Component {
 
   findTypeTemperature(parameter){
     return parameter.Type == "Temperature";
+  }
+
+  sortTime(data){
+    return(data.sort(
+      function(a,b){
+        var TimeA = a.TimeStamp; // ignore upper and lowercase
+        var TimeB = b.TimeStamp; // ignore upper and lowercase
+        if (TimeA > TimeB) {
+          return -1;
+        }
+        if (TimeA < TimeB) {
+          return 1;
+        }
+        return 0;
+      }
+    ))
   }
 
   render() {
@@ -110,9 +131,9 @@ class AssetDeviceDetail extends React.Component {
             <div className="row mt-3">
               <div className="col-auto">
                 <h3>History</h3>
-                <ParameterTable data={parameterData}/>
+                <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
-              <div className="col-auto">
+              <div className="col-sm-auto col-lg-10">
                 <ParameterPlot data={parameterData}/>
               </div>
             </div>

@@ -15,8 +15,25 @@ const DeviceTableRow = (props) => {
       <tr>
         <td>{props.data.SerialNumber}</td>
         <td>{props.data.Parameters[0].ParameterID}</td>
-        <td>{props.data.Tag}</td>
+        <td>
+          <select value = {0} onChange={console.log('')}>
+            <option value = "0">ShellInlet</option>
+            <option value = "0">ShellOutlet</option>
+            <option value = "0">TubeInlet</option>
+            <option value = "0">TubeOutlet</option>
+          </select>
+        </td>
         <td>{props.data.LastCalibrationDate}</td>
+      </tr>
+  );
+};
+
+const ParameterTableRow = (props) => {
+  return(
+      <tr>
+        <td>Avg_ShellInlet</td>
+        <td>a=b*c</td>
+        <td>This is a description</td>
       </tr>
   );
 };
@@ -71,7 +88,7 @@ class AssetConfigurations extends React.Component {
 
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
-                <Row>
+                <Row className="mt-3">
                   <Col>
                     <div className="table-responsive">
                         <table className="table table-striped" style={{textAlign:'center'}}>
@@ -94,8 +111,25 @@ class AssetConfigurations extends React.Component {
                 </Row>
             </TabPane>
             <TabPane tabId="2">
-              <Row>
-
+              <Row className="mt-3">
+                <Col>
+                  <div className="table-responsive">
+                      <table className="table table-striped" style={{textAlign:'center'}}>
+                          <thead>
+                              <tr>
+                                  <th>Parameter Name</th>
+                                  <th>Equation</th>
+                                  <th>Description</th>
+                              </tr>
+                          </thead>
+                          <tbody id="main-table-content">
+                              {device.map((singleDevice,i) =>
+                                  <ParameterTableRow data={singleDevice} key={i}/>
+                              )}
+                          </tbody>
+                      </table>
+                  </div>
+                </Col>
               </Row>
             </TabPane>
           </TabContent>

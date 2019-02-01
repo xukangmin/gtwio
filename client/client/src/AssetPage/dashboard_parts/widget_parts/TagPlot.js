@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import Plot from 'react-plotly.js';
 import { dataActions } from '../../../_actions/dataAction';
+import Plot from 'react-plotly.js';
 
-class TempPlot extends React.Component {
+class TagPlot extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -19,7 +19,9 @@ class TempPlot extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({interval: event.target.value});
+    this.setState(
+      {interval: event.target.value}
+    );
   }
 
   render(){
@@ -84,5 +86,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TempPlot);
-export { connectedPage as TempPlot };
+const connectedPage = connect(mapStateToProps)(TagPlot);
+export { connectedPage as TagPlot };

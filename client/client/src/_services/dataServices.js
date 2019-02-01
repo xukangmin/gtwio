@@ -1,4 +1,5 @@
-import { gConstants } from '../_components/constants'
+import { gConstants } from '../_components/constants';
+import SortDevices from '../_components/SortDevices'
 
 const loadSVGdata = (svgname) => {
     const requestOptions = {
@@ -39,9 +40,9 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
             }
             return resJSON;
         })
-        .then(assetData => {
-            localStorage.setItem('asset(' + assetid + ')', JSON.stringify(assetData));
-            return assetData;
+        .then(TagData => {
+            localStorage.setItem('asset(' + assetid + ')', JSON.stringify(TagData));
+            return SortDevices(TagData);
         });
 }
 

@@ -14,7 +14,7 @@ const SingleDevice = (props) => {
     </tr>)
 }
 
-class TempTable extends React.Component {
+class TagTable extends React.Component {
   constructor(props){
     super(props);
   }
@@ -53,5 +53,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TempTable);
-export { connectedPage as TempTable };
+const connectedPage = connect(mapStateToProps)(TagTable);
+export { connectedPage as TagTable };

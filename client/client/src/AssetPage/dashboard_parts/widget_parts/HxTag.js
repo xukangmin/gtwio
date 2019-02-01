@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'reactstrap';
-import { TempRadar } from './TempRadar';
-import { TempPlot } from './TempPlot';
-import { TempTable } from './TempTable';
 import { assetActions } from '../../../_actions/assetAction';
 import { dataActions } from '../../../_actions/dataAction';
+import { Container, Row, Col } from 'reactstrap';
+import { TagRadar } from './TagRadar';
+import { TagPlot } from './TagPlot';
+import { TagTable } from './TagTable';
+
 import Loader from '../../../_components/loader';
 
 class HxTag extends React.Component {

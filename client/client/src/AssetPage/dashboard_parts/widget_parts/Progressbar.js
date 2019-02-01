@@ -8,7 +8,6 @@ import 'react-circular-progressbar/dist/styles.css';
 class Progressbar extends React.Component {
   constructor(props) {
     super(props);
-
   }
 
   render() {
@@ -30,28 +29,31 @@ class Progressbar extends React.Component {
       textAlign: "center"
     }
     return(
-      <div style={barStyle}>
-        <div className="mx-auto" style={{width: "100px"}}>
+      <div style = {barStyle}>
+        <div className = "mx-auto" style = {{width: "100px"}}>
           <CircularProgressbar
-            percentage={percentage}
-            text={`${percentage}`}
-            strokeWidth={4}
-            styles={{
-              path: { stroke: barColor, strokeLinecap: 'butt' },
-              text: { fill: barColor, fontSize: '30px' }
+            percentage = {percentage}
+            text = {`${percentage}`}
+            strokeWidth = {4}
+            styles = {{
+              path: {
+                stroke: barColor,
+                strokeLinecap: 'butt' },
+              text: {
+                fill: barColor,
+                fontSize: '30px' }
             }}
           />
-          <span style={unitStyle}>{this.props.unit}</span>
+          <span style = {unitStyle}>{this.props.unit}</span>
         </div>
 
-
-        <span style={titleStyle}>{this.props.type}</span>
+        <span style = {titleStyle}>{this.props.type}</span>
       </div>)
   }
 }
 
 function mapStateToProps(state) {
-  return({});
+  
 }
 
 const connectedPage = connect(mapStateToProps)(Progressbar);

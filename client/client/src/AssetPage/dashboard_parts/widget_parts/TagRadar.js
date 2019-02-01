@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 
-class TempRadar extends React.Component {
+class TagRadar extends React.Component {
   constructor(props){
     super(props);
   }
@@ -46,5 +46,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TempRadar);
-export { connectedPage as TempRadar };
+const connectedPage = connect(mapStateToProps)(TagRadar);
+export { connectedPage as TagRadar };

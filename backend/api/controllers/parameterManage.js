@@ -264,19 +264,28 @@ function updateRequireList(req, res) {
       if (err) {
         shareUtil.SendInternalErr(res);
       } else {
-        Promise.all(requireList.map(item => _add_single_parameter_require(item, paraID)))
-          .then(
-            ret => {
-              console.log("added");
-              shareUtil.SendSuccess(res);
-            }
-          )
-          .catch(
-            err => {
-              var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
-              shareUtil.SendInternalErr(res, msg);
-            }
-          )
+        data.Require = requireList;
+        data.save(err => {
+          if (err) {
+            var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+            shareUtil.SendInternalErr(res, msg);
+          } else {
+            Promise.all(requireList.map(item => _add_single_parameter_require(item, paraID)))
+              .then(
+                ret => {
+                  console.log("added");
+                  shareUtil.SendSuccess(res);
+                }
+              )
+              .catch(
+                err => {
+                  var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+                  shareUtil.SendInternalErr(res, msg);
+                }
+              )
+          }
+        });
+
 
       }
     });

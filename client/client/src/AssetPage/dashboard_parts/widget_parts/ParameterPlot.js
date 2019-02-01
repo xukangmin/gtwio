@@ -15,7 +15,7 @@ class ParameterPlot extends React.Component {
 
     this.state = {
       data: {
-        x: tempX,
+        x: this.sortTime(tempX),
         y: tempY,
         type: 'scatter'
       },
@@ -27,10 +27,26 @@ class ParameterPlot extends React.Component {
           showline: false,
           autotick: false,
           ticklen: 8,
-          dtick: 5
+          dtick: 9
         }
       }
     }
+  }
+
+  sortTime(data){
+    return(data.sort(
+      function(a,b){
+        var TimeA = a;
+        var TimeB = b;
+        if (TimeA > TimeB) {
+          return 1;
+        }
+        if (TimeA < TimeB) {
+          return -1;
+        }
+        return 0;
+      }
+    ))
   }
 
   render(){

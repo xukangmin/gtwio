@@ -134,7 +134,7 @@ class AssetDeviceDetail extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className="col-sm-auto col-lg-8">
-                <ParameterPlot data={parameterData}/>
+                <ParameterPlot data={this.sortTime(parameterData)}/>
               </div>
             </div>
           </div>

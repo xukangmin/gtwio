@@ -59,6 +59,9 @@ class HxStatic extends React.Component {
     document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
     document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
     document.getElementById("asset_name").innerHTML = name;
+
+    document.getElementById("TubeInlet_flow").style.visibility = "hidden";
+    document.getElementById("ShellOutlet_flow").style.visibility = "hidden";
   }
 
   render() {

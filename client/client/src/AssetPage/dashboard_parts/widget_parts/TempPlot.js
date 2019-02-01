@@ -39,7 +39,7 @@ class TempPlot extends React.Component {
         dtick: this.state.interval*0.8
       },
       margin:{
-        l: 30,
+        l: 40,
         t: 30
       }
     }

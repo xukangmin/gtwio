@@ -78,7 +78,7 @@ class SideNav extends React.Component {
                       </li>
 
                       <li className ="nav-item">
-                        <a className ="nav-link" href="/">
+                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/configurations"}>
                           <i className ="fas fa-fw fa-sliders-h mr-2"></i>
                           Configurations
                         </a>

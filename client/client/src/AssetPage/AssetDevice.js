@@ -149,7 +149,6 @@ class AssetDevice extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const { AssetID } = this.state;
     const { devices } = this.props;
 
@@ -161,11 +160,6 @@ class AssetDevice extends React.Component {
       return (
           <div className="mt-3" >
             <div className="container-fluid">
-              <Breadcrumb style={{display: "none"}}>
-                <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                <BreadcrumbItem><a href={"/asset/"+AssetID+"/dashboard"}>{localStorage.getItem("selectedAssetName")}</a></BreadcrumbItem>
-                <BreadcrumbItem><a href="#">Devices</a></BreadcrumbItem>
-              </Breadcrumb>
                {devices ?
                 <div className="row">
                   {devices.map((item,i) =>

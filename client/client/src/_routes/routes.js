@@ -6,6 +6,7 @@ import { AssetMain } from '../AssetPage/AssetMain'
 import { AssetOverview } from '../AssetPage/AssetOverview'
 import { AssetDashboard } from '../AssetPage/AssetDashboard'
 import { AssetDevice } from '../AssetPage/AssetDevice'
+import { AssetConfigurations } from '../AssetPage/AssetConfigurations'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
@@ -66,6 +67,10 @@ const routes = [
         {
           path: '/asset/:assetID/device',
           component: AssetDevice
+        },
+        {
+          path: '/asset/:assetID/configurations',
+          component: AssetConfigurations
         },
         {
           path: '/asset/:assetID/detail/:deviceID',

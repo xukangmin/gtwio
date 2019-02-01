@@ -87,8 +87,6 @@ class HxStatic extends React.Component {
     }
 
     else{
-      const now = new Date().toString();
-
       return (
         <div>
           {AssetData ?
@@ -110,7 +108,7 @@ class HxStatic extends React.Component {
                   <Progressbar type="Performance Factor" percentage="54" unit="%"/>
                 </Row>
                 <div style={LastUpdate_style}>
-                  <span>Last updated: {now}</span>
+                  <span>Last updated: {new Date().toLocaleTimeString("en-US")}</span>
                 </div>
               </div>
             </div>

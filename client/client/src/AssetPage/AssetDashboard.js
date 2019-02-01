@@ -12,13 +12,6 @@ import update from 'immutability-helper';
 import { AddNewWidgetModal } from './dashboard_parts/AddNewWidgetModal';
 import { dashboardActions } from '../_actions/dashboardAction';
 
-function createDefaultDashboard(assetid, dispatch) {
-    dispatch(dashboardAction.addDashboard(assetid, {
-
-    }));
-}
-
-
 class AssetDashboard extends React.Component {
   constructor(props) {
     super(props);

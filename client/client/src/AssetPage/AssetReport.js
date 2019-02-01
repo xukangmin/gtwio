@@ -16,13 +16,9 @@ class AssetReport extends React.Component {
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
-    // data will update every 1 minute on this page
-
-
   }
 
   render() {
-    //const { assets } = this.state;
     const { AssetID } = this.state;
     if (!this.user)
     {
@@ -35,7 +31,6 @@ class AssetReport extends React.Component {
          </div>
       );
     }
-
   }
 }
 

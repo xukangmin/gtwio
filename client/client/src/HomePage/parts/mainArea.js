@@ -39,6 +39,7 @@ class MainArea extends React.Component {
     }
 
     render() {
+      console.log(this.props.assets)
         return (
             <div id="MainArea">
                 <div className="table-responsive">

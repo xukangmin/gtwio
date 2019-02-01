@@ -846,7 +846,7 @@ paths:
           description: Error
           schema: 
             $ref: "#/definitions/ErrorResponse"
-  /parameter/getParameterAttributes:
+  /parameter/getSingleParameter:
     # binds a127 app logic to a route
     x-swagger-router-controller: parameterManage
     get:
@@ -855,7 +855,7 @@ paths:
       summary: Retrieve list of attributes
       description: Return list of parameter's attributes for a given ParameterID
       # used as the method name of the controller
-      operationId: getParameterAttributes
+      operationId: getSingleParameter
       parameters:
         - name: ParameterID
           in: query
@@ -921,6 +921,32 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/UpdateParameterModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /parameter/addToRequireList:
+    x-swagger-router-controller: parameterManage
+    put:
+      tags:
+      - parameter
+      summary: update a Parameter
+      description: update a Parameter
+      # used as the method name of the controller
+      operationId: addToRequireList
+      parameters:
+      - in: body
+        name: body
+        description: Parameter object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/AddToRequireListModel'
       responses:
         200:
           description: Success
@@ -1315,6 +1341,15 @@ definitions:
         type: string
       Unit:
         type: string
+  AddToRequireListModel:
+    type: object
+    properties:
+      ParameterID:
+        type: string
+      RequireList:
+        type: array
+        items:
+          type: string
   UpdateParameterModel:
     type: object
     properties:

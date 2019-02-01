@@ -16,7 +16,8 @@ var functions = {
   deleteParameter: deleteParameter,
   getParameterByAsset: getParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
-  getParameterAttributes: getParameterAttributes
+  getSingleParameter: getSingleParameter,
+  updateRequireList: updateRequireList
 }
 
 for (var key in functions) {
@@ -225,5 +226,83 @@ function getParameterByAsset(req, res) {
 function getParameterbyDevice(req, res) {
 }
 
-function getParameterAttributes(req, res) {
+function _add_single_parameter_require(paraid, ori_para_id){
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.findOne({ParameterID: paraid}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (!data.RequiredBy.includes(ori_para_id)) {
+            // add paraid to required by list
+            Parameter.update({ParameterID: paraid}, {
+              $push: {
+                RequiredBy: ori_para_id
+              }
+            },function(err, data){
+              if (!err) {
+                resolve();
+              }
+            });
+          } else {
+            resolve();
+          }
+
+        }
+      });
+    }
+  );
+}
+
+
+function updateRequireList(req, res) {
+  var paraID = req.body.ParameterID;
+  var requireList = req.body.RequireList;
+
+  if (paraID) {
+    Parameter.findOne({ParameterID: paraID}, function(err,data) {
+      if (err) {
+        shareUtil.SendInternalErr(res);
+      } else {
+        Promise.all(requireList.map(item => _add_single_parameter_require(item, paraID)))
+          .then(
+            ret => {
+              console.log("added");
+              shareUtil.SendSuccess(res);
+            }
+          )
+          .catch(
+            err => {
+              var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+              shareUtil.SendInternalErr(res, msg);
+            }
+          )
+
+      }
+    });
+  } else {
+    var msg = "parID missing";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+}
+function removeFromRequireList(req, res) {
+
+}
+
+function getSingleParameter(req, res) {
+  var paraID = req.swagger.params.ParameterID.value;
+
+  if (paraID) {
+    Parameter.findOne({ParameterID: paraID}, function(err,data) {
+      if (err) {
+        shareUtil.SendInternalErr(res);
+      } else {
+        shareUtil.SendSuccessWithData(res, data);
+      }
+    });
+  } else {
+    var msg = "parID missing";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+
 }

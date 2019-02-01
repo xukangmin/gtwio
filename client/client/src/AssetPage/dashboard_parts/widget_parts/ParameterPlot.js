@@ -6,31 +6,6 @@ import Plot from 'react-plotly.js';
 class ParameterPlot extends React.Component {
   constructor(props){
     super(props);
-    let tempX = [];
-    let tempY = [];
-    for (var i=0; i<this.props.data.length; i++){
-      tempX.push(new Date(this.props.data[i].TimeStamp).toLocaleTimeString("en-US"));
-      tempY.push(this.props.data[i].Value)
-    }
-
-    this.state = {
-      data: {
-        x: this.sortTime(tempX),
-        y: tempY,
-        type: 'scatter'
-      },
-      layout:{
-        yaxis: {
-          range: [0,100]
-        },
-        xaxis:{
-          showline: false,
-          autotick: false,
-          ticklen: 8,
-          dtick: 9
-        }
-      }
-    }
   }
 
   sortTime(data){
@@ -50,10 +25,35 @@ class ParameterPlot extends React.Component {
   }
 
   render(){
+    let {parameterData} = this.props;
+    let tempX = [];
+    let tempY = [];
+    for (var i=0; i<parameterData.length; i++){
+      tempX.push(new Date(parameterData[i].TimeStamp).toLocaleTimeString("en-US"));
+      tempY.push(parameterData[i].Value)
+    }
+
+    let data= {
+        x: this.sortTime(tempX),
+        y: tempY,
+        type: 'scatter'
+      };
+    let layout= {
+        yaxis: {
+          range: [0,100]
+        },
+        xaxis:{
+          showline: false,
+          autotick: false,
+          ticklen: 8,
+          dtick: 9
+        }
+      };
+
     return(
       <Plot
-          data={[this.state.data]}
-          layout={this.state.layout}
+          data={[data]}
+          layout={layout}
           style={{width:"100%"}}
       />
     );
@@ -61,8 +61,10 @@ class ParameterPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {
-  };
+    const parameterdata = state.data.data;
+    return {
+        parameterData: parameterdata
+    };
 }
 
 const connectedPage = connect(mapStateToProps)(ParameterPlot);

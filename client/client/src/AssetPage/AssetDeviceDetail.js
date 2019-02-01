@@ -36,7 +36,7 @@ const DeviceInfo = (props) => {
 };
 
 const ParameterTable = (props) => {
-  const parameter = props.data;
+  let parameter = props.data;
   return(
     <div>
       <Table style={{
@@ -102,15 +102,17 @@ class AssetDeviceDetail extends React.Component {
   render() {
     const { AssetID } = this.state;
     const { deviceData } = this.props;
-    const { parameterData } = this.props;
+    let { parameterData } = this.props;
 
     let tempParameter;
-    if(deviceData){
+    if (deviceData){
       tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
     }
 
     if(!this.props.parameterData && tempParameter){
-      this.props.dispatch(dataActions.getSingleParameterData(tempParameter, Date.now()-600000, Date.now()));
+      this.interval = setInterval(() => {
+        this.props.dispatch(dataActions.getSingleParameterData(tempParameter, Date.now()-600000, Date.now()));
+      }, 1000);
     }
 
     if (!this.user)
@@ -134,7 +136,7 @@ class AssetDeviceDetail extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className="col-sm-auto col-lg-8">
-                <ParameterPlot data={this.sortTime(parameterData)}/>
+                <ParameterPlot/>
               </div>
             </div>
           </div>

@@ -199,7 +199,14 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
   data.save(err => {
     // trigger calculation
     trigger_all_parameters(paraID);
-    callback(err);
+    if (err)
+    {
+      callback(err);
+    } else {
+      Parameter.findOneAndUpdate({ParameterID: paraID},{CurrentValue: value, CurrentTimeStamp: timestamp}, function(err) {
+        callback(err);
+      });
+    }
   });
 }
 

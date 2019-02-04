@@ -59,6 +59,10 @@ function deleteTempSensors() {
     });
   }
 
+  for (i = 0; i < 4; i++) {
+    Parameter.deleteMany({ParameterID: 'GenPara0' + i.toString()}, function() {});
+  }
+
 }
 
 
@@ -237,6 +241,7 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
             para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
             para.DisplayName = 'Temperature Value';
             para.CurrentValue = 0;
+            para.CurrentTimeStamp = 0;
             para.Type = 'Temperature';
             para.Unit = 'F';
             para.Tag = tagName + "/" + para.Type; // automatically generated if under device
@@ -293,9 +298,9 @@ function createDemoAccount() {
   createTempSensor(assetid, 14, "TubeOutlet", "02A015", 180);
   createTempSensor(assetid, 15, "TubeOutlet", "02A016", 270);
   createParameter('ASSETID0', 0, 'Average Shell Inlet', 'AVG_SHELL_INLET', 'Avg([TempPara0],[TempPara1],[TempPara2],[TempPara3])');
-  createParameter('ASSETID0', 0, 'Average Shell Outlet', 'AVG_SHELL_OUTLET', 'Avg([TempPara4],[TempPara5],[TempPara6],[TempPara7])');
-  createParameter('ASSETID0', 0, 'Average Tube Inlet', 'AVG_TUBE_INLET', 'Avg([TempPara8],[TempPara9],[TempPara10],[TempPara11])');
-  createParameter('ASSETID0', 0, 'Average Tube Outlet', 'AVG_TUBE_OUTLET', 'Avg([TempPara12],[TempPara13],[TempPara14],[TempPara15])');
+  createParameter('ASSETID0', 1, 'Average Shell Outlet', 'AVG_SHELL_OUTLET', 'Avg([TempPara4],[TempPara5],[TempPara6],[TempPara7])');
+  createParameter('ASSETID0', 2, 'Average Tube Inlet', 'AVG_TUBE_INLET', 'Avg([TempPara8],[TempPara9],[TempPara10],[TempPara11])');
+  createParameter('ASSETID0', 3, 'Average Tube Outlet', 'AVG_TUBE_OUTLET', 'Avg([TempPara12],[TempPara13],[TempPara14],[TempPara15])');
   //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
   //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
   //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);

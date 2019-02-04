@@ -46,6 +46,10 @@ function createDevice(req, res) {
     device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
     device.DisplayName = displayName;
 
+    for (var key in deviceobj) {
+      device[key] = deviceobj[key];
+    }
+
     device.save(err => {
       if (err)
       {
@@ -158,6 +162,43 @@ function getDeviceByAsset(req, res) {
       if (data)
       {
         var deviceslist = data.Devices;
+        Promise.all(deviceslist.map(_getSingleDevice))
+          .then(
+            ret => {
+              shareUtil.SendSuccessWithData(res, ret);
+            }
+          )
+          .catch(
+            err => {
+              var msg = "data Save Error:" + JSON.stringify(err, null, 2);
+              shareUtil.SendInternalErr(res, msg);
+            }
+          )
+
+        //getSingleDeviceInternal(0, deviceslist, [], function(deviceout){
+        //  shareUtil.SendSuccessWithData(res, deviceout);
+        //});
+      } else {
+        var msg = "AssetID does not exist";
+        shareUtil.SendNotFound(res, msg);
+      }
+    }
+  });
+}
+
+
+function getDeviceByAsset2(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+  Asset.findOne({AssetID: assetid}, function(err, data)
+  {
+    if (err) {
+      var msg = "Error: " + JSON.stringify(err, null, 2);
+      callback(false, msg);
+    }
+    else {
+      if (data)
+      {
+        var deviceslist = data.Devices;
         getSingleDeviceInternal(0, deviceslist, [], function(deviceout){
           shareUtil.SendSuccessWithData(res, deviceout);
         });
@@ -206,21 +247,44 @@ function _getAllParameterByDeviceIDPromise(deviceid) {
         if (err) {
           reject(err);
         } else {
-          Promise.all(data.Parameters.map(_getParameter))
-            .then(ret => {
-              let data_out = data.toObject();
-              data_out.Parameters = ret;
-              resolve(data_out);
-            })
-            .catch(err => {
-              reject(err);
-            })
+          if (data) {
+            Promise.all(data.Parameters.map(_getParameter))
+              .then(ret => {
+                let data_out = data.toObject();
+                data_out.Parameters = ret;
+                resolve(data_out);
+              })
+              .catch(err => {
+                reject(err);
+              });
+          } else {
+            resolve();
+          }
+
         }
 
       });
     }
   );
 
+}
+
+function _getSingleDevice(deviceobj) {
+  return new Promise(
+    (resolve, reject) => {
+      _getAllParameterByDeviceIDPromise(deviceobj.DeviceID)
+        .then(
+          ret => {
+            resolve(ret);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+    }
+  );
 }
 
 function getSingleDevice(req, res) {

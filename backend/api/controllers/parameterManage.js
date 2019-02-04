@@ -17,7 +17,8 @@ var functions = {
   getParameterByAsset: getParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
-  updateRequireList: updateRequireList
+  updateRequireList: updateRequireList,
+  updateRequireListByEquation: updateRequireListByEquation
 }
 
 for (var key in functions) {
@@ -28,17 +29,26 @@ function createParameter(req, res) {
   var paraobj = req.body;
 
   if (paraobj.AssetID) {
-    _addParameter(paraobj.AssetID, null, paraobj, function(err) {
+    _addParameter(paraobj.AssetID, null, paraobj, function(err, data) {
       if (err)
       {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
         shareUtil.SendInternalErr(res, msg);
       } else {
           shareUtil.SendSuccess(res);
+          console.log(data);
+          if (data.Equation) { // update equation
+            _updateRequireListByEquation(data.ParameterID, data.Equation, function(err,data) {
+              if (err) {
+                var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                console.error(msg);
+              }
+            });
+          }
       }
     });
   } else if (paraobj.DeviceID) {
-    _addParameter(null, paraobj.DeviceID, paraobj, function(err) {
+    _addParameter(null, paraobj.DeviceID, paraobj, function(err, data) {
       if (err)
       {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
@@ -46,6 +56,14 @@ function createParameter(req, res) {
         shareUtil.SendInternalErr(res, msg);
       } else {
           shareUtil.SendSuccess(res);
+          if (data.Equation) { // update equation
+            _updateRequireListByEquation(data.ParameterID, data.Equation, function(err,data) {
+              if (err) {
+                var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                console.error(msg);
+              }
+            });
+          }
       }
     });
   }
@@ -73,6 +91,14 @@ function updateParameter(req, res) {
           console.error(msg);
           shareUtil.SendInternalErr(res, msg);
         } else {
+            if (paraobj.Equation) { // update equation
+              _updateRequireListByEquation(paraobj.ParameterID, paraobj.Equation, function(err,data) {
+                if (err) {
+                  var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                  console.error(msg);
+                }
+              });
+            }
             shareUtil.SendSuccess(res);
         }
       });
@@ -187,9 +213,9 @@ function _addParameter(assetID, deviceID, paraobj, callback) {
                     },
                     function(err1,data) {
                       if (err1) {
-                        callback(err1);
+                        callback(err1, null);
                       } else {
-                        callback(null);
+                        callback(null, para);
                       }
                     });
       } else if (assetID) { // add to asset only
@@ -202,10 +228,10 @@ function _addParameter(assetID, deviceID, paraobj, callback) {
                     function(err2,data){
                       if (err2)
                       {
-                        callback(err2);
+                        callback(err2, null);
                       }
                       else {
-                        callback(null);
+                        callback(null, para);
                       }
                     }
                   );
@@ -254,40 +280,148 @@ function _add_single_parameter_require(paraid, ori_para_id){
   );
 }
 
+function _remove_single_parameter_require(paraid, ori_para_id){
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.findOne({ParameterID: paraid}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (data.RequiredBy.includes(ori_para_id)) {
+            // remove paraid to required from list
+            Parameter.update({ParameterID: paraid}, {
+              $pull: {
+                RequiredBy: ori_para_id
+              }
+            },function(err, data){
+              if (!err) {
+                resolve();
+              }
+            });
+          } else {
+            resolve();
+          }
+
+        }
+      });
+    }
+  );
+}
+
+function _updateRequireListByEquation(paraid, equation, callback) {
+  var paralist = [];
+
+  var reg = /\[[^\]]+\]/g;
+
+  var paralist = equation.match(reg);
+
+  if (paralist.length > 0) {
+      paralist = paralist.map(item => item.replace('[','').replace(']',''));
+
+      _updateRequireList(paraid, paralist, callback);
+  }
+}
+
+function updateRequireListByEquation(req, res) {
+  var paraID = req.body.ParameterID;
+
+  Parameter.findOne({ParameterID: paraID}, function(err, data) {
+    if (data.Equation) {
+      _updateRequireListByEquation(paraID, data.Equation, function(err, data) {
+        if (err) {
+          var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res, msg);
+        } else {
+          shareUtil.SendSuccess(res);
+        }
+      });
+    }
+  });
+
+}
+
+function _updateRequireList(paraID, requireList, callback) {
+  Parameter.findOne({ParameterID: paraID}, function(err,data) {
+    if (err) {
+      callback(err, null);
+    } else {
+      var addlist = [];
+      var rmlist = [];
+      if (data.Require) {
+        // check existence in
+        for(var i in requireList) {
+          var rexist = false;
+          for (var j in data.Require) {
+            if (requireList[i] === data.Require[j]) {
+              rexist = true;
+            }
+          }
+          if (!rexist) {
+              addlist.push(requireList[i]);
+          }
+        }
+        var old_para_list = data.Require.toObject();
+        for(var i in old_para_list) {
+          var rexist = false;
+          for (var j in requireList) {
+            if (old_para_list[i] === requireList[j]) {
+              rexist = true;
+            }
+          }
+          if (!rexist) {
+              rmlist.push(old_para_list[i]);
+          }
+        }
+
+      }
+      else
+      {
+        addlist = requireList;
+      }
+
+      data.Require = requireList;
+
+      data.save(err => {
+        if (err) {
+          callback(err, null);
+        } else {
+          Promise.all(addlist.map(item => _add_single_parameter_require(item, paraID)))
+            .then(
+              ret => {
+                return Promise.all(rmlist.map(item => _remove_single_parameter_require(item, paraID)));
+
+              }
+            )
+            .then(
+              ret => {
+                callback(null, ret);
+              }
+            )
+            .catch(
+              err => {
+                callback(err, null);
+              }
+            )
+        }
+      });
+
+
+    }
+  });
+}
 
 function updateRequireList(req, res) {
   var paraID = req.body.ParameterID;
   var requireList = req.body.RequireList;
 
   if (paraID) {
-    Parameter.findOne({ParameterID: paraID}, function(err,data) {
-      if (err) {
-        shareUtil.SendInternalErr(res);
-      } else {
-        data.Require = requireList;
-        data.save(err => {
-          if (err) {
-            var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
-            shareUtil.SendInternalErr(res, msg);
-          } else {
-            Promise.all(requireList.map(item => _add_single_parameter_require(item, paraID)))
-              .then(
-                ret => {
-                  console.log("added");
-                  shareUtil.SendSuccess(res);
-                }
-              )
-              .catch(
-                err => {
-                  var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
-                  shareUtil.SendInternalErr(res, msg);
-                }
-              )
-          }
-        });
-
-
-      }
+    _updateRequireList(paraID, requireList, function(err, data) {
+        if (err) {
+          var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res, msg);
+        } else {
+          shareUtil.SendSuccess(res);
+        }
     });
   } else {
     var msg = "parID missing";

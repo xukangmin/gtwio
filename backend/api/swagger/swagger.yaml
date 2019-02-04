@@ -931,7 +931,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /parameter/addToRequireList:
+  /parameter/updateRequireList:
     x-swagger-router-controller: parameterManage
     put:
       tags:
@@ -939,7 +939,7 @@ paths:
       summary: update a Parameter
       description: update a Parameter
       # used as the method name of the controller
-      operationId: addToRequireList
+      operationId: updateRequireList
       parameters:
       - in: body
         name: body
@@ -957,6 +957,32 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /parameter/updateRequireListByEquation:
+    x-swagger-router-controller: parameterManage
+    put:
+      tags:
+      - parameter
+      summary: update a Parameter
+      description: update a Parameter
+      # used as the method name of the controller
+      operationId: updateRequireListByEquation
+      parameters:
+      - in: body
+        name: body
+        description: Parameter object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRequireListByEquationModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /parameter/deleteParameter:
     x-swagger-router-controller: parameterManage
     delete:
@@ -1350,6 +1376,11 @@ definitions:
         type: array
         items:
           type: string
+  UpdateRequireListByEquationModel:
+    type: object
+    properties:
+      ParameterID:
+        type: string
   UpdateParameterModel:
     type: object
     properties:

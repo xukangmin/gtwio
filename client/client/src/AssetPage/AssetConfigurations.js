@@ -8,7 +8,7 @@ import './asset.css';
 import Loader from '../_components/loader';
 import SideNav from '../_components/sideNav';
 import HeaderNav from '../_components/headerNav';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button } from 'reactstrap';
 import classnames from 'classnames';
 
 const DeviceTableRow = (props) => {
@@ -29,7 +29,8 @@ const DeviceTableRow = (props) => {
             <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
           </select>
         </td>
-        <td>{props.data.LastCalibrationDate.slice(0,10)}</td>
+        <td>{props.data.LastCalibrationDate ? props.data.LastCalibrationDate.slice(0,10) : ""}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>
       </tr>
   );
 };
@@ -58,6 +59,7 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
     this.updateDeviceTag = this.updateDeviceTag.bind(this);
+    this.deleteDevice = this.deleteDevice.bind(this);
 
     this.state = {
       activeTab: '1',
@@ -115,6 +117,12 @@ class AssetConfigurations extends React.Component {
     this.props.dispatch(deviceActions.updateDeviceTag(this.user.UserID, this.asset, event.target.name, event.target.value));
   }
 
+  deleteDevice(device){
+    if (confirm("Are you sure to delete this device?")){
+        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
+    }
+  }
+
   render() {
     const { device } = this.props;
     console.log(device)
@@ -154,11 +162,12 @@ class AssetConfigurations extends React.Component {
                                     <th>Parameter</th>
                                     <th>Location Tag</th>
                                     <th>Last Calibration Date</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} update={this.updateDeviceTag} key={i}/>
+                                    <DeviceTableRow data={singleDevice} update={this.updateDeviceTag} delete={this.deleteDevice} key={i}/>
                                 )}
                             </tbody>
                         </table>

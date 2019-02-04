@@ -20,7 +20,6 @@ import toastr from 'toastr';
 
 class AssetDevice extends React.Component {
   constructor(props) {
-    console.log('asset device')
     super(props);
     this.state = {
         AssetID : props.match.params.assetID,
@@ -31,64 +30,6 @@ class AssetDevice extends React.Component {
         errors: {
         },
         addNewDeviceModalOpen: false,
-        /*
-        Devices: [{
-          DeviceID: "11111",
-          DeviceName: "Device1",
-          SerialNumber: "02A002",
-          Variables: [
-            {
-              varName: "Temp",
-              varID: "12345",
-              LastTimeStamp: 12345
-            },
-            {
-              varName: "Hum",
-              varID: "12346",
-              LastTimeStamp: 12345
-            }
-          ],
-          Status: "Active"
-        },
-        {
-          DeviceName: "Device2",
-          Variables: [
-            {
-              varName: "Temp",
-              varID: "12347",
-              LastTimeStamp: 12345
-            },
-            {
-              varName: "Hum",
-              varID: "12348",
-              LastTimeStamp: 12345
-            },
-            {
-              varName: "Test",
-              varID: "12349",
-              LastTimeStamp: 12345
-            }
-          ],
-          Status: "Inactive"
-        },
-        {
-          DeviceName: "Device3",
-          SerialNumber: "02A100",
-          Variables: [
-            {
-              varName: "Temp",
-              varID: "12350",
-              LastTimeStamp: 12345
-            },
-            {
-              varName: "Hum",
-              varID: "12351",
-              LastTimeStamp: 12345
-            }
-          ],
-          Status: "Inactive"
-        }
-        ]*/
     }
 
     this.user = JSON.parse(localStorage.getItem('user'));

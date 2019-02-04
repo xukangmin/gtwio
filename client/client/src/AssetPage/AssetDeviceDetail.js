@@ -27,7 +27,7 @@ const DeviceInfo = (props) => {
           </tr>
           <tr>
             <th>Last Calibration Date</th>
-            <td>{device.LastCalibrationDate}</td>
+            <td>{device.LastCalibrationDate.slice(0,10)}</td>
           </tr>
         </tbody>
       </Table>

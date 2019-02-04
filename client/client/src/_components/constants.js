@@ -1,6 +1,6 @@
 export const gConstants = {
     API_ROOT: 'http://192.168.1.30:10010',
-    SERVER_ROOT: 'http://192.168.1.27',
+    SERVER_ROOT: 'http://localhost',
     SUCCESS: 'ALERT_SUCCESS',
     ERROR: 'ALERT_ERROR',
     CLEAR: 'ALERT_CLEAR',
@@ -69,6 +69,10 @@ export const gConstants = {
     DELETE_DEVICE_REQUEST: 'DELETE_DEVICE_REQUEST',
     DELETE_DEVICE_SUCCESS: 'DELETE_DEVICE_SUCCESS',
     DELETE_DEVICE_FAILURE: 'DELETE_DEVICE_FAILURE',
+
+    UPDATE_DEVICE_REQUEST: 'UPDATE_DEVICE_REQUEST',
+    UPDATE_DEVICE_SUCCESS: 'UPDATE_DEVICE_SUCCESS',
+    UPDATE_DEVICE_FAILURE: 'UPDATE_DEVICE_FAILURE',
     // ****************************
 
     // ********* DASHBOARD ************

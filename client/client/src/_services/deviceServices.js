@@ -1,7 +1,5 @@
-
-
 import { gConstants } from '../_components/constants'
-
+import SortDevices from '../_components/SortDevices';
 
 const getAllDevices = (user, assetid) => {
     const requestOptions = {
@@ -21,7 +19,7 @@ const getAllDevices = (user, assetid) => {
             return resJSON;
         })
         .then(deviceData => {
-            return deviceData;
+            return SortDevices(deviceData);
         });
 }
 
@@ -104,9 +102,40 @@ const deleteDevice = (assetid, deviceid) => {
     });
 }
 
+const updateDeviceTag = (deviceid, data) => {
+
+    const body = {
+        'DeviceID': deviceid,
+        'Tag': data
+    };
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(gConstants.API_ROOT + '/device/updateDevice', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const deviceServices = {
     addNewDevice,
     deleteDevice,
     getAllDevices,
-    getSingleDevice
+    getSingleDevice,
+    updateDeviceTag
 };

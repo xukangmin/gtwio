@@ -1,5 +1,5 @@
 import { gConstants } from '../_components/constants';
-import SortDevices from '../_components/SortDevices'
+import SortDevices from '../_components/SortDevices';
 
 const loadSVGdata = (svgname) => {
     const requestOptions = {

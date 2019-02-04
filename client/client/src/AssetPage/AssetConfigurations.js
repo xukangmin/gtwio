@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
+import { AddNewDeviceModal } from '../AssetPage/device_parts/AddNewDeviceModal';
 import './asset.css';
 import Loader from '../_components/loader';
 import SideNav from '../_components/sideNav';
@@ -13,17 +14,22 @@ import classnames from 'classnames';
 const DeviceTableRow = (props) => {
   return(
       <tr>
-        <td>{props.data.SerialNumber}</td>
-        <td>{props.data.Parameters[0].ParameterID}</td>
+        <td><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
         <td>
-          <select value = {0} onChange={console.log('')}>
-            <option value = "0">ShellInlet</option>
-            <option value = "0">ShellOutlet</option>
-            <option value = "0">TubeInlet</option>
-            <option value = "0">TubeOutlet</option>
+          <select>
+            <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
           </select>
         </td>
-        <td>{props.data.LastCalibrationDate}</td>
+        <td>
+          <select name={props.data.DeviceID} value = {props.data.Tag} onChange={props.update}>
+            <option value = "{props.data.Tag}">{props.data.Tag}</option>
+            <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
+            <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
+            <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
+            <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
+          </select>
+        </td>
+        <td>{props.data.LastCalibrationDate.slice(0,10)}</td>
       </tr>
   );
 };
@@ -47,8 +53,19 @@ class AssetConfigurations extends React.Component {
     this.props.dispatch(deviceActions.getAllDeviceData(this.user, this.asset));
 
     this.toggle = this.toggle.bind(this);
+    this.AddDevice = this.AddDevice.bind(this);
+    this.updateDeviceState = this.updateDeviceState.bind(this);
+    this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
+    this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
+    this.updateDeviceTag = this.updateDeviceTag.bind(this);
+
     this.state = {
-      activeTab: '1'
+      activeTab: '1',
+      NewDevice: {
+        DisplayName: '',
+        SerialNumber: ''
+      },
+      addNewDeviceModalOpen: false
     };
   }
 
@@ -58,6 +75,44 @@ class AssetConfigurations extends React.Component {
         activeTab: tab
       });
     }
+  }
+
+  AddDevice(event) {
+    if (this.state.NewDevice.DisplayName === "") {
+      this.setState({errors: {DisplayName: "Name cannot be empty"}});
+      return;
+    }
+
+    this.props.dispatch(deviceActions.addNewDevice(this.user, this.asset, this.state.NewDevice));
+    this.AddDeviceModalClose();
+  }
+
+  updateDeviceState(event) {
+    const field = event.target.name;
+    let device = Object.assign({}, this.state.NewDevice);
+    device[field] = event.target.value;
+    this.setState({errors: {}});
+    return this.setState({NewDevice: device});
+  }
+
+  AddDeviceModalOpen() {
+    this.setState({
+      addDeviceModalOpen: true,
+      NewDevice: {
+        DisplayName: '',
+        SerialNumber: ''
+      },
+      errors: {
+      }
+    });
+  }
+
+  AddDeviceModalClose() {
+    this.setState({addDeviceModalOpen: false});
+  }
+
+  updateDeviceTag(event){
+    this.props.dispatch(deviceActions.updateDeviceTag(this.user.UserID, this.asset, event.target.name, event.target.value));
   }
 
   render() {
@@ -90,7 +145,7 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
-                    <button type="button" className="btn btn-info mb-3" href="#" data-toggle="modal" data-target="#addNewAssetModal" id="addNewAssetModalButton">Add Device</button>
+                    <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
                     <div className="table-responsive">
                         <table className="table table-striped" style={{textAlign:'center'}}>
                             <thead>
@@ -98,12 +153,12 @@ class AssetConfigurations extends React.Component {
                                     <th>Serial Numer</th>
                                     <th>Parameter</th>
                                     <th>Location Tag</th>
-                                    <th>Last Calibration</th>
+                                    <th>Last Calibration Date</th>
                                 </tr>
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} key={i}/>
+                                    <DeviceTableRow data={singleDevice} update={this.updateDeviceTag} key={i}/>
                                 )}
                             </tbody>
                         </table>
@@ -114,7 +169,7 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <button type="button" className="btn btn-info mb-3" href="#" data-toggle="modal" data-target="#addNewAssetModal" id="addNewAssetModalButton">Add Parameter</button>
+                  <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Parameter</button>
                   <div className="table-responsive">
                       <table className="table table-striped" style={{textAlign:'center'}}>
                           <thead>
@@ -135,6 +190,15 @@ class AssetConfigurations extends React.Component {
               </Row>
             </TabPane>
           </TabContent>
+
+          <AddNewDeviceModal
+            device={this.state.NewDevice}
+            onChange={this.updateDeviceState}
+            onAdd={this.AddDevice}
+            errors={this.state.errors}
+            isOpen={this.state.addDeviceModalOpen}
+            onClose={this.AddDeviceModalClose}
+          />
           </div>
         :
         <Loader/>}
@@ -144,7 +208,7 @@ class AssetConfigurations extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.device;
+  const { data, addedData } = state.device;
   return {
       device : data
   };

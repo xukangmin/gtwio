@@ -80,10 +80,30 @@ const deleteDevice = (user, assetid, deviceid) => {
     function failure(error) { return { type: gConstants.DELETE_DEVICE_FAILURE, error } }
 }
 
+const updateDeviceTag = (user, assetid, deviceid, data) => {
+    return dispatch => {
+        dispatch(request());
+        deviceServices.updateDeviceTag(deviceid, data)
+            .then(
+                info => {
+                    dispatch(getAllDeviceData(user, assetid));
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.UPDATE_DEVICE_REQUEST } }
+    function success(data) { return { type: gConstants.UPDATE_DEVICE_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.UPDATE_DEVICE_FAILURE, error } }
+}
 
 export const deviceActions = {
     addNewDevice,
     deleteDevice,
     getAllDeviceData,
-    getSingleDeviceData
+    getSingleDeviceData,
+    updateDeviceTag
 };

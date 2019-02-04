@@ -17,22 +17,6 @@ class HxTag extends React.Component {
     this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.match.params.assetID, this.props.match.params.tagID, Date.now()-600000, Date.now()));
   }
 
-  sortDevice(data){
-    return(data.sort(
-      function(a,b){
-        var nameA = a.SerialNumber.toUpperCase();
-        var nameB = b.SerialNumber.toUpperCase();
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
-      }
-    ))
-  }
-
   render(){
     const { AssetData } = this.props;
     const { DeviceData } = this.props;
@@ -44,11 +28,11 @@ class HxTag extends React.Component {
             <h3 className = "mt-3">{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
 
             <Row>
-              <div className = "col-9"><TempPlot asset = {AssetData.AssetID} tag = {this.props.match.params.tagID}/></div>
-              <div className = "col-3"><TempRadar/></div>
+              <div className = "col-9"><TagPlot asset = {AssetData.AssetID} tag = {this.props.match.params.tagID}/></div>
+              <div className = "col-3"><TagRadar/></div>
             </Row>
             <Row>
-              <Col className = "mt-5"><TempTable/></Col>
+              <Col className = "mt-5"><TagTable/></Col>
               <Col></Col>
             </Row>
           </div>

@@ -76,9 +76,31 @@ const addAsset = (user, displayname) => {
     });
 }
 
+const deleteAsset = (assetid, userid) => {
+
+    const requestOptions = {
+        method: 'DELETE'
+    };
+
+    return fetch(gConstants.API_ROOT + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + userid, requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
 
 export const assetServices = {
     getAssetsOverview,
     getSingleAsset,
-    addAsset
+    addAsset,
+    deleteAsset
 };

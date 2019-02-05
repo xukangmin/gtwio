@@ -60,6 +60,8 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
     this.updateDeviceTag = this.updateDeviceTag.bind(this);
     this.deleteDevice = this.deleteDevice.bind(this);
+    // this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+
 
     this.state = {
       activeTab: '1',

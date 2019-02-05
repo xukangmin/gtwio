@@ -5,6 +5,7 @@ import AssetNav from './AssetNav';
 
 
 const AssetSubMenu = (props) => {
+    console.log(props)
     return (
         <li className="nav-item">
             <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"} onClick={()=>props.assetClick(props.singleAsset.AssetID,props.singleAsset.DisplayName)}>

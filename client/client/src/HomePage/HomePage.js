@@ -104,7 +104,7 @@ class HomePage extends React.Component {
                 <AddNewAssets user={this.user} dispatch={this.props.dispatch}/>
               </div>
               <div>
-                <MainArea assets={assets_display} />
+                <MainArea assets={assets_display} user={this.user} dispatch={this.props.dispatch}/>
               </div>
 
           </div> :

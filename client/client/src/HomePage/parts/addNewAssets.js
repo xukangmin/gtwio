@@ -20,6 +20,7 @@ class AddNewAssets extends React.Component {
         e.preventDefault();
         this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname));
         $(this.modal).modal('hide');
+        this.setState({showModal: false});
     }
 
     handleEditSubmit(e){

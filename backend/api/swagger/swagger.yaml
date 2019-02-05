@@ -3,10 +3,10 @@ info:
   version: "0.0.1"
   title: GTW IOT API
 # during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
+host: http://192.168.1.30
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -17,12 +17,12 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
-  
+
 tags:
 - name: asset
   description: Get Asset Info
   externalDocs:
-    description: Find out more  
+    description: Find out more
     url: http://swagger.io
 - name: data
   description: retrieve data from database
@@ -43,10 +43,10 @@ tags:
  #   type: apiKey
   #  in: header
   #  name: x-api-key
-    
+
 #security:
  # - UserSecurity: []
-  
+
 paths:
   /asset/getAssetByUser:
     # binds a127 app logic to a route
@@ -101,7 +101,7 @@ paths:
       parameters:
         - name: AssetID
           in: query
-          description: AssetID 
+          description: AssetID
           required: true
           type: string
       responses:
@@ -152,7 +152,7 @@ paths:
       tags:
       - asset
       summary: update an existing Asset
-      description: update an existing Asset 
+      description: update an existing Asset
       # used as the method name of the controller
       operationId: updateAsset
       parameters:
@@ -176,7 +176,7 @@ paths:
     delete:
       tags:
       - asset
-      description: delete an existing Asset 
+      description: delete an existing Asset
       # used as the method name of the controller
       operationId: deleteAsset
       parameters:
@@ -250,7 +250,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"   
+            $ref: "#/definitions/ErrorResponse"
   /user/validateResetPasswordLink:
     x-swagger-router-controller: userManage
     get:
@@ -281,7 +281,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"   
+            $ref: "#/definitions/ErrorResponse"
   /user/updatePassword:
     x-swagger-router-controller: userManage
     get:
@@ -312,7 +312,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"   
+            $ref: "#/definitions/ErrorResponse"
   /user/createUser:
     x-swagger-router-controller: userManage
     post:
@@ -539,7 +539,7 @@ paths:
       parameters:
         - name: DeviceID
           in: query
-          description: DeviceID 
+          description: DeviceID
           required: true
           type: string
       responses:
@@ -684,7 +684,7 @@ paths:
       parameters:
         - name: DashboardID
           in: query
-          description: DashboardID 
+          description: DashboardID
           required: true
           type: string
       responses:
@@ -844,7 +844,7 @@ paths:
                 type: integer
         default:
           description: Error
-          schema: 
+          schema:
             $ref: "#/definitions/ErrorResponse"
   /parameter/getParameterAttributes:
     # binds a127 app logic to a route
@@ -859,7 +859,7 @@ paths:
       parameters:
         - name: ParameterID
           in: query
-          description: ParameterID 
+          description: ParameterID
           required: true
           type: string
       responses:
@@ -1112,7 +1112,7 @@ paths:
       - name: body
         in: body
         required: true
-        schema: 
+        schema:
           $ref: '#/definitions/AddDataByDeviceIDModel'
       responses:
         200:
@@ -1136,11 +1136,11 @@ paths:
       - name: body
         in: body
         required: true
-        schema: 
+        schema:
           properties:
             Data:
             # type: object
-              #items: 
+              #items:
               $ref: '#/definitions/AddDataByDeviceIDModel'
             Timestamp:
               type: integer
@@ -1166,7 +1166,7 @@ paths:
       - name: body
         in: body
         required: true
-        schema: 
+        schema:
           $ref: '#/definitions/AddDataBySerialNumberModel'
       responses:
         200:
@@ -1270,7 +1270,7 @@ definitions:
   AddDataBySerialNumberModel:
     type: object
     properties:
-      SerialNumber: 
+      SerialNumber:
         type: string
       Value:
         type: number
@@ -1281,22 +1281,22 @@ definitions:
   AddDataByDeviceIDModel:
     type: object
     properties:
-      DeviceID: 
+      DeviceID:
         type: string
       Value:
         type: number
       DataType:
         type: string
       TimeStamp:
-        type: number      
+        type: number
   CreateParameterModel:
     type: object
     properties:
       AssetID:
         type: string
-      DeviceID: 
+      DeviceID:
         type: string
-      Unit: 
+      Unit:
         type: string
       DataType:
         type: string
@@ -1305,9 +1305,9 @@ definitions:
     properties:
       ParameterID:
         type: string
-      CurrentValue: 
+      CurrentValue:
         type: string
-      DisplayName: 
+      DisplayName:
         type: string
       Tag:
         type: string
@@ -1322,9 +1322,9 @@ definitions:
         type: string
       ParameterID:
         type: string
-      CurrentValue: 
+      CurrentValue:
         type: string
-      ParameterName: 
+      ParameterName:
         type: string
       ParameterTag:
         type: string

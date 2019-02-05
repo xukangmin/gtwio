@@ -22,6 +22,26 @@ const addAsset = (user, displayname) => {
     function failure(error) { return { type: gConstants.ADD_ASSET_FAILURE, error } }
 }
 
+const deleteAsset = (assetid, user) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.deleteAsset(assetid, user)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getAssetsOverview(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.DELETE_ASSET_REQUEST } }
+    function success(msg) { return { type: gConstants.DELETE_ASSET_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.DELETE_ASSET_FAILURE, error } }
+}
+
 const getAssetsOverview = (user) => {
     return dispatch => {
         dispatch(request());
@@ -109,5 +129,6 @@ const getAllDeviceData = (user, assetid) => {
 export const assetActions = {
     getAssetsOverview,
     getSingleAssetData,
-    addAsset
+    addAsset,
+    deleteAsset
 };

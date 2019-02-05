@@ -1,4 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { assetActions } from '../../_actions/assetAction'
+import { Button } from 'reactstrap';
 
 const MainTableRow = (props) => {
     return(
@@ -13,9 +17,17 @@ const MainTableRow = (props) => {
             <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
             <td>{props.singleAsset.Location}</td>
             <td>
-              <button style={{marginRight: "10px"}} onClick={()=>props.editAssetTarget(props.singleAsset.DisplayName)} type="button" className="btn btn-info" href="#" data-toggle="modal" data-target="#editAssetModal" id="editAssetModalButton"><i className="fas fa-edit"></i></button>
-              <button type="button" className="btn btn-info" href="#" data-toggle="modal" data-target="#deleteAssetModal" id="deleteAssetModalButton"><i className="fas fa-trash-alt"></i></button>
-
+              <Button style={{marginRight: "10px"}}
+                      href="#"
+                      data-toggle="modal"
+                      data-target="#editAssetModal"
+                      id="editAssetModalButton">
+                        <i className="fas fa-edit"></i>
+              </Button>
+              <Button color="danger"
+                      onClick={()=>props.deleteSelectedAsset(props.singleAsset.AssetID, props.user)}>
+                        <i className="fa fa-trash" aria-hidden="true"></i>
+              </Button>
             </td>
         </tr>
     );
@@ -27,6 +39,7 @@ class MainArea extends React.Component {
       this.state = {
         clickedAsset: null
       }
+      this.deleteAsset = this.deleteAsset.bind(this);
     }
 
     assetSelected(id,name){
@@ -34,8 +47,10 @@ class MainArea extends React.Component {
       localStorage.setItem("selectedAssetName", name);
     }
 
-    editAsssetSelected(name){
-      localStorage.setItem("ToEditAsset", name)
+    deleteAsset(asset, user){
+      if (confirm("Are you sure to delete this asset?")){
+          this.props.dispatch(assetActions.deleteAsset(asset, user.UserID));
+      }
     }
 
     render() {
@@ -54,7 +69,7 @@ class MainArea extends React.Component {
                         </thead>
                         <tbody id="main-table-content">
                             {this.props.assets.map((singleAsset,i) =>
-                                <MainTableRow assetClicked={this.assetSelected} editAssetTarget={this.editAsssetSelected} singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
+                                <MainTableRow assetClicked={this.assetSelected} deleteSelectedAsset={this.deleteAsset} user={this.props.user} singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
                             )}
                         </tbody>
                     </table>
@@ -64,6 +79,4 @@ class MainArea extends React.Component {
     }
 
 }
-
-
-export default MainArea
+ export default MainArea

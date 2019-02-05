@@ -79,24 +79,32 @@ function _getSingleDataPoint(paraid, currentTimeStamp) {
     );
 }
 
-function _perform_calculation(para_arr, data_arr, equation) {
+function _perform_calculation(dataobj, equation) {
   return new Promise(
     (resolve, reject) => {
-      console.log(para_arr);
-      console.log(data_arr);
+      console.log("_perform_calculation:");
+      console.log(dataobj);
       var new_eval = equation.replace('Avg', 'math.mean');
-      for(var i = 0; i < para_arr.length; i++) {
-        new_eval = new_eval.replace(para_arr[i], data_arr[i].toString());
-      }
 
-      var result = eval(new_eval);
-      console.log(result);
-      resolve(result);
+      for(var i = 0; i < dataobj.length; i++) {
+        new_eval = new_eval.replace(dataobj[i].ParameterID, dataobj[i].Value.toString());
+      }
+      var new_eval = new_eval.replace(/[\[\]]/g,'');
+      console.log(new_eval);
+      try {
+
+        var result = eval(new_eval);
+        resolve(result);
+      }
+      catch(err) {
+        console.error(err);
+        reject(err);
+      }
     }
   );
 }
 
-function trigger_single_parameter_calculation(paraid) {
+function trigger_single_parameter_calculation(paraid, dataobj) {
   console.log("trigger paraid=" + paraid);
 
   Parameter.findOne({ParameterID: paraid}, function(err,data){
@@ -107,47 +115,78 @@ function trigger_single_parameter_calculation(paraid) {
           if (data) {
             if (data.Require) {
               if (data.Require.length > 0) {
-
-                Promise.all(data.Require.map(item => _getSingleDataPoint(item, currentTimeStamp)))
-                  .then(
-                    ret => {
-                      var isValid = true;
-                      for(var i in ret)
-                      {
-                         if (ret[i].length === 0) {
-                           isValid = false;
-                         }
+                if (data.RawData) {
+                  if (data.RawData.length > 0)
+                  {
+                    // check if exists, if exists, replace the old one.
+                    var data_exist = false;
+                    for (var i in data.RawData)
+                    {
+                      if (data.RawData[i].ParameterID === dataobj.ParameterID) {
+                        data.RawData.splice(i,1,dataobj);
+                        data_exist = true;
                       }
-                      // all data must exist
-                      var dataarr = [];
-                      if (isValid) {
-                        for(var i in ret)
+                    }
+                    if (!data_exist) {
+                      data.RawData.push(dataobj);
+                    }
+
+                    var all_match = true;
+                    var datareqobj = data.Require.toObject();
+                    var max_timestamp = 0;
+                    for (var i in datareqobj) {
+                      var check = false;
+                      for (var j in data.RawData) {
+                          if (data.RawData[j].ParameterID === datareqobj[i]) {
+                            check = true;
+                          }
+                      }
+
+
+                      if (!check) {
+                        all_match = false;
+                      }
+                    }
+
+                    if (all_match) {
+
+                      for(var i in data.RawData) {
+                        if (data.RawData[i].TimeStamp > max_timestamp)
                         {
-                          dataarr.push(ret[i][0].Value);
+                          max_timestamp = data.RawData[i].TimeStamp;
                         }
-                        return _perform_calculation(data.Require, dataarr, data.Equation)
                       }
 
+                      console.log("trigger calculation");
+                      _perform_calculation(data.RawData, data.Equation)
+                        .then(
+                          ret => {
+                            console.log(ret);
+                            _addDataByParameterID(paraid, ret, max_timestamp, err => {if(err) console.error(err)});
+                          }
+                        )
+                        .catch(
+                          err => {
+                            console.error(err);
+                          }
+                        )
+                      data.RawData = [];
                     }
-                  )
-                  .then(
-                    ret => {
-                      if (ret) {
-                        console.log(ret);
-                        _addDataByParameterID(paraid, ret, currentTimeStamp, function(err) {
-                            if (err) {
-                              console.log(err);
-                            }
-                        })
-                      }
-                    }
-                  )
-                  .catch(
-                    err => {
-                      console.log(err);
 
-                    }
-                  )
+
+                    data.save();
+                    // check if data match require
+
+                  } else {
+                    data.RawData.push(dataobj);
+                    data.save();
+                  }
+                } else {
+                  data.RawData = [];
+                  data.RawData.push(dataobj);
+                  data.save();
+                }
+                //
               }
             }
             /*
@@ -167,8 +206,8 @@ function trigger_single_parameter_calculation(paraid) {
   });
 }
 
-function trigger_all_parameters(paraID) {
-  Parameter.findOne({ParameterID: paraID}, function(err, data) {
+function trigger_all_parameters(dataobj) {
+  Parameter.findOne({ParameterID: dataobj.ParameterID}, function(err, data) {
     if (err)
     {
       console.log(err);
@@ -177,7 +216,7 @@ function trigger_all_parameters(paraID) {
         if (data.RequiredBy) {
           if (data.RequiredBy.length > 0) {
             for (var i = 0; i < data.RequiredBy.length; i++) {
-              trigger_single_parameter_calculation(data.RequiredBy[i]);
+              trigger_single_parameter_calculation(data.RequiredBy[i], dataobj);
             }
           }
         }
@@ -193,12 +232,17 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
   data.ParameterID = paraID;
   data.Value = value;
   data.TimeStamp = timestamp;
+  var dataobj = {
+    ParameterID: paraID,
+    Value: value,
+    TimeStamp: timestamp
+  };
   console.log("_addDataByParameterID");
   console.log(paraID);
   console.log(value);
   data.save(err => {
     // trigger calculation
-    trigger_all_parameters(paraID);
+    trigger_all_parameters(dataobj);
     if (err)
     {
       callback(err);

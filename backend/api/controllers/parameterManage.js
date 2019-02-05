@@ -324,7 +324,7 @@ function _updateRequireListByEquation(paraid, equation, callback) {
 
 function updateRequireListByEquation(req, res) {
   var paraID = req.body.ParameterID;
-
+  console.log("Test");
   Parameter.findOne({ParameterID: paraID}, function(err, data) {
     if (data.Equation) {
       _updateRequireListByEquation(paraID, data.Equation, function(err, data) {
@@ -335,6 +335,9 @@ function updateRequireListByEquation(req, res) {
           shareUtil.SendSuccess(res);
         }
       });
+    } else {
+      var msg = "no equation:" +  JSON.stringify(err, null, 2);
+      shareUtil.SendInvalidInput(res, msg);
     }
   });
 

@@ -15,7 +15,8 @@ const ParameterSchema = new Schema(
     Tag: String,
     Equation: String,
     RequiredBy: [String], // ParameterID List
-    Require: [String] // ParameterID List
+    Require: [String], // ParameterID List
+    RawData: [Object]
   },
   { timestamps: true }
 );

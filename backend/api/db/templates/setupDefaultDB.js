@@ -176,7 +176,8 @@ function createParameter(assetid, index, displayName, tag, equation) {
   para.DisplayName = displayName;
   para.Tag = tag;
   para.Equation = equation;
-
+  para.RawData = [];
+  
   para.save(err => {
     if (err)
     {

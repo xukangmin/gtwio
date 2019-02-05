@@ -2,7 +2,8 @@ const Data = require('../api/db/data.js');
 const Device = require('../api/db/device.js');
 const Parameter = require('../api/db/parameter.js');
 const Asset = require('../api/db/asset.js');
-
+const fetch = require('node-fetch');
+const API_PORT =  require('../config/constants.js').API_PORT;
 function generate_simulation_data(paraID, lowRange, highRange) {
   let data = new Data();
 
@@ -16,6 +17,36 @@ function generate_simulation_data(paraID, lowRange, highRange) {
       console.log(err);
     }
   });
+}
+
+function generate_simulation_data1(paraID, lowRange, highRange) {
+  const requestOptions = {
+      headers: { 'Content-Type': 'application/json'},
+      method: 'POST',
+      body: JSON.stringify({
+          'ParameterID': paraID,
+          'Value': Math.random() * (highRange-lowRange) + lowRange,
+          "TimeStamp": Math.floor((new Date).getTime())
+      })
+  };
+
+  fetch('http://localhost:' + API_PORT + '/data/addDataByParameterID', requestOptions)
+      .then(response => {
+          return Promise.all([response, response.json()])
+      })
+      .then( ([resRaw, resJSON]) => {
+          if (!resRaw.ok)
+          {
+              return Promise.reject(resJSON.message);
+          }
+          return resJSON;
+      })
+      .then(ret => {
+
+      })
+      .catch(err => {
+        console.error(err);
+      });
 }
 
 module.exports.simualte = (interval) => {
@@ -38,7 +69,6 @@ module.exports.simualte = (interval) => {
     generate_simulation_data('TempPara13', 80, 85);
     generate_simulation_data('TempPara14', 80, 85);
     generate_simulation_data('TempPara15', 80, 85);
-
   }
 
   setInterval(myFunc, interval, 'funky');

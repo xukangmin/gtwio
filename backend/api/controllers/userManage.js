@@ -50,7 +50,7 @@ function createUser(req, res) {
           user.VerificationCodeExpire = epochtime + 1800; // expire in 30 minutes
           user.VerificationCode = crypto.randomBytes(20).toString('hex');
           user.ApiKey = crypto.randomBytes(16).toString('hex');
-          user.Active = 0;
+          user.Active = 1;
 
           user.save(err => {
             if (err)
@@ -59,7 +59,7 @@ function createUser(req, res) {
               shareUtil.SendInternalErr(res,msg);
             }
             else {
-              completeRegistrationEmail(user.EmailAddress, user.UserID, user.VerificationCode);
+              //completeRegistrationEmail(user.EmailAddress, user.UserID, user.VerificationCode);
               shareUtil.SendSuccessWithData(res, user);
             }
 

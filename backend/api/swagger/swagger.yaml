@@ -527,7 +527,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /device/getDeviceAttributes:
+  /device/getSingleDevice:
     # binds a127 app logic to a route
     x-swagger-router-controller: deviceManage
     get:
@@ -535,7 +535,7 @@ paths:
       - device
       description: Return list of device's attributes for a given DeviceID
       # used as the method name of the controller
-      operationId: getDeviceAttributes
+      operationId: getSingleDevice
       parameters:
         - name: DeviceID
           in: query
@@ -846,7 +846,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /parameter/getParameterAttributes:
+  /parameter/getSingleParameter:
     # binds a127 app logic to a route
     x-swagger-router-controller: parameterManage
     get:
@@ -855,7 +855,7 @@ paths:
       summary: Retrieve list of attributes
       description: Return list of parameter's attributes for a given ParameterID
       # used as the method name of the controller
-      operationId: getParameterAttributes
+      operationId: getSingleParameter
       parameters:
         - name: ParameterID
           in: query
@@ -931,6 +931,58 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /parameter/updateRequireList:
+    x-swagger-router-controller: parameterManage
+    put:
+      tags:
+      - parameter
+      summary: update a Parameter
+      description: update a Parameter
+      # used as the method name of the controller
+      operationId: updateRequireList
+      parameters:
+      - in: body
+        name: body
+        description: Parameter object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/AddToRequireListModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /parameter/updateRequireListByEquation:
+    x-swagger-router-controller: parameterManage
+    put:
+      tags:
+      - parameter
+      summary: update a Parameter
+      description: update a Parameter
+      # used as the method name of the controller
+      operationId: updateRequireListByEquation
+      parameters:
+      - in: body
+        name: body
+        description: Parameter object thats needs to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRequireListByEquationModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /parameter/deleteParameter:
     x-swagger-router-controller: parameterManage
     delete:
@@ -1314,6 +1366,20 @@ definitions:
       Equation:
         type: string
       Unit:
+        type: string
+  AddToRequireListModel:
+    type: object
+    properties:
+      ParameterID:
+        type: string
+      RequireList:
+        type: array
+        items:
+          type: string
+  UpdateRequireListByEquationModel:
+    type: object
+    properties:
+      ParameterID:
         type: string
   UpdateParameterModel:
     type: object

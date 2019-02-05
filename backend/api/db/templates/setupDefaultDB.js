@@ -4,6 +4,8 @@ const Parameter = require('../parameter.js');
 const Device = require('../device.js');
 const Dashboard = require('../dashboard.js');
 const Data = require('../data.js');
+const API_PORT =  require('../../../config/constants.js').API_PORT;
+const fetch = require('node-fetch');
 
 var userid = 'USERID0';
 
@@ -55,6 +57,10 @@ function deleteTempSensors() {
     });
     Data.deleteMany({ParameterID: 'TempPara' + i.toString()}, function(err){
     });
+  }
+
+  for (i = 0; i < 4; i++) {
+    Parameter.deleteMany({ParameterID: 'GenPara0' + i.toString()}, function() {});
   }
 
 }
@@ -136,6 +142,64 @@ function createDashboard(assetid) {
   });
 }
 
+function addRequireToParameter(paraid, requirelist) {
+  const requestOptions = {
+      headers: { 'Content-Type': 'application/json'},
+      method: 'POST',
+      body: JSON.stringify({
+          'ParameterID': paraid,
+          'RequireList': requirelist
+      })
+  };
+
+  fetch('http://localhost:' + API_PORT + '/parameter/addToRequireList', requestOptions)
+      .then(response => {
+          return Promise.all([response, response.json()])
+      })
+      .then( ([resRaw, resJSON]) => {
+          if (!resRaw.ok)
+          {
+              return Promise.reject(resJSON.message);
+          }
+          return resJSON;
+      })
+      .then(user => {
+          console.log(user);
+      });
+}
+
+function createParameter(assetid, index, displayName, tag, equation) {
+  let para = new Parameter();
+
+  para.ParameterID = 'GenPara' + index.toString();
+  para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+  para.DisplayName = displayName;
+  para.Tag = tag;
+  para.Equation = equation;
+
+  para.save(err => {
+    if (err)
+    {
+      var msg = "Parameters Save Error:" + JSON.stringify(err, null, 2);
+      console.log(msg);
+    } else {
+      Asset.findOneAndUpdate({AssetID: assetid},
+          {
+            $push:  {
+              Parameters: {ParameterID: para.ParameterID}
+            }
+          }, function(err) {
+              if (err) {
+                var msg = "Parameters Save Error:" + JSON.stringify(err, null, 2);
+                console.log(msg);
+              }
+          });
+    }
+  })
+}
+
+
+
 function createTempSensor(assetid, index, tagName, sn, angle) {
 
     let device = new Device();
@@ -146,6 +210,9 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
     device.Tag = tagName;
     device.SerialNumber = sn;
     device.Angle = angle;
+    device.LastCalibrationDate = (new Date).getTime();
+    device.CalibrationConstants = {A: 0, B: 1, C: 0};
+    device.CorrectionEquation = 'A * A * data + B * data + C';
 
     device.save(err => {
       if (err)
@@ -174,6 +241,7 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
             para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
             para.DisplayName = 'Temperature Value';
             para.CurrentValue = 0;
+            para.CurrentTimeStamp = 0;
             para.Type = 'Temperature';
             para.Unit = 'F';
             para.Tag = tagName + "/" + para.Type; // automatically generated if under device
@@ -229,10 +297,45 @@ function createDemoAccount() {
   createTempSensor(assetid, 13, "TubeOutlet", "02A014", 90);
   createTempSensor(assetid, 14, "TubeOutlet", "02A015", 180);
   createTempSensor(assetid, 15, "TubeOutlet", "02A016", 270);
+  createParameter('ASSETID0', 0, 'Average Shell Inlet', 'AVG_SHELL_INLET', 'Avg([TempPara0],[TempPara1],[TempPara2],[TempPara3])');
+  createParameter('ASSETID0', 1, 'Average Shell Outlet', 'AVG_SHELL_OUTLET', 'Avg([TempPara4],[TempPara5],[TempPara6],[TempPara7])');
+  createParameter('ASSETID0', 2, 'Average Tube Inlet', 'AVG_TUBE_INLET', 'Avg([TempPara8],[TempPara9],[TempPara10],[TempPara11])');
+  createParameter('ASSETID0', 3, 'Average Tube Outlet', 'AVG_TUBE_OUTLET', 'Avg([TempPara12],[TempPara13],[TempPara14],[TempPara15])');
+  //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
+  //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
+  //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
+  //addRequireToParameter('GenPara0', ['TempPara0','TempPara1','TempPara2','TempPara3']);
+
   //createTempSensor(assetid,0,3,'ShellInlet');
   //createTempSensor(assetid,4,7,'ShellOutlet');
   //createTempSensor(assetid,8,11,'TubeInlet');
   //createTempSensor(assetid,12,15,'TubeOutlet');
+}
+
+function testFunc(username, password) {
+  const requestOptions = {
+      headers: { 'Content-Type': 'application/json'},
+      method: 'POST',
+      body: JSON.stringify({
+          'EmailAddress': username,
+          'Password': password
+      })
+  };
+
+  fetch('http://localhost:' + API_PORT + '/user/createUser', requestOptions)
+      .then(response => {
+          return Promise.all([response, response.json()])
+      })
+      .then( ([resRaw, resJSON]) => {
+          if (!resRaw.ok)
+          {
+              return Promise.reject(resJSON.message);
+          }
+          return resJSON;
+      })
+      .then(user => {
+          console.log(user);
+      });
 }
 
 function deleteDemoAccount() {
@@ -261,3 +364,4 @@ function checkDemoExist(callback) {
 module.exports.createDemoAccount = createDemoAccount;
 module.exports.checkDemoExist = checkDemoExist;
 module.exports.deleteDemoAccount = deleteDemoAccount;
+module.exports.testFunc = testFunc;

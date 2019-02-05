@@ -43,7 +43,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 
 //SetupDB.createDemoAccount();
-Simulation.simualte(60000);
+Simulation.simualte(10000);
 
 var config = {
   appRoot: __dirname, // required config
@@ -77,7 +77,10 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
 
   var port = API_PORT;
-  app.listen(port);
+  app.listen(port, function() {
+      console.log('Backend started');
+      //SetupDB.testFunc('demo1@graftel.com','demo');
+  });
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {
     //console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');

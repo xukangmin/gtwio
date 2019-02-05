@@ -9,6 +9,7 @@ const ParameterSchema = new Schema(
     AddTimeStamp: Number,
     DisplayName: String,
     CurrentValue: Number,
+    CurrentTimeStamp: Number,
     Unit: String,
     Type: String,
     Tag: String,

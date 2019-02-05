@@ -13,6 +13,7 @@
     "express": "^4.16.4",
     "mathjs": "^5.4.1",
     "mongoose": "^5.4.3",
+    "node-fetch": "^2.3.0",
     "npm": "^6.5.0",
     "os": "^0.1.1",
     "swagger-express-mw": "^0.7.0",

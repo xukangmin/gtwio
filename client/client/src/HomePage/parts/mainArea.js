@@ -49,7 +49,7 @@ class MainArea extends React.Component {
 
     deleteAsset(asset, user){
       if (confirm("Are you sure to delete this asset?")){
-          this.props.dispatch(assetActions.deleteAsset(asset, user.UserID));
+          this.props.dispatch(assetActions.deleteAsset(asset, user));
       }
     }
 

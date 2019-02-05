@@ -10,6 +10,7 @@ import SideNav from '../_components/sideNav';
 import HeaderNav from '../_components/headerNav';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button } from 'reactstrap';
 import classnames from 'classnames';
+import toastr from 'toastr';
 
 const DeviceTableRow = (props) => {
   return(
@@ -22,7 +23,7 @@ const DeviceTableRow = (props) => {
         </td>
         <td>
           <select name={props.data.DeviceID} value = {props.data.Tag} onChange={props.update}>
-            <option value = "{props.data.Tag}">{props.data.Tag}</option>
+            <option value = {props.data.Tag}>{props.data.Tag}</option>
             <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
             <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
             <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
@@ -117,6 +118,7 @@ class AssetConfigurations extends React.Component {
 
   updateDeviceTag(event){
     this.props.dispatch(deviceActions.updateDeviceTag(this.user.UserID, this.asset, event.target.name, event.target.value));
+    toastr.success("Device location updated.");
   }
 
   deleteDevice(device){
@@ -127,7 +129,6 @@ class AssetConfigurations extends React.Component {
 
   render() {
     const { device } = this.props;
-    console.log(device)
     return (
       <div>
         {device?

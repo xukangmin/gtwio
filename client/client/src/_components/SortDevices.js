@@ -1,5 +1,4 @@
 export default function(data) {
-  console.log('sort')
   return(data.sort(
     function(a,b){
       var nameA = a.SerialNumber ? a.SerialNumber.toUpperCase() : "";

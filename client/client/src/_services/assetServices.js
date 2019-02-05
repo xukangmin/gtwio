@@ -76,13 +76,13 @@ const addAsset = (user, displayname) => {
     });
 }
 
-const deleteAsset = (assetid, userid) => {
+const deleteAsset = (assetid, user) => {
 
     const requestOptions = {
         method: 'DELETE'
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + userid, requestOptions)
+    return fetch(gConstants.API_ROOT + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + user.UserID, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

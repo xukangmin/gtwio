@@ -16,18 +16,26 @@ const DeviceTableRow = (props) => {
   return(
       <tr>
         <td><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
+        <td>{props.data.DisplayName ? props.data.DisplayName : ""}</td>
         <td>
           <select>
             <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
           </select>
         </td>
         <td>
-          <select name={props.data.DeviceID} value = {props.data.Tag} onChange={props.update}>
+          <select name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update}>
             <option value = {props.data.Tag}>{props.data.Tag}</option>
             <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
             <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
             <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
             <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
+          </select>
+          <select name={props.data.DeviceID + " Angle"} value = {props.data.Angle} onChange={props.update}>
+            <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
+            <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
+            <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>
+            <option style = {{display: props.data.Angle=="180" ? "none" : "block"}} value = "180">180°</option>
+            <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
           </select>
         </td>
         <td>{props.data.LastCalibrationDate ? props.data.LastCalibrationDate.slice(0,10) : ""}</td>
@@ -59,10 +67,8 @@ class AssetConfigurations extends React.Component {
     this.updateDeviceState = this.updateDeviceState.bind(this);
     this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
-    this.updateDeviceTag = this.updateDeviceTag.bind(this);
+    this.updateDevice = this.updateDevice.bind(this);
     this.deleteDevice = this.deleteDevice.bind(this);
-    // this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
-
 
     this.state = {
       activeTab: '1',
@@ -92,6 +98,24 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalClose();
   }
 
+  updateDevice(event){
+    console.log(event.target.name.split(" "))
+    const device = event.target.name.split(" ")[0];
+    const item = event.target.name.split(" ")[1];
+    let updateData = {
+        'DeviceID': device
+    }
+    updateData[item] = event.target.value;
+    this.props.dispatch(deviceActions.updateDevice(this.user.UserID, this.asset, updateData));
+    toastr.success("Device location updated.");
+  }
+
+  deleteDevice(device){
+    if (confirm("Are you sure to delete this device?")){
+        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
+    }
+  }
+
   updateDeviceState(event) {
     const field = event.target.name;
     let device = Object.assign({}, this.state.NewDevice);
@@ -114,17 +138,6 @@ class AssetConfigurations extends React.Component {
 
   AddDeviceModalClose() {
     this.setState({addDeviceModalOpen: false});
-  }
-
-  updateDeviceTag(event){
-    this.props.dispatch(deviceActions.updateDeviceTag(this.user.UserID, this.asset, event.target.name, event.target.value));
-    toastr.success("Device location updated.");
-  }
-
-  deleteDevice(device){
-    if (confirm("Are you sure to delete this device?")){
-        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
-    }
   }
 
   render() {
@@ -162,6 +175,7 @@ class AssetConfigurations extends React.Component {
                             <thead>
                                 <tr>
                                     <th>Serial Numer</th>
+                                    <th>Description</th>
                                     <th>Parameter</th>
                                     <th>Location Tag</th>
                                     <th>Last Calibration Date</th>
@@ -170,7 +184,7 @@ class AssetConfigurations extends React.Component {
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} update={this.updateDeviceTag} delete={this.deleteDevice} key={i}/>
+                                    <DeviceTableRow data={singleDevice} update={this.updateDevice} delete={this.deleteDevice} key={i}/>
                                 )}
                             </tbody>
                         </table>

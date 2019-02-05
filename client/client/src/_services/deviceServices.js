@@ -102,12 +102,9 @@ const deleteDevice = (assetid, deviceid) => {
     });
 }
 
-const updateDeviceTag = (deviceid, data) => {
+const updateDevice = (data) => {
 
-    const body = {
-        'DeviceID': deviceid,
-        'Tag': data
-    };
+    const body = data;
 
     const requestOptions = {
         method: 'PUT',
@@ -137,5 +134,5 @@ export const deviceServices = {
     deleteDevice,
     getAllDevices,
     getSingleDevice,
-    updateDeviceTag
+    updateDevice
 };

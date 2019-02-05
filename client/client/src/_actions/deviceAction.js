@@ -80,10 +80,11 @@ const deleteDevice = (user, assetid, deviceid) => {
     function failure(error) { return { type: gConstants.DELETE_DEVICE_FAILURE, error } }
 }
 
-const updateDeviceTag = (user, assetid, deviceid, data) => {
+const updateDevice = (user, assetid, data) => {
+    console.log(data);
     return dispatch => {
         dispatch(request());
-        deviceServices.updateDeviceTag(deviceid, data)
+        deviceServices.updateDevice(data)
             .then(
                 info => {
                     dispatch(getAllDeviceData(user, assetid));
@@ -105,5 +106,5 @@ export const deviceActions = {
     deleteDevice,
     getAllDeviceData,
     getSingleDeviceData,
-    updateDeviceTag
+    updateDevice
 };

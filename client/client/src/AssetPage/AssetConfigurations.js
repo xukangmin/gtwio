@@ -20,10 +20,12 @@ const DeviceTableRow = (props) => {
         <td>
           <InlineEdit
             value={props.data.DisplayName}
-            tag="p"
+            tag="span"
             type="text"
-            saveLabel="Save"
+            saveLabel="Update"
+            saveColor="#17a2b8"
             cancelLabel="Cancel"
+            cancelColor="#6c757d"
             onSave={value => props.updateName(props.data.DeviceID, value)}
           />
         </td>
@@ -77,9 +79,9 @@ class AssetConfigurations extends React.Component {
     this.updateDeviceState = this.updateDeviceState.bind(this);
     this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
-    this.updateDevice = this.updateDevice.bind(this);
-    this.updateDeviceDisplayName = this.updateDeviceDisplayName.bind(this);
-    this.deleteDevice = this.deleteDevice.bind(this);
+    this.UpdateDevice = this.UpdateDevice.bind(this);
+    this.UpdateDeviceDisplayName = this.UpdateDeviceDisplayName.bind(this);
+    this.DeleteDevice = this.DeleteDevice.bind(this);
 
     this.state = {
       activeTab: '1',
@@ -109,8 +111,7 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalClose();
   }
 
-  updateDevice(event){
-    console.log(event.target.name.split(" "))
+  UpdateDevice(event){
     const device = event.target.name.split(" ")[0];
     const item = event.target.name.split(" ")[1];
     let updateData = {
@@ -121,7 +122,7 @@ class AssetConfigurations extends React.Component {
     toastr.success("Device location updated.");
   }
 
-  updateDeviceDisplayName(id, data){
+  UpdateDeviceDisplayName(id, data){
     let updateData = {
         'DeviceID': id,
         'DisplayName': data
@@ -130,7 +131,7 @@ class AssetConfigurations extends React.Component {
     toastr.success("Device description updated.");
   }
 
-  deleteDevice(device){
+  DeleteDevice(device){
     if (confirm("Are you sure to delete this device?")){
         this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
     }
@@ -204,7 +205,7 @@ class AssetConfigurations extends React.Component {
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} update={this.updateDevice} updateName={this.updateDeviceDisplayName} delete={this.deleteDevice} key={i}/>
+                                    <DeviceTableRow data={singleDevice} update={this.UpdateDevice} updateName={this.UpdateDeviceDisplayName} delete={this.DeleteDevice} key={i}/>
                                 )}
                             </tbody>
                         </table>

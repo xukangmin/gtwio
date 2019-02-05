@@ -11,12 +11,22 @@ import HeaderNav from '../_components/headerNav';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button } from 'reactstrap';
 import classnames from 'classnames';
 import toastr from 'toastr';
+import InlineEdit from 'react-inline-edit-input';
 
 const DeviceTableRow = (props) => {
   return(
       <tr>
         <td><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
-        <td>{props.data.DisplayName ? props.data.DisplayName : ""}</td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="p"
+            type="text"
+            saveLabel="Save"
+            cancelLabel="Cancel"
+            onSave={value => props.updateName(props.data.DeviceID, value)}
+          />
+        </td>
         <td>
           <select>
             <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
@@ -68,6 +78,7 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
     this.updateDevice = this.updateDevice.bind(this);
+    this.updateDeviceDisplayName = this.updateDeviceDisplayName.bind(this);
     this.deleteDevice = this.deleteDevice.bind(this);
 
     this.state = {
@@ -108,6 +119,15 @@ class AssetConfigurations extends React.Component {
     updateData[item] = event.target.value;
     this.props.dispatch(deviceActions.updateDevice(this.user.UserID, this.asset, updateData));
     toastr.success("Device location updated.");
+  }
+
+  updateDeviceDisplayName(id, data){
+    let updateData = {
+        'DeviceID': id,
+        'DisplayName': data
+    }
+    this.props.dispatch(deviceActions.updateDevice(this.user.UserID, this.asset, updateData));
+    toastr.success("Device description updated.");
   }
 
   deleteDevice(device){
@@ -184,7 +204,7 @@ class AssetConfigurations extends React.Component {
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} update={this.updateDevice} delete={this.deleteDevice} key={i}/>
+                                    <DeviceTableRow data={singleDevice} update={this.updateDevice} updateName={this.updateDeviceDisplayName} delete={this.deleteDevice} key={i}/>
                                 )}
                             </tbody>
                         </table>

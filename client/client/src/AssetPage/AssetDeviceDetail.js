@@ -69,7 +69,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria</th>
-              <td>{"Window Size:" + device.Parameters[0].StabilityCriteria.WindowSize + " UpperLimit:" + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
+              <td>{"Window Size: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
             </tr>
             <tr>
               <th>Status</th>
@@ -168,7 +168,7 @@ class AssetDeviceDetail extends React.Component {
   render() {
     const { AssetID } = this.state;
     const { deviceData } = this.props;
-    let { parameterData } = this.props;
+    const { parameterData } = this.props;
 
     let tempParameter;
     if (deviceData){

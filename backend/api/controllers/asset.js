@@ -157,7 +157,6 @@ function updateAsset(req, res) {
 
 
 function deleteAsset(req, res) {
-  console.log("entered");
   var assetid = req.swagger.params.AssetID.value;
   var userid = req.swagger.params.UserID.value;
   if (assetid) {

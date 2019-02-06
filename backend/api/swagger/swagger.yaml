@@ -1316,7 +1316,7 @@ definitions:
       ParameterID:
         type: string
       Value:
-        type: string
+        type: number
       TimeStamp:
         type: number
   AddDataBySerialNumberModel:
@@ -1351,6 +1351,8 @@ definitions:
       Unit:
         type: string
       DataType:
+        type: string
+      Equation:
         type: string
   ParameterModel:
     type: object

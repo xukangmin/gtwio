@@ -4,7 +4,7 @@ const Parameter = require('../api/db/parameter.js');
 const Asset = require('../api/db/asset.js');
 const fetch = require('node-fetch');
 const API_PORT =  require('../config/constants.js').API_PORT;
-function generate_simulation_data(paraID, lowRange, highRange) {
+function generate_simulation_data1(paraID, lowRange, highRange) {
   let data = new Data();
 
   data.ParameterID = paraID;
@@ -19,7 +19,7 @@ function generate_simulation_data(paraID, lowRange, highRange) {
   });
 }
 
-function generate_simulation_data1(paraID, lowRange, highRange) {
+function generate_simulation_data(paraID, lowRange, highRange) {
   const requestOptions = {
       headers: { 'Content-Type': 'application/json'},
       method: 'POST',

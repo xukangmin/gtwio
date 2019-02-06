@@ -1352,6 +1352,8 @@ definitions:
         type: string
       DataType:
         type: string
+      Equation:
+        type: string
   ParameterModel:
     type: object
     properties:

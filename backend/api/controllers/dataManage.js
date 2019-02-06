@@ -80,27 +80,149 @@ function _getSingleDataPoint(paraid, currentTimeStamp) {
     );
 }
 
-function _perform_calculation(dataobj, equation) {
+function compareStrings (string1, string2, ignoreCase) {
+    if (ignoreCase) {
+            string1 = string1.toLowerCase();
+            string2 = string2.toLowerCase();
+    }
+
+    return string1 === string2;
+}
+
+function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
+  // [ParaID, Operation, Time to look back, offset]
   return new Promise(
     (resolve, reject) => {
-      //console.log("_perform_calculation:");
+      var plist = strpara.replace(/[\[\]]/g,'').split(',');
+      var paraid, op, timerange, offset;
+
+      if (plist.length > 4 || plist.length === 0)
+      {
+        reject(new Error('wrong format'));
+      } else {
+        if (plist.length === 1) {
+          paraid = plist[0];
+          op = "Current";
+          timerange = 0;
+          offset = 0;
+        } else if (plist.length === 2) {
+          paraid = plist[0];
+          op = "avg";
+          timerange = plist[1];
+          offset = 0;
+        } else if (plist.length === 3) {
+          paraid = plist[0];
+          op = plist[1];
+          timerange = plist[2];
+          offset = 0;
+        } else if (plist.length === 4) {
+          paraid = plist[0];
+          op = plist[1];
+          timerange = plist[2];
+          offset = plist[4];
+        } 
+
+        if (timerange == 0 || compareStrings(op,"Current") || compareStrings(op,"LAST")) {
+          var result =  dataobj.find(item => item.ParameterID === paraid).Value;
+          resolve(result);
+        }
+        else {
+          _getDataByParameterID({ParameterID: paraid}, latestTimeStamp - offset - timerange, latestTimeStamp - offset)
+            .then(
+              data => {
+                // first sort data
+                 if (data.length > 0) {
+                   data.sort((a,b) => a.TimeStamp - b.TimeStamp);
+                   var dataarr = data.map(item => item.Value);
+                   if (compareStrings(op,"AVG") || compareStrings(op,"MEAN")) { // average data
+                      var result = math.mean(dataarr);
+                      resolve(result);
+                   } else if (compareStrings(op,"MAX")) {
+                     var result = math.max(dataarr);
+                     resolve(result);
+                   } else if (compareStrings(op,"MIN")) {
+                     var result = math.min(dataarr);
+                     resolve(result);
+                   } else if (compareStrings(op,"COUNT")) {
+                     var result = dataarr.length;
+                     resolve(result);
+                   } else if (compareStrings(op,"MEDIAN")) {
+                     var result = math.median(dataarr);
+                     resolve(result);
+                   } else if (compareStrings(op,"SUM")) {
+                     var result = math.sum(dataarr);
+                     resolve(result);
+                   } else if (compareStrings(op,"FIRST")) {
+                     var result = dataarr[0];
+                     resolve(result);
+                   }
+                   else {
+                     reject(new Error('Operation not defined'))
+                   }
+                 } else {
+                   reject(new Error('data not exist'));
+                 }
+              }
+            )
+            .catch(
+              err => {
+                reject(err);
+              }
+            );
+        }
+
+
+      }
+
+
+
+    });
+
+}
+function _math_op_convert(streval) {
+  streval = streval.replace(/avg/ig,'mean');
+  return streval;
+}
+
+function _perform_calculation(dataobj, equation, latestTimeStamp) {
+  return new Promise(
+    (resolve, reject) => {
+      console.log("_perform_calculation:");
       //console.log(dataobj);
-      var new_eval = equation.replace('Avg', 'math.mean');
+      var new_eval = equation;
 
-      for(var i = 0; i < dataobj.length; i++) {
-        new_eval = new_eval.replace(dataobj[i].ParameterID, dataobj[i].Value.toString());
-      }
-      var new_eval = new_eval.replace(/[\[\]]/g,'');
-      //console.log(new_eval);
-      try {
+      var reg = /\[[^\]]+\]/g;
 
-        var result = eval(new_eval);
-        resolve(result);
-      }
-      catch(err) {
-        console.error(err);
-        reject(err);
-      }
+      var paralist = equation.match(reg);
+
+      Promise.all(paralist.map(item => _resolve_parameter(item, latestTimeStamp, dataobj)))
+        .then(
+          ret => {
+            //console.log(ret);
+            for(var i = 0; i < paralist.length; i++) {
+              new_eval = new_eval.replace(paralist[i], ret[i].toString());
+            }
+            new_eval = _math_op_convert(new_eval);
+            new_eval = new_eval.replace(/[\[\]]/g,'');
+            console.log(new_eval);
+            try {
+              var result = math.eval(new_eval);
+              //console.log(result);
+              resolve(result);
+            }
+            catch(err) {
+              console.error(err);
+              reject(err);
+            }
+          }
+        )
+        .catch(
+          err => {
+            console.error(err);
+          }
+        );
+
+
     }
   );
 }
@@ -163,7 +285,7 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                     }
                   }
 
-                  _perform_calculation(rawdataobj[paraid], data.Equation)
+                  _perform_calculation(rawdataobj[paraid], data.Equation, max_timestamp)
                     .then(
                       ret => {
                         rawdataobj[paraid] = [];
@@ -218,6 +340,94 @@ function trigger_all_parameters(dataobj) {
   });
 }
 
+function _update_stability_info(paraID, info, stdev, code) {
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.findOneAndUpdate({ParameterID: paraID}, {Status: info, StandardDeviation: stdev, StatusCode: code}, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+}
+
+function _calculate_stability(paraID, stabilityCriteria, timestamp) {
+  return new Promise(
+    (resolve, reject) => {
+      _getDataByParameterID({ParameterID: paraID}, timestamp - stabilityCriteria.WindowSize * 1000, timestamp)
+        .then(
+          data => {
+            var result = [];
+            for(var i in data) {
+              result.push(data[i].Value);
+            }
+            var stdev = math.std(result);
+            resolve(stdev);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+
+    }
+  );
+}
+
+function _update_status(paraID, timestamp, currentValue) {
+  // get StabilityCriteria
+//  console.log(paraID);
+//  console.log(timestamp);
+  Parameter.findOne({ParameterID: paraID}, function(err, data) {
+    if (!err) {
+      //console.log(data);
+      if (data) {
+        if (data.StabilityCriteria) {
+          if (!(JSON.stringify(data.StabilityCriteria) == "{}"))
+          {
+            //console.log(data.StabilityCriteria);
+            _calculate_stability(paraID, data.StabilityCriteria, timestamp)
+              .then(
+                stdev => {
+                  var status_text = 'Valid';
+                  var code = 0;
+                  if (stdev > data.StabilityCriteria.UpperLimit) {
+                    status_text = 'Not stable';
+                    code = 1;
+                  }
+                  if (data.Range)
+                  {
+                      if (currentValue > data.Range.UpperLimit || currentValue < data.Range.LowerLimit)
+                      {
+                        status_text = 'Out of Range';
+                        code = 2;
+                      }
+                  }
+
+                  return _update_stability_info(paraID, status_text, stdev, code);
+                }
+              )
+              .then(
+                ret => {
+
+                }
+              )
+              .catch(
+                err => {
+                  console.error(err);
+                }
+              );
+          }
+        }
+      }
+    }
+  });
+
+}
+
 function _addDataByParameterID(paraID, value, timestamp, callback) {
   let data = new Data();
   data.ParameterID = paraID;
@@ -228,12 +438,13 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
     Value: value,
     TimeStamp: timestamp
   };
-  console.log("_addDataByParameterID: " + paraID + " , " + value + " , " + timestamp);
+//  console.log("_addDataByParameterID: " + paraID + " , " + value + " , " + timestamp);
 //  console.log(paraID);
 //  console.log(value);
   data.save(err => {
     // trigger calculation
     trigger_all_parameters(dataobj);
+    _update_status(paraID, timestamp, value);
     if (err)
     {
       callback(err);

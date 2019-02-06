@@ -4,7 +4,7 @@ const DBHOST = require('./config/constants.js').DBHOST;
 const CLIENT_HOST = require('./config/constants.js').CLIENT_HOST;
 const API_PORT =  require('./config/constants.js').API_PORT;
 const Simulation = require("./simulation/temp_data_simulation.js");
-const SetupDB = require('./api/db/templates/setupDefaultDB.js');
+const SetupDB = require('./simulation/setupDefaultDB.js');
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();

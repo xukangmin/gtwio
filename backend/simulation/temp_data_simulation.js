@@ -4,7 +4,7 @@ const Parameter = require('../api/db/parameter.js');
 const Asset = require('../api/db/asset.js');
 const fetch = require('node-fetch');
 const API_PORT =  require('../config/constants.js').API_PORT;
-function generate_simulation_data1(paraID, lowRange, highRange) {
+function generate_simulation_data(paraID, lowRange, highRange) {
   let data = new Data();
 
   data.ParameterID = paraID;
@@ -19,7 +19,7 @@ function generate_simulation_data1(paraID, lowRange, highRange) {
   });
 }
 
-function generate_simulation_data(paraID, lowRange, highRange) {
+function generate_simulation_data1(paraID, lowRange, highRange) {
   const requestOptions = {
       headers: { 'Content-Type': 'application/json'},
       method: 'POST',
@@ -53,22 +53,22 @@ module.exports.simualte = (interval) => {
   function myFunc(arg) {
     // console.log(`arg was => ${arg}`);
     console.log("generate simulation data");
-    generate_simulation_data('TempPara0', 60, 70);
-    generate_simulation_data('TempPara1', 60, 70);
-    generate_simulation_data('TempPara2', 60, 70);
-    generate_simulation_data('TempPara3', 60, 70);
-    generate_simulation_data('TempPara4', 75, 80);
-    generate_simulation_data('TempPara5', 75, 80);
-    generate_simulation_data('TempPara6', 75, 80);
-    generate_simulation_data('TempPara7', 75, 80);
-    generate_simulation_data('TempPara8', 90, 95);
-    generate_simulation_data('TempPara9', 90, 95);
-    generate_simulation_data('TempPara10', 90, 95);
-    generate_simulation_data('TempPara11', 90, 95);
-    generate_simulation_data('TempPara12', 80, 85);
-    generate_simulation_data('TempPara13', 80, 85);
-    generate_simulation_data('TempPara14', 80, 85);
-    generate_simulation_data('TempPara15', 80, 85);
+    generate_simulation_data('TempPara0', 60, 61);
+    generate_simulation_data('TempPara1', 60, 61);
+    generate_simulation_data('TempPara2', 60, 61);
+    generate_simulation_data('TempPara3', 60, 61);
+    generate_simulation_data('TempPara4', 75, 76);
+    generate_simulation_data('TempPara5', 75, 76);
+    generate_simulation_data('TempPara6', 75, 76);
+    generate_simulation_data('TempPara7', 75, 76);
+    generate_simulation_data('TempPara8', 90, 91);
+    generate_simulation_data('TempPara9', 90, 91);
+    generate_simulation_data('TempPara10', 90, 91);
+    generate_simulation_data('TempPara11', 90, 91);
+    generate_simulation_data('TempPara12', 80, 81);
+    generate_simulation_data('TempPara13', 80, 81);
+    generate_simulation_data('TempPara14', 80, 81);
+    generate_simulation_data('TempPara15', 80, 81);
   }
 
   setInterval(myFunc, interval, 'funky');

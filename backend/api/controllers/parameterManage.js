@@ -5,7 +5,6 @@ const Data = require('../db/data.js');
 const Device = require('../db/device.js');
 const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
-
 // parameter is predefined like temperature, Humidity, heat transfer rate
 // with equations depending on each other
 // it can also handle unit conversions
@@ -18,7 +17,9 @@ var functions = {
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
   updateRequireList: updateRequireList,
-  updateRequireListByEquation: updateRequireListByEquation
+  updateRequireListByEquation: updateRequireListByEquation,
+  _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise
+
 }
 
 for (var key in functions) {
@@ -245,11 +246,114 @@ function _addParameter(assetID, deviceID, paraobj, callback) {
   });
 }
 
-function getParameterByAsset(req, res) {
+function _getParameter(paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+        Parameter.findOne({ParameterID: paraobj.ParameterID}, function(err, data){
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+    }
+  );
+}
+
+function _getAllParameterByDeviceIDPromise(deviceid) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({DeviceID: deviceid}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (data) {
+            Promise.all(data.Parameters.map(_getParameter))
+              .then(ret => {
+                let data_out = data.toObject();
+                data_out.Parameters = ret;
+                resolve(data_out);
+              })
+              .catch(err => {
+                reject(err);
+              });
+          } else {
+            resolve();
+          }
+
+        }
+
+      });
+    }
+  );
 
 }
 
+function getParameterByAsset(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+
+  if (assetid) {
+    Asset.findOne({AssetID: assetid}, function(err, data){
+      if (err) {
+        var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+        shareUtil.SendInternalErr(res, msg);
+      } else {
+        if (data)
+        {
+          if (data.Parameters)
+          {
+            Promise.all(data.Parameters.map(_getParameter))
+              .then(
+                ret => {
+                  //console.log(ret);
+                  shareUtil.SendSuccessWithData(res, ret);
+                }
+              )
+              .catch(
+                err => {
+                  var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+                  shareUtil.SendInternalErr(res, msg);
+                }
+              )
+          } else {
+            shareUtil.SendSuccessWithData(res, []);
+          }
+        } else {
+          var msg = "AssetID does not exist";
+          shareUtil.SendInvalidInput(res, msg);
+        }
+
+
+      }
+    });
+  } else {
+    var msg = "missing Asset ID";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+}
+
 function getParameterbyDevice(req, res) {
+  var deviceID = req.swagger.params.DeviceID.value;
+
+  if (deviceID)
+  {
+    _getAllParameterByDeviceIDPromise(deviceID)
+      .then(
+        ret => {
+          shareUtil.SendSuccessWithData(res, ret);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res, msg);
+        }
+      );
+  } else {
+    var msg = "Missing device ID";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+
 }
 
 function _add_single_parameter_require(paraid, ori_para_id){
@@ -316,15 +420,14 @@ function _updateRequireListByEquation(paraid, equation, callback) {
   var paralist = equation.match(reg);
 
   if (paralist.length > 0) {
-      paralist = paralist.map(item => item.replace('[','').replace(']',''));
-
+      paralist = paralist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
+      
       _updateRequireList(paraid, paralist, callback);
   }
 }
 
 function updateRequireListByEquation(req, res) {
   var paraID = req.body.ParameterID;
-  console.log("Test");
   Parameter.findOne({ParameterID: paraID}, function(err, data) {
     if (data.Equation) {
       _updateRequireListByEquation(paraID, data.Equation, function(err, data) {
@@ -430,9 +533,6 @@ function updateRequireList(req, res) {
     var msg = "parID missing";
     shareUtil.SendInvalidInput(res, msg);
   }
-}
-function removeFromRequireList(req, res) {
-
 }
 
 function getSingleParameter(req, res) {

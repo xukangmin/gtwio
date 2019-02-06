@@ -16,7 +16,11 @@ const ParameterSchema = new Schema(
     Equation: String,
     RequiredBy: [String], // ParameterID List
     Require: [String], // ParameterID List
-    RawData: [Object]
+    Status: String,
+    StatusCode: Number,
+    StabilityCriteria: {WindowSize: Number, UpperLimit: Number},
+    Range: {UpperLimit: Number, LowerLimit: Number},
+    StandardDeviation: Number
   },
   { timestamps: true }
 );

@@ -81,7 +81,6 @@ const deleteDevice = (user, assetid, deviceid) => {
 }
 
 const updateDevice = (user, assetid, data) => {
-    console.log(data);
     return dispatch => {
         dispatch(request());
         deviceServices.updateDevice(data)

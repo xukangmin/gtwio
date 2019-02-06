@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { dataActions } from '../_actions/dataAction'
-import { deviceActions } from '../_actions/deviceAction'
+import { parameterActions } from '../_actions/parameterAction'
 import './asset.css'
 import Loader from '../_components/loader'
 import SideNav from '../_components/sideNav'
@@ -10,41 +10,27 @@ import HeaderNav from '../_components/headerNav'
 import { Table } from 'reactstrap';
 import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/ParameterPlot';
 
-const DeviceInfo = (props) => {
-  const device = props.data;
+const ParameterInfo = (props) => {
+  const parameter = props.data;
   return(
     <div className = "row">
       <div className="col-12">
-        <h3>{device.DisplayName}</h3>
+        <h3>{parameter.DisplayName}</h3>
       </div>
       <div className = "col-lg-6 col-sm-12">
         <Table striped>
           <tbody>
             <tr>
-              <th>Device ID</th>
-              <td>{device.DeviceID}</td>
+              <th>Parameter ID</th>
+              <td>{parameter.ParameterID}</td>
             </tr>
             <tr>
-              <th>Serial Number</th>
-              <td>{device.SerialNumber}</td>
+              <th>Tag</th>
+              <td>{parameter.Tag}</td>
             </tr>
             <tr>
-              <th>Last Calibration Date</th>
-              <td>{device.LastCalibrationDate.slice(0,10)}</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-      <div className = "col-lg-6 col-sm-12">
-        <Table striped>
-          <tbody>
-            <tr>
-              <th>Range Limits</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>Stability Criteria</th>
-              <td></td>
+              <th>Equation</th>
+              <td>{parameter.Equation}</td>
             </tr>
           </tbody>
         </Table>
@@ -82,23 +68,20 @@ const ParameterTable = (props) => {
   );
 };
 
-class AssetDeviceDetail extends React.Component {
+class AssetParameterDetail extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
         AssetID : props.match.params.assetID,
-        DeviceID: props.match.params.deviceID
+        ParameterID: props.match.params.parameterID
     }
 
-    this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
+    this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
+    this.props.dispatch(dataActions.getSingleParameterData(this.state.ParameterID, 1549470293237, 1549470453241));
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
-  }
-
-  findTypeTemperature(parameter){
-    return parameter.Type == "Temperature";
   }
 
   sortTime(data){
@@ -119,17 +102,13 @@ class AssetDeviceDetail extends React.Component {
 
   render() {
     const { AssetID } = this.state;
-    const { deviceData } = this.props;
+    const { parameter } = this.props;
     let { parameterData } = this.props;
 
-    let tempParameter;
-    if (deviceData){
-      tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
-    }
-
-    if(!this.props.parameterData && tempParameter){
+    console.log(parameter)
+    if(!this.props.parameter){
       this.dispatchParameterContinuously = setInterval(() => {
-        this.props.dispatch(dataActions.getSingleParameterData(tempParameter, Date.now()-600000, Date.now()));
+        this.props.dispatch(dataActions.getSingleParameterData(parameter.ParameterID, 1549470293237, 1549470453241));
       }, 5000);
     }
 
@@ -140,10 +119,9 @@ class AssetDeviceDetail extends React.Component {
     else{
       return (
         <div className = "mt-3">
-        {deviceData && parameterData ?
+        {parameter && parameterData ?
           <div>
-            <DeviceInfo data={deviceData}/>
-
+            <ParameterInfo data={parameter}/>
             <div className = "row mt-3">
               <div className = "col-auto">
                 <h3>History</h3>
@@ -164,13 +142,13 @@ class AssetDeviceDetail extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.device;
-  const parameterdata = state.data.data;
+  const { data } = state.data;
+  const parameter = state.parameter.data
   return {
-      deviceData : data,
-      parameterData: parameterdata
+      parameterData: data,
+      parameter: parameter
   };
 }
 
-const connectedPage = connect(mapStateToProps)(AssetDeviceDetail);
-export { connectedPage as AssetDeviceDetail };
+const connectedPage = connect(mapStateToProps)(AssetParameterDetail);
+export { connectedPage as AssetParameterDetail };

@@ -32,7 +32,7 @@ class HxTag extends React.Component {
               <div className = "col-3"><TagRadar/></div>
             </Row>
             <Row>
-              <Col className = "mt-5"><TagTable/></Col>
+              <Col className = "mt-5"><TagTable asset = {AssetData.AssetID}/></Col>
               <Col></Col>
             </Row>
           </div>

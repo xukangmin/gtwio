@@ -17,7 +17,7 @@ import InlineEdit from 'react-inline-edit-input';
 const DeviceTableRow = (props) => {
   return(
       <tr>
-        <td><a href = {"/asset/ASSETID0/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
+        <td><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
         <td>
           <InlineEdit
             value={props.data.DisplayName}
@@ -60,8 +60,19 @@ const DeviceTableRow = (props) => {
 const ParameterTableRow = (props) => {
   return(
       <tr>
-        <td>{props.data.ParameterID}</td>
-        <td>{props.data.DisplayName}</td>
+        <td><a href = {"/asset/"+ props.asset + "/parameter/" + props.data.ParameterID}>{props.data.ParameterID}</a></td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="span"
+            type="text"
+            saveLabel="Update"
+            saveColor="#17a2b8"
+            cancelLabel="Cancel"
+            cancelColor="#6c757d"
+            onSave={value => props.updateName(props.data.ParameterID, value)}
+          />
+        </td>
         <td>{props.data.Equation}</td>
       </tr>
   );
@@ -83,6 +94,7 @@ class AssetConfigurations extends React.Component {
     this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
     this.UpdateDevice = this.UpdateDevice.bind(this);
     this.UpdateDeviceDisplayName = this.UpdateDeviceDisplayName.bind(this);
+    this.UpdateParameterDisplayName = this.UpdateParameterDisplayName.bind(this);
     this.DeleteDevice = this.DeleteDevice.bind(this);
 
     this.state = {
@@ -133,6 +145,15 @@ class AssetConfigurations extends React.Component {
     toastr.success("Device description updated.");
   }
 
+  UpdateParameterDisplayName(id, data){
+    let updateData = {
+        'ParameterID': id,
+        'DisplayName': data
+    }
+    this.props.dispatch(paramterActions.updateParameter(this.user.UserID, this.asset, updateData));
+    toastr.success("Paramter description updated.");
+  }
+
   DeleteDevice(device){
     if (confirm("Are you sure to delete this device?")){
         this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
@@ -167,7 +188,7 @@ class AssetConfigurations extends React.Component {
     const { device, parameter } = this.props;
     return (
       <div>
-        {device?
+        {device && parameter?
           <div>
             <Nav tabs>
               <NavItem>
@@ -207,7 +228,7 @@ class AssetConfigurations extends React.Component {
                             </thead>
                             <tbody id="main-table-content">
                                 {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} update={this.UpdateDevice} updateName={this.UpdateDeviceDisplayName} delete={this.DeleteDevice} key={i}/>
+                                    <DeviceTableRow data={singleDevice} asset={this.asset} update={this.UpdateDevice} updateName={this.UpdateDeviceDisplayName} delete={this.DeleteDevice} key={i}/>
                                 )}
                             </tbody>
                         </table>
@@ -230,7 +251,7 @@ class AssetConfigurations extends React.Component {
                           </thead>
                           <tbody id="main-table-content">
                               {parameter.map((singleParameter,i) =>
-                                  <ParameterTableRow data={singleParameter} key={i}/>
+                                  <ParameterTableRow data={singleParameter} asset={this.asset} updateName={this.UpdateParameterDisplayName} key={i}/>
                               )}
                           </tbody>
                       </table>

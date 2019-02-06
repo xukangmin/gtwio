@@ -18,6 +18,51 @@ const getParameterByAsset = (assetid) => {
         });
 }
 
+const getSingleParameter = (pid) => {
+
+    return fetch(gConstants.API_ROOT + '/parameter/getSingleParameter?ParameterID=' + pid)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        })
+        .then(parameterdata => {
+            return parameterdata;
+        });
+}
+
+const updateParameter = (data) => {
+    const body = data;
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(gConstants.API_ROOT + '/parameter/updateParameter', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const parameterServices = {
-    getParameterByAsset
+    getParameterByAsset,
+    getSingleParameter,
+    updateParameter
 };

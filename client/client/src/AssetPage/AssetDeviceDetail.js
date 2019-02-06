@@ -13,24 +13,42 @@ import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/Paramet
 const DeviceInfo = (props) => {
   const device = props.data;
   return(
-    <div>
-      <h3>{device.DisplayName}</h3>
-      <Table striped>
-        <tbody>
-          <tr>
-            <th>Device ID</th>
-            <td>{device.DeviceID}</td>
-          </tr>
-          <tr>
-            <th>Serial Number</th>
-            <td>{device.SerialNumber}</td>
-          </tr>
-          <tr>
-            <th>Last Calibration Date</th>
-            <td>{device.LastCalibrationDate.slice(0,10)}</td>
-          </tr>
-        </tbody>
-      </Table>
+    <div className = "row">
+      <div className="col-12">
+        <h3>{device.DisplayName}</h3>
+      </div>
+      <div className = "col-lg-6 col-sm-12">
+        <Table striped>
+          <tbody>
+            <tr>
+              <th>Device ID</th>
+              <td>{device.DeviceID}</td>
+            </tr>
+            <tr>
+              <th>Serial Number</th>
+              <td>{device.SerialNumber}</td>
+            </tr>
+            <tr>
+              <th>Last Calibration Date</th>
+              <td>{device.LastCalibrationDate.slice(0,10)}</td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
+      <div className = "col-lg-6 col-sm-12">
+        <Table striped>
+          <tbody>
+            <tr>
+              <th>Range Limits</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Stability Criteria</th>
+              <td></td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 };
@@ -124,11 +142,7 @@ class AssetDeviceDetail extends React.Component {
         <div className = "mt-3">
         {deviceData && parameterData ?
           <div>
-            <div className = "row">
-              <div className = "col-6">
-                <DeviceInfo data={deviceData}/>
-              </div>
-            </div>
+            <DeviceInfo data={deviceData}/>
 
             <div className = "row mt-3">
               <div className = "col-auto">

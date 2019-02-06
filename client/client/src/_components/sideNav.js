@@ -72,7 +72,7 @@ class SideNav extends React.Component {
                         </a>
                       </li>
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/device"}>
+                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/devices"}>
                           <i className ="fas fa-fw fa-thermometer-quarter mr-2"></i>
                           Devices
                         </a>

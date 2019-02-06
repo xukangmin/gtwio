@@ -8,11 +8,11 @@ export const AddNewDeviceModal = ({device,onChange,errors,onAdd,isOpen,onClose})
             <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
                 <ModalHeader toggle={onClose}>Add New Device</ModalHeader>
                 <ModalBody>
-                    <AddNewDeviceForm 
-                                device={device}
-                                onChange={onChange}
-                                errors={errors}
-                            />
+                    <AddNewDeviceForm
+                        device={device}
+                        onChange={onChange}
+                        errors={errors}
+                    />
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={onAdd}>Add</Button>{' '}

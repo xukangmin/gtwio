@@ -8,6 +8,7 @@ import { AssetDashboard } from '../AssetPage/AssetDashboard'
 import { AssetDevice } from '../AssetPage/AssetDevice'
 import { AssetConfigurations } from '../AssetPage/AssetConfigurations'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
+import { AssetParameterDetail } from '../AssetPage/AssetParameterDetail'
 import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
 import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
@@ -65,7 +66,7 @@ const routes = [
           component: HxStatic
         },
         {
-          path: '/asset/:assetID/device',
+          path: '/asset/:assetID/devices',
           component: AssetDevice
         },
         {
@@ -73,8 +74,12 @@ const routes = [
           component: AssetConfigurations
         },
         {
-          path: '/asset/:assetID/detail/:deviceID',
+          path: '/asset/:assetID/device/:deviceID',
           component: AssetDeviceDetail
+        },
+        {
+          path: '/asset/:assetID/parameter/:parameterID',
+          component: AssetParameterDetail
         },
         {
           path: '/asset/:assetID/tag/:tagID',

@@ -56,8 +56,6 @@ class AssetDevice extends React.Component {
   }
 
   AddNewDeviceToAsset(event) {
-    //console.log(this.state);
-    // validate input
     if (this.state.NewDevice.DisplayName === "") {
       this.setState({errors: {DisplayName: "Name cannot be empty"}});
       return;

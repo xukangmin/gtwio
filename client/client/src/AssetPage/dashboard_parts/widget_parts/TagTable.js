@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 const SingleDevice = (props) => {
   return(
     <tr>
-      <th scope = "row"><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></th>
+      <th scope = "row"><a href = {"/asset/ASSETID0/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></th>
       <td>{props.data.Data[0].Value.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Min.toFixed(2)}</td>
       <td>{props.data.DataStatistics.Max.toFixed(2)}</td>

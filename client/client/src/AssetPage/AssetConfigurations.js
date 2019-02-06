@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
+import { parameterActions } from '../_actions/parameterAction';
 import { AddNewDeviceModal } from '../AssetPage/device_parts/AddNewDeviceModal';
 import './asset.css';
 import Loader from '../_components/loader';
@@ -16,7 +17,7 @@ import InlineEdit from 'react-inline-edit-input';
 const DeviceTableRow = (props) => {
   return(
       <tr>
-        <td><a href = {"/asset/ASSETID0/detail/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
+        <td><a href = {"/asset/ASSETID0/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
         <td>
           <InlineEdit
             value={props.data.DisplayName}
@@ -59,9 +60,9 @@ const DeviceTableRow = (props) => {
 const ParameterTableRow = (props) => {
   return(
       <tr>
-        <td>Avg_ShellInlet</td>
-        <td>a=b*c</td>
-        <td>This is a description</td>
+        <td>{props.data.ParameterID}</td>
+        <td>{props.data.DisplayName}</td>
+        <td>{props.data.Equation}</td>
       </tr>
   );
 };
@@ -73,6 +74,7 @@ class AssetConfigurations extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset =  props.match.params.assetID;
     this.props.dispatch(deviceActions.getAllDeviceData(this.user, this.asset));
+    this.props.dispatch(parameterActions.getParameterByAsset(this.asset));
 
     this.toggle = this.toggle.bind(this);
     this.AddDevice = this.AddDevice.bind(this);
@@ -162,7 +164,7 @@ class AssetConfigurations extends React.Component {
   }
 
   render() {
-    const { device } = this.props;
+    const { device, parameter } = this.props;
     return (
       <div>
         {device?
@@ -221,14 +223,14 @@ class AssetConfigurations extends React.Component {
                       <table className="table table-striped" style={{textAlign:'center'}}>
                           <thead>
                               <tr>
-                                  <th>Parameter Name</th>
-                                  <th>Equation</th>
+                                  <th>Parameter ID</th>
                                   <th>Description</th>
+                                  <th>Equation</th>
                               </tr>
                           </thead>
                           <tbody id="main-table-content">
-                              {device.map((singleDevice,i) =>
-                                  <ParameterTableRow data={singleDevice} key={i}/>
+                              {parameter.map((singleParameter,i) =>
+                                  <ParameterTableRow data={singleParameter} key={i}/>
                               )}
                           </tbody>
                       </table>
@@ -256,8 +258,10 @@ class AssetConfigurations extends React.Component {
 
 function mapStateToProps(state) {
   const { data, addedData } = state.device;
+  const parameterData = state.parameter.data;
   return {
-      device : data
+      device : data,
+      parameter: parameterData
   };
 }
 

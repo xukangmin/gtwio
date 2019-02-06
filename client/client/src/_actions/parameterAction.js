@@ -46,7 +46,7 @@ const updateParameter = (user, assetid, data) => {
         parameterServices.updateParameter(data)
             .then(
                 info => {
-                    dispatch(updateParameter(user, assetid));
+                    dispatch(updateParameter(data));
                     dispatch(success(info));
                 },
                 error => {

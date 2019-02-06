@@ -3,12 +3,16 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { dataActions } from '../_actions/dataAction'
 import { deviceActions } from '../_actions/deviceAction'
+import { parameterActions } from '../_actions/parameterAction'
 import './asset.css'
 import Loader from '../_components/loader'
 import SideNav from '../_components/sideNav'
 import HeaderNav from '../_components/headerNav'
 import { Table } from 'reactstrap';
 import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/ParameterPlot';
+import toastr from 'toastr';
+import InlineEdit from 'react-inline-edit-input';
+import EditableLabel from 'react-inline-edition';
 
 const DeviceInfo = (props) => {
   const device = props.data;
@@ -39,12 +43,41 @@ const DeviceInfo = (props) => {
         <Table striped>
           <tbody>
             <tr>
-              <th>Range Limits</th>
-              <td></td>
+              <th>{"Range Limits  (°" + device.Parameters[0].Unit + ")"}</th>
+              <td>
+                <InlineEdit
+                  value={device.Parameters[0].Range.LowerLimit}
+                  tag="span"
+                  type="text"
+                  saveLabel="Update"
+                  saveColor="#17a2b8"
+                  cancelLabel="Cancel"
+                  cancelColor="#6c757d"
+                  onSave={value => props.update(props.parameter, "LowerLimit", value)}
+                />
+                <InlineEdit
+                  value={device.Parameters[0].Range.UpperLimit}
+                  tag="span"
+                  type="text"
+                  saveLabel="Update"
+                  saveColor="#17a2b8"
+                  cancelLabel="Cancel"
+                  cancelColor="#6c757d"
+                  onSave={value => props.update(props.parameter, "UpperLimit", value)}
+                />
+              </td>
             </tr>
             <tr>
               <th>Stability Criteria</th>
-              <td></td>
+              <td>{"Window Size:" + device.Parameters[0].StabilityCriteria.WindowSize + " UpperLimit:" + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td>{device.Parameters[0].Status}</td>
+            </tr>
+            <tr>
+              <th>Stability Criteria</th>
+              <td>{device.Parameters[0].StandardDeviation.toFixed(2)}</td>
             </tr>
           </tbody>
         </Table>
@@ -95,6 +128,11 @@ class AssetDeviceDetail extends React.Component {
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
+
+    const {device} = this.props;
+    const {parameterData} = this.props;console.log(device)
+
+    this.updateLimit = this.updateLimit.bind(this);
   }
 
   findTypeTemperature(parameter){
@@ -117,6 +155,16 @@ class AssetDeviceDetail extends React.Component {
     ))
   }
 
+  updateLimit(parameter, range, value){
+    let updateData = {
+        'ParameterID': parameter,
+        'Range': {}
+    }
+    updateData.Range[range] = value;
+    this.props.dispatch(parameterActions.updateParameter(this.user.UserID, this.state.AssetID, updateData));
+    toastr.success("Device range limits updated.");
+  }
+
   render() {
     const { AssetID } = this.state;
     const { deviceData } = this.props;
@@ -128,6 +176,7 @@ class AssetDeviceDetail extends React.Component {
     }
 
     if(!this.props.parameterData && tempParameter){
+      console.log(tempParameter)
       this.dispatchParameterContinuously = setInterval(() => {
         this.props.dispatch(dataActions.getSingleParameterData(tempParameter, Date.now()-600000, Date.now()));
       }, 5000);
@@ -142,7 +191,7 @@ class AssetDeviceDetail extends React.Component {
         <div className = "mt-3">
         {deviceData && parameterData ?
           <div>
-            <DeviceInfo data={deviceData}/>
+            <DeviceInfo data={deviceData} update={this.updateLimit} parameter={tempParameter}/>
 
             <div className = "row mt-3">
               <div className = "col-auto">

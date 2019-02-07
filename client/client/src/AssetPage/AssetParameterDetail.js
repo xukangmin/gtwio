@@ -32,6 +32,19 @@ const ParameterInfo = (props) => {
               <th>Equation</th>
               <td>{parameter.Equation}</td>
             </tr>
+            {parameter.CurrentValue &&
+              <tr>
+                <th>Current Value</th>
+                <td>{parameter.CurrentValue.toFixed(3)}</td>
+              </tr>
+            }
+            {parameter.CurrentTimeStamp &&
+              <tr>
+                <th>Current Time Stamp</th>
+                <td>{new Date(Number(parameter.CurrentTimeStamp)).toLocaleString()}</td>
+              </tr>
+            }
+
           </tbody>
         </Table>
       </div>
@@ -78,11 +91,18 @@ class AssetParameterDetail extends React.Component {
     }
 
     this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
-    this.props.dispatch(dataActions.getSingleParameterData(this.state.ParameterID, 1549470293237, 1549470453241));
+    //this.props.dispatch(dataActions.getSingleParameterData(this.state.ParameterID, 1549470293237, 1549470453241));
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
   }
+
+  componentDidMount() {
+    this.dispatchParameterContinuously = setInterval(() => {
+      this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
+    }, 5000);
+  }
+
 
   sortTime(data){
     return(data.sort(
@@ -106,12 +126,12 @@ class AssetParameterDetail extends React.Component {
     let { parameterData } = this.props;
 
     console.log(parameter)
-    if(!this.props.parameter){
+/*    if(!this.props.parameter){
       this.dispatchParameterContinuously = setInterval(() => {
         this.props.dispatch(dataActions.getSingleParameterData(parameter.ParameterID, 1549470293237, 1549470453241));
       }, 5000);
     }
-
+*/
     if (!this.user)
     {
       return (<Redirect to = '/login' />);
@@ -119,9 +139,10 @@ class AssetParameterDetail extends React.Component {
     else{
       return (
         <div className = "mt-3">
-        {parameter && parameterData ?
+        {parameter ?
           <div>
             <ParameterInfo data={parameter}/>
+            {parameterData &&
             <div className = "row mt-3">
               <div className = "col-auto">
                 <h3>History</h3>
@@ -131,6 +152,7 @@ class AssetParameterDetail extends React.Component {
                 <ParameterPlot/>
               </div>
             </div>
+           }
           </div>
         :
           <Loader/>

@@ -135,7 +135,94 @@ function createDashboard(assetid) {
 
 }
 
+function createFlowMeter(assetid, index, tagName, sn, angle) {
+    return new Promise(
+      (resolve, reject) => {
+        let device = new Device();
 
+        device.DeviceID = 'Flow' + index.toString();
+        device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+        device.DisplayName = 'Flow Meter ' + index.toString();
+        device.Tag = tagName;
+        device.SerialNumber = sn;
+        device.Angle = angle;
+        device.LastCalibrationDate = (new Date).getTime();
+        device.CalibrationConstants = {A: 0, B: 1, C: 0};
+        device.CorrectionEquation = 'A * A * data + B * data + C';
+
+        device.save(err => {
+          if (err)
+          {
+            var msg = "device Save Error:" + JSON.stringify(err, null, 2);
+            console.log(msg);
+            reject(err);
+          }
+          else {
+            // add device to asset
+            Asset.findOneAndUpdate({AssetID: assetid},
+                {
+                  $push:  {
+                    Devices: {DeviceID: device.DeviceID}
+                  }
+                },
+              function(err, data) {
+              if (err)
+              {
+                var msg = "Device update Error:" + JSON.stringify(err, null, 2);
+                console.log(msg);
+                reject(err);
+              }
+              else{
+                let para = new Parameter();
+
+                para.ParameterID = 'FlowPara' + index.toString();
+                para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+                para.DisplayName = 'Flow Value';
+                para.CurrentValue = 0;
+                para.CurrentTimeStamp = 0;
+                para.Type = 'FlowRate';
+                para.Unit = 'gpm';
+                para.Tag = tagName + "/" + para.Type; // automatically generated if under device
+                para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
+                para.Range = {UpperLimit: 100, LowerLimit: 32};
+
+                para.save(err => {
+                  if(err)
+                  {
+                    var msg = "para add Error:" + JSON.stringify(err, null, 2);
+                    console.log(msg);
+                    reject(err);
+                  }
+                  else {
+                    Device.findOneAndUpdate({DeviceID: 'Flow' + index.toString()},
+                    {
+                      $push: {
+                        Parameters: {ParameterID: para.ParameterID}
+                      }
+                    },
+                    function(err, data) {
+                      if (err) {
+                        var msg = "para add to device Error:" + JSON.stringify(err, null, 2);
+                        console.log(msg);
+                        reject(err);
+                      } else {
+                        resolve();
+                      }
+                    }
+
+                    );
+                  }
+                });
+              }
+            });
+
+          }
+
+        });
+      }
+    );
+
+}
 
 function createTempSensor(assetid, index, tagName, sn, angle) {
     return new Promise(
@@ -422,6 +509,16 @@ function createDemoAccount() {
     .then(
       ret => {
         return createTempSensor(assetid, 15, "TubeOutlet", "02A016", 270);
+      }
+    )
+    .then(
+      ret => {
+        return createFlowMeter(assetid, 0, "ShellInlet", "05A001", 0);
+      }
+    )
+    .then(
+      ret => {
+        return createFlowMeter(assetid, 1, "TubeOutlet", "05A002", 0);
       }
     )
     .then(

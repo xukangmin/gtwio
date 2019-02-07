@@ -4,6 +4,7 @@ export const parameter = (state = {}, action) => {
   switch (action.type) {
     case gConstants.GET_PARAMETER_REQUEST:
         return {
+            ...state,
             gettingPARAMETER: true
         };
     case gConstants.GET_PARAMETER_SUCCESS:

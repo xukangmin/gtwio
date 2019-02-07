@@ -44,7 +44,7 @@ const updateParameter = (data) => {
                  },
         body: JSON.stringify(body)
     };
-
+    console.log(requestOptions);
     return fetch(gConstants.API_ROOT + '/parameter/updateParameter', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])

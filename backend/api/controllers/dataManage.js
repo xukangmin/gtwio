@@ -120,7 +120,7 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           op = plist[1];
           timerange = plist[2];
           offset = plist[4];
-        } 
+        }
 
         if (timerange == 0 || compareStrings(op,"Current") || compareStrings(op,"LAST")) {
           var result =  dataobj.find(item => item.ParameterID === paraid).Value;
@@ -187,7 +187,7 @@ function _math_op_convert(streval) {
 function _perform_calculation(dataobj, equation, latestTimeStamp) {
   return new Promise(
     (resolve, reject) => {
-      console.log("_perform_calculation:");
+      //console.log("_perform_calculation:");
       //console.log(dataobj);
       var new_eval = equation;
 
@@ -204,7 +204,7 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            console.log(new_eval);
+            //console.log(new_eval);
             try {
               var result = math.eval(new_eval);
               //console.log(result);

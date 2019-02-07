@@ -4,6 +4,7 @@ export const device = (state = {}, action) => {
   switch (action.type) {
     case gConstants.GET_DEVICE_REQUEST:
         return {
+            ...state,
             gettingDEVICE: true
         };
     case gConstants.GET_DEVICE_SUCCESS:
@@ -24,6 +25,7 @@ export const device = (state = {}, action) => {
             msg: action.msg
         };
     case gConstants.ADD_DEVICE_FAILURE:
+      console.log(action);
         return {
             ...state,
             error: action.error

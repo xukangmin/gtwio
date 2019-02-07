@@ -1,6 +1,7 @@
 import { gConstants } from '../_components/constants';
 import { deviceServices } from '../_services/deviceServices';
 import { alertActions } from './alertAction';
+import { dataActions } from './dataAction';
 
 const getAllDeviceData = (user, assetid) => {
     return dispatch => {
@@ -28,6 +29,12 @@ const getSingleDeviceData = (deviceid) => {
             .then(
                 devicedata => {
                     dispatch(success(devicedata));
+
+                    if (devicedata.Parameters) {
+                      if (devicedata.Parameters.length === 1) {
+                        dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, devicedata.Parameters[0].CurrentTimeStamp - 600000, devicedata.Parameters[0].CurrentTimeStamp));
+                      }
+                    }
                 },
                 error => {
                     dispatch(failure(error));

@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: GTW IOT API
 # during dev, should point to your local machine
-host: http://192.168.1.30
+host: localhost
 # basePath prefixes all resource paths
 basePath: /
 #
@@ -982,7 +982,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"            
+            $ref: "#/definitions/ErrorResponse"
   /parameter/deleteParameter:
     x-swagger-router-controller: parameterManage
     delete:

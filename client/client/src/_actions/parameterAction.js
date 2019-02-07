@@ -1,6 +1,7 @@
 import { gConstants } from '../_components/constants';
 import { parameterServices } from '../_services/parameterServices';
 import { alertActions } from './alertAction';
+import { dataActions } from './dataAction';
 
 const getParameterByAsset = (assetid) => {
     return dispatch => {
@@ -28,6 +29,10 @@ const getSingleParameter = (pid) => {
             .then(
                 parameterdata => {
                     dispatch(success(parameterdata));
+
+                    if (parameterdata.CurrentTimeStamp) {
+                      dispatch(dataActions.getSingleParameterData(parameterdata.ParameterID, parameterdata.CurrentTimeStamp - 600000, parameterdata.CurrentTimeStamp));
+                    }
                 },
                 error => {
                     dispatch(failure(error));
@@ -46,7 +51,6 @@ const updateParameter = (user, assetid, data) => {
         parameterServices.updateParameter(data)
             .then(
                 info => {
-                    dispatch(updateParameter(data));
                     dispatch(success(info));
                 },
                 error => {

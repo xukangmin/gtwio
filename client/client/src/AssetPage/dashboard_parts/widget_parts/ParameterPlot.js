@@ -8,22 +8,11 @@ class ParameterPlot extends React.Component {
     super(props);
   }
 
-  sortTime(data){
-    return(data.sort(
-      function(a,b){
-        if (a > b) {
-          return 1;
-        }
-        if (a < b) {
-          return -1;
-        }
-        return 0;
-      }
-    ))
-  }
-
   render(){
     const { parameterData } = this.props;
+
+    parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
+
     let tempX = [];
     let tempY = [];
     for(var i = 0; i < parameterData.length; i++){
@@ -32,7 +21,7 @@ class ParameterPlot extends React.Component {
     }
 
     const data= {
-      x: this.sortTime(tempX),
+      x: tempX,
       y: tempY,
       type: 'scatter'
     };

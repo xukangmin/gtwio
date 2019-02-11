@@ -1230,6 +1230,30 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /data/addDataByParticleEvent:
+    x-swagger-router-controller: dataManage
+    post:
+      tags:
+      - data
+      description:  Add Data by serial number of the device and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName.ApiKey of user is needed in header of request
+      # used as the method name of the controller
+      operationId: addDataByParticleEvent
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AddDataBySerialNumberModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

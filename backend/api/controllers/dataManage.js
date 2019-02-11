@@ -844,6 +844,41 @@ function addDataByDeviceID(req, res)  {
   }
 }
 
+function _addDataBySerialNumber(sn, ts, value, type, callback) {
+  return new Promise(
+    (resolve, reject) => {
+      _getAllParameterBySerialNumber(sn, function(err, data){
+        if (err) {
+          reject(err);
+        } else {
+          // add same data to all qualified parameters
+          var timestamp = 0;
+          if (ts)
+          {
+            timestamp = ts;
+          } else {
+            timestamp = Math.floor((new Date).getTime());
+          }
+          data = data.filter(item => item.Type === type);
+          if (data.length > 0)
+          {
+            Promise.all(data.map(item => _addDataByParameterIDPromise(item, value, timestamp)))
+              .then(() => {
+                resolve(null);
+              })
+              .catch(err => {
+                reject(err);
+              });
+          } else {
+            // consider add parameter with type
+            reject(new Error("no parameter exist"));
+          }
+        }
+      });
+    });
+
+}
+
 function addDataBySerialNumber(req, res) {
   var dataobj = req.body;
 
@@ -999,8 +1034,51 @@ function getDataByTag(req, res) {
 }
 
 function addDataByParticleEvent(req, res) {
-  console.log(req.body);
-  shareUtil.SendSuccess(res);
+  var p_data = req.body;
+
+  if (p_data.data && p_data.event) {
+    // parse data format = timestamp,deviceid1, data, deviceid2, data, deviceid3, data
+    var dlist = p_data.data.split(",");
+
+    var num_data = (dlist.length - 1) / 2;
+
+    var type = "Unknown";
+
+    if (p_data.event) {
+      if (p_data.event == "hx/t") {
+        type = "Temperature";
+      }
+    }
+    var devicelist = [];
+    var timestamp = Number(dlist[0]) * 1000;
+
+    for (var i = 0; i < num_data; i++){
+      var single_device = {
+                            SerialNumber: dlist[i * 2 + 1],
+                            Value: Number(dlist[i * 2 + 2])
+                          };
+      devicelist.push(single_device);
+    }
+
+    Promise.all(devicelist.map(item => _addDataBySerialNumber(item.SerialNumber,timestamp, item.Value, type)))
+      .then(
+        ret => {
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          shareUtil.SendInternalErr(res,  "data add error:" + JSON.stringify(err, null, 2));
+        }
+      )
+
+
+  } else {
+    var msg = "missing data key";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+
+
 }
 
 function getDataByParameterTag(req, res) {

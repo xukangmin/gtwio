@@ -17,7 +17,8 @@ var functions = {
   getDataByTag: getDataByTag,
   getDataByAssetID: getDataByAssetID,
   getDataByDeviceID: getDataByDeviceID,
-  testFunc: testFunc
+  testFunc: testFunc,
+  addDataByParticleEvent: addDataByParticleEvent
 }
 
 for (var key in functions) {
@@ -995,6 +996,11 @@ function getDataByTag(req, res) {
     shareUtil.SendInvalidInput(res, msg);
   }
 
+}
+
+function addDataByParticleEvent(req, res) {
+  console.log(req.body);
+  shareUtil.SendSuccess(res);
 }
 
 function getDataByParameterTag(req, res) {

@@ -43,7 +43,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 
 //SetupDB.createDemoAccount();
-Simulation.simualte(10000);
+//Simulation.simualte(10000);
 
 var config = {
   appRoot: __dirname, // required config

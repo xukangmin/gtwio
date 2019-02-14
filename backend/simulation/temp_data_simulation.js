@@ -69,6 +69,8 @@ module.exports.simualte = (interval) => {
     generate_simulation_data('TempPara13', 80, 81);
     generate_simulation_data('TempPara14', 80, 81);
     generate_simulation_data('TempPara15', 80, 81);
+    generate_simulation_data('FlowPara0', 50, 60);
+    generate_simulation_data('FlowPara1', 50, 60);
   }
 
   setInterval(myFunc, interval, 'funky');

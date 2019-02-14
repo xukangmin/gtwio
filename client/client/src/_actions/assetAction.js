@@ -60,6 +60,40 @@ const getAssetsOverview = (user) => {
     function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
 }
+const getSingleAssetDetail = (user, assetid) => {
+    return dispatch => {
+      dispatch(request());
+      assetServices.getSingleAsset(user, assetid)
+        .then(
+          assetdata => {
+            dispatch(success(assetdata));
+            if (assetdata.Settings) {
+              if (assetdata.Settings.Tags) {
+                assetServices.getDataByTagList(assetdata.Settings.Tags)
+                  .then(
+                    tags => {
+                      console.log("tags");
+                      console.log(tags);
+                      dispatch(success_tag(tags));
+                    },
+                    error => {
+                      dispatch(failure(error));
+                    }
+                  );
+              }
+            }
+          },
+          error => {
+            dispatch(failure(error));
+          }
+        )
+    };
+
+    function request() { return { type: gConstants.GET_ASSET_REQUEST } }
+    function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
+    function success_tag(data) { return {type: gConstants.GET_ASSET_TAG_SUCCESS, data } }
+}
 
 const getSingleAssetData = (user, assetid) => {
     return dispatch => {
@@ -130,5 +164,6 @@ export const assetActions = {
     getAssetsOverview,
     getSingleAssetData,
     addAsset,
-    deleteAsset
+    deleteAsset,
+    getSingleAssetDetail
 };

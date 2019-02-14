@@ -52,6 +52,58 @@ function createAsset(userid, assetid) {
       asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
       asset.DisplayName = 'demo_hx_asset';
 
+      var settings = {};
+      settings.Tags = [
+              {
+                TagName: "ShellInlet",
+                Data: [
+                  {
+                    Name: "Temperature",
+                    ParameterID: "GenPara0"
+                  },
+                  {
+                    Name: "FlowRate",
+                    ParameterID: "FlowPara0"
+                  }]
+              },
+              {
+                TagName: "ShellOutlet",
+                Data: [
+                  {
+                    Name: "Temperature",
+                    ParameterID: "GenPara1"
+                  },
+                  {
+                    Name: "FlowRate",
+                    ParameterID: "FlowPara1"
+                  }]
+              },
+              {
+                TagName: "TubeInlet",
+                Data: [
+                  {
+                    Name: "Temperature",
+                    ParameterID: "GenPara2"
+                  },
+                  {
+                    Name: "FlowRate",
+                    ParameterID: "N/A"
+                  }]
+              },
+              {
+                TagName: "TubeOutlet",
+                Data: [
+                  {
+                    Name: "Temperature",
+                    ParameterID: "GenPara3"
+                  },
+                  {
+                    Name: "FlowRate",
+                    ParameterID: "FlowPara1"
+                  }]
+              },
+            ];
+      asset.Settings = settings;
       asset.save(err => {
         if (err)
         {
@@ -323,7 +375,7 @@ function createParameter(assetid, index, displayName, tag, equation) {
        para.DisplayName = displayName;
        para.Tag = tag;
        para.Equation = equation;
-
+       para.Unit = "F";
        para.save(err => {
          if (err)
          {
@@ -381,7 +433,7 @@ function deleteTempSensors() {
   }
 
   for (i = 0; i < 4; i++) {
-    Parameter.deleteMany({ParameterID: 'GenPara0' + i.toString()}, function() {});
+    Parameter.deleteMany({ParameterID: 'GenPara' + i.toString()}, function() {});
   }
 
 }

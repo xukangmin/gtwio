@@ -654,23 +654,30 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
             )
             .then(
               data => {
-                  let dev = deviceobj.toObject();
-                  dev = _cleanDeviceObj(dev);
-                  dev.Data = data;
-                  var dataarr = data.map(item => item.Value);
-                  var stat = {};
-                  var sum = dataarr.reduce((total, p) => total + p, 0);
-                  var avg = sum / dataarr.length;
-                  var min = dataarr.reduce((min, p) => Math.min(min,p));
-                  var max = dataarr.reduce((max, p) => Math.max(max,p));
-                  var stdev = math.std(dataarr);
-                  stat.Sum = sum;
-                  stat.Avg = avg;
-                  stat.Min = min;
-                  stat.Max = max;
-                  stat.STDEV = stdev;
-                  dev.DataStatistics = stat;
-                  resolve(dev);
+                  if (data.length === 0)
+                  {
+                    resolve(data);
+                  } else
+                  {
+                    let dev = deviceobj.toObject();
+                    dev = _cleanDeviceObj(dev);
+                    dev.Data = data;
+                    var dataarr = data.map(item => item.Value);
+                    var stat = {};
+                    var sum = dataarr.reduce((total, p) => total + p, 0);
+                    var avg = sum / dataarr.length;
+                    var min = dataarr.reduce((min, p) => Math.min(min,p));
+                    var max = dataarr.reduce((max, p) => Math.max(max,p));
+                    var stdev = math.std(dataarr);
+                    stat.Sum = sum;
+                    stat.Avg = avg;
+                    stat.Min = min;
+                    stat.Max = max;
+                    stat.STDEV = stdev;
+                    dev.DataStatistics = stat;
+                    resolve(dev);
+                  }
+
               }
             )
             .catch(

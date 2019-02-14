@@ -17,7 +17,7 @@ import { Progressbar } from './Progressbar';
 class HxStatic extends React.Component {
   constructor(props) {
     super(props);
-    this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
+    this.props.dispatch(assetActions.getSingleAssetDetail(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.state = {
          AssetID: props.match.params.assetID,
          Settings: {
@@ -52,13 +52,48 @@ class HxStatic extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
   }
 
-  HandleText(elem, name){
-    const { Settings } = this.state;
-    elem.children[0].innerHTML = Settings[elem.id].temperature;
-    elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + Settings[elem.id].name);
-    document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
-    document.getElementById(elem.id+'_flow').children[0].innerHTML = Settings[elem.id].flow +' gpm';
-    document.getElementById("asset_name").innerHTML = name;
+  componentDidMount() {
+    this.dispatchParameterContinuously = setInterval(() => {
+      this.props.dispatch(assetActions.getSingleAssetDetail(JSON.parse(localStorage.getItem('user')),this.state.AssetID));
+    }, 5000);
+  }
+
+
+  HandleText(elem, tag, assetdata){
+
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature");
+    var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
+
+    if (temp_obj)
+    {
+      if (typeof temp_obj.Value == 'number') {
+        elem.children[0].innerHTML = temp_obj.Value.toFixed(2);
+      } else {
+        elem.children[0].innerHTML = temp_obj.Value;
+      }
+
+    }
+    if (tag)
+    {
+      elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName);
+    }
+    if (flow_obj.Value)
+    {
+      if (typeof flow_obj.Value == 'number')
+      {
+        document.getElementById(elem.id+'_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
+      } else {
+        document.getElementById(elem.id+'_flow').children[0].innerHTML = flow_obj.Value +' gpm';
+      }
+
+    }
+
+    //document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
+    if (assetdata)
+    {
+      document.getElementById("asset_name").innerHTML = assetdata.DisplayName;
+    }
+
 
     document.getElementById("TubeInlet_flow").style.visibility = "hidden";
     document.getElementById("ShellOutlet_flow").style.visibility = "hidden";
@@ -66,7 +101,7 @@ class HxStatic extends React.Component {
 
   render() {
     const { AssetID } = this.state;
-    const { AssetData } = this.props;
+    const { AssetData, AssetTags } = this.props;
     const Hx_style = {
       maxWidth: "1200px",
       maxHeight: "560px"
@@ -85,7 +120,6 @@ class HxStatic extends React.Component {
     {
       return (<Redirect to='/login' />);
     }
-
     else{
       return (
         <div>
@@ -99,11 +133,17 @@ class HxStatic extends React.Component {
               </div>
               <div style={Hx_style} className="mx-auto">
                 <Samy svgXML={svgcontents} >
-                    {Object.keys(this.state.Settings).map((item,i) =>
-                      <SvgProxy selector={"#" + item} key={i} onElementSelected={(elem) => this.HandleText(elem, AssetData.DisplayName)}/>
-                    )}
+                    {
+                      AssetTags &&
+                      AssetTags.map((item,i) =>
+                        <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, AssetData))} />
+                      )
+                    }
                 </Samy>
                 <Row style={Progressbars_style}>
+                  <div>
+                    {AssetData.AddTimeStamp}
+                  </div>
                   <Progressbar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
                   <Progressbar type="Performance Factor" percentage="54" unit="%"/>
                 </Row>
@@ -121,9 +161,10 @@ class HxStatic extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.asset;
+  const { data, tags } = state.asset;
   return {
-      AssetData : data
+      AssetData : data,
+      AssetTags : tags
   };
 }
 

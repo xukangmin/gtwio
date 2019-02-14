@@ -1,5 +1,6 @@
-import { gConstants } from '../_components/constants'
-
+import { gConstants } from '../_components/constants';
+import { dataServices } from './dataServices';
+import { parameterServices } from './parameterServices';
 
 const getAssetsOverview = (user) => {
     const requestOptions = {
@@ -23,6 +24,62 @@ const getAssetsOverview = (user) => {
             localStorage.setItem('assets', JSON.stringify(assetData));
             return assetData;
         });
+}
+
+const _getSingleParameterCurrentValue = (dataobj) => {
+  return new Promise(
+    (resolve, reject) => {
+      if (dataobj.ParameterID == "N/A" || dataobj.ParameterID == "None" || dataobj.ParameterID == "Null")
+      {
+        dataobj.Value = "N/A";
+        resolve(dataobj);
+      } else {
+        parameterServices.getSingleParameter(dataobj.ParameterID)
+          .then(ret => {
+              dataobj.Value  = ret.CurrentValue;
+              dataobj.Unit = ret.Unit;
+              resolve(dataobj);
+          })
+          .catch(
+            err => {
+              reject(err);
+            }
+          );
+      }
+
+
+    });
+
+
+}
+
+
+
+const _getSingleTag = (tag) => {
+  return new Promise(
+    (resolve, reject) => {
+      Promise.all(tag.Data.map(_getSingleParameterCurrentValue))
+        .then(
+          ret => {
+            tag.Data = ret;
+            resolve(tag);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+    });
+}
+
+const getDataByTagList = (taglist) => {
+  return Promise.all(taglist.map(_getSingleTag))
+    .then(
+      ret => {
+        return ret;
+      }
+    )
 }
 
 
@@ -102,5 +159,6 @@ export const assetServices = {
     getAssetsOverview,
     getSingleAsset,
     addAsset,
-    deleteAsset
+    deleteAsset,
+    getDataByTagList
 };

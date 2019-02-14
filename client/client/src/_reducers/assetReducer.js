@@ -4,12 +4,19 @@ export const asset = (state = {}, action) => {
   switch (action.type) {
     case gConstants.GET_ASSET_REQUEST:
         return {
+            ...state,
             gettingAsset: true
         };
     case gConstants.GET_ASSET_SUCCESS:
         return {
             gotData: true,
             data: action.data
+        };
+    case gConstants.GET_ASSET_TAG_SUCCESS:
+        return {
+          ...state,
+          gotData: true,
+          tags: action.data
         };
     case gConstants.GET_ASSET_FAILURE:
         return {

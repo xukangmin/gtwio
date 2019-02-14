@@ -12,7 +12,8 @@ const AssetSchema = new Schema(
     LatestTimeStamp: Number,
     Parameters: [{ParameterID: String}],
     Devices: [{DeviceID: String}],
-    Dashboards: [{DashboardID: String}]
+    Dashboards: [{DashboardID: String}],
+    Settings: {Tags: [{TagName: String, Data: [{Name: String, ParameterID: String}]}]}
   },
   { timestamps: true }
 );

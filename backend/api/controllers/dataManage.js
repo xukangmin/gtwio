@@ -647,6 +647,7 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
                   parameter = ret[0];
                 }
                 else {
+                  console.log(ret);
                   reject('parameter type not unique');
                 }
                 return _getDataByParameterID(parameter, sTS, eTS);

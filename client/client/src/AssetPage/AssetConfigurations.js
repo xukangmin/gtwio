@@ -11,6 +11,8 @@ import classnames from 'classnames';
 import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
 
+
+
 const DeviceTableRow = (props) => {
   return(
       <tr>
@@ -71,6 +73,8 @@ const ParameterTableRow = (props) => {
           />
         </td>
         <td>{props.data.Equation}</td>
+        <td>{props.data.CurrentValue.toFixed(2)}</td>
+        <td>{new Date(props.data.CurrentTimeStamp).toLocaleString()}</td>
       </tr>
   );
 };
@@ -244,6 +248,8 @@ class AssetConfigurations extends React.Component {
                                   <th>Parameter ID</th>
                                   <th>Description</th>
                                   <th>Equation</th>
+                                  <th>Current Value</th>
+                                  <th>Time Stamp</th>
                               </tr>
                           </thead>
                           <tbody id="main-table-content">

@@ -9,6 +9,33 @@ import SideNav from '../_components/sideNav'
 import HeaderNav from '../_components/headerNav'
 import { Table } from 'reactstrap';
 import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/ParameterPlot';
+import InlineEdit from 'react-inline-edit-input';
+import toastr from 'toastr';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+
+const AddNewParameterModal = ({device,onChange,errors,onAdd,isOpen,onClose}) => {
+    return (
+        <div>
+            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
+                <ModalHeader toggle={onClose}>Add New Device</ModalHeader>
+                <ModalBody>
+                    <AddNewDeviceForm
+                        device={device}
+                        onChange={onChange}
+                        errors={errors}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
+                    <Button color="secondary" onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+      </div>
+
+    );
+}
+
 
 const ParameterInfo = (props) => {
   const parameter = props.data;
@@ -30,7 +57,18 @@ const ParameterInfo = (props) => {
             </tr>
             <tr>
               <th>Equation</th>
-              <td>{parameter.Equation}</td>
+              <td>
+                <InlineEdit
+                  value={parameter.Equation}
+                  tag="span"
+                  type="text"
+                  saveLabel="Update"
+                  saveColor="#17a2b8"
+                  cancelLabel="Cancel"
+                  cancelColor="#6c757d"
+                  onSave={value => props.update(parameter.ParameterID, value)}
+                />
+              </td>
             </tr>
             {parameter.CurrentValue &&
               <tr>
@@ -92,7 +130,7 @@ class AssetParameterDetail extends React.Component {
 
     this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
     //this.props.dispatch(dataActions.getSingleParameterData(this.state.ParameterID, 1549470293237, 1549470453241));
-
+    this.updateEquation = this.updateEquation.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
   }
@@ -103,6 +141,16 @@ class AssetParameterDetail extends React.Component {
     }, 5000);
   }
 
+
+  updateEquation(parameterid, value){
+    console.log("updateEquation called");
+    console.log(value);
+    var paradata = {};
+    paradata.ParameterID = parameterid;
+    paradata.Equation = value;
+    this.props.dispatch(parameterActions.updateParameter(paradata));
+    toastr.success("Equation updated.");
+  }
 
   sortTime(data){
     return(data.sort(
@@ -125,7 +173,7 @@ class AssetParameterDetail extends React.Component {
     const { parameter } = this.props;
     let { parameterData } = this.props;
 
-    console.log(parameter)
+    //console.log(parameter)
 /*    if(!this.props.parameter){
       this.dispatchParameterContinuously = setInterval(() => {
         this.props.dispatch(dataActions.getSingleParameterData(parameter.ParameterID, 1549470293237, 1549470453241));
@@ -141,7 +189,7 @@ class AssetParameterDetail extends React.Component {
         <div className = "mt-3">
         {parameter ?
           <div>
-            <ParameterInfo data={parameter}/>
+            <ParameterInfo data={parameter} update={this.updateEquation}/>
             {parameterData &&
             <div className = "row mt-3">
               <div className = "col-auto">

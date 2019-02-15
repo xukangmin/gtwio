@@ -595,6 +595,26 @@ function createDemoAccount() {
     )
     .then(
       ret => {
+        return createParameter('ASSETID0', 4, 'Delta T S', 'DELTA_TS', '[GenPara0] - [GenPara1]');
+      }
+    )
+    .then(
+      ret => {
+        return createParameter('ASSETID0', 5, 'Delta T 1', 'DELTA_T1', '[GenPara2] - [GenPara1]');
+      }
+    )
+    .then(
+      ret => {
+        return createParameter('ASSETID0', 6, 'Delta T 2', 'DELTA_T2', '[GenPara3] - [GenPara0]');
+      }
+    )
+    .then(
+      ret => {
+        return createParameter('ASSETID0', 7, 'LMTD', 'LMTD', '([GenPara5] - [GenPara6])/log([GenPara5]/[GenPara6])');
+      }
+    )
+    .then(
+      ret => {
         return updateRequireListByEquation('GenPara0');
       }
     )
@@ -611,6 +631,26 @@ function createDemoAccount() {
     .then(
       ret => {
         return updateRequireListByEquation('GenPara3');
+      }
+    )
+    .then(
+      ret => {
+        return updateRequireListByEquation('GenPara4');
+      }
+    )
+    .then(
+      ret => {
+        return updateRequireListByEquation('GenPara5');
+      }
+    )
+    .then(
+      ret => {
+        return updateRequireListByEquation('GenPara6');
+      }
+    )
+    .then(
+      ret => {
+        return updateRequireListByEquation('GenPara7');
       }
     )
     .catch(

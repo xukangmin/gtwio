@@ -141,9 +141,6 @@ class HxStatic extends React.Component {
                     }
                 </Samy>
                 <Row style={Progressbars_style}>
-                  <div>
-                    {AssetData.AddTimeStamp}
-                  </div>
                   <Progressbar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
                   <Progressbar type="Performance Factor" percentage="54" unit="%"/>
                 </Row>

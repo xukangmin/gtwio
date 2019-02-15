@@ -45,7 +45,7 @@ const getSingleParameter = (pid) => {
     function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
 }
 
-const updateParameter = (user, assetid, data) => {
+const updateParameter = (data) => {
     return dispatch => {
         dispatch(request());
         parameterServices.updateParameter(data)

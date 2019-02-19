@@ -6,12 +6,11 @@ import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
 import { AddNewDeviceModal } from '../AssetPage/device_parts/AddNewDeviceModal';
 import Loader from '../_components/loader';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import classnames from 'classnames';
 import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
-
-
+import TextInput from '../_components/TextInput';
 
 const DeviceTableRow = (props) => {
   return(
@@ -79,6 +78,50 @@ const ParameterTableRow = (props) => {
   );
 };
 
+const AddNewParameterForm = ({parameter,onChange,errors}) => {
+    return (
+        <form>
+            <TextInput
+                name="DisplayName"
+                label="Name"
+                placeholder="(required)"
+                value={parameter.DisplayName}
+                onChange={onChange}
+                error={errors.DisplayName} />
+            <TextInput
+                name="Equation"
+                label="Equation"
+                placeholder="(required)"
+                value={parameter.Equation}
+                onChange={onChange}
+                error={errors.Equation} />
+        </form>
+    );
+};
+
+const AddNewParameterModal = ({parameter,onChange,errors,onAdd,isOpen,onClose}) => {
+    return (
+        <div>
+            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
+                <ModalHeader toggle={onClose}>Add New Parameter</ModalHeader>
+                <ModalBody>
+                    <AddNewParameterForm
+                        parameter={parameter}
+                        onChange={onChange}
+                        errors={errors}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
+                    <Button color="secondary" onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+      </div>
+
+    );
+}
+
+
 class AssetConfigurations extends React.Component {
   constructor(props) {
     super(props);
@@ -98,14 +141,30 @@ class AssetConfigurations extends React.Component {
     this.UpdateParameterDisplayName = this.UpdateParameterDisplayName.bind(this);
     this.DeleteDevice = this.DeleteDevice.bind(this);
 
+    this.AddParameterModalOpen = this.AddParameterModalOpen.bind(this);
+    this.AddParameterModalClose = this.AddParameterModalClose.bind(this);
+    this.AddParameter = this.AddParameter.bind(this);
+    this.updateParameterState = this.updateParameterState.bind(this);
+
     this.state = {
       activeTab: '1',
       NewDevice: {
         DisplayName: '',
         SerialNumber: ''
       },
-      addNewDeviceModalOpen: false
+      NewParameter: {
+        DisplayName: '',
+        Equation: ''
+      },
+      addNewDeviceModalOpen: false,
+      addNewParameterModalOpen: false
     };
+  }
+
+  componentDidMount() {
+    this.dispatchParameterContinuously = setInterval(() => {
+      this.props.dispatch(parameterActions.getParameterByAsset(this.asset));
+    }, 5000);
   }
 
   toggle(tab) {
@@ -115,6 +174,8 @@ class AssetConfigurations extends React.Component {
       });
     }
   }
+
+
 
   AddDevice(event) {
     if (this.state.NewDevice.DisplayName === "") {
@@ -185,6 +246,42 @@ class AssetConfigurations extends React.Component {
     this.setState({addDeviceModalOpen: false});
   }
 
+  AddParameter(event) {
+    console.log(this.state);
+    if (this.state.NewParameter.DisplayName === "") {
+      this.setState({errors: {DisplayName: "Name cannot be empty"}});
+      return;
+    }
+
+    //this.props.dispatch(deviceActions.addNewDevice(this.user, this.asset, this.state.NewDevice));
+    this.AddParameterModalClose();
+  }
+
+  updateParameterState(event) {
+    const field = event.target.name;
+    let parameter = Object.assign({}, this.state.NewParameter);
+    parameter[field] = event.target.value;
+    this.setState({errors: {}});
+    return this.setState({NewParameter: parameter});
+  }
+
+
+  AddParameterModalOpen() {
+    this.setState({
+      addParameterModalOpen: true,
+      NewParameter: {
+        DisplayName: '',
+        Equation: ''
+      },
+      errors: {
+      }
+    });
+  }
+
+  AddParameterModalClose() {
+    this.setState({addParameterModalOpen: false});
+  }
+
   render() {
     const { device, parameter } = this.props;
     return (
@@ -240,7 +337,7 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Parameter</button>
+                  <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddParameterModalOpen}>Add Parameter</button>
                   <div className="table-responsive">
                       <table className="table table-striped" style={{textAlign:'center'}}>
                           <thead>
@@ -271,6 +368,16 @@ class AssetConfigurations extends React.Component {
             errors={this.state.errors}
             isOpen={this.state.addDeviceModalOpen}
             onClose={this.AddDeviceModalClose}
+          />
+
+
+          <AddNewParameterModal
+            parameter={this.state.NewParameter}
+            onChange={this.updateParameterState}
+            onAdd={this.AddParameter}
+            errors={this.state.errors}
+            isOpen={this.state.addParameterModalOpen}
+            onClose={this.AddParameterModalClose}
           />
           </div>
         :

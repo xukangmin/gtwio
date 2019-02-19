@@ -237,6 +237,8 @@ function createFlowMeter(assetid, index, tagName, sn, angle) {
                 para.Tag = tagName + "/" + para.Type; // automatically generated if under device
                 para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
                 para.Range = {UpperLimit: 100, LowerLimit: 32};
+                para.StreamingStatus = "Unknown";
+                para.Timeout = 600;
 
                 para.save(err => {
                   if(err)
@@ -326,6 +328,8 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
                 para.Tag = tagName + "/" + para.Type; // automatically generated if under device
                 para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
                 para.Range = {UpperLimit: 100, LowerLimit: 32};
+                para.StreamingStatus = "Unknown";
+                para.Timeout = 600;
 
                 para.save(err => {
                   if(err)
@@ -376,6 +380,9 @@ function createParameter(assetid, index, displayName, tag, equation) {
        para.Tag = tag;
        para.Equation = equation;
        para.Unit = "F";
+       para.StreamingStatus = "Unknown";
+       para.Timeout = 600;
+
        para.save(err => {
          if (err)
          {

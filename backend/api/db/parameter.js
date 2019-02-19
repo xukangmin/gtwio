@@ -20,7 +20,9 @@ const ParameterSchema = new Schema(
     StatusCode: Number,
     StabilityCriteria: {WindowSize: Number, UpperLimit: Number},
     Range: {UpperLimit: Number, LowerLimit: Number},
-    StandardDeviation: Number
+    StandardDeviation: Number,
+    StreamingStatus: String,
+    Timeout: Number // in seconds
   },
   { timestamps: true }
 );

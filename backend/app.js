@@ -5,7 +5,7 @@ const CLIENT_HOST = require('./config/constants.js').CLIENT_HOST;
 const API_PORT =  require('./config/constants.js').API_PORT;
 const Simulation = require("./simulation/temp_data_simulation.js");
 const SetupDB = require('./simulation/setupDefaultDB.js');
-
+const SelfCheck = require('./SelfCheck/checkstatus.js');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 var mongoose = require("mongoose");
@@ -44,6 +44,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 //SetupDB.createDemoAccount();
 Simulation.simualte(10000);
+SelfCheck.selfcheck(60000);
 
 var config = {
   appRoot: __dirname, // required config

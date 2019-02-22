@@ -1,0 +1,16 @@
+{
+	"LocalEndPoint": "http://localhost",
+	"CloudEndPoint": "http://xxx",
+	"CoreModules": [
+		{
+			"MacAddress": "CC:AB:F7:AA:8D:CC",
+			"BLEName": "GTW01A001",
+			"Devices": [
+				"02A001",
+				"02A002",
+				"02A003",
+				"02A004"
+			]
+		}
+	]
+}

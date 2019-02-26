@@ -9,12 +9,12 @@ a {
 
 .card {
 	margin-bottom: 30px !important;
-    /* box-shadow: 1px 1px 1px grey; */
+	border-radius: 0;
+	border-color: #dee2e6 !important;
 }
 
 .card:hover {
-	/* box-shadow: 5px 5px 5px grey; */
-	box-shadow: 5px 5px 5px #ddd;
+	/* box-shadow: 5px 5px 5px #fbfbfb; */
 	-webkit-transition: all 0.4s; /* Safari */
 	transition: all 0.4s;
 }
@@ -26,7 +26,7 @@ a {
 
 .card-header {
 	font-size: medium;
-	font-weight: bold;
+	font-weight: 600;
 	/* background: linear-gradient(to bottom, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 0%, rgba(188,224,238,1) 100%); */
 }
 
@@ -41,7 +41,7 @@ a {
 
 .NewCardBox {
 	border-width:1px;
-    border-style:dashed;
+  border-style:dashed;
 }
 
 .NewCardBox:hover {
@@ -71,7 +71,7 @@ a {
 
 .react-grid-item:not(.react-grid-placeholder) {
 background: #ffffff;
-border: 1px solid black;
+/* border: 1px solid black; */
 }
 
 .dashboard-toolbar-icon {

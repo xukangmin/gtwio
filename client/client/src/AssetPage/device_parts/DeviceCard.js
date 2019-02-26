@@ -3,7 +3,7 @@ import React from 'react';
 export const DeviceCard = ({ device, assetid, onSelDel }) => {
     return (
         <div className="col-lg-3 col-xl-2 col-md-4 col-xs-6 col-sm-4">
-            <div className={"card mb-2 " + (device.Status === "Active" ? "border-success" : "border-secondary" )} style={{maxWidth: 220, minWidth: 100}}>
+            <div className={"card mb-2 " + (device.Status === "Active" ? "border-success" : "border-secondary" )} style={{minWidth: 100}}>
                 <a href={"/asset/" + assetid + "/device/" + device.DeviceID}>
                     <div className="card-header">
                         {device.DisplayName}

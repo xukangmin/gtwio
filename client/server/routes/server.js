@@ -11,7 +11,7 @@ var public_path = root_path + "/server/public/";
 // set the view engine to ejs
 server.set('view engine', 'ejs');
 server.set('views', views_path);
-server.use(express.static(public_path), { dotfiles: 'allow' });
+server.use(express.static(public_path, { dotfiles: 'allow' }));
 // use res.render to load up an ejs view file
 
 // index page

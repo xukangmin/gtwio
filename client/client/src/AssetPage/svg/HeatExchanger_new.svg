@@ -6,14 +6,14 @@
 	 style="enable-background:new 0 0 819.2 1024;" xml:space="preserve">
 <style type="text/css">
 	a:hover{text-decoration: none;}
-	.st0{fill:#FF8080;stroke:#000000;stroke-width:2.6337;stroke-linejoin:round;}
-	.st1{fill:#FF8080;stroke:#000000;stroke-width:2.9606;}
-	.st2{fill:#FFFFFF;stroke:#000000;stroke-width:2.6628;stroke-linejoin:round;}
-	.st3{fill:#3C94FA;stroke:#000000;stroke-width:2.4385}
+	.st0{fill:#FF8080;stroke:#fff;stroke-width:0;}
+	.st1{fill:#FF8080;stroke:#fff;stroke-width:0;}
+	.st2{fill:#FFFFFF;stroke:#fff;stroke-width:0;}
+	.st3{fill:#3C94FA;stroke:#fff;stroke-width:0;}
 	.st4{fill:none;}
-	.st5{fill:#FF8080;stroke:#000000;stroke-width:2.6687;stroke-linejoin:round;}
-	.st6{fill:#0073F9;fill-opacity:0.7647;stroke:#000000;stroke-width:2.662;stroke-linejoin:round;}
-	.st7{fill:#3C94FA;stroke:#000000;stroke-width:2.6622;stroke-linejoin:round;}
+	.st5{fill:#FF8080;}
+	.st6{fill:#0073F9;fill-opacity:0.7647;stroke:#fff;stroke-width:0;}
+	.st7{fill:#3C94FA;stroke:#fff;stroke-width:0;}
 	.st9{font-size:30px;fill:white;}
 	.st10{fill-rule:evenodd;clip-rule:evenodd;fill:#3C94FA;}
 	.st11{fill-rule:evenodd;clip-rule:evenodd;fill:#FF8080;}
@@ -23,10 +23,10 @@
 	.st15{fill:white;font-size:15.5449px;}
 	.st16{font-size:13.6018px;}
 	.st17{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
-	.st18{fill:#FF8080;stroke:#FF0000;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
+	.st18{fill:#FF8080;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st19{fill:#3F0700;}
 	.st20{fill:white;font-size:20px;}
-	.st21{fill:#3C94FA;stroke:#0000FF;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
+	.st21{fill:#3C94FA;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st22{fill:none;stroke:#FFFFFF;stroke-width:1.6908;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6908,5.0725;}
 	.st23{opacity:0.44;fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}
 	.st24{fill:#FFFFFF;}
@@ -53,19 +53,19 @@
 <path id="path6736" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st0" d="
 	M586.3,136c-47.3,0-85.7,37.4-85.7,83.6c0,46.2,38.4,83.6,85.7,83.6c0,0,0,0,0,0c47.3,0,85.7-37.4,85.7-83.6c0,0,0,0,0,0
 	C672,173.5,633.7,136,586.3,136z"/>
-<ellipse id="path4552" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st1" cx="229.3" cy="219.6" rx="86.2" ry="83.5">
+<ellipse id="path4552" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st1" cx="209.3" cy="219.6" rx="86.2" ry="83.5">
 </ellipse>
 <rect id="rect6794" x="228.8" y="136" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st2" width="358.2" height="167.3">
 </rect>
 <g>
-	<rect id="rect4550" x="228.8" y="136" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st3" width="358.2" height="167.3">
+	<rect id="center-rect" x="213" y="136" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st3" width="378.2" height="167.3">
 	</rect>
 	<text x="50%" y="50%" text-anchor="middle" id="asset_name" class="st8 st9">HX</text>
 </g>
 <path id="path6276" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st4" d="
 	M300.3,301.7l-69.7-0.1v-81.9v-81.9l111.8-0.2c61.5-0.1,141.3-0.2,177.5-0.2l65.8,0v82.3v82.3l-107.8-0.1
 	C418.5,301.8,338.6,301.7,300.3,301.7L300.3,301.7z"/>
-<rect id="rect7266" x="90.2" y="203.2" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st5" width="54.5" height="32.3">
+<rect id="rect-pink-left" x="71.2" y="203.2" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st5" width="54.5" height="32.3">
 </rect>
 <rect id="rect7266-48" x="273.5" y="84.1" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st6" width="35.4" height="51.6">
 </rect>
@@ -84,7 +84,7 @@
 <path id="path4286" inkscape:connector-curvature="0" inkscape:original-d="m 373.70716,103.47996 0,55.25088" inkscape:path-effect="#path-effect4288" class="st13" d="
 	M290.5,131.4"/>
 <path class="st4" d=""/>
-<path id="path4487-7" inkscape:connector-curvature="0" class="st13" d="M108.1,218.9l4.8-4.8L96,218.9l16.9,4.8L108.1,218.9z"/>
+<path id="path4487-7" transform="matrix(1 0 0 1 -20 0)" inkscape:connector-curvature="0" class="st13" d="M108.1,218.9l4.8-4.8L96,218.9l16.9,4.8L108.1,218.9z"/>
 <path id="path4286-6" inkscape:connector-curvature="0" inkscape:original-d="m 185.36497,271.30794 -58.70406,0" inkscape:path-effect="#path-effect4288-8" sodipodi:nodetypes="cc" class="st13" d="
 	M98.4,218.9"/>
 <path class="st4" d=""/>
@@ -112,7 +112,7 @@
 		<text id="ShellOutlet_id" transform="matrix(1 0 0 1 408.2012 416.3193)" class="st8 st16 hide">(ID: 01A001)</text>
 	</g>
 </g>
-<line class="st17" x1="108.1" y1="218.9" x2="144.7" y2="218.9"/>
+<line class="st17" x1="76.1" y1="218.9" x2="122.7" y2="218.9"/><!-- left arrow line-->
 <line class="st17" x1="689" y1="218.5" x2="725.6" y2="218.5"/>
 <line class="st17" x1="290.9" y1="128.4" x2="290.9" y2="91.8"/>
 <line class="st17" x1="529.5" y1="342.1" x2="529.5" y2="305.5"/>
@@ -122,12 +122,12 @@
 		<text id="TubeOutlet_id" transform="matrix(1 0 0 1 6.3271 288.0156)" class="st8 st16 hide">(ID: 01A001)</text>
 	</g>
 	<g>
-		<circle id="path4295-9-1" class="st18" cx="44.1" cy="217.1" r="34.3"/>
+		<circle id="path4295-9-1" class="st18" cx="34.1" cy="217.1" r="34.3"/>
 		<g>
 			<a id="TubeOutlet">
-				<text id="TubeOutlet_n" transform="matrix(1 0 0 1 19.9541 218.5259)" class="st19 st8 st20">92.8</text>
+				<text id="TubeOutlet_n" transform="matrix(1 0 0 1 10 218.5259)" class="st19 st8 st20">92.8</text>
 			</a>
-			<text transform="matrix(1 0 0 1 35.9541 237.27)" class="st8 st15">°F</text>
+			<text transform="matrix(1 0 0 1 25 237.27)" class="st8 st15">°F</text>
 		</g>
 	</g>
 </g>
@@ -176,20 +176,20 @@
 		<rect id="rect9030-2" x="492.3" y="269.5" class="st22" width="74.8" height="26.7"/>
 		<g>
 			<rect id="rect9030-1-1_2_" x="495.7" y="273.3" class="st23" width="67.5" height="19.1"/>
-			<text transform="matrix(1 0 0 1 522.5308 289.217)" class="st24 st25 st20">+</text>
+			<text transform="matrix(1 0 0 1 138 289.217)" class="st24 st25 st20">+</text>
 		</g>
 	</a>
 </g>
 <g>
 	<rect id="rect9030" x="248.7" y="142.8" class="st26" width="87.4" height="26.7"/>
 	<a id="ShellInlet_flow">
-		<text transform="matrix(1 0 0 1 264.8091 161.6133)" class="st24 st8 st27">9.89 gpm</text>
+		<text transform="matrix(1 0 0 1 264.8091 161.6133)" class="st24 st8 st27">N/A gpm</text>
 	</a>
 </g>
 <g>
-	<rect id="rect9030-1-1-7" x="149.4" y="207.4" class="st26" width="72.8" height="24.7"/>
+	<rect id="rect-left" x="129.4" y="207.4" class="st26" width="79.8" height="24.7"/>
 	<a id="TubeOutlet_flow">
-		<text transform="matrix(1 0 0 1 158.8292 223.6892)" class="st24 st8 st16">9.89 gpm</text>
+		<text transform="matrix(1 0 0 1 138 223.6892)" class="st24 st8 st16">N/A gpm</text>
 	</a>
 </g>
 </svg>

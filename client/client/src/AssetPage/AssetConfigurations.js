@@ -41,7 +41,7 @@ const DeviceTableRow = (props) => {
             <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
             <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
           </select>
-          <select name={props.data.DeviceID + " Angle"} value = {props.data.Angle} onChange={props.update}>
+          <select name={props.data.DeviceID + " Angle"} value = {props.data.Angle} onChange={props.update} style = {{display: props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline"}}>
             <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
             <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
             <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>

@@ -1,6 +1,19 @@
-import express from 'express';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const express = require('express');
+
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
 const server = express();
 
@@ -21,6 +34,13 @@ server.get('/*', (req, res) => {
   res.render('index',{});
 });
 
-server.listen(80, () => {
+const httpServer = http.createServer(server);
+const httpsServer = https.createServer(credentials, server);
+
+httpServer.listen(80, () => {
   console.log('Sever listening on port 80!');
+});
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
 });

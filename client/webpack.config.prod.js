@@ -53,14 +53,6 @@ module.exports = [
     path: path.join(__dirname, './server/public/js'),
     filename: '[name].bundle.js'
   },
-  plugins: [
-    new BrotliPlugin({
-      asset: '[path].br[query]',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.8
-    })
-  ],
   optimization: {
 		splitChunks: {
 			cacheGroups: {

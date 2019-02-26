@@ -4,25 +4,28 @@ import { connect } from 'react-redux';
 import { dataActions } from '../../../_actions/dataAction';
 import Plot from 'react-plotly.js';
 
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+// you will need the css that comes with bootstrap@3. if you are using
+// a tool like webpack, you can do the following:
+import 'bootstrap/dist/css/bootstrap.css';
+// you will also need the css that comes with bootstrap-daterangepicker
+import 'bootstrap-daterangepicker/daterangepicker.css';
+
 class TagPlot extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      plot_Interval: 10
+      plot_Interval: 10,
+      start: Date.now()-10*60*1000,
+      end: Date.now()
     }
 
-    this.dispatchTagContinuously = setInterval(() => {
-      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.plot_Interval*60*1000, Date.now()));
-    }, 5000);
-
-    this.handleChange = this.handleChange.bind(this);
+    // this.dispatchTagContinuously = setInterval(() => {
+    //   this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, Date.now()-this.state.plot_Interval*60*1000, Date.now()));
+    // }, 5000);
   }
 
-  handleChange(event) {
-    this.setState(
-      {interval: event.target.value}
-    );
-  }
+
 
   render(){
     const { DeviceData } = this.props;
@@ -57,18 +60,10 @@ class TagPlot extends React.Component {
 
     return(
       <div>
-        <label>
-          {"Show  "}
-          <select value = {this.state.interval} onChange = {this.handleChange}>
-            <option value = "10">10 minutes</option>
-            <option value = "30">30 minutes</option>
-            <option value = "60">60 minutes</option>
-          </select>
-          {"  from  "}
-          <select value = {this.state.time} onChange = {this.handleChange}>
-            <option value = "10">Now</option>
-          </select>
-        </label>
+        <DateRangePicker startDate="1/1/2014" endDate="3/1/2014">
+          <button>Click Me To Open Picker!</button>
+        </DateRangePicker>
+
         <Plot
           data = {formattedData}
           layout = {layout}

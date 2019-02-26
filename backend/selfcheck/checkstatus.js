@@ -11,6 +11,11 @@ module.exports.selfcheck = (interval) => {
       data.forEach(singlePara => {
         var currentTime = (new Date).getTime();
 
+        if (!singlePara.Timeout)
+        {
+          singlePara.Timeout = 600;
+        }
+
         if (currentTime - singlePara.CurrentTimeStamp <= singlePara.Timeout * 1000) {
           singlePara.StreamingStatus = "Active";
         } else {

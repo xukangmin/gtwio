@@ -21,7 +21,13 @@ module.exports = {
   ],
   module: {
     rules: [
-      {test: /\.js$/, include: path.join(__dirname, '/client/src'), loaders: ['babel-loader']},
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
       {test: /(\.css)$/, loaders: ['style-loader', 'css-loader']},
       {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
       {test: /\.(woff|woff2)$/, loader: "url-loader?prefix=font/&limit=5000"},

@@ -74,12 +74,12 @@ module.exports = [
 	},
   module: {
       rules: [
-          { test : /\.jsx?/,
-
-              loaders: [
-                  'babel-loader'
-                  //,'jsx-loader'
-              ]
+          {
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader"
+            }
           },
           {test: /\.css$/, use: [
             'style-loader',

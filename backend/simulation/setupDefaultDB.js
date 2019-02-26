@@ -572,12 +572,12 @@ function createDemoAccount() {
     )
     .then(
       ret => {
-        return createFlowMeter(assetid, 0, "ShellInlet", "05A001", 0);
+        return createFlowMeter(assetid, 0, "ShellInlet_Flow", "05A001", 0);
       }
     )
     .then(
       ret => {
-        return createFlowMeter(assetid, 1, "TubeOutlet", "05A002", 0);
+        return createFlowMeter(assetid, 1, "TubeOutlet_Flow", "05A002", 0);
       }
     )
     .then(

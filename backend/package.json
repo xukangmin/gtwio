@@ -26,6 +26,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "server": "node app_prod.js",
     "test": "swagger project test"
   }
 }

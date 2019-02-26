@@ -9,6 +9,11 @@ const SelfCheck = require('./selfcheck/checkstatus.js');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 var mongoose = require("mongoose");
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const express = require('express');
+
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/cert.pem', 'utf8');
 const ca = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/chain.pem', 'utf8');

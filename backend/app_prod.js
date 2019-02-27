@@ -9,6 +9,20 @@ const SelfCheck = require('./selfcheck/checkstatus.js');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 var mongoose = require("mongoose");
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const express = require('express');
+
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/hxmonitor.io/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
 module.exports = app; // for testing
 
@@ -43,7 +57,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 
 //SetupDB.createDemoAccount();
-Simulation.simualte(11000);
+Simulation.simualte(10000);
 SelfCheck.selfcheck(60000);
 
 var config = {
@@ -78,8 +92,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
 
   var port = API_PORT;
-  app.listen(port, function() {
-      console.log('Backend started');
+
+  https.createServer(credentials, app).listen(443, function () {
+      console.log('Server started @ %s!', 443);
+  });
+
+  http.createServer(credentials, app).listen(80, function () {
+      console.log('Server started @ %s!', 80);
   });
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {

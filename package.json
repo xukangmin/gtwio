@@ -11,7 +11,8 @@
     "start-web": "cd client && npm start",
     "server": "concurrently \"npm:start-server-api\" \"npm:start-server-web\"",
     "start-server-api": "cd backend && npm start",
-    "start-server-web": "cd client && npm run build && npm run server"
+    "start-server-web": "cd client && npm run server",
+    "build": "cd client && npm run build"
   },
   "author": "Kangmin",
   "license": "ISC",

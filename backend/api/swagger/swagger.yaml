@@ -9,7 +9,6 @@ basePath: /
 #
 schemes:
   # tip: remove http to make production-grade
-  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -37,6 +36,8 @@ tags:
   externalDocs:
     description: Find out more about our store
     url: http://swagger.io
+- name: deploy
+  description: github webhooks
 
 #securityDefinitions:
  # UserSecurity:
@@ -1238,6 +1239,30 @@ paths:
       description:  Add Data by serial number of the device and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName.ApiKey of user is needed in header of request
       # used as the method name of the controller
       operationId: addDataByParticleEvent
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AddDataBySerialNumberModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /deploy/productionUpdate:
+    x-swagger-router-controller: deployManage
+    post:
+      tags:
+      - deploy
+      description:  deploy trigger by github webhooks 
+      # used as the method name of the controller
+      operationId: productionUpdate
       parameters:
       - name: body
         in: body

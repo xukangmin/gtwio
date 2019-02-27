@@ -5,7 +5,7 @@ const Parameter = require('../api/db/parameter.js');
 module.exports.selfcheck = (interval) => {
   function myFunc(arg) {
     // console.log(`arg was => ${arg}`);
-    console.log("self_check");
+    //console.log("self_check");
     // check all device & parameter status
     Parameter.find({},function(err, data){
       data.forEach(singlePara => {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --config ./webpack.config.dev.js",
-    "build": "webpack --mode production --config ./webpack.config.prod.js",
+    "build": "webpack --mode production --progress --config ./webpack.config.prod.js",
     "server": "nodemon \"./server/bin/server.js\" --watch \"./server\"",
     "open:src": "babel-node server/srcServer.js",
     "watch:build": "webpack --watch"

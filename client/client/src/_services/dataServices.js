@@ -29,7 +29,7 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(gConstants.API_ROOT + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&Type=Temperature&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
+    return fetch(process.env.API_HOST + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&Type=Temperature&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -47,7 +47,7 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
 }
 
 const getSingleParameterData = (pid, t1, t2) => {
-    return fetch(gConstants.API_ROOT + '/data/getDataByParameterID?ParameterID=' + pid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+    return fetch(process.env.API_HOST + '/data/getDataByParameterID?ParameterID=' + pid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
         .then(response => {
             return Promise.all([response, response.json()])
         })

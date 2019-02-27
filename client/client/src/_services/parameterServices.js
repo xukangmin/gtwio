@@ -2,7 +2,7 @@ import { gConstants } from '../_components/constants';
 
 const getParameterByAsset = (assetid) => {
 
-    return fetch(gConstants.API_ROOT + '/parameter/getParameterByAsset?AssetID=' + assetid)
+    return fetch(process.env.API_HOST + '/parameter/getParameterByAsset?AssetID=' + assetid)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -20,7 +20,7 @@ const getParameterByAsset = (assetid) => {
 
 const getSingleParameter = (pid) => {
 
-    return fetch(gConstants.API_ROOT + '/parameter/getSingleParameter?ParameterID=' + pid)
+    return fetch(process.env.API_HOST + '/parameter/getSingleParameter?ParameterID=' + pid)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -45,7 +45,7 @@ const updateParameter = (data) => {
         body: JSON.stringify(body)
     };
     console.log(requestOptions);
-    return fetch(gConstants.API_ROOT + '/parameter/updateParameter', requestOptions)
+    return fetch(process.env.API_HOST + '/parameter/updateParameter', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

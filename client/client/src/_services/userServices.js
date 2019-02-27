@@ -20,7 +20,7 @@ function login(username, password) {
         })
     };
 
-    return fetch(gConstants.API_ROOT + '/user/login', requestOptions)
+    return fetch(process.env.API_HOST + '/user/login', requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -58,7 +58,7 @@ function register(email, password) {
         })
     };
 
-    return fetch(gConstants.API_ROOT + '/user/createUser', requestOptions)
+    return fetch(process.env.API_HOST + '/user/createUser', requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -78,7 +78,7 @@ function register(email, password) {
 
 function activate(id, code) {
 
-    return fetch(gConstants.API_ROOT + '/user/activate?UserID=' + id + '&ActivateKey=' + code)
+    return fetch(process.env.API_HOST + '/user/activate?UserID=' + id + '&ActivateKey=' + code)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -99,7 +99,7 @@ function activate(id, code) {
 
 function reset(email) {
 
-    return fetch(gConstants.API_ROOT + '/user/resetUser?EmailAddress=' + email)
+    return fetch(process.env.API_HOST + '/user/resetUser?EmailAddress=' + email)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -120,7 +120,7 @@ function reset(email) {
 
 function resetPassword(email, password) {
 
-    return fetch(gConstants.API_ROOT + '/user/updatePassword?EmailAddress=' + email + '&Password=' + password)
+    return fetch(process.env.API_HOST + '/user/updatePassword?EmailAddress=' + email + '&Password=' + password)
         .then(response => {
             return Promise.all([response, response.json()])
         })

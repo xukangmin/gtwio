@@ -8,7 +8,7 @@ const getAllDashboards = (assetid) => {
         headers: { 'Content-Type': 'application/json'}
     };
 
-    return fetch(gConstants.API_ROOT + '/dashboard/getDashboardByAsset?AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/dashboard/getDashboardByAsset?AssetID=' + assetid, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -29,7 +29,7 @@ const getSingleDashboard = (dashboardid) => {
         headers: { 'Content-Type': 'application/json'}
     };
 
-    return fetch(gConstants.API_ROOT + '/dashboard/getDashboardByAsset?DashboardID=' + dashboardid, requestOptions)
+    return fetch(process.env.API_HOST + '/dashboard/getDashboardByAsset?DashboardID=' + dashboardid, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -57,7 +57,7 @@ const updateDashboard = (dashboarddata) => {
 
 
 
-    return fetch(gConstants.API_ROOT + '/dashboard/updateDashboard', requestOptions)
+    return fetch(process.env.API_HOST + '/dashboard/updateDashboard', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -98,7 +98,7 @@ const addNewDashboard = (assetid, dashboarddata) => {
 
 
 
-    return fetch(gConstants.API_ROOT + '/dashboard/createDashboard', requestOptions)
+    return fetch(process.env.API_HOST + '/dashboard/createDashboard', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -120,7 +120,7 @@ const deleteDashboard = (assetid, dashboardid) => {
         method: 'DELETE'
     };
 
-    return fetch(gConstants.API_ROOT + '/dashboard/deleteDashboard?DashboardID=' + dashboardid + '&AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/dashboard/deleteDashboard?DashboardID=' + dashboardid + '&AssetID=' + assetid, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

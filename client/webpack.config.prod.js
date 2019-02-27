@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var fs = require('fs');
 var BrotliPlugin = require('brotli-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 var nodeModules = {};
 fs.readdirSync('node_modules')
@@ -25,6 +26,9 @@ module.exports = [
         filename: 'server.js'
     },
     externals: nodeModules,
+    plugins: [
+      new Dotenv()
+    ],
     module: {
         rules: [
             { test : /\.jsx?/,
@@ -53,6 +57,9 @@ module.exports = [
     path: path.join(__dirname, './server/public/js'),
     filename: '[name].bundle.js'
   },
+  plugins: [
+    new Dotenv()
+  ],
   optimization: {
 		splitChunks: {
 			cacheGroups: {

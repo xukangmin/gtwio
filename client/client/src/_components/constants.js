@@ -1,6 +1,4 @@
 export const gConstants = {
-    API_ROOT: 'https://api.hxmonitor.io',
-    SERVER_ROOT: 'http://localhost',
     SUCCESS: 'ALERT_SUCCESS',
     ERROR: 'ALERT_ERROR',
     CLEAR: 'ALERT_CLEAR',

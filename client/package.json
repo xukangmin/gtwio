@@ -33,11 +33,8 @@
     "history": "^4.7.2",
     "immutability-helper": "^2.6.6",
     "jquery": "^3.3.1",
-<<<<<<< HEAD
     "nodemon": "^1.18.9",
-=======
     "moment": "^2.24.0",
->>>>>>> 7160567ced6399d4c338f47e2f949a0b2f203564
     "plotly.js": "^1.44.1",
     "popper.js": "^1.14.1",
     "progressbar.js": "^1.0.1",

@@ -38,6 +38,7 @@
     "progressbar.js": "^1.0.1",
     "query-string": "^5.1.1",
     "raw-loader": "^0.5.1",
+    "react-advanced-datetimerange-picker": "^0.1.10",
     "react-bootstrap-daterangepicker": "^4.1.0",
     "react-circular-progressbar": "^1.0.0",
     "react-fontawesome": "^1.6.1",

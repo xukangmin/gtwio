@@ -52,7 +52,7 @@ function generate_simulation_data(paraID, lowRange, highRange) {
 module.exports.simualte = (interval) => {
   function myFunc(arg) {
     // console.log(`arg was => ${arg}`);
-    console.log("generate simulation data");
+    //console.log("generate simulation data");
     generate_simulation_data('TempPara0', 60, 61);
     generate_simulation_data('TempPara1', 60, 61);
     generate_simulation_data('TempPara2', 60, 61);

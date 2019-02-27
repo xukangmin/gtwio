@@ -87,7 +87,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria</th>
-              <td>{"Window Size123: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
+              <td>{"Window Size: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
             </tr>
             <tr>
               <th>Status</th>

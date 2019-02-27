@@ -11,36 +11,51 @@ import moment from "moment"
 class TagPlot extends React.Component {
   constructor(props){
     super(props);
-    // this.state = {
-    //   plot_Interval: 10,
-    //   start: Date.now()-10*60*1000,
-    //   end: Date.now()
-    // }
+
     let now = new Date();
     let start = moment(now).subtract(10, "minutes");
     let end = moment(now);
+
     this.state = {
         start : start,
         end : end,
-        plot_Interval: 10
+        plot_Interval: 10,
+        continue_Dispatch: true,
+        interval_Updated: false
     }
 
     this.applyCallback = this.applyCallback.bind(this);
+    this.pauseDispatch = this.pauseDispatch.bind(this);
+
     this.dispatchTagContinuously = setInterval(() => {
-      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end));
+      console.log(this.state.continue_Dispatch);
+      if(this.state.continue_Dispatch && !this.state.interval_Updated){
+        this.setState({
+          start: moment(new Date()).subtract(10, "minutes"),
+          end: moment(new Date())
+        })
+        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end));
+      }
     }, 5000);
-    // this.updateRange = this.updateRange.bind(this);
   }
 
   applyCallback(startDate, endDate){
-        this.setState({
-                start: startDate,
-                end : endDate,
-                plot_Interval : (endDate - startDate)/1000/60
-            }
-        )
-        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end));
-    }
+    this.setState({
+        start: startDate,
+        end : endDate,
+        plot_Interval : (endDate - startDate)/1000/60,
+        continue_Dispatch: true,
+        interval_Updated: true
+      },
+      ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end))
+    );
+  }
+
+  pauseDispatch(){
+    this.setState({
+      continue_Dispatch:false
+    });
+  }
 
   render(){
     const { DeviceData } = this.props;
@@ -77,17 +92,16 @@ class TagPlot extends React.Component {
     let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
     let end = moment(start).add(1, "days").subtract(1, "seconds");
     let ranges = {
-        "Today Only": [moment(start), moment(end)],
-        "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
-        "3 Days": [moment(start).subtract(3, "days"), moment(end)]
+      "Today Only": [moment(start), moment(end)],
+      "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
+      "3 Days": [moment(start).subtract(3, "days"), moment(end)]
     }
     let local = {
-        "format":"DD-MM-YYYY HH:mm",
-        "sundayFirst" : false
+      "format":"DD-MM-YYYY HH:mm",
+      "sundayFirst" : false
     }
-    let maxDate = moment(start).add(24, "hour")
+    let maxDate = moment(start).add(24, "hour");
 
-    console.log(moment(this.state.start).format("X"))
     return(
       <div>
         <div className="col-6">
@@ -100,6 +114,7 @@ class TagPlot extends React.Component {
             applyCallback={this.applyCallback}
           >
             <FormControl
+              onClick={this.pauseDispatch}
               id="formControlsTextB"
               type="text"
               label="Text"

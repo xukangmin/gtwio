@@ -80,7 +80,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   var port = API_PORT;
   app.listen(port, function() {
       console.log('Backend started');
-      //SetupDB.testFunc('demo1@graftel.com','demo');
   });
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {

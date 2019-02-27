@@ -79,7 +79,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   var port = API_PORT;
   app.listen(port, function() {
-      console.log('Backend started');
+      console.log('Backend started1');
   });
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {

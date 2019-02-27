@@ -87,7 +87,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria</th>
-              <td>{"Window Size: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
+              <td>{"Window Size1: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
             </tr>
             <tr>
               <th>Status</th>
@@ -232,7 +232,7 @@ class AssetDeviceDetail extends React.Component {
     if (deviceData)
     {
       tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
-      
+
       if (deviceData.Parameters.find(this.findTypeTemperature).CurrentValue) {
         //this.props.dispatch(deviceActions.setPollEnable(true));
         //this.props.dispatch(dataActions.getSingleParameterData(deviceData.Parameters.find(this.findTypeTemperature).ParameterID, Date.now()-600000, Date.now()));

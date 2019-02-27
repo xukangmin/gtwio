@@ -1,12 +1,11 @@
 'use strict';
 
-const DBHOST = require('./config/constants.js').DBHOST;
-const CLIENT_HOST = require('./config/constants.js').CLIENT_HOST;
-const API_PORT =  require('./config/constants.js').API_PORT;
 const Simulation = require("./simulation/temp_data_simulation.js");
 const SetupDB = require('./simulation/setupDefaultDB.js');
 const SelfCheck = require('./selfcheck/checkstatus.js');
 var SwaggerExpress = require('swagger-express-mw');
+require('dotenv').config();
+
 var app = require('express')();
 var mongoose = require("mongoose");
 
@@ -16,7 +15,7 @@ var swStats = require('swagger-stats');
 app.use(swStats.getMiddleware({}));
 
 mongoose.connect(
-  DBHOST,
+  process.env.DB_HOST,
   { useNewUrlParser: true }
 );
 
@@ -27,11 +26,11 @@ db.once("open", () =>
     console.log("connected to the database!!");
     SetupDB.checkDemoExist(function(exist) {
       if(exist) {
-        console.log("exists");
+        console.log("hxmonitor db exists");
         //SetupDB.deleteDemoAccount();
       }
       else {
-        console.log("not exists");
+        console.log("hxmonitor db not exists, create demo account");
         SetupDB.createDemoAccount();
       }
     });
@@ -77,9 +76,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // install middleware
   swaggerExpress.register(app);
 
-  var port = API_PORT;
+  var port = process.env.APP_PORT;
   app.listen(port, function() {
-      console.log('Backend started');
+      console.log('Backend started at ' + port);
   });
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {

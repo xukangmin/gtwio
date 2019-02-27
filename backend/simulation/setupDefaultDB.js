@@ -4,7 +4,6 @@ const Parameter = require('../api/db/parameter.js');
 const Device = require('../api/db/device.js');
 const Dashboard = require('../api/db/dashboard.js');
 const Data = require('../api/db/data.js');
-const API_PORT =  require('../config/constants.js').API_PORT;
 const fetch = require('node-fetch');
 
 var userid = 'USERID0';
@@ -456,7 +455,7 @@ function updateRequireListByEquation(paraid) {
           })
       };
 
-      fetch('http://localhost:' + API_PORT + '/parameter/updateRequireListByEquation', requestOptions)
+      fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/parameter/updateRequireListByEquation', requestOptions)
           .then(response => {
               return Promise.all([response, response.json()])
           })

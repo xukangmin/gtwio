@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -17,7 +18,8 @@ module.exports = {
     historyApiFallback: true
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new Dotenv()
   ],
   module: {
     rules: [

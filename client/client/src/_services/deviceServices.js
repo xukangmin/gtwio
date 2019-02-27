@@ -7,7 +7,7 @@ const getAllDevices = (user, assetid) => {
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(gConstants.API_ROOT + '/device/getDeviceByAsset?AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/device/getDeviceByAsset?AssetID=' + assetid, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -25,7 +25,7 @@ const getAllDevices = (user, assetid) => {
 
 const getSingleDevice = (deviceid) => {
 
-    return fetch(gConstants.API_ROOT + '/device/getSingleDevice?DeviceID=' + deviceid)
+    return fetch(process.env.API_HOST + '/device/getSingleDevice?DeviceID=' + deviceid)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -64,7 +64,7 @@ const addNewDevice = (user, assetid, devicedata) => {
         body: JSON.stringify(body)
     };
 
-    return fetch(gConstants.API_ROOT + '/device/createDevice', requestOptions)
+    return fetch(process.env.API_HOST + '/device/createDevice', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -86,7 +86,7 @@ const deleteDevice = (assetid, deviceid) => {
         method: 'DELETE'
     };
 
-    return fetch(gConstants.API_ROOT + '/device/deleteDevice?DeviceID=' + deviceid + '&AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/device/deleteDevice?DeviceID=' + deviceid + '&AssetID=' + assetid, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -113,7 +113,7 @@ const updateDevice = (data) => {
         body: JSON.stringify(body)
     };
 
-    return fetch(gConstants.API_ROOT + '/device/updateDevice', requestOptions)
+    return fetch(process.env.API_HOST + '/device/updateDevice', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

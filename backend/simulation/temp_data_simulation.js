@@ -3,7 +3,6 @@ const Device = require('../api/db/device.js');
 const Parameter = require('../api/db/parameter.js');
 const Asset = require('../api/db/asset.js');
 const fetch = require('node-fetch');
-const API_PORT =  require('../config/constants.js').API_PORT;
 function generate_simulation_data1(paraID, lowRange, highRange) {
   let data = new Data();
 
@@ -30,7 +29,7 @@ function generate_simulation_data(paraID, lowRange, highRange) {
       })
   };
 
-  fetch('http://localhost:' + API_PORT + '/data/addDataByParameterID', requestOptions)
+  fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataByParameterID', requestOptions)
       .then(response => {
           return Promise.all([response, response.json()])
       })

@@ -546,7 +546,7 @@ function getUserbyApiKeyQuery(apiKey, callback) {
 
 function sendForgotPasswordEmail(emailid, VerificationCode) {
   const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(require('../../../../sg.js').SENDGRID_API_KEY);
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   var link =  "http://localhost:3000/reset-password?email=" + emailid + "&code=" + VerificationCode;
   const msg = {
     to: emailid,
@@ -566,7 +566,7 @@ function sendForgotPasswordEmail(emailid, VerificationCode) {
 
 function completeRegistrationEmail(emailid, userid, verificationCode) {
   const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(require('../../config/constants.js').SENDGRID_API_KEY);
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   var link =  require('../../config/constants.js').CLIENT_HOST + "/activate?id=" + userid + "&code=" + verificationCode;
   const msg = {
     to: emailid,

@@ -5,12 +5,13 @@
   "main": "server.js",
   "scripts": {
     "postinstall": "cd backend && npm install && cd .. && cd client && npm install",
-    "start": "concurrently \"npm:start-api\" \"npm:start-api-editor\" \"npm:start-web\"",
+    "start": "concurrently \"npm:start-server-api\" \"npm:start-server-web\"",
     "start-api": "cd backend && swagger project start",
     "start-api-editor": "cd backend && swagger project edit",
     "start-web": "cd client && npm start",
+    "dev": "concurrently \"npm:start-api\" \"npm:start-api-editor\" \"npm:start-web\"",
     "server": "concurrently \"npm:start-server-api\" \"npm:start-server-web\"",
-    "start-server-api": "cd backend && npm start",
+    "start-server-api": "cd backend && npm run server",
     "start-server-web": "cd client && npm run server",
     "build": "cd client && npm run build"
   },

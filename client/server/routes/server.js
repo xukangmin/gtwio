@@ -21,6 +21,6 @@ server.get('/*', (req, res) => {
   res.render('index',{});
 });
 
-server.listen(8001, () => {
-  console.log('Sever listening on port 8001!');
+server.listen(process.env.APP_PORT, () => {
+  console.log('Sever listening on port ' + process.env.APP_PORT);
 });

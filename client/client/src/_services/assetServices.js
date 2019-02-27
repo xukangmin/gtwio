@@ -9,7 +9,7 @@ const getAssetsOverview = (user) => {
         method: 'GET'
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
+    return fetch(process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -89,7 +89,7 @@ const getSingleAsset = (user, assetid) => {
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/getSingleAsset?AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetid, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -117,7 +117,7 @@ const addAsset = (user, displayname) => {
         })
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/createAsset', requestOptions)
+    return fetch(process.env.API_HOST + '/asset/createAsset', requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -139,7 +139,7 @@ const deleteAsset = (assetid, user) => {
         method: 'DELETE'
     };
 
-    return fetch(gConstants.API_ROOT + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + user.UserID, requestOptions)
+    return fetch(process.env.API_HOST + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + user.UserID, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })

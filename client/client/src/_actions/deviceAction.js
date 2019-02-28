@@ -23,6 +23,7 @@ const getAllDeviceData = (user, assetid) => {
 }
 
 const getSingleDeviceData = (deviceid) => {
+
     return dispatch => {
         dispatch(request());
         deviceServices.getSingleDevice(deviceid)

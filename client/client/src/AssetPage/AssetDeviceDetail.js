@@ -135,6 +135,7 @@ const ParameterTable = (props) => {
 
 class AssetDeviceDetail extends React.Component {
   constructor(props) {
+    console.log('hello')
     super(props);
 
     this.state = {
@@ -229,14 +230,17 @@ class AssetDeviceDetail extends React.Component {
     const { parameterData } = this.props;
 
     let tempParameter;
+    console.log('???')
     if (deviceData)
     {
-      tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
+      // tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
+      console.log(deviceData);
+      // tempParameter = deviceData.Parameters.ParameterID;
 
-      if (deviceData.Parameters.find(this.findTypeTemperature).CurrentValue) {
+      // if (deviceData.Parameters.find(this.findTypeTemperature).CurrentValue) {
         //this.props.dispatch(deviceActions.setPollEnable(true));
         //this.props.dispatch(dataActions.getSingleParameterData(deviceData.Parameters.find(this.findTypeTemperature).ParameterID, Date.now()-600000, Date.now()));
-      }
+      // }
     }
 
 

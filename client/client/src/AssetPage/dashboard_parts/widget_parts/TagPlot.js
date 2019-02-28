@@ -26,6 +26,7 @@ class TagPlot extends React.Component {
 
     this.applyCallback = this.applyCallback.bind(this);
     this.pauseDispatch = this.pauseDispatch.bind(this);
+    this.plotUpdated = this.plotUpdated.bind(this);
 
     this.dispatchTagContinuously = setInterval(() => {
       console.log(this.state.continue_Dispatch);
@@ -55,6 +56,10 @@ class TagPlot extends React.Component {
     this.setState({
       continue_Dispatch:false
     });
+  }
+
+  plotUpdated(){
+    console.log('plot')
   }
 
   render(){

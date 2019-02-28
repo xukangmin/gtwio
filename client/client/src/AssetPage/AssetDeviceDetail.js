@@ -135,7 +135,6 @@ const ParameterTable = (props) => {
 
 class AssetDeviceDetail extends React.Component {
   constructor(props) {
-    console.log('hello')
     super(props);
 
     this.state = {
@@ -157,10 +156,6 @@ class AssetDeviceDetail extends React.Component {
     }, 5000);
   }
 
-  findTypeTemperature(parameter){
-    return parameter.Type == "Temperature";
-  }
-
   sortTime(data){
     return(data.sort(
       function(a,b){
@@ -178,7 +173,6 @@ class AssetDeviceDetail extends React.Component {
   }
 
   updateLimit(parameter, currentValue, range, value){
-
     var num_in = Number(value);
 
     if (!isNaN(num_in))
@@ -213,36 +207,15 @@ class AssetDeviceDetail extends React.Component {
           toastr.success("Device range limits updated.");
         }
       }
-
-
-
     } else {
       toastr.warning("Please Enter Number Only");
     }
-
-    //this.props.dispatch(parameterActions.updateParameter(this.user.UserID, this.state.AssetID, updateData));
-    //toastr.success("Device range limits updated.");
   }
 
   render() {
     const { AssetID } = this.state;
     const { deviceData, pollEnable } = this.props;
     const { parameterData } = this.props;
-
-    let tempParameter;
-    console.log('???')
-    if (deviceData)
-    {
-      // tempParameter = deviceData.Parameters.find(this.findTypeTemperature).ParameterID;
-      console.log(deviceData);
-      // tempParameter = deviceData.Parameters.ParameterID;
-
-      // if (deviceData.Parameters.find(this.findTypeTemperature).CurrentValue) {
-        //this.props.dispatch(deviceActions.setPollEnable(true));
-        //this.props.dispatch(dataActions.getSingleParameterData(deviceData.Parameters.find(this.findTypeTemperature).ParameterID, Date.now()-600000, Date.now()));
-      // }
-    }
-
 
     if (!this.user)
     {
@@ -252,7 +225,7 @@ class AssetDeviceDetail extends React.Component {
         <div className = "mt-3">
         {deviceData ?
           <div>
-            <DeviceInfo data={deviceData} update={this.updateLimit} parameter={tempParameter}/>
+            <DeviceInfo data={deviceData} update={this.updateLimit} parameter={deviceData.Parameters.ParameterID}/>
             {parameterData &&
               <div className = "row mt-3">
                 <div className = "col-auto">
@@ -267,12 +240,9 @@ class AssetDeviceDetail extends React.Component {
           </div> :
           <Loader/>
         }
-
         </div>
       );
     }
-
-
   }
 }
 

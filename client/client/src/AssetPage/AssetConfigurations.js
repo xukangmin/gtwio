@@ -175,8 +175,6 @@ class AssetConfigurations extends React.Component {
     }
   }
 
-
-
   AddDevice(event) {
     if (this.state.NewDevice.DisplayName === "") {
       this.setState({errors: {DisplayName: "Name cannot be empty"}});
@@ -253,7 +251,6 @@ class AssetConfigurations extends React.Component {
       return;
     }
 
-    //this.props.dispatch(deviceActions.addNewDevice(this.user, this.asset, this.state.NewDevice));
     this.AddParameterModalClose();
   }
 
@@ -264,7 +261,6 @@ class AssetConfigurations extends React.Component {
     this.setState({errors: {}});
     return this.setState({NewParameter: parameter});
   }
-
 
   AddParameterModalOpen() {
     this.setState({

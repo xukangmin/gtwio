@@ -19,33 +19,7 @@ class HxStatic extends React.Component {
     super(props);
     this.props.dispatch(assetActions.getSingleAssetDetail(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.state = {
-         AssetID: props.match.params.assetID,
-         Settings: {
-           ShellInlet: {
-             temperature: "50.7",
-             name: "ShellInlet",
-             id: "OA123",
-             flow: '9.89'
-           },
-           ShellOutlet: {
-             temperature: "62.4",
-             name: "ShellOutlet",
-             id: "OA123",
-             flow: 'N/A',
-           },
-           TubeInlet: {
-             temperature: "92.8",
-             name: "TubeInlet",
-             id: "OA123",
-             flow: 'N/A',
-           },
-           TubeOutlet: {
-             temperature: "88.4",
-             name: "TubeOutlet",
-             id: "OA123",
-             flow: '9.89'
-           }
-         }
+       AssetID: props.match.params.assetID,
     }
 
     this.HandleText = this.HandleText.bind(this);

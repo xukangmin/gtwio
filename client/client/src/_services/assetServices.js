@@ -155,10 +155,38 @@ const deleteAsset = (assetid, user) => {
     });
 }
 
+const updateAsset = (data) => {
+
+    const body = data;
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(process.env.API_HOST + '/asset/updateAsset', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const assetServices = {
     getAssetsOverview,
     getSingleAsset,
     addAsset,
     deleteAsset,
-    getDataByTagList
+    getDataByTagList,
+    updateAsset
 };

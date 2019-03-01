@@ -60,6 +60,7 @@ const getAssetsOverview = (user) => {
     function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
 }
+
 const getSingleAssetDetail = (user, assetid) => {
     return dispatch => {
       dispatch(request());
@@ -159,11 +160,32 @@ const getAllDeviceData = (user, assetid) => {
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
 }
 
+const updateAsset = (user, assetid, data) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.updateAsset(data)
+            .then(
+                info => {
+                    dispatch(getAssetsOverview(user));
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.UPDATE_ASSET_REQUEST } }
+    function success(data) { return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
+}
 
 export const assetActions = {
     getAssetsOverview,
     getSingleAssetData,
     addAsset,
     deleteAsset,
-    getSingleAssetDetail
+    getSingleAssetDetail,
+    getAllDeviceData,
+    updateAsset
 };

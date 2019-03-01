@@ -1,50 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { assetActions } from '../../_actions/assetAction'
-import { Button } from 'reactstrap';
-
-const MainTableRow = (props) => {
-    return(
-        <tr>
-            <td>
-              <a href={"/asset/" + props.singleAsset.AssetID + "/dashboard"}
-                onClick={()=>props.assetClicked(props.singleAsset.AssetID,props.singleAsset.DisplayName)}>
-                  {props.singleAsset.DisplayName}
-              </a>
-            </td>
-            <td style={props.status==="Running"?{color:'#08D800'}:{color:'red'}}>{props.status}</td>
-            <td><a href={"/asset/" + props.singleAsset.AssetID + "/device"}>{props.singleAsset.Devices.length}</a></td>
-            <td>{props.singleAsset.Location}</td>
-            <td>
-              <Button style={{marginRight: "10px"}}
-                      href="#"
-                      data-toggle="modal"
-                      data-target="#editAssetModal"
-                      id="editAssetModalButton">
-                        <i className="fas fa-edit"></i>
-              </Button>
-              <Button color="danger"
-                      onClick={()=>props.deleteSelectedAsset(props.singleAsset.AssetID, props.user)}>
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-              </Button>
-            </td>
-        </tr>
-    );
-};
+import { assetActions } from '../../_actions/assetAction';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class MainArea extends React.Component {
     constructor(props) {
+      console.log(props)
       super(props);
       this.state = {
-        clickedAsset: null
+        clickedAsset: null,
+        displayname: '',
+        editModalOpen: false
       }
       this.deleteAsset = this.deleteAsset.bind(this);
+      this.editButtonClicked = this.editButtonClicked.bind(this);
+      this.editModalToggle = this.editModalToggle.bind(this);
     }
 
     assetSelected(id,name){
       localStorage.setItem("selectedAssetID", id);
       localStorage.setItem("selectedAssetName", name);
+    }
+
+    editModalToggle(){
+      this.setState(prevState => ({
+        editModalOpen: !prevState.editModalOpen
+      }));
+    }
+
+    editButtonClicked(){
+      this.props.dispatch(assetActions.editAsset(this.props.user,this.state.displayname));
     }
 
     deleteAsset(asset, user){
@@ -54,27 +40,63 @@ class MainArea extends React.Component {
     }
 
     render() {
+      console.log(this.props.assets)
         return (
-            <div id="MainArea">
-                <div className="table-responsive">
-                    <table className="table table-striped" style={{textAlign:'center'}}>
-                        <thead>
-                            <tr>
-                                <th>Asset</th>
-                                <th>Status</th>
-                                <th>Device Count</th>
-                                <th>Location</th>
-                                <th>Edit</th>
+          <div id="MainArea">
+            <div className="table-responsive">
+                <table className="table table-striped" style={{textAlign:'center'}}>
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Status</th>
+                            <th>Device Count</th>
+                            <th>Location</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="main-table-content">
+                        {this.props.assets.map((singleAsset,i) =>
+                            <tr key={i}>
+                                <td>
+                                  <a href={"/asset/" + singleAsset.AssetID + "/dashboard"}>{singleAsset.DisplayName}
+                                  </a>
+                                </td>
+                                <td style={{color:"#08D800"}}>OK</td>
+                                <td><a href={"/asset/" + singleAsset.AssetID + "/device"}>{singleAsset.Devices.length}</a></td>
+                                <td>{singleAsset.Location}</td>
+                                <td>
+                                  <Button name={singleAsset.DisplayName} onClick={this.editModalToggle} style={{marginRight: "10px"}} >
+                                    <i className="fas fa-edit"></i>
+                                  </Button>
+                                  <Modal isOpen={this.state.editModalOpen} toggle={this.editModalToggle}>
+                                    <ModalHeader toggle={this.editModalToggle}>Edit Asset</ModalHeader>
+                                    <ModalBody>
+                                      <Form>
+                                        <FormGroup>
+                                          <Label for="displayname">Name</Label>
+                                          <Input type="text" id="displayname" name="displayname" value={singleAsset.DisplayName} onChange={this.handleChange}/>
+                                          <br/>
+                                          <Label for="location">Location</Label>
+                                          <Input type="text" id="location"/>
+                                        </FormGroup>
+                                      </Form>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                      <Button color="primary" id="edit" onClick={this.editButtonClicked}>Save</Button>{' '}
+                                      <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
+                                    </ModalFooter>
+                                  </Modal>
+                                  <Button color="danger"
+                                          onClick={()=>this.deleteAsset(singleAsset.AssetID, this.props.user)}>
+                                            <i className="fa fa-trash" aria-hidden="true"></i>
+                                  </Button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody id="main-table-content">
-                            {this.props.assets.map((singleAsset,i) =>
-                                <MainTableRow assetClicked={this.assetSelected} deleteSelectedAsset={this.deleteAsset} user={this.props.user} singleAsset={singleAsset} key={i} status="Running" health="OK" alerts={0}/>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                        )}
+                    </tbody>
+                </table>
             </div>
+          </div>
         );
     }
 

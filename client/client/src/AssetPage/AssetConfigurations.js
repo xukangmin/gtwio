@@ -6,7 +6,7 @@ import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
 import { AddNewDeviceModal } from '../AssetPage/device_parts/AddNewDeviceModal';
 import Loader from '../_components/loader';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import classnames from 'classnames';
 import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
@@ -29,25 +29,25 @@ const DeviceTableRow = (props) => {
           />
         </td>
         <td>
-          <select>
+          <Input type="select">
             <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
-          </select>
+          </Input>
         </td>
         <td>
-          <select name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update}>
+          <Input type="select" name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update} style={{display: "inline", width: "70%"}}>
             <option value = {props.data.Tag}>{props.data.Tag}</option>
             <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
             <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
             <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
             <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
-          </select>
-          <select name={props.data.DeviceID + " Angle"} value = {props.data.Angle} onChange={props.update} style = {{display: props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline"}}>
+          </Input>
+          <Input type="select" name={props.data.DeviceID + " Angle"} value = {props.data.Angle} onChange={props.update} style = {{display: props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline", width:props.data.Parameters[0].DisplayName=="Flow Value" ? "0%" : "30%"}}>
             <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
             <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
             <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>
             <option style = {{display: props.data.Angle=="180" ? "none" : "block"}} value = "180">180°</option>
             <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
-          </select>
+          </Input>
         </td>
         <td>{props.data.LastCalibrationDate ? props.data.LastCalibrationDate.slice(0,10) : ""}</td>
         <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>

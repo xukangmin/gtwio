@@ -81,7 +81,7 @@ class TagPlot extends React.Component {
 
     let layout = {
       yaxis: {
-        range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
+        range: [Math.min(...allData[0])-10, Math.max(...allData[0])+10],
         ticklen: 8
       },
       xaxis: {

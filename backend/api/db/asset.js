@@ -9,6 +9,7 @@ const AssetSchema = new Schema(
     AddTimeStamp: Number,
     AssetType: String,
     DisplayName: String,
+    Location: String,
     LatestTimeStamp: Number,
     Parameters: [{ParameterID: String}],
     Devices: [{DeviceID: String}],

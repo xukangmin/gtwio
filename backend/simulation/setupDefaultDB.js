@@ -50,7 +50,8 @@ function createAsset(userid, assetid) {
       asset.DeviceCount = 0;
       asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
       asset.DisplayName = 'demo_hx_asset';
-
+      asset.Location = 'Plant A';
+      
       var settings = {};
       settings.Tags = [
               {

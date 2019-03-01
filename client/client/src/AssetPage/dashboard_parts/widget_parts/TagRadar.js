@@ -20,7 +20,7 @@ class TagRadar extends React.Component {
       polar: {
         radialaxis: {
           visible: true,
-          range: [0, Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value)))]
+          range: [Math.ceil(Math.min(...DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value)))-10, Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value)))+10]
         }
       },
       showlegend: false,

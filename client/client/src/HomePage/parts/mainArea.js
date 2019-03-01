@@ -6,7 +6,6 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, La
 
 class MainArea extends React.Component {
     constructor(props) {
-      console.log(props)
       super(props);
       this.state = {
         asset: '',
@@ -21,7 +20,6 @@ class MainArea extends React.Component {
     }
 
     editModalToggle(asset_id, name){
-      console.log(asset_id)
       this.setState(prevState => ({
         asset: asset_id,
         displayname: name,
@@ -43,7 +41,6 @@ class MainArea extends React.Component {
 
     handleChange(event) {
         const { name, value } = event.target;
-        console.log(name,value);
         this.setState(
           {
             asset: name,
@@ -66,7 +63,6 @@ class MainArea extends React.Component {
     }
 
     render() {
-      console.log(this.props.assets)
         return (
           <div id="MainArea">
             <div className="table-responsive">

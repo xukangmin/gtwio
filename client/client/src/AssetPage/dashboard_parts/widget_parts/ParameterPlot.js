@@ -28,7 +28,7 @@ class ParameterPlot extends React.Component {
 
     const layout= {
       yaxis: {
-        range: [0,100]
+        range: [Math.min(...tempY)-10,Math.max(...tempY)+10]
       },
       xaxis:{
         showline: false,

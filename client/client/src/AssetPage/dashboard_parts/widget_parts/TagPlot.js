@@ -64,12 +64,24 @@ class TagPlot extends React.Component {
 
   render(){
     const { DeviceData } = this.props;
+    console.log(DeviceData);
 
     let formattedData = [];
+    let allData = [];
+
+    for (var i = 0; i < DeviceData.length; i++){
+      formattedData.push({
+        x: DeviceData[i].Data.map((item,i) => new Date(item.TimeStamp).toLocaleTimeString("en-US")),
+        y: DeviceData[i].Data.map((item,i) => item.Value),
+        type: 'scatter',
+        name: DeviceData[i].SerialNumber
+      })
+      allData.push(DeviceData[i].Data.map((item,i) => item.Value));
+    }
 
     let layout = {
       yaxis: {
-        range: [0,100],
+        range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
         ticklen: 8
       },
       xaxis: {
@@ -82,15 +94,6 @@ class TagPlot extends React.Component {
         l: 40,
         t: 30
       }
-    }
-
-    for (var i = 0; i < DeviceData.length; i++){
-      formattedData.push({
-        x: DeviceData[i].Data.map((item,i) => new Date(item.TimeStamp).toLocaleTimeString("en-US")),
-        y: DeviceData[i].Data.map((item,i) => item.Value),
-        type: 'scatter',
-        name: DeviceData[i].SerialNumber
-      })
     }
 
     let now = new Date();

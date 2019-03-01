@@ -9,28 +9,54 @@ class MainArea extends React.Component {
       console.log(props)
       super(props);
       this.state = {
-        clickedAsset: null,
+        asset: '',
         displayname: '',
         editModalOpen: false
       }
       this.deleteAsset = this.deleteAsset.bind(this);
       this.editButtonClicked = this.editButtonClicked.bind(this);
       this.editModalToggle = this.editModalToggle.bind(this);
+      this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
+      this.handleChange = this.handleChange.bind(this);
     }
 
-    assetSelected(id,name){
-      localStorage.setItem("selectedAssetID", id);
-      localStorage.setItem("selectedAssetName", name);
-    }
-
-    editModalToggle(){
+    editModalToggle(asset_id, name){
+      console.log(asset_id)
       this.setState(prevState => ({
+        asset: asset_id,
+        displayname: name,
         editModalOpen: !prevState.editModalOpen
       }));
     }
 
     editButtonClicked(){
-      this.props.dispatch(assetActions.editAsset(this.props.user,this.state.displayname));
+      let updateData = {
+        DisplayName: this.state.displayname
+      }
+      this.props.dispatch(assetActions.updateAsset(this.props.user,this.state.asset,updateData));
+      this.setState(prevState => ({
+        asset: '',
+        displayname: '',
+        editModalOpen: !prevState.editModalOpen
+      }));
+    }
+
+    handleChange(event) {
+        const { name, value } = event.target;
+        console.log(name,value);
+        this.setState(
+          {
+            asset: name,
+            displayname: value
+          });
+    }
+
+    cancelButtonClicked(){
+      this.setState(prevState => ({
+        asset: '',
+        displayname: '',
+        editModalOpen: !prevState.editModalOpen
+      }));
     }
 
     deleteAsset(asset, user){
@@ -65,7 +91,7 @@ class MainArea extends React.Component {
                                 <td><a href={"/asset/" + singleAsset.AssetID + "/device"}>{singleAsset.Devices.length}</a></td>
                                 <td>{singleAsset.Location}</td>
                                 <td>
-                                  <Button name={singleAsset.DisplayName} onClick={this.editModalToggle} style={{marginRight: "10px"}} >
+                                  <Button onClick={()=>this.editModalToggle(singleAsset.AssetID, singleAsset.DisplayName)} style={{marginRight: "10px"}} >
                                     <i className="fas fa-edit"></i>
                                   </Button>
                                   <Modal isOpen={this.state.editModalOpen} toggle={this.editModalToggle}>
@@ -74,7 +100,7 @@ class MainArea extends React.Component {
                                       <Form>
                                         <FormGroup>
                                           <Label for="displayname">Name</Label>
-                                          <Input type="text" id="displayname" name="displayname" value={singleAsset.DisplayName} onChange={this.handleChange}/>
+                                          <Input type="text" id="displayname" name={singleAsset.AssetID} value={this.state.displayname} onChange={this.handleChange}/>
                                           <br/>
                                           <Label for="location">Location</Label>
                                           <Input type="text" id="location"/>

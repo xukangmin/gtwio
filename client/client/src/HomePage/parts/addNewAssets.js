@@ -26,12 +26,14 @@ class AddNewAssets extends React.Component {
     addButtonClicked(){
       this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname));
       this.setState(prevState => ({
+        displayname: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
 
     cancelButtonClicked(){
       this.setState(prevState => ({
+        displayname: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }

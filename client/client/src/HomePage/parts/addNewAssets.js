@@ -1,5 +1,5 @@
-import React from 'react'
-import { assetActions } from '../../_actions/assetAction'
+import React from 'react';
+import { assetActions } from '../../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class AddNewAssets extends React.Component {
@@ -8,37 +8,32 @@ class AddNewAssets extends React.Component {
 
         this.state = {
             displayname: '',
-            addModal: false
+            addModalOpen: false
         };
 
         this.addModalToggle = this.addModalToggle.bind(this);
         this.addButtonClicked = this.addButtonClicked.bind(this);
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
-        this.editAsset = this.editAsset.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     addModalToggle(){
       this.setState(prevState => ({
-        addModal: !prevState.addModal
+        addModalOpen: !prevState.addModalOpen
       }));
     }
 
     addButtonClicked(){
       this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname));
       this.setState(prevState => ({
-        addModal: !prevState.addModal
+        addModalOpen: !prevState.addModalOpen
       }));
     }
 
     cancelButtonClicked(){
       this.setState(prevState => ({
-        addModal: !prevState.addModal
+        addModalOpen: !prevState.addModalOpen
       }));
-    }
-
-    editAsset(){
-      this.props.dispatch(assetActions.editAsset(this.props.user,this.state.displayname));
     }
 
     handleChange(event) {
@@ -52,7 +47,7 @@ class AddNewAssets extends React.Component {
         return(
           <div>
             <Button color="primary" onClick={this.addModalToggle}>Add New Asset</Button>
-            <Modal isOpen={this.state.addModal} toggle={this.addModalToggle}>
+            <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
               <ModalBody>
                 <Form>
@@ -73,7 +68,6 @@ class AddNewAssets extends React.Component {
           </div>
         );
     }
-
 }
 
 export default AddNewAssets

@@ -32,7 +32,6 @@ class TagPlot extends React.Component {
     this.handleOptionChange = this.handleOptionChange.bind(this);
 
     this.dispatchTagContinuously = setInterval(() => {
-      console.log(this.state.continue_Dispatch);
       if(this.state.continue_Dispatch){
         this.setState({
           realtime_start: moment(new Date()).subtract(10, "minutes"),
@@ -65,10 +64,16 @@ class TagPlot extends React.Component {
       selectedOption: event.target.value
     });
     if(event.target.value === 'option1'){
-      this.setState({continue_Dispatch: true});
+      this.setState({
+        realtime_interval: 10,
+        continue_Dispatch: true
+      });
       this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
     } else {
-      this.setState({continue_Dispatch: false});
+      this.setState({
+        custom_interval: (custom_end - custom_start)/1000/60,
+        continue_Dispatch: false
+      });
       this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end));
     }
   }
@@ -89,6 +94,7 @@ class TagPlot extends React.Component {
       allData.push(DeviceData[i].Data.map((item,i) => item.Value));
     }
 
+    console.log(DeviceData)
     let layout = {
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
@@ -98,7 +104,7 @@ class TagPlot extends React.Component {
         showline: false,
         autotick: false,
         ticklen: 8,
-        dtick: this.state.plot_Interval*0.8
+        dtick: this.state.selectedOption === 'option1' ? this.state.realtime_interval*0.8 : this.state.custom_interval*0.8
       },
       margin:{
         l: 40,

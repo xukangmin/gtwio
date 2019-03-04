@@ -53,12 +53,6 @@ class TagPlot extends React.Component {
     );
   }
 
-  pauseDispatch(){
-    this.setState({
-      continue_Dispatch: false
-    });
-  }
-
   handleOptionChange(event) {
     this.setState({
       selectedOption: event.target.value
@@ -67,14 +61,16 @@ class TagPlot extends React.Component {
       this.setState({
         realtime_interval: 10,
         continue_Dispatch: true
-      });
-      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
+      },
+        ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end))
+      );
     } else {
       this.setState({
-        custom_interval: (custom_end - custom_start)/1000/60,
+        custom_interval: (this.state.custom_end - this.state.custom_start)/1000/60,
         continue_Dispatch: false
-      });
-      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end));
+      },
+        ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end))
+      );
     }
   }
 
@@ -94,7 +90,6 @@ class TagPlot extends React.Component {
       allData.push(DeviceData[i].Data.map((item,i) => item.Value));
     }
 
-    console.log(DeviceData)
     let layout = {
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
@@ -152,7 +147,6 @@ class TagPlot extends React.Component {
             applyCallback={this.applyCallback}
           >
             <FormControl
-              onClick={this.pauseDispatch}
               id="formControlsTextB"
               type="text"
               label="Text"

@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { dataActions } from '../../../_actions/dataAction';
 import Plot from 'react-plotly.js';
 
-import DateTimeRangeContainer from 'react-advanced-datetimerange-picker'
-import {FormControl} from 'react-bootstrap'
-import moment from "moment"
+import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
+import { FormControl, Nav, NavLink, NavItem, TabContent, TabPane } from 'react-bootstrap';
+import classnames from 'classnames';
+import moment from "moment";
 
 class TagPlot extends React.Component {
   constructor(props){
@@ -21,12 +22,14 @@ class TagPlot extends React.Component {
         end : end,
         plot_Interval: 10,
         continue_Dispatch: true,
-        interval_Updated: false
+        interval_Updated: false,
+        selectedOption: 'option1'
     }
 
     this.applyCallback = this.applyCallback.bind(this);
     this.pauseDispatch = this.pauseDispatch.bind(this);
     this.plotUpdated = this.plotUpdated.bind(this);
+    this.handleOptionChange = this.handleOptionChange.bind(this);
 
     this.dispatchTagContinuously = setInterval(() => {
       console.log(this.state.continue_Dispatch);
@@ -62,6 +65,12 @@ class TagPlot extends React.Component {
     console.log('plot')
   }
 
+  handleOptionChange(event) {
+    this.setState({
+      selectedOption: event.target.value
+    });
+  }
+
   render(){
     const { DeviceData } = this.props;
     console.log(DeviceData);
@@ -81,7 +90,7 @@ class TagPlot extends React.Component {
 
     let layout = {
       yaxis: {
-        range: [Math.min(...allData[0])-10, Math.max(...allData[0])+10],
+        range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
         ticklen: 8
       },
       xaxis: {
@@ -112,6 +121,20 @@ class TagPlot extends React.Component {
 
     return(
       <div>
+        <form>
+          <div className="radio" style={{display: 'inline'}}>
+            <label>
+              <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange}/>
+              {' '}Real Time Data
+            </label>
+          </div>
+          <div className="radio" style={{display: 'inline', marginLeft: '15px'}}>
+            <label>
+              <input type="radio" value="option2" checked={this.state.selectedOption === 'option2'} onChange={this.handleOptionChange}/>
+              {' '}Custom Time Range
+            </label>
+          </div>
+        </form>
         <div className="col-6">
           <DateTimeRangeContainer
             ranges={ranges}
@@ -127,6 +150,7 @@ class TagPlot extends React.Component {
               type="text"
               label="Text"
               placeholder={moment(this.state.start).format("lll") + " - " + moment(this.state.end).format("lll")}
+              style={{display: this.state.selectedOption === 'option1' ? "none" : "block"}}
             />
           </DateTimeRangeContainer>
         </div>

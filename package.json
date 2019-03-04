@@ -18,6 +18,7 @@
   "author": "Kangmin",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "react-tabs": "^3.0.0"
   }
 }

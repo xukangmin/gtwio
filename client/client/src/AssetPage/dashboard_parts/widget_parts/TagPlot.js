@@ -18,62 +18,63 @@ class TagPlot extends React.Component {
     let end = moment(now);
 
     this.state = {
-        start : start,
-        end : end,
-        plot_Interval: 10,
+        realtime_start : start,
+        realtime_end : end,
+        realtime_interval: 10,
+        custom_start: start,
+        custom_end: end,
+        custom_interval: 10,
         continue_Dispatch: true,
-        interval_Updated: false,
         selectedOption: 'option1'
     }
 
     this.applyCallback = this.applyCallback.bind(this);
-    this.pauseDispatch = this.pauseDispatch.bind(this);
-    this.plotUpdated = this.plotUpdated.bind(this);
     this.handleOptionChange = this.handleOptionChange.bind(this);
 
     this.dispatchTagContinuously = setInterval(() => {
       console.log(this.state.continue_Dispatch);
-      if(this.state.continue_Dispatch && !this.state.interval_Updated){
+      if(this.state.continue_Dispatch){
         this.setState({
-          start: moment(new Date()).subtract(10, "minutes"),
-          end: moment(new Date())
+          realtime_start: moment(new Date()).subtract(10, "minutes"),
+          realtime_end: moment(new Date())
         })
-        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end));
+        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
       }
     }, 5000);
   }
 
   applyCallback(startDate, endDate){
     this.setState({
-        start: startDate,
-        end : endDate,
-        plot_Interval : (endDate - startDate)/1000/60,
-        continue_Dispatch: true,
-        interval_Updated: true
+        custom_start: startDate,
+        custom_end : endDate,
+        custom_interval : (endDate - startDate)/1000/60,
+        continue_Dispatch: false
       },
-      ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end))
+      ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end))
     );
   }
 
   pauseDispatch(){
     this.setState({
-      continue_Dispatch:false
+      continue_Dispatch: false
     });
-  }
-
-  plotUpdated(){
-    console.log('plot')
   }
 
   handleOptionChange(event) {
     this.setState({
       selectedOption: event.target.value
     });
+    if(event.target.value === 'option1'){
+      this.setState({continue_Dispatch: true});
+      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
+    } else {
+      this.setState({continue_Dispatch: false});
+      this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end));
+    }
   }
 
   render(){
     const { DeviceData } = this.props;
-    console.log(DeviceData);
 
     let formattedData = [];
     let allData = [];
@@ -138,8 +139,8 @@ class TagPlot extends React.Component {
         <div className="col-6">
           <DateTimeRangeContainer
             ranges={ranges}
-            start={this.state.start}
-            end={this.state.end}
+            start={this.state.custom_start}
+            end={this.state.custom_end}
             local={local}
             maxDate={maxDate}
             applyCallback={this.applyCallback}
@@ -149,7 +150,7 @@ class TagPlot extends React.Component {
               id="formControlsTextB"
               type="text"
               label="Text"
-              placeholder={moment(this.state.start).format("lll") + " - " + moment(this.state.end).format("lll")}
+              placeholder={moment(this.state.custom_start).format("lll") + " - " + moment(this.state.custom_end).format("lll")}
               style={{display: this.state.selectedOption === 'option1' ? "none" : "block"}}
             />
           </DateTimeRangeContainer>

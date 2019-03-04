@@ -42,11 +42,12 @@ const getSingleDevice = (deviceid) => {
 }
 
 const addNewDevice = (user, assetid, devicedata) => {
-
+    console.log(devicedata.DisplayName)
     const body = {
         'AssetID': assetid,
         'UserID': user.UserID,
-        'DisplayName': devicedata.DisplayName
+        'DisplayName': devicedata.DisplayName,
+        'SerialNumber': devicedata.SerialNumber
     };
 
     if (devicedata.SerialNumber != "")
@@ -75,8 +76,8 @@ const addNewDevice = (user, assetid, devicedata) => {
         }
         return resJSON;
     })
-    .then(assetData => {
-        return assetData;
+    .then(deviceData => {
+        return deviceData;
     });
 }
 

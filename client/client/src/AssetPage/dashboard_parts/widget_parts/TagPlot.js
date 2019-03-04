@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { dataActions } from '../../../_actions/dataAction';
 import Plot from 'react-plotly.js';
-
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import { FormControl, Nav, NavLink, NavItem, TabContent, TabPane } from 'react-bootstrap';
 import classnames from 'classnames';
@@ -126,7 +125,7 @@ class TagPlot extends React.Component {
         <form>
           <div className="radio" style={{display: 'inline'}}>
             <label>
-              <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange}/>
+              <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange} style={{fontWeight: "bold"}}/>
               {' '}Real Time Data
             </label>
           </div>

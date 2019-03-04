@@ -28,8 +28,8 @@ class HxTag extends React.Component {
             <h3 className = "mt-3">{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
 
             <Row>
-              <div className = "col-9"><TagPlot asset = {AssetData.AssetID} tag = {this.props.match.params.tagID}/></div>
-              <div className = "col-3"><TagRadar/></div>
+              <div className = "col-8"><TagPlot asset = {AssetData.AssetID} tag = {this.props.match.params.tagID}/></div>
+              <div className = "col-4"><TagRadar/></div>
             </Row>
             <Row>
               <Col className = "mt-5"><TagTable asset = {AssetData.AssetID}/></Col>

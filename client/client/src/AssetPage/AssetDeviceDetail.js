@@ -39,8 +39,8 @@ const DeviceInfo = (props) => {
             </tr>
             {device.Parameters[0].CurrentValue &&
             <tr>
-              <th>{"Current Value (°" + device.Parameters[0].Unit + ")"}</th>
-              <td>{device.Parameters[0].CurrentValue.toFixed(3)}</td>
+              <th>Current Value</th>
+              <td>{device.Parameters[0].CurrentValue.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
             </tr>
             }
             {device.Parameters[0].CurrentTimeStamp &&
@@ -56,10 +56,10 @@ const DeviceInfo = (props) => {
         <Table striped>
           <tbody>
             <tr>
-              <th>{"Lower Limit  (°" + device.Parameters[0].Unit + ")"}</th>
+              <th>Lower Alarm Limit</th>
               <td>
                 <InlineEdit
-                  value={device.Parameters[0].Range.LowerLimit}
+                  value={device.Parameters[0].Range.LowerLimit + ' ' + device.Parameters[0].Unit}
                   tag="span"
                   type="text"
                   saveLabel="Update"
@@ -71,10 +71,10 @@ const DeviceInfo = (props) => {
               </td>
             </tr>
             <tr>
-              <th>{"Upper Limit  (°" + device.Parameters[0].Unit + ")"}</th>
+              <th>Upper Alarm Limit</th>
               <td>
                 <InlineEdit
-                  value={device.Parameters[0].Range.UpperLimit}
+                  value={device.Parameters[0].Range.UpperLimit + ' ' + device.Parameters[0].Unit}
                   tag="span"
                   type="text"
                   saveLabel="Update"
@@ -86,8 +86,12 @@ const DeviceInfo = (props) => {
               </td>
             </tr>
             <tr>
-              <th>Stability Criteria</th>
-              <td>{"Window Size: " + device.Parameters[0].StabilityCriteria.WindowSize} <br/>  {" UpperLimit: " + device.Parameters[0].StabilityCriteria.UpperLimit}</td>
+              <th>Stability Criteria - Window Size</th>
+              <td>{device.Parameters[0].StabilityCriteria.WindowSize + ' minutes'}</td>
+            </tr>
+            <tr>
+              <th>Stability Criteria - Upper Threshold</th>
+              <td>{device.Parameters[0].StabilityCriteria.UpperLimit + ' ' + device.Parameters[0].Unit}</td>
             </tr>
             <tr>
               <th>Status</th>
@@ -95,7 +99,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria</th>
-              <td>{device.Parameters[0].StandardDeviation.toFixed(5)}</td>
+              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
             </tr>
           </tbody>
         </Table>
@@ -106,6 +110,9 @@ const DeviceInfo = (props) => {
 
 const ParameterTable = (props) => {
   const parameter = props.data;
+  const device = props.device;
+
+  console.log(device);
   return(
     <div>
       <Table
@@ -116,15 +123,15 @@ const ParameterTable = (props) => {
         }}>
         <thead>
           <tr>
-            <th>Time</th>
+            <th>Timestamp</th>
             <th>Temperature</th>
           </tr>
         </thead>
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i}>
-                <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
+                <td>{new Date(item.TimeStamp).toLocaleString()}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
               </tr>
           )}
         </tbody>
@@ -230,7 +237,7 @@ class AssetDeviceDetail extends React.Component {
               <div className = "row mt-3">
                 <div className = "col-auto">
                   <h3>History</h3>
-                  <ParameterTable data={this.sortTime(parameterData)}/>
+                  <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">
                   <ParameterPlot/>

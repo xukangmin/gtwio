@@ -68,7 +68,7 @@ class RangePicker extends React.Component {
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
               {moment(this.state.start).format("MMMM Do YYYY, H:mm") + " - " + moment(this.state.end).format("MMMM Do YYYY, H:mm")}
-              <i class="fas fa-angle-down ml-3"></i>
+              <i className="fas fa-angle-down ml-3"></i>
             </Button>
           </DateTimeRangeContainer>
         </div>

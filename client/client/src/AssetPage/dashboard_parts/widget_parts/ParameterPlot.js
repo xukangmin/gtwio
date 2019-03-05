@@ -10,7 +10,6 @@ class ParameterPlot extends React.Component {
 
   render(){
     const { parameterData } = this.props;
-
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let tempX = [];

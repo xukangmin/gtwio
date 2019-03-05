@@ -280,7 +280,6 @@ class AssetConfigurations extends React.Component {
     this.setState({addParameterModalOpen: false});
   }
 
-//////////////////////////////////////////////////
   DeleteParameter(parameter){
     if (confirm("Are you sure to delete this parameter?")){
         this.props.dispatch(parameterActions.DeleteParameter(this.asset, parameter));

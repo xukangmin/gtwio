@@ -42,7 +42,6 @@ const getSingleDevice = (deviceid) => {
 }
 
 const addNewDevice = (user, assetid, devicedata) => {
-    console.log(devicedata.DisplayName)
     const body = {
         'AssetID': assetid,
         'UserID': user.UserID,
@@ -54,9 +53,6 @@ const addNewDevice = (user, assetid, devicedata) => {
     {
         Object.assign(body, devicedata);
     }
-
-    console.log("body: ");
-    console.log(body);
 
     const requestOptions = {
         method: 'POST',

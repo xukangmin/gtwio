@@ -74,6 +74,7 @@ const ParameterTableRow = (props) => {
         <td>{props.data.Equation}</td>
         <td>{props.data.CurrentValue.toFixed(2)}</td>
         <td>{new Date(props.data.CurrentTimeStamp).toLocaleString()}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.ParameterID)}></i></Button></td>
       </tr>
   );
 };
@@ -145,6 +146,7 @@ class AssetConfigurations extends React.Component {
     this.AddParameterModalClose = this.AddParameterModalClose.bind(this);
     this.AddParameter = this.AddParameter.bind(this);
     this.updateParameterState = this.updateParameterState.bind(this);
+    this.DeleteParameter = this.DeleteParameter.bind(this);
 
     this.state = {
       activeTab: '1',
@@ -250,7 +252,7 @@ class AssetConfigurations extends React.Component {
       this.setState({errors: {DisplayName: "Name cannot be empty"}});
       return;
     }
-
+    this.props.dispatch(parameterActions.addNewParameter(this.asset, this.state.NewParameter.DisplayName, this.state.NewParameter.Equation));
     this.AddParameterModalClose();
   }
 
@@ -276,6 +278,13 @@ class AssetConfigurations extends React.Component {
 
   AddParameterModalClose() {
     this.setState({addParameterModalOpen: false});
+  }
+
+//////////////////////////////////////////////////
+  DeleteParameter(parameter){
+    if (confirm("Are you sure to delete this parameter?")){
+        this.props.dispatch(parameterActions.DeleteParameter(this.asset, parameter));
+    }
   }
 
   render() {
@@ -343,11 +352,12 @@ class AssetConfigurations extends React.Component {
                                   <th>Equation</th>
                                   <th>Current Value</th>
                                   <th>Time Stamp</th>
+                                  <th>Delete</th>
                               </tr>
                           </thead>
                           <tbody id="main-table-content">
                               {parameter.map((singleParameter,i) =>
-                                  <ParameterTableRow data={singleParameter} asset={this.asset} updateName={this.UpdateParameterDisplayName} key={i}/>
+                                  <ParameterTableRow data={singleParameter} asset={this.asset} updateName={this.UpdateParameterDisplayName} delete={this.DeleteParameter} key={i}/>
                               )}
                           </tbody>
                       </table>
@@ -365,8 +375,6 @@ class AssetConfigurations extends React.Component {
             isOpen={this.state.addDeviceModalOpen}
             onClose={this.AddDeviceModalClose}
           />
-
-
           <AddNewParameterModal
             parameter={this.state.NewParameter}
             onChange={this.updateParameterState}

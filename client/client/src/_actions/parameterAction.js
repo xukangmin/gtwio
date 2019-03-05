@@ -45,6 +45,26 @@ const getSingleParameter = (pid) => {
     function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
 }
 
+const addNewParameter = (assetid, displayname, equation) => {
+    return dispatch => {
+        dispatch(request());
+        parameterServices.addParameter(assetid, displayname, equation)
+            .then(
+                info => {
+                    dispatch(getParameterByAsset(assetid));
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.ADD_PARAMETER_REQUEST } }
+    function success(data) { return { type: gConstants.ADD_PARAMETER_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.ADD_PARAMETER_FAILURE, error } }
+}
+
 const updateParameter = (data) => {
     return dispatch => {
         dispatch(request());
@@ -64,8 +84,30 @@ const updateParameter = (data) => {
     function failure(error) { return { type: gConstants.UPDATE_PARAMETER_FAILURE, error } }
 }
 
+const deleteParameter = (asset, parameterid) => {
+    return dispatch => {
+        dispatch(request());
+        parameterServices.deleteParameter(parameterid)
+            .then(
+                info => {
+                    dispatch(getParameterByAsset(assetid));
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.DELETE_PARAMETER_REQUEST } }
+    function success(data) { return { type: gConstants.DELETE_PARAMETER_REQUEST, data } }
+    function failure(error) { return { type: gConstants.DELETE_PARAMETER_REQUEST, error } }
+}
+
 export const parameterActions = {
     getParameterByAsset,
     getSingleParameter,
-    updateParameter
+    addNewParameter,
+    updateParameter,
+    deleteParameter
 };

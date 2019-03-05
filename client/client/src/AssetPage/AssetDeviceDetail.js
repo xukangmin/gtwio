@@ -111,8 +111,6 @@ const DeviceInfo = (props) => {
 const ParameterTable = (props) => {
   const parameter = props.data;
   const device = props.device;
-
-  console.log(device);
   return(
     <div>
       <Table

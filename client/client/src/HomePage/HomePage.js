@@ -41,40 +41,33 @@ class HomePage extends React.Component {
     // first Get user's assets info with interval 10s
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
+    this.range = JSON.parse(localStorage.getItem('range'));
+
+    if (!this.range)
+    {
+       var range = {
+         live: true,
+         interval: 30,
+         start: 0,
+         end: 0,
+         polling: true
+       };
+       this.range = range;
+       localStorage.setItem('range', JSON.stringify(range));
+    }
 
     if (this.user && !this.assets_local)
     {
       this.props.dispatch(assetActions.getAssetsOverview(this.user));
     }
-    console.log("called!!!!!!!!!!!!!!");
 
   }
 
   componentDidMount() {
-   //this.props.dispatch(assetActions.getAssetsOverview(this.user));
-    this.startTimer();
   }
 
   componentWillUnmount () {
-    clearInterval(this.timer)
   }
-
-  startTimer () {
-    clearInterval(this.timer);
-    this.timer = setInterval(this.tick.bind(this), 5000);
-  }
-
-  stopTimer () {
-    clearInterval(this.timer)
-  }
-
-  tick () {
-    //this.props.dispatch(assetActions.getAssetsOverview(this.user));
-    //this.props.dispatch();
-    //this.props.dispatch(assetActions.getAssetsOverview(this.user));
-  }
-
-
 
   render() {
     //const { assets } = this.state;

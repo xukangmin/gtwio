@@ -24,12 +24,26 @@ class HxStatic extends React.Component {
 
     this.HandleText = this.HandleText.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
+    this.range = JSON.parse(localStorage.getItem('range'));
+
+    if (!this.range)
+    {
+       var range = {
+         live: true,
+         interval: 30,
+         start: 0,
+         end: 0,
+         polling: true
+       };
+       this.range = range;
+       localStorage.setItem('range', JSON.stringify(range));
+    }
   }
 
   componentDidMount() {
     this.dispatchParameterContinuously = setInterval(() => {
       this.props.dispatch(assetActions.getSingleAssetDetail(JSON.parse(localStorage.getItem('user')),this.state.AssetID));
-    }, 5000);
+    }, 60000);
   }
 
 

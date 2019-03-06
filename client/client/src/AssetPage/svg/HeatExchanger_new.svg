@@ -103,7 +103,7 @@
 		<!-- st14 class: N/A data -->
 		<circle id="path4295-9-1-4" class="st21" cx="532.6" cy="401.4" r="34.3"/>
 		<a href="#" id="ShellOutlet">
-			<text transform="matrix(1 0 0 1 507.6403 403.9592)" class="st8 st20">92.8</text>
+			<text transform="matrix(1 0 0 1 507.6403 403.9592)" class="st8 st20">N/A</text>
 			<text transform="matrix(1 0 0 1 523.6398 422.7033)" class="st8 st15">°F</text>
 		</a>
 	</g>
@@ -125,7 +125,7 @@
 		<circle id="path4295-9-1" class="st18" cx="34.1" cy="217.1" r="34.3"/>
 		<g>
 			<a id="TubeOutlet">
-				<text id="TubeOutlet_n" transform="matrix(1 0 0 1 10 218.5259)" class="st19 st8 st20">92.8</text>
+				<text id="TubeOutlet_n" transform="matrix(1 0 0 1 10 218.5259)" class="st19 st8 st20">N/A</text>
 			</a>
 			<text transform="matrix(1 0 0 1 25 237.27)" class="st8 st15">°F</text>
 		</g>
@@ -141,7 +141,7 @@
 			<ellipse id="path4295-9-1-4-7" transform="matrix(0.1602 -0.9871 0.9871 0.1602 436.5919 945.0707)" class="st18" cx="773.7" cy="216" rx="34.3" ry="34.3"/>
 		<g>
 			<a id="TubeInlet">
-				<text transform="matrix(1 0 0 1 751.0845 218.526)" class="st19 st8 st20">92.8</text>
+				<text transform="matrix(1 0 0 1 751.0845 218.526)" class="st19 st8 st20">N/A</text>
 			</a>
 			<text transform="matrix(1 0 0 1 767.0841 237.2702)" class="st8 st15">°F</text>
 		</g>
@@ -156,7 +156,7 @@
 		<circle id="path4295" class="st21" cx="290.9" cy="43.3" r="34.3"/>
 		<g>
 			<a id="ShellInlet">
-				<text transform="matrix(1 0 0 1 267.6403 43.9592)" class="st8 st20">92.8</text>
+				<text transform="matrix(1 0 0 1 267.6403 43.9592)" class="st8 st20">N/A</text>
 			</a>
 			<text transform="matrix(1 0 0 1 283.6398 62.7033)" class="st8 st15">°F</text>
 		</g>

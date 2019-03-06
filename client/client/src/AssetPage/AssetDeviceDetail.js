@@ -40,7 +40,7 @@ const DeviceInfo = (props) => {
             {device.Parameters[0].CurrentValue &&
             <tr>
               <th>Current Value</th>
-              <td>{device.Parameters[0].CurrentValue.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
+              <td>{device.Parameters[0].CurrentValue.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
             </tr>
             }
             {device.Parameters[0].CurrentTimeStamp &&
@@ -59,7 +59,7 @@ const DeviceInfo = (props) => {
               <th>Lower Alarm Limit</th>
               <td>
                 <InlineEdit
-                  value={device.Parameters[0].Range.LowerLimit + ' ' + device.Parameters[0].Unit}
+                  value={device.Parameters[0].Range.LowerLimit + ' °' + device.Parameters[0].Unit}
                   tag="span"
                   type="text"
                   saveLabel="Update"
@@ -74,7 +74,7 @@ const DeviceInfo = (props) => {
               <th>Upper Alarm Limit</th>
               <td>
                 <InlineEdit
-                  value={device.Parameters[0].Range.UpperLimit + ' ' + device.Parameters[0].Unit}
+                  value={device.Parameters[0].Range.UpperLimit + ' °' + device.Parameters[0].Unit}
                   tag="span"
                   type="text"
                   saveLabel="Update"
@@ -91,11 +91,11 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria - Upper Threshold</th>
-              <td>{device.Parameters[0].StabilityCriteria.UpperLimit + ' ' + device.Parameters[0].Unit}</td>
+              <td>{device.Parameters[0].StabilityCriteria.UpperLimit + ' °' + device.Parameters[0].Unit}</td>
             </tr>
             <tr>
               <th>Stability</th>
-              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' ' + device.Parameters[0].Unit + '/hr'}</td>
+              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' °' + device.Parameters[0].Unit + '/hr'}</td>
             </tr>
             <tr>
               <th>Status</th>
@@ -129,7 +129,7 @@ const ParameterTable = (props) => {
           {parameter.map((item,i) =>
               <tr key = {i}>
                 <td>{new Date(item.TimeStamp).toLocaleString()}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
               </tr>
           )}
         </tbody>

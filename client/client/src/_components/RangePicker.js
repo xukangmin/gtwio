@@ -23,7 +23,7 @@ class RangePicker extends React.Component {
       {
          var range = {
            live: true,
-           interval: 30,
+           interval: 600,
            start: moment(now).subtract(10, "minutes"),
            end: moment(now),
            polling: true
@@ -35,20 +35,18 @@ class RangePicker extends React.Component {
       this.applyCallback = this.applyCallback.bind(this);
       this.handleOptionChange = this.handleOptionChange.bind(this);
       this.handleLiveButtonApply = this.handleLiveButtonApply.bind(this);
-
     }
 
     handleOptionChange(event) {
-      console.log(event.target.value)
-      this.setState({
-        LiveSelectedOption: event.target.value
-      });
+      this.range.interval = event.target.value;
+      console.log(this.range)
+      localStorage.setItem('range', JSON.stringify(this.range));
     }
 
     componentDidMount(){
-      const rangeOptions = $(".rangecontainer");
-      const liveDiv = $(".liveDiv");
-      const timePicker = $(".fromDateTimeContainer");
+      let rangeOptions = $(".rangecontainer");
+      let liveDiv = $(".liveDiv");
+      let timePicker = $(".fromDateTimeContainer");
       $(".liveDiv").css("display","none");
       $(".inputDate").css("textAlign","center");
 
@@ -57,6 +55,7 @@ class RangePicker extends React.Component {
         $(".daterangepicker:first").append(liveDiv);
         $(".liveDiv").css("display","block");
       });
+
       $( ".rangebuttontextstyle:not(:first)" ).click(function(){
         $(".fromDateTimeContainer").css("display","block");
         $(".liveDiv").css("display","none");
@@ -64,18 +63,10 @@ class RangePicker extends React.Component {
     }
 
     applyCallback(start, end){
-      var range = {
-        live: true,
-        interval: 30,
-        start: this.range.start,
-        end: this.range.end,
-        polling: true
-      };
-      this.range = range;
-
-
-      localStorage.setItem('range', JSON.stringify(range));
-
+      this.range.live = false;
+      this.range.start = start;
+      this.range.end = end;
+      localStorage.setItem('range', JSON.stringify(this.range));
 
       var m_res = matchRoutes(routes, window.location.pathname);
       var asset, tag, device;
@@ -90,7 +81,6 @@ class RangePicker extends React.Component {
 
       if (asset && device)
       {
-        console.log("apply");
         this.props.dispatch(deviceActions.getSingleDeviceData(device, range.live, range.interval, range.start, range.end));
       } else if (asset && tag){
         this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, range.start, range.end));
@@ -100,11 +90,12 @@ class RangePicker extends React.Component {
     }
 
     handleLiveButtonApply(){
-
+      this.range.live = true;
+      localStorage.setItem('range', JSON.stringify(this.range));
     }
 
     render() {
-      console.log(this.range)
+      console.log(this.range.interval)
       let now = new Date();
       let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
       let end = moment(start).add(1, "days").subtract(1, "seconds");
@@ -139,7 +130,7 @@ class RangePicker extends React.Component {
             />
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
-              {moment(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment(this.range.end).format("MMMM Do YYYY, H:mm")}
+              {moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")}
               <i className="fas fa-angle-down ml-3"></i>
             </Button>
 

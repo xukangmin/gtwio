@@ -5,6 +5,7 @@ import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { dataActions } from '../_actions/dataAction';
+import { deviceActions } from '../_actions/deviceAction';
 import { FormControl, Button } from 'react-bootstrap';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from "moment";
@@ -84,7 +85,7 @@ class RangePicker extends React.Component {
         if (m_res[item].match.isExact) {
           asset = m_res[item].match.params.assetID;
           tag = m_res[item].match.params.tagID;
-          device = m_rest[item].match.params.deviceID;
+          device = m_res[item].match.params.deviceID;
         }
       }
 

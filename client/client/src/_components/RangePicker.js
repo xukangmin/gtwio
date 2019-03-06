@@ -70,7 +70,7 @@ class RangePicker extends React.Component {
         $(".daterangepicker:first").append(liveDiv);
         $(".liveDiv").css("display","block");
       } else{
-        $( ".rangebuttontextstyle:first" ).removeClass( "myClass noClass" ).addClass( "yourClass" );
+        $( ".rangecontainer:first-child" ).removeClass( "rangeButtonSelectedStyle" ).addClass( "rangebuttonstyle" );
       }
     }
 
@@ -107,6 +107,7 @@ class RangePicker extends React.Component {
     }
 
     handleLiveButtonApply(){
+      $("#reactbody").click();
       this.range.live = true;
       localStorage.setItem('range', JSON.stringify(this.range));
       this.forceUpdate();
@@ -129,6 +130,33 @@ class RangePicker extends React.Component {
       }
       let maxDate = moment(start).add(24, "hour");
 
+      let rangeText;
+      switch(this.range.interval){
+        case "10":
+          rangeText = "10 Minutes";
+          break;
+        case "30":
+          rangeText = "30 Minutes";
+          break;
+        case "60":
+          rangeText = "1 Hour";
+          break;
+        case "300":
+          rangeText = "5 Hours";
+          break;
+        case "600":
+          rangeText = "10 Hours";
+          break;
+        case "1440":
+          rangeText = "1 Day";
+          break;
+        case "10080":
+          rangeText = "1 Week";
+          break;
+        case "302400":
+          rangeText = "30 Days";
+          break;
+      }
 
       return (
 
@@ -150,7 +178,7 @@ class RangePicker extends React.Component {
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
               {this.range.live==true?
-                "Real-time Data in "+ this.range.interval:
+                "Real-time Data: "+ rangeText + " from Now":
                 moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
 
               }
@@ -161,12 +189,14 @@ class RangePicker extends React.Component {
           </DateTimeRangeContainer>
 
           <div className='liveDiv p-3'>
-            <div className='radio'> <label><input type='radio' value={10} checked={this.range.interval == 10} onChange={this.handleOptionChange}/>10 Minutes</label> </div>
-            <div className='radio'> <label><input type='radio' value={30} checked={this.range.interval == 30} onChange={this.handleOptionChange}/>30 Minutes</label> </div>
-            <div className='radio'> <label><input type='radio' value={60} checked={this.range.interval == 60} onChange={this.handleOptionChange}/>1 Hour</label> </div>
-            <div className='radio'> <label><input type='radio' value={300} checked={this.range.interval == 300} onChange={this.handleOptionChange}/>5 Hours</label> </div>
-            <div className='radio'> <label><input type='radio' value={600} checked={this.range.interval == 600} onChange={this.handleOptionChange}/>10 Hours</label> </div>
-            <div className='radio'> <label><input type='radio' value={1440} checked={this.range.interval == 1440} onChange={this.handleOptionChange}/>1 Day</label> </div>
+            <div className='radio'> <label><input type='radio' value={10} checked={this.range.interval == 10} onChange={this.handleOptionChange}/>{" "}10 Minutes</label> </div>
+            <div className='radio'> <label><input type='radio' value={30} checked={this.range.interval == 30} onChange={this.handleOptionChange}/>{" "}30 Minutes</label> </div>
+            <div className='radio'> <label><input type='radio' value={60} checked={this.range.interval == 60} onChange={this.handleOptionChange}/>{" "}1 Hour</label> </div>
+            <div className='radio'> <label><input type='radio' value={300} checked={this.range.interval == 300} onChange={this.handleOptionChange}/>{" "}5 Hours</label> </div>
+            <div className='radio'> <label><input type='radio' value={600} checked={this.range.interval == 600} onChange={this.handleOptionChange}/>{" "}10 Hours</label> </div>
+            <div className='radio'> <label><input type='radio' value={1440} checked={this.range.interval == 1440} onChange={this.handleOptionChange}/>{" "}1 Day</label> </div>
+            <div className='radio'> <label><input type='radio' value={10080} checked={this.range.interval == 10080} onChange={this.handleOptionChange}/>{" "}1 Week</label> </div>
+            <div className='radio'> <label><input type='radio' value={302400} checked={this.range.interval == 302400} onChange={this.handleOptionChange}/>{" "}30 Days</label> </div>
             <Button onClick={this.handleLiveButtonApply} color="success" className="mt-2">Apply</Button>
           </div>
         </div>

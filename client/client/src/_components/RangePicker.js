@@ -5,6 +5,7 @@ import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { dataActions } from '../_actions/dataAction';
+import { deviceActions } from '../_actions/deviceAction';
 import { FormControl, Button } from 'react-bootstrap';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from "moment";
@@ -29,13 +30,28 @@ class RangePicker extends React.Component {
         interval: 10*60*1000
       }
 
+      this.range = JSON.parse(localStorage.getItem('range'));
+
+      if (!this.range)
+      {
+         var range = {
+           live: true,
+           interval: 30,
+           start: 0,
+           end: 0,
+           polling: true
+         };
+         this.range = range;
+         localStorage.setItem('range', JSON.stringify(range));
+      }
+
       this.applyCallback = this.applyCallback.bind(this);
 
-      this.dispatchTagContinuously = setInterval(() => {
+  //    this.dispatchTagContinuously = setInterval(() => {
 
-          this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
+ //          this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
 
-      }, 60000);
+//      }, 60000);
     }
 
     componentDidMount(){
@@ -54,15 +70,35 @@ class RangePicker extends React.Component {
         },
         () => {
           var m_res = matchRoutes(routes, window.location.pathname);
-          var asset, tag;
+          var asset, tag, device;
 
           for(var item in m_res) {
             if (m_res[item].match.isExact) {
               asset = m_res[item].match.params.assetID;
               tag = m_res[item].match.params.tagID;
+              device = m_rest[item].match.params.deviceID;
             }
           }
-          this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, this.state.start, this.state.end));
+          var range = {
+            live: false,
+            interval: 30,
+            start: this.state.start,
+            end: this.state.end,
+            polling: false
+          };
+          localStorage.setItem('range', JSON.stringify(range));
+
+          if (asset && device)
+          {
+            console.log("apply");
+            this.props.dispatch(deviceActions.getSingleDeviceData(device, range.live, range.interval, range.start, range.end));
+          } else if (asset && tag){
+            this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, this.state.start, this.state.end));
+          } else {
+
+          }
+
+
         }
       );
     }

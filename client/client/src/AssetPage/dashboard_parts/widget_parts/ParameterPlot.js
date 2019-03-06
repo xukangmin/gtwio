@@ -26,6 +26,7 @@ class ParameterPlot extends React.Component {
     };
 
     const layout= {
+      title: 'Line Chart',
       yaxis: {
         range: [Math.min(...tempY)-10, Math.max(...tempY)+10]
       },

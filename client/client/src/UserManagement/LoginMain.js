@@ -15,6 +15,7 @@ import { ResetPasswordForm } from './parts/resetpassword';
 class LoginMain extends React.Component {
   constructor(props) {
     super(props);
+    localStorage.clear();
     if (this.props.location.pathname === '/activate')
     {
       const parsed = queryString.parse(this.props.location.search);
@@ -38,12 +39,12 @@ class LoginMain extends React.Component {
                         email: parsed.email
                       }
       }
-      
+
     }
     else {
       this.state = {showPage: 'login'};
     }
-    
+
     this.handleClick = this.handleClick.bind(this);
     this.props.dispatch(userActions.logout());
     this.props.dispatch(alertActions.clear());
@@ -52,9 +53,9 @@ class LoginMain extends React.Component {
   handleClick(b) {
     this.props.dispatch(alertActions.clear());
     this.setState({showPage: b});
-  } 
-  
-  
+  }
+
+
   render() {
     let active_form = null;
     const { type, message } = this.props;
@@ -76,7 +77,7 @@ class LoginMain extends React.Component {
         active_form = <ResetPasswordForm {...this.props} email={this.state.email} />
       }
     }
-    
+
     return (
       <div id="login-page-main">
         <div className="container text-center" id="login-box">
@@ -113,7 +114,7 @@ class LoginMain extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => { 
+const mapStateToProps = (state) => {
   const { type, message } = state.alert;
 
   return {

@@ -45,15 +45,13 @@ class RootLayout extends Component {
       else{
         return (
           <div id="home-page-main">
-          <HeaderNav />
+          <HeaderNav dispatch={this.props.dispatch}/>
           <div className ="container-fluid">
             {assets_display ?
             <div className ="row">
               <SideNav assets={assets_display}/>
               <main role="main" className ="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     {renderRoutes(this.props.route.routes, {store : this.props.store})}
-                    {/*<MainArea assets={assets_display} />
-                    <AddNewAssets user={this.user} dispatch={this.props.dispatch} />*/}
               </main>
             </div>
             : <Loader />

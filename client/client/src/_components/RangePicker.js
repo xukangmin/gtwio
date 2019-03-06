@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { FormControl, Button } from 'react-bootstrap';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from "moment";
+import { matchRoutes } from 'react-router-config';
+import routes from '../_routes/routes';
+import { dataActions } from '../_actions/dataAction';
 
 class RangePicker extends React.Component {
     constructor(props) {
@@ -28,7 +31,20 @@ class RangePicker extends React.Component {
           start: start,
           end: end
         },
-        ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end))
+        () => {
+          var m_res = matchRoutes(routes, window.location.pathname);
+          var asset, tag;
+
+          for(var item in m_res) {
+            if (m_res[item].match.isExact) {
+              asset = m_res[item].match.params.assetID;
+              tag = m_res[item].match.params.tagID;
+            }
+          }
+          //console.log(asset);
+          //console.log(tag);
+          this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, this.state.start, this.state.end));
+        }
       );
     }
 

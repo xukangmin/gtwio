@@ -38,7 +38,7 @@ class TagPlot extends React.Component {
         })
         this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
       }
-    }, 5000);
+    }, 60000);
   }
 
   applyCallback(startDate, endDate){

@@ -27,7 +27,7 @@ class RangePicker extends React.Component {
       }
 
       this.range = JSON.parse(localStorage.getItem('range'));
-      // console.log(moment(this.range.start));
+      this.user = JSON.parse(localStorage.getItem('user'));
 
       let now = new Date();
       let start = moment(now).subtract(10, "minutes");
@@ -87,6 +87,8 @@ class RangePicker extends React.Component {
         polling: true
       };
       this.range = range;
+
+
       localStorage.setItem('range', JSON.stringify(range));
       this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user'))), this.state.asset,  this.state.tag, moment(new Date()).format('X')-this.state.LiveSelectedOption, moment(new Date()).format('X')));
 

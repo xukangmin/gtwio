@@ -22,7 +22,7 @@ const getAllDeviceData = (user, assetid) => {
     function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
 }
 
-const getSingleDeviceData = (deviceid) => {
+const getSingleDeviceData = (deviceid, live, interval, start, end) => {
 
     return dispatch => {
         dispatch(request());
@@ -33,7 +33,12 @@ const getSingleDeviceData = (deviceid) => {
 
                     if (devicedata.Parameters) {
                       if (devicedata.Parameters.length === 1) {
-                        dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, devicedata.Parameters[0].CurrentTimeStamp - 600000, devicedata.Parameters[0].CurrentTimeStamp));
+                        if (live) {
+                          dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, devicedata.Parameters[0].CurrentTimeStamp - interval * 60 * 1000, devicedata.Parameters[0].CurrentTimeStamp));
+                        } else {
+                          dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, start, end));
+                        }
+
                       }
                     }
                 },

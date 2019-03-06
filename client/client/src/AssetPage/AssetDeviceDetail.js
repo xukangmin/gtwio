@@ -145,27 +145,22 @@ class AssetDeviceDetail extends React.Component {
     this.state = {
         AssetID : props.match.params.assetID,
         DeviceID: props.match.params.deviceID,
-        polling: true
     }
 
-    this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
+    this.range = JSON.parse(localStorage.getItem('range'));
+    console.log(this.range);
+    this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID, this.range.live, this.range.interval, this.range.start, this.range.end));
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
-    this.plotDirty = this.plotDirty.bind(this);
     this.updateLimit = this.updateLimit.bind(this);
-  }
-
-  plotDirty() {
-    this.setState({
-      polling: false
-    });
   }
 
   componentDidMount() {
     this.dispatchParameterContinuously = setInterval(() => {
-      if (this.state.polling)
+      this.range = JSON.parse(localStorage.getItem('range'));
+      if (this.range.polling)
       {
         this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
       }
@@ -245,11 +240,11 @@ class AssetDeviceDetail extends React.Component {
             {parameterData &&
               <div className = "row mt-3">
                 <div className = "col-auto">
-                  <h3>History</h3>
+                  <h4>Table View</h4>
                   <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">
-                  <ParameterPlot onUpdate={this.plotDirty}/>
+                  <ParameterPlot />
                 </div>
               </div>
             }

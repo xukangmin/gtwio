@@ -6,11 +6,11 @@ const SingleDevice = (props) => {
   return(
     <tr>
       <th scope = "row"><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></th>
-      <td>{props.data.Data[0].Value.toFixed(2)}</td>
-      <td>{props.data.DataStatistics.Min.toFixed(2)}</td>
-      <td>{props.data.DataStatistics.Max.toFixed(2)}</td>
-      <td>{props.data.DataStatistics.Avg.toFixed(2)}</td>
-      <td>{props.data.DataStatistics.STDEV.toFixed(2)}</td>
+      <td>{props.data.Data[0].Value.toFixed(2)}°F</td>
+      <td>{props.data.DataStatistics.Min.toFixed(2)}°F</td>
+      <td>{props.data.DataStatistics.Max.toFixed(2)}°F</td>
+      <td>{props.data.DataStatistics.Avg.toFixed(2)}°F</td>
+      <td>{props.data.DataStatistics.STDEV.toFixed(2)}°F</td>
     </tr>)
 }
 
@@ -30,7 +30,7 @@ class TagTable extends React.Component {
                 <th>Current</th>
                 <th>Min</th>
                 <th>Max</th>
-                <th>Average</th>
+                <th>Mean</th>
                 <th>STDEV</th>
               </tr>
             </thead>

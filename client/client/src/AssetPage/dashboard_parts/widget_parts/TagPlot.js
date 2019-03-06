@@ -81,8 +81,8 @@ class TagPlot extends React.Component {
 
     for (var i = 0; i < DeviceData.length; i++){
       formattedData.push({
-        x: DeviceData[i].Data.map((item,i) => new Date(item.TimeStamp).toLocaleTimeString("en-US")),
-        y: DeviceData[i].Data.map((item,i) => item.Value),
+        x: DeviceData[i].Data.map((item,i) => moment(item.TimeStamp).format("H:mm")),
+        y: DeviceData[i].Data.map((item,i) => item.Value.toFixed(2)),
         type: 'scatter',
         name: DeviceData[i].SerialNumber
       })
@@ -125,7 +125,7 @@ class TagPlot extends React.Component {
         <form style={{display: "none"}}>
           <div className="radio" style={{display: 'inline'}}>
             <label>
-              <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange} style={{fontWeight: "bold"}}/>
+              <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange}/>
               {' '}Real Time Data
             </label>
           </div>

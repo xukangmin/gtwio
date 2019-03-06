@@ -15,6 +15,7 @@ import { dataActions } from '../_actions/dataAction'
 import { assetActions } from '../_actions/assetAction'
 
 import Loader from '../_components/loader'
+import moment from 'moment'
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -47,13 +48,17 @@ class HomePage extends React.Component {
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
     this.range = JSON.parse(localStorage.getItem('range'));
 
+    let now = new Date();
+    let start = moment(now).subtract(10, "minutes").format('X');
+    let end = moment(now).format('X');
+
     if (!this.range)
     {
        var range = {
          live: true,
          interval: 30,
-         start: 0,
-         end: 0,
+         start: start,
+         end: end,
          polling: true
        };
        this.range = range;

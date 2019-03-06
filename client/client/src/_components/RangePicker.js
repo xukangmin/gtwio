@@ -36,12 +36,39 @@ class RangePicker extends React.Component {
       this.applyCallback = this.applyCallback.bind(this);
       this.handleOptionChange = this.handleOptionChange.bind(this);
       this.handleLiveButtonApply = this.handleLiveButtonApply.bind(this);
+      this.updateLocalStorageAndTriggers = this.updateLocalStorageAndTriggers.bind(this);
+    }
+
+    updateLocalStorageAndTriggers() {
+
+      //console.log(this.range);
+
+      localStorage.setItem('range', JSON.stringify(this.range));
+
+      var m_res = matchRoutes(routes, window.location.pathname);
+      var asset, tag, device;
+
+      for(var item in m_res) {
+        if (m_res[item].match.isExact) {
+          asset = m_res[item].match.params.assetID;
+          tag = m_res[item].match.params.tagID;
+          device = m_res[item].match.params.deviceID;
+        }
+      }
+      if (asset && device)
+      {
+        console.log("here");
+        this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start, this.range.end));
+      } else if (asset && tag){
+        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')), asset, tag, this.range.start, this.range.end));
+      } else {
+
+      }
     }
 
     handleOptionChange(event) {
       this.range.interval = event.target.value;
-      console.log(this.range)
-      localStorage.setItem('range', JSON.stringify(this.range));
+
       this.forceUpdate();
     }
 
@@ -63,9 +90,7 @@ class RangePicker extends React.Component {
         $(".liveDiv").css("display","none");
       });
 
-      console.log(this.range.live)
       if(this.range.live==true){
-        console.log('live')
         $(".fromDateTimeContainer").css("display","none");
         $(".daterangepicker:first").append(liveDiv);
         $(".liveDiv").css("display","block");
@@ -75,53 +100,13 @@ class RangePicker extends React.Component {
     }
 
     applyCallback(start, end){
-<<<<<<< HEAD
-      var range = {
-        live: false,
-        interval: 30,
-        start: this.range.start,
-        end: this.range.end,
-        polling: false
-      };
-      this.range = range;
 
-
-      localStorage.setItem('range', JSON.stringify(range));
-
-=======
-      console.log(start)
-      console.log(end)
       this.range.live = false;
       this.range.start = moment(start).format('X');
       this.range.end = moment(end).format('X');
-      localStorage.setItem('range', JSON.stringify(this.range));
->>>>>>> 41092ae42255f5f7acb5e5a633525cab5ef749ba
+      this.range.polling = false;
 
-      var m_res = matchRoutes(routes, window.location.pathname);
-      var asset, tag, device;
-
-      for(var item in m_res) {
-        if (m_res[item].match.isExact) {
-          asset = m_res[item].match.params.assetID;
-          tag = m_res[item].match.params.tagID;
-          device = m_res[item].match.params.deviceID;
-        }
-      }
-      console.log(this.range);
-      if (asset && device)
-      {
-<<<<<<< HEAD
-        console.log("apply");
-        console.log(this.range);
-        this.props.dispatch(deviceActions.getSingleDeviceData(device, range.live, range.interval, range.start, range.end));
-=======
-        this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start, this.range.end));
->>>>>>> 41092ae42255f5f7acb5e5a633525cab5ef749ba
-      } else if (asset && tag){
-        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')), asset, tag, this.range.start, this.range.end));
-      } else {
-
-      }
+      this.updateLocalStorageAndTriggers();
 
       this.forceUpdate();
 
@@ -129,12 +114,14 @@ class RangePicker extends React.Component {
 
     handleLiveButtonApply(){
       this.range.live = true;
-      localStorage.setItem('range', JSON.stringify(this.range));
+
+      this.updateLocalStorageAndTriggers();
+
       this.forceUpdate();
     }
 
     render() {
-      console.log(this.range)
+      //console.log(this.range)
       let now = new Date();
       let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
       let end = moment(start).add(1, "days").subtract(1, "seconds");

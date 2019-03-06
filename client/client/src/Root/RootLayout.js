@@ -45,7 +45,7 @@ class RootLayout extends Component {
       else{
         return (
           <div id="home-page-main">
-          <HeaderNav />
+          <HeaderNav dispatch={this.props.dispatch} />
           <div className ="container-fluid">
             {assets_display ?
             <div className ="row">

@@ -1,8 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
+import Route from 'react-router-dom/Route';
+import { renderRoutes } from 'react-router-config';
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
+import { dataActions } from '../_actions/dataAction';
 import { FormControl, Button } from 'react-bootstrap';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from "moment";
+import $ from 'jquery';
 
 class RangePicker extends React.Component {
     constructor(props) {
@@ -21,6 +27,20 @@ class RangePicker extends React.Component {
       }
 
       this.applyCallback = this.applyCallback.bind(this);
+
+      this.dispatchTagContinuously = setInterval(() => {
+
+          this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.realtime_start, this.state.realtime_end));
+
+      }, 60000);
+    }
+
+    componentDidMount(){
+      $( ".rangecontainer:first-child" ).click(function(){
+        // $(".fromDateTimeContainer").css("display","none");
+        // $(".daterangepicker").append(
+        //   "<div><div className='radio'><label><input type='radio' value='option1'/>10 Min</label></div><div className='radio'><label><input type='radio' value='option2'/>30 Min</label></div></div>")
+      });
     }
 
     applyCallback(start, end){
@@ -28,15 +48,18 @@ class RangePicker extends React.Component {
           start: start,
           end: end
         },
-        ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.custom_start, this.state.custom_end))
+        ()=>this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),this.props.asset, this.props.tag, this.state.start, this.state.end))
       );
     }
+
+
 
     render() {
       let now = new Date();
       let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
       let end = moment(start).add(1, "days").subtract(1, "seconds");
       let ranges = {
+        "Live": [moment(start), moment(end)],
         "Today Only": [moment(start), moment(end)],
         "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
         "3 Days": [moment(start).subtract(3, "days"), moment(end)]
@@ -68,7 +91,7 @@ class RangePicker extends React.Component {
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
               {moment(this.state.start).format("MMMM Do YYYY, H:mm") + " - " + moment(this.state.end).format("MMMM Do YYYY, H:mm")}
-              <i class="fas fa-angle-down ml-3"></i>
+              <i className="fas fa-angle-down ml-3"></i>
             </Button>
           </DateTimeRangeContainer>
         </div>
@@ -77,5 +100,4 @@ class RangePicker extends React.Component {
 
 }
 
-
-export default RangePicker
+export default RangePicker;

@@ -122,7 +122,7 @@ class TagPlot extends React.Component {
 
     return(
       <div>
-        <form>
+        <form style={{display: "none"}}>
           <div className="radio" style={{display: 'inline'}}>
             <label>
               <input type="radio" value="option1" checked={this.state.selectedOption === 'option1'} onChange={this.handleOptionChange} style={{fontWeight: "bold"}}/>

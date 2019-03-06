@@ -31,10 +31,11 @@ class ParameterPlot extends React.Component {
         range: [Math.min(...tempY)-10, Math.max(...tempY)+10]
       },
       xaxis:{
+        autorange: true,
         showline: false,
         autotick: true,
-        ticklen: 8,
-        dtick: 9
+        nticks: 6,
+        ticklen: 8
       }
     };
 

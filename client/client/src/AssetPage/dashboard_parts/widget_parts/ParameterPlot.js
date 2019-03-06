@@ -32,7 +32,7 @@ class ParameterPlot extends React.Component {
       },
       xaxis:{
         showline: false,
-        autotick: false,
+        autotick: true,
         ticklen: 8,
         dtick: 9
       }

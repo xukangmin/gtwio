@@ -37,6 +37,7 @@ class RangePicker extends React.Component {
       this.handleOptionChange = this.handleOptionChange.bind(this);
       this.handleLiveButtonApply = this.handleLiveButtonApply.bind(this);
       this.updateLocalStorageAndTriggers = this.updateLocalStorageAndTriggers.bind(this);
+      this.intervalToText = this.intervalToText.bind(this);
     }
 
     updateLocalStorageAndTriggers() {
@@ -60,6 +61,7 @@ class RangePicker extends React.Component {
         console.log("here");
         this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start, this.range.end));
       } else if (asset && tag){
+        console.log('tag');
         this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')), asset, tag, this.range.start, this.range.end));
       } else {
 
@@ -121,25 +123,10 @@ class RangePicker extends React.Component {
       this.forceUpdate();
     }
 
-    render() {
-      //console.log(this.range)
-      let now = new Date();
-      let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
-      let end = moment(start).add(1, "days").subtract(1, "seconds");
-      let ranges = {
-        "Real-time Data": [moment(start), moment(end)],
-        "Today Only": [moment(start), moment(end)],
-        "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
-        "3 Days": [moment(start).subtract(3, "days"), moment(end)]
-      }
-      let local = {
-        "format":"MM-DD-YYYY HH:mm",
-        "sundayFirst" : false
-      }
-      let maxDate = moment(start).add(24, "hour");
-
+    intervalToText(interval){
       let rangeText;
-      switch(this.range.interval){
+      interval.toString();
+      switch(interval){
         case "10":
           rangeText = "10 Minutes";
           break;
@@ -165,6 +152,27 @@ class RangePicker extends React.Component {
           rangeText = "30 Days";
           break;
       }
+      return rangeText;
+    }
+
+    render() {
+      //console.log(this.range)
+      let now = new Date();
+      let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
+      let end = moment(start).add(1, "days").subtract(1, "seconds");
+      let ranges = {
+        "Real-time Data": [moment(start), moment(end)],
+        "Today Only": [moment(start), moment(end)],
+        "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
+        "3 Days": [moment(start).subtract(3, "days"), moment(end)]
+      }
+      let local = {
+        "format":"MM-DD-YYYY HH:mm",
+        "sundayFirst" : false
+      }
+      let maxDate = moment(start).add(24, "hour");
+
+
 
       return (
 
@@ -186,7 +194,7 @@ class RangePicker extends React.Component {
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
               {this.range.live==true?
-                "Real-time Data: "+ rangeText + " from Now":
+                "Real-time Data: "+ this.intervalToText(JSON.parse(localStorage.getItem('range')).interval) + " from Now":
                 moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
 
               }

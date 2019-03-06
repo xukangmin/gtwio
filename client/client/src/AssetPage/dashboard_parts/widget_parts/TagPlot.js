@@ -81,7 +81,7 @@ class TagPlot extends React.Component {
 
     for (var i = 0; i < DeviceData.length; i++){
       formattedData.push({
-        x: DeviceData[i].Data.map((item,i) => moment(item.TimeStamp).format("H:mm")),
+        x: DeviceData[i].Data.map((item,i) => moment(item.TimeStamp/1000).format("H:mm")),
         y: DeviceData[i].Data.map((item,i) => item.Value.toFixed(2)),
         type: 'scatter',
         name: DeviceData[i].SerialNumber

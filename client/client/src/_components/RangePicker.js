@@ -66,11 +66,11 @@ class RangePicker extends React.Component {
 
     applyCallback(start, end){
       var range = {
-        live: true,
+        live: false,
         interval: 30,
         start: this.range.start,
         end: this.range.end,
-        polling: true
+        polling: false
       };
       this.range = range;
 
@@ -92,6 +92,7 @@ class RangePicker extends React.Component {
       if (asset && device)
       {
         console.log("apply");
+        console.log(this.range);
         this.props.dispatch(deviceActions.getSingleDeviceData(device, range.live, range.interval, range.start, range.end));
       } else if (asset && tag){
         this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, range.start, range.end));

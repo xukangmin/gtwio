@@ -41,8 +41,6 @@ class RangePicker extends React.Component {
               tag = m_res[item].match.params.tagID;
             }
           }
-          //console.log(asset);
-          //console.log(tag);
           this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')),asset, tag, this.state.start, this.state.end));
         }
       );

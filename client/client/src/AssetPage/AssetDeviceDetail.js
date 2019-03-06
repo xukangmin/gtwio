@@ -94,12 +94,12 @@ const DeviceInfo = (props) => {
               <td>{device.Parameters[0].StabilityCriteria.UpperLimit + ' ' + device.Parameters[0].Unit}</td>
             </tr>
             <tr>
-              <th>Status</th>
-              <td>{device.Parameters[0].Status}</td>
+              <th>Stability</th>
+              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' ' + device.Parameters[0].Unit + '/hr'}</td>
             </tr>
             <tr>
-              <th>Stability Criteria</th>
-              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
+              <th>Status</th>
+              <td>{device.Parameters[0].Status}</td>
             </tr>
           </tbody>
         </Table>
@@ -144,7 +144,8 @@ class AssetDeviceDetail extends React.Component {
 
     this.state = {
         AssetID : props.match.params.assetID,
-        DeviceID: props.match.params.deviceID
+        DeviceID: props.match.params.deviceID,
+        polling: true
     }
 
     this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
@@ -152,13 +153,23 @@ class AssetDeviceDetail extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
+    this.plotDirty = this.plotDirty.bind(this);
     this.updateLimit = this.updateLimit.bind(this);
+  }
+
+  plotDirty() {
+    this.setState({
+      polling: false
+    });
   }
 
   componentDidMount() {
     this.dispatchParameterContinuously = setInterval(() => {
-      this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
-    }, 5000);
+      if (this.state.polling)
+      {
+        this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
+      }
+    }, 60000);
   }
 
   sortTime(data){
@@ -238,7 +249,7 @@ class AssetDeviceDetail extends React.Component {
                   <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">
-                  <ParameterPlot/>
+                  <ParameterPlot onUpdate={this.plotDirty}/>
                 </div>
               </div>
             }

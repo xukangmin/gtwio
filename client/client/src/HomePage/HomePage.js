@@ -76,7 +76,6 @@ class HomePage extends React.Component {
   render() {
     //const { assets } = this.state;
     const { assets, msg } = this.props;
-
     let assets_display = null;
 
     if (assets)

@@ -7,9 +7,9 @@ const DataSchema = new Schema(
   {
     ParameterID: String,
     TimeStamp: Number, // with ms accuracy
-    Value: Number
-  },
-  { timestamps: true }
+    Value: Number,
+    Valid: Boolean // criteria defined in the parameters
+  }
 );
 
 // export the new Schema so we could modify it using Node.js

@@ -75,12 +75,27 @@ class RangePicker extends React.Component {
     }
 
     applyCallback(start, end){
+<<<<<<< HEAD
+      var range = {
+        live: false,
+        interval: 30,
+        start: this.range.start,
+        end: this.range.end,
+        polling: false
+      };
+      this.range = range;
+
+
+      localStorage.setItem('range', JSON.stringify(range));
+
+=======
       console.log(start)
       console.log(end)
       this.range.live = false;
       this.range.start = moment(start).format('X');
       this.range.end = moment(end).format('X');
       localStorage.setItem('range', JSON.stringify(this.range));
+>>>>>>> 41092ae42255f5f7acb5e5a633525cab5ef749ba
 
       var m_res = matchRoutes(routes, window.location.pathname);
       var asset, tag, device;
@@ -95,7 +110,13 @@ class RangePicker extends React.Component {
       console.log(this.range);
       if (asset && device)
       {
+<<<<<<< HEAD
+        console.log("apply");
+        console.log(this.range);
+        this.props.dispatch(deviceActions.getSingleDeviceData(device, range.live, range.interval, range.start, range.end));
+=======
         this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start, this.range.end));
+>>>>>>> 41092ae42255f5f7acb5e5a633525cab5ef749ba
       } else if (asset && tag){
         this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')), asset, tag, this.range.start, this.range.end));
       } else {

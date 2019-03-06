@@ -348,7 +348,7 @@ function _update_stability_info(paraID, info, stdev, code) {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          resolve(stdev);
         }
       });
     });
@@ -357,15 +357,24 @@ function _update_stability_info(paraID, info, stdev, code) {
 function _calculate_stability(paraID, stabilityCriteria, timestamp) {
   return new Promise(
     (resolve, reject) => {
-      _getDataByParameterID({ParameterID: paraID}, timestamp - stabilityCriteria.WindowSize * 1000, timestamp)
+      _getDataByParameterID({ParameterID: paraID}, timestamp - stabilityCriteria.WindowSize * 60 * 1000, timestamp)
         .then(
           data => {
-            var result = [];
-            for(var i in data) {
-              result.push(data[i].Value);
+            // calculate F / hr
+            var rate;
+            if (data.length > 0) {
+              var diff = Math.abs(data[0].Value - data[data.length - 1].Value);
+              rate = diff / stabilityCriteria.WindowSize / 60;
+            } else {
+              rate = -1;
             }
-            var stdev = math.std(result);
-            resolve(stdev);
+            // console.log(data);
+            // var result = [];
+            // for(var i in data) {
+            //   result.push(data[i].Value);
+            // }
+            // var stdev = math.std(result);
+            resolve(rate);
           }
         )
         .catch(
@@ -376,6 +385,13 @@ function _calculate_stability(paraID, stabilityCriteria, timestamp) {
 
     }
   );
+}
+function _update_single_data(paraID, timestamp, valid) {
+    Data.findOneAndUpdate({ParameterID: paraID, TimeStamp: timestamp}, {Valid: valid}, function(err) {
+      if (err) {
+        console.error(err);
+      }
+    })
 }
 
 function _update_status(paraID, timestamp, currentValue) {
@@ -394,10 +410,12 @@ function _update_status(paraID, timestamp, currentValue) {
               .then(
                 stdev => {
                   var status_text = 'Valid';
+                  var valid = true;
                   var code = 0;
                   if (stdev > data.StabilityCriteria.UpperLimit) {
                     status_text = 'Not stable';
                     code = 1;
+                    valid = false;
                   }
                   if (data.Range)
                   {
@@ -405,9 +423,10 @@ function _update_status(paraID, timestamp, currentValue) {
                       {
                         status_text = 'Out of Range';
                         code = 2;
+                        valid = false;
                       }
                   }
-
+                  _update_single_data(paraID, timestamp, valid);
                   return _update_stability_info(paraID, status_text, stdev, code);
                 }
               )

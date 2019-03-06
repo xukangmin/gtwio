@@ -160,9 +160,10 @@ class AssetDeviceDetail extends React.Component {
   componentDidMount() {
     this.dispatchParameterContinuously = setInterval(() => {
       this.range = JSON.parse(localStorage.getItem('range'));
+      console.log(this.range);
       if (this.range.polling)
       {
-        this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID));
+        this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID, this.range.live, this.range.interval, this.range.start, this.range.end));
       }
     }, 60000);
   }

@@ -17,6 +17,7 @@ class MainArea extends React.Component {
       this.editModalToggle = this.editModalToggle.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
       this.handleChange = this.handleChange.bind(this);
+      this.assetSelected = this.assetSelected.bind(this);
     }
 
     editModalToggle(asset_id, name){
@@ -62,6 +63,11 @@ class MainArea extends React.Component {
       }
     }
 
+    assetSelected(assetid,assetname){
+      localStorage.setItem("selectedAssetID", assetid);
+      localStorage.setItem("selectedAssetName", assetname);
+    }
+
     render() {
         return (
           <div id="MainArea">
@@ -80,7 +86,7 @@ class MainArea extends React.Component {
                         {this.props.assets.map((singleAsset,i) =>
                             <tr key={i}>
                                 <td>
-                                  <a href={"/asset/" + singleAsset.AssetID + "/dashboard"}>{singleAsset.DisplayName}
+                                  <a href={"/asset/" + singleAsset.AssetID + "/dashboard"} onClick={()=>this.assetSelected(singleAsset.AssetID, singleAsset.DisplayName)}>{singleAsset.DisplayName}
                                   </a>
                                 </td>
                                 <td style={{color:"#08D800"}}>OK</td>

@@ -39,6 +39,7 @@ class RangePicker extends React.Component {
     }
 
     componentDidMount(){
+      $(".inputDate").css("textAlign","center");
       $( ".rangecontainer:first-child" ).click(function(){
         // $(".fromDateTimeContainer").css("display","none");
         // $(".daterangepicker").append(

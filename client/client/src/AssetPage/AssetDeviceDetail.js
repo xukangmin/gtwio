@@ -128,8 +128,8 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i} >
-                <td style={{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
+                <td style = {{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + device.Parameters[0].Unit}</td>
               </tr>
           )}
         </tbody>
@@ -159,7 +159,6 @@ class AssetDeviceDetail extends React.Component {
   componentDidMount() {
     this.dispatchParameterContinuously = setInterval(() => {
       this.range = JSON.parse(localStorage.getItem('range'));
-      console.log(this.range);
       if (this.range.polling)
       {
         this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID, this.range.live, this.range.interval, this.range.start, this.range.end));

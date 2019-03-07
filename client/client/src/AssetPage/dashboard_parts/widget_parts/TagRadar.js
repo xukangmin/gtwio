@@ -14,16 +14,16 @@ class TagRadar extends React.Component {
     let SerialNumberList = DeviceData.map((singleDevice,i) => singleDevice.SerialNumber);
     SerialNumberList.push(SerialNumberList[0]);
 
-    let CurrentValueList = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value);
+    let CurrentValueList = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value.toFixed(2));
     CurrentValueList.push(CurrentValueList[0]);
 
-    let MeanValueList = DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Avg);
+    let MeanValueList = DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Avg.toFixed(2));
     MeanValueList.push(MeanValueList[0]);
 
-    let MaxValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg+0.5));
+    let MaxValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg+0.5).toFixed(2));
     MaxValueList.push(MaxValueList[0]);
 
-    let MinValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg-0.5));
+    let MinValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg-0.5).toFixed(2));
     MinValueList.push(MinValueList[0]);
 
     let PlotMax = Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Max)))+1;
@@ -37,7 +37,7 @@ class TagRadar extends React.Component {
       mode: 'lines',
       line: {color: 'rgba(246, 71, 71, 0.2)'},
       fillcolor: 'rgba(246, 71, 71, 0.5)',
-      fill: "toself"
+      fill: 'toself'
     },
     {
       name: 'Valid',
@@ -47,7 +47,7 @@ class TagRadar extends React.Component {
       mode: 'lines',
       line: {color: 'rgba(200, 247, 197, 0.8)'},
       fillcolor: 'rgba(200, 247, 197, 0.75)',
-      fill: "toself"
+      fill: 'toself'
     },
     {
       name: 'Lower Alarm Limit',
@@ -57,7 +57,7 @@ class TagRadar extends React.Component {
       mode: 'lines',
       line: {color: 'rgba(246, 71, 71, 0.2)'},
       fillcolor: 'rgba(246, 71, 71, 0.5)',
-      fill: "toself"
+      fill: 'toself'
     },
     {
       name: 'Current Value',
@@ -89,7 +89,7 @@ class TagRadar extends React.Component {
       showlegend: false,
       margin:{
         l: 40,
-        t: 40
+        t: 50
       }
     }
     return(

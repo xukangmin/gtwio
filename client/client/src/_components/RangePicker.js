@@ -64,9 +64,7 @@ class RangePicker extends React.Component {
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
-      } else {
-
-      }
+      } 
     }
 
     handleOptionChange(event) {
@@ -91,14 +89,6 @@ class RangePicker extends React.Component {
         $(".fromDateTimeContainer").css("display","block");
         $(".liveDiv").css("display","none");
       });
-
-      if(this.range.live==true){
-        $(".fromDateTimeContainer").css("display","none");
-        $(".daterangepicker:first").append(liveDiv);
-        $(".liveDiv").css("display","block");
-      } else{
-        $( ".rangecontainer:first-child" ).removeClass( "rangeButtonSelectedStyle" ).addClass( "rangebuttonstyle" );
-      }
     }
 
     applyCallback(start, end){
@@ -166,8 +156,6 @@ class RangePicker extends React.Component {
         "sundayFirst" : false
       }
       let maxDate = moment(start).add(24, "hour");
-
-
 
       return (
 

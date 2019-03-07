@@ -109,8 +109,8 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i}>
-                <td>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2)}</td>
+                <td style={{padding: 0}}>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2)}</td>
               </tr>
           )}
         </tbody>

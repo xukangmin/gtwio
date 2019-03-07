@@ -127,9 +127,9 @@ const ParameterTable = (props) => {
         </thead>
         <tbody>
           {parameter.map((item,i) =>
-              <tr key = {i}>
-                <td>{new Date(item.TimeStamp).toLocaleString()}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold"}}>{item.Value.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
+              <tr key = {i} >
+                <td style={{padding:0}}>{new Date(item.TimeStamp).toLocaleString()}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
               </tr>
           )}
         </tbody>

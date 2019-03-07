@@ -46,7 +46,7 @@ const DeviceInfo = (props) => {
             {device.Parameters[0].CurrentTimeStamp &&
             <tr>
               <th>Current Time Stamp</th>
-              <td>{new Date(Number(device.Parameters[0].CurrentTimeStamp)).toLocaleString()}</td>
+              <td>{moment(new Date(Number(device.Parameters[0].CurrentTimeStamp))).format('MMMM Do YYYY, H:mm')}</td>
             </tr>
             }
           </tbody>
@@ -128,7 +128,7 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i} >
-                <td style={{padding:0}}>{new Date(item.TimeStamp).toLocaleString()}</td>
+                <td style={{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
                 <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + ' °' + device.Parameters[0].Unit}</td>
               </tr>
           )}

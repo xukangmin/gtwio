@@ -8,8 +8,7 @@ import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { FormControl, Button } from 'react-bootstrap';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
-import moment from "moment";
-
+import moment from 'moment';
 import $ from 'jquery';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
@@ -64,7 +63,7 @@ class RangePicker extends React.Component {
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
-      } 
+      }
     }
 
     handleOptionChange(event) {
@@ -89,6 +88,8 @@ class RangePicker extends React.Component {
         $(".fromDateTimeContainer").css("display","block");
         $(".liveDiv").css("display","none");
       });
+
+
     }
 
     applyCallback(start, end){
@@ -196,7 +197,7 @@ class RangePicker extends React.Component {
             <div className='radio'> <label><input type='radio' value={1440} checked={this.range.interval == 1440} onChange={this.handleOptionChange}/>{" "}1 Day</label> </div>
             <div className='radio'> <label><input type='radio' value={10080} checked={this.range.interval == 10080} onChange={this.handleOptionChange}/>{" "}1 Week</label> </div>
             <div className='radio'> <label><input type='radio' value={302400} checked={this.range.interval == 302400} onChange={this.handleOptionChange}/>{" "}30 Days</label> </div>
-            <Button onClick={this.handleLiveButtonApply} color="success" className="mt-2">Apply</Button>
+            <Button id="DateRangePickerButton" onClick={this.handleLiveButtonApply} color="success" className="mt-2">Apply</Button>
           </div>
         </div>
       );

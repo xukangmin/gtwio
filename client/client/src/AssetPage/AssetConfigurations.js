@@ -49,7 +49,7 @@ const DeviceTableRow = (props) => {
             <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
           </Input>
         </td>
-        <td>{props.data.LastCalibrationDate ? props.data.LastCalibrationDate.slice(0,10) : ""}</td>
+        <td>{props.data.LastCalibrationDate ? moment(props.data.LastCalibrationDate).format('MMMM Do YYYY') : ""}</td>
         <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>
       </tr>
   );
@@ -73,7 +73,7 @@ const ParameterTableRow = (props) => {
         </td>
         <td>{props.data.Equation}</td>
         <td>{props.data.CurrentValue.toFixed(2)}</td>
-        <td>{new Date(props.data.CurrentTimeStamp).toLocaleString()}</td>
+        <td>{moment(new Date(props.data.CurrentTimeStamp)).format('MMMM Do YYYY')}</td>
         <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.ParameterID)}></i></Button></td>
       </tr>
   );

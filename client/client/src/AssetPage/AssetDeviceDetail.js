@@ -35,7 +35,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Last Calibration Date</th>
-              <td>{device.LastCalibrationDate.slice(0,10)}</td>
+              <td>{moment(device.LastCalibrationDate).format('MMMM Do YYYY')}</td>
             </tr>
             {device.Parameters[0].CurrentValue &&
             <tr>

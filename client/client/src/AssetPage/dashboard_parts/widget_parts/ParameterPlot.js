@@ -15,7 +15,7 @@ class ParameterPlot extends React.Component {
     let tempX = [];
     let tempY = [];
     for(var i = 0; i < parameterData.length; i++){
-      tempX.push(new Date(parameterData[i].TimeStamp).toLocaleTimeString("en-US"));
+      tempX.push(moment(new Date(parameterData[i].TimeStamp)).format('H:mm'));
       tempY.push(parameterData[i].Value)
     }
 
@@ -28,7 +28,9 @@ class ParameterPlot extends React.Component {
     const layout= {
       title: 'Line Chart',
       yaxis: {
-        range: [Math.min(...tempY)-10, Math.max(...tempY)+10]
+        range: [Math.min(...tempY)-10, Math.max(...tempY)+10],
+        ticklen: 8,
+        title: "(°F)"
       },
       xaxis:{
         autorange: true,

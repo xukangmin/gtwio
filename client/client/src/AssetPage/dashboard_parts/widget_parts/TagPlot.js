@@ -21,7 +21,7 @@ class TagPlot extends React.Component {
 
     for (var i = 0; i < DeviceData.length; i++){
       formattedData.push({
-        x: DeviceData[i].Data.map((item,i) => new Date(item.TimeStamp).toLocaleTimeString("en-US")),
+        x: DeviceData[i].Data.map((item,i) => moment(new Date(item.TimeStamp)).format("H:mm")),
         y: DeviceData[i].Data.map((item,i) => item.Value.toFixed(2)),
         type: 'scatter',
         name: DeviceData[i].SerialNumber
@@ -32,7 +32,8 @@ class TagPlot extends React.Component {
     let layout = {
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
-        ticklen: 8
+        ticklen: 8,
+        title: "(°F)"
       },
       xaxis: {
         showline: false,
@@ -40,7 +41,7 @@ class TagPlot extends React.Component {
         ticklen: 8
       },
       margin:{
-        l: 40,
+        l: 50,
         t: 30
       }
     }

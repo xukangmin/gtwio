@@ -36,7 +36,7 @@ class TagRadar extends React.Component {
       theta: SerialNumberList,
       mode: 'lines',
       line: {color: 'rgba(246, 71, 71, 0.2)'},
-      fillcolor: 'rgba(246, 71, 71, 0.2)',
+      fillcolor: 'rgba(246, 71, 71, 0.5)',
       fill: "toself"
     },
     {
@@ -46,6 +46,7 @@ class TagRadar extends React.Component {
       theta: SerialNumberList,
       mode: 'lines',
       line: {color: 'rgba(200, 247, 197, 0.8)'},
+      fillcolor: 'rgba(200, 247, 197, 0.75)',
       fill: "toself"
     },
     {
@@ -55,7 +56,7 @@ class TagRadar extends React.Component {
       theta: SerialNumberList,
       mode: 'lines',
       line: {color: 'rgba(246, 71, 71, 0.2)'},
-      fillcolor: 'rgba(246, 71, 71, 0.2)',
+      fillcolor: 'rgba(246, 71, 71, 0.5)',
       fill: "toself"
     },
     {
@@ -76,6 +77,7 @@ class TagRadar extends React.Component {
     }];
 
     const layout = {
+      title: '(°F)',
       polar: {
         radialaxis: {
           visible: true,

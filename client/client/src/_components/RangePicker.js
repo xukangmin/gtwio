@@ -19,6 +19,8 @@ class RangePicker extends React.Component {
       super(props);
 
       this.range = JSON.parse(localStorage.getItem('range'));
+      this.user = JSON.parse(localStorage.getItem('user'));
+
       if (!this.range)
       {
         let now = new Date();
@@ -41,9 +43,6 @@ class RangePicker extends React.Component {
     }
 
     updateLocalStorageAndTriggers() {
-
-      //console.log(this.range);
-
       localStorage.setItem('range', JSON.stringify(this.range));
 
       var m_res = matchRoutes(routes, window.location.pathname);
@@ -58,11 +57,13 @@ class RangePicker extends React.Component {
       }
       if (asset && device)
       {
-        console.log("here");
-        this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start, this.range.end));
+        this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start*1000, this.range.end*1000));
       } else if (asset && tag){
-        console.log('tag');
-        this.props.dispatch(dataActions.getSingleTagData(JSON.parse(localStorage.getItem('user')), asset, tag, this.range.start, this.range.end));
+        if (this.range.live){
+          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, moment(new Date()).subtract(this.range.interval, "minutes"), moment(new Date())));
+        } else {
+          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
+        }
       } else {
 
       }
@@ -70,7 +71,6 @@ class RangePicker extends React.Component {
 
     handleOptionChange(event) {
       this.range.interval = event.target.value;
-
       this.forceUpdate();
     }
 
@@ -102,16 +102,13 @@ class RangePicker extends React.Component {
     }
 
     applyCallback(start, end){
-
       this.range.live = false;
       this.range.start = moment(start).format('X');
       this.range.end = moment(end).format('X');
       this.range.polling = false;
 
       this.updateLocalStorageAndTriggers();
-
       this.forceUpdate();
-
     }
 
     handleLiveButtonApply(){
@@ -119,7 +116,6 @@ class RangePicker extends React.Component {
       this.range.live = true;
 
       this.updateLocalStorageAndTriggers();
-
       this.forceUpdate();
     }
 
@@ -156,7 +152,6 @@ class RangePicker extends React.Component {
     }
 
     render() {
-      //console.log(this.range)
       let now = new Date();
       let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
       let end = moment(start).add(1, "days").subtract(1, "seconds");

@@ -652,6 +652,15 @@ function _cleanDeviceObj(deviceobj) {
 return deviceobj;
 }
 
+function _getRawDataByDevice(deviceobj, sTS, eTS) {
+  return new Promise(
+    (resolve, reject) => {
+      Promise.all(deviceobj.Parameters.map(_getParameter))
+        .then(
+
+        )
+    });
+}
 
 function _getRawDataByType(deviceobj, type, sTS, eTS) {
     return new Promise(
@@ -976,7 +985,7 @@ function _cleanData(dataobj) {
 function _getDataByParameterID(para, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
-      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value -_id', function(err, data) {
+      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value Valid -_id', function(err, data) {
         if (err) {
           console.log(err);
           reject(err);
@@ -1113,8 +1122,43 @@ function getDataByParameterTag(req, res) {
 }
 
 function getDataByAssetID(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+  var sTS = req.swagger.params.StartTimeStamp.value;
+  var eTS = req.swagger.params.EndTimeStamp.value;
 
+
+
+  if (assetid && sTS && eTS) {
+    // get device
+    console.log(assetid);
+    _getAllDeviceByAssetID(assetid)
+      .then(
+        devicelist => {
+          return Promise.all(devicelist.map(_getDeviceInfoByDeviceID));
+        }
+      )
+      .then(
+        devicelist =>
+        {
+          return Promise.all(devicelist.map(_getAllParameterByDeviceIDPromise));
+        }
+      )
+      .then(
+        ret => {
+          console.log(ret);
+        }
+      )
+      .catch(
+        err => {
+          shareUtil.SendInvalidInput(res, "getDataByAssetID error:" + JSON.stringify(err, null, 2));
+        }
+      )
+  } else {
+    var msg = "assetid  or StartTimeStamp or EndTimeStamp missing";
+    shareUtil.SendInvalidInput(res, msg);
+  }
 }
+
 function getDataByDeviceID(req, res) {
 
 }

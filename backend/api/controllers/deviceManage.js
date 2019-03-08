@@ -1,7 +1,7 @@
 //'use strict';
 
 var shareUtil = require('./shareUtil.js');
-var asset = require('./asset.js');
+var asset = require('./assetManage.js');
 var userManage = require('./userManage.js');
 const Device = require('../db/device.js');
 const Asset = require('../db/asset.js');
@@ -25,11 +25,65 @@ var functions = {
   updateDevice: updateDevice,
   deleteDevice: deleteDevice,
   getDeviceByAsset: getDeviceByAsset,
-  getSingleDevice: getSingleDevice
+  getSingleDevice: getSingleDevice,
+  _createDeviceWithParameter: _createDeviceWithParameter
 }
 
 for (var key in functions) {
   module.exports[key] = functions[key];
+}
+
+function _createDeviceWithParameter(assetid, name, sn, paralist) {
+  return new Promise(
+    (resolve, reject) => {
+      const shortid = require('shortid');
+
+      let device = new Device();
+
+      device.DeviceID = "D" + shortid.generate();
+      device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+      device.DisplayName = name;
+      device.SerialNumber = sn;
+
+      device.save(err => {
+        if (err)
+        {
+          var msg = "device Save Error:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+        else {
+          // add device to asset
+          Asset.findOneAndUpdate({AssetID: assetid},
+              {
+                $push:  {
+                  Devices: {DeviceID: device.DeviceID}
+                }
+              },
+            function(err, data) {
+            if (err)
+            {
+              reject(err);
+            }
+            else {
+              // create parameter
+              Promise.all(paralist.map(item => parameterManage._createParameter(device.DeviceID, null, item, item)))
+                .then(
+                  ret => {
+                    resolve(device.DeviceID);
+                  }
+                )
+                .catch(
+                  err => {
+                    reject(err);
+                  }
+                )
+            }
+          });
+
+        }
+
+      });
+    });
 }
 
 function createDevice(req, res) {
@@ -38,12 +92,11 @@ function createDevice(req, res) {
   var displayName = deviceobj.DisplayName;
   var assetid = deviceobj.AssetID;
   if (assetid && displayName) {
-    var uuidv1 = require('uuid/v1');
-    var crypto = require('crypto');
+    const shortid = require('shortid');
 
     let device = new Device();
 
-    device.DeviceID = uuidv1();
+    device.DeviceID = "D" + shortid.generate();
     device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
     device.DisplayName = displayName;
 

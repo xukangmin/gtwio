@@ -18,6 +18,7 @@
     "nodemon": "^1.18.10",
     "npm": "^6.5.0",
     "os": "^0.1.1",
+    "shortid": "^2.2.14",
     "swagger-express-mw": "^0.7.0",
     "swagger-parser": "^6.0.3",
     "swagger-stats": "^0.95.6",

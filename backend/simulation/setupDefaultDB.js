@@ -51,7 +51,7 @@ function createAsset(userid, assetid) {
       asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
       asset.DisplayName = 'demo_hx_asset';
       asset.Location = 'Plant A';
-      
+
       var settings = {};
       settings.Tags = [
               {
@@ -324,7 +324,7 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
                 para.CurrentValue = 0;
                 para.CurrentTimeStamp = 0;
                 para.Type = 'Temperature';
-                para.Unit = 'F';
+                para.Unit = '°F';
                 para.Tag = tagName + "/" + para.Type; // automatically generated if under device
                 para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
                 para.Range = {UpperLimit: 100, LowerLimit: 32};
@@ -476,7 +476,20 @@ function updateRequireListByEquation(paraid) {
 
 }
 
+function createAssetType0() {
+  return new Promise(
+    (resolve, reject) => {
 
+    });
+}
+
+function createAssetType1() {
+
+}
+
+function createAssetType2() {
+
+}
 
 function createDemoAccount() {
   createUser(userid)

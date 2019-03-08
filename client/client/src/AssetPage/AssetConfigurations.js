@@ -320,9 +320,19 @@ class AssetConfigurations extends React.Component {
       return cell.toFixed(2);
     }
 
+    function onAfterInsertRow(row) {
+      // let newRowStr = '';
+      //
+      // for (const prop in row) {
+      //   newRowStr += prop + ': ' + row[prop] + ' \n';
+      // }
+      // alert('The new row is:\n ' + newRowStr);
+    }
+
     const options = {
-      afterSearch: afterSearch  // define a after search hook
-    };
+       // afterInsertRow: onAfterInsertRow
+    }
+
     return (
       <div>
         {device && parameter?
@@ -350,14 +360,78 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
-                    <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
-                    <BootstrapTable data={device} insertRow={ true } deleteRow={true} search={ true } options={ options } cellEdit={ cellEditProp } version='4'>
-                      <TableHeaderColumn isKey dataField='SerialNumber' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Serial Number</TableHeaderColumn>
-                      <TableHeaderColumn dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
-                      <TableHeaderColumn dataField='Parameters' dataFormat={parameterFormatter} dataSort={ true } editable={{type: 'select', options: {values: ["Temperature Value", "Flow Value"]}}}>Parameter</TableHeaderColumn>
-                      <TableHeaderColumn dataField='Tag' dataSort={ true } editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>Location</TableHeaderColumn>
-                      <TableHeaderColumn dataField='Angle' dataSort={ true } editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>Angle</TableHeaderColumn>
-                      <TableHeaderColumn dataField='LastCalibrationDate' editable={false} dataFormat={dateFormatter} dataSort={ true }>Last Calibration Date</TableHeaderColumn>
+                    <button style={{display: "none"}} type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
+                    <BootstrapTable
+                      data={device}
+                      options={options}
+                      insertRow={true}
+                      deleteRow={true}
+                      search={true}
+                      cellEdit={cellEditProp}
+                      version='4'
+                      bordered={false}
+                      hover
+                      height='80%'
+                      scrollTop={'Bottom'}
+                      >
+
+                      <TableHeaderColumn
+                        isKey
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='SerialNumber'
+                        editable={false}
+                        dataFormat={linkFormatter}
+                        formatExtraData={this.asset}
+                        dataSort={true}>
+                          Serial Number
+                      </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='DisplayName'
+                        dataSort={true}>
+                          Description
+                      </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='Parameters'
+                        dataFormat={parameterFormatter}
+                        dataSort={true}
+                        editable={{type: 'select', options: {values: ["Temperature Value", "Flow Value"]}}}>
+                          Parameter
+                      </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='Tag'
+                        dataSort={true}
+                        editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>
+                          Location
+                      </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='Angle'
+                        dataSort={true}
+                        editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>
+                          Angle
+                      </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='LastCalibrationDate'
+                        editable={false}
+                        dataFormat={dateFormatter}
+                        dataSort={true}>
+                          Last Calibration Date
+                      </TableHeaderColumn>
                     </BootstrapTable>
                   </Col>
                 </Row>
@@ -365,33 +439,24 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddParameterModalOpen}>Add Parameter</button>
-                  <BootstrapTable data={parameter} insertRow={ true } deleteRow={true} search={ true } options={ options } cellEdit={ cellEditProp } version='4'>
-                    <TableHeaderColumn isKey dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
-                    <TableHeaderColumn dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
-                    <TableHeaderColumn dataField='CurrentValue' dataSort={ true } editable={false} dataFormat={decimalFormatter}>Current Value</TableHeaderColumn>
-                    <TableHeaderColumn dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
+                  <button style={{display: "none"}} type="button" className="btn btn-info mb-3" href="#" onClick={this.AddParameterModalOpen}>Add Parameter</button>
+                  <BootstrapTable
+                    data={parameter}
+                    hover
+                    height='80%' scrollTop={ 'Bottom' }
+                    insertRow={ true }
+                    deleteRow={true}
+                    search={ true }
+                    options={ options }
+                    cellEdit={ cellEditProp }
+                    version='4'
+                    bordered={ false }>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentValue' dataSort={ true } editable={false} dataFormat={decimalFormatter}>Current Value</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
                   </BootstrapTable>
-                  <div className="table-responsive">
-                      <table className="table table-striped" style={{textAlign:'center'}}>
-                          <thead>
-                              <tr>
-                                  <th>Parameter ID</th>
-                                  <th>Description</th>
-                                  <th>Equation</th>
-                                  <th>Current Value</th>
-                                  <th>Time Stamp</th>
-                                  <th>Delete</th>
-                              </tr>
-                          </thead>
-                          <tbody id="main-table-content">
-                              {parameter.map((singleParameter,i) =>
-                                  <ParameterTableRow data={singleParameter} asset={this.asset} updateName={this.UpdateParameterDisplayName} delete={this.DeleteParameter} key={i}/>
-                              )}
-                          </tbody>
-                      </table>
-                  </div>
                 </Col>
               </Row>
             </TabPane>

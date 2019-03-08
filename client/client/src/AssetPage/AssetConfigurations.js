@@ -289,6 +289,8 @@ class AssetConfigurations extends React.Component {
     }
   }
 
+
+
   render() {
     const { device, parameter } = this.props;
 
@@ -299,6 +301,12 @@ class AssetConfigurations extends React.Component {
     const cellEditProp = {
       mode: 'click'
     };
+
+    const createCustomDeleteButton = (onClick) => {
+      return (
+        <button type="button" class="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i class="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
+      );
+    }
 
     function linkFormatter(cell, row, enumObject){
       const assetID = enumObject;
@@ -330,8 +338,16 @@ class AssetConfigurations extends React.Component {
     }
 
     const options = {
+      insertText: 'Add Device',
+      deleteText: 'Delete',
+      deleteBtn: createCustomDeleteButton
        // afterInsertRow: onAfterInsertRow
     }
+
+    const selectRowProp = {
+      mode: 'checkbox',
+      bgColor: 'pink'
+    };
 
     return (
       <div>
@@ -366,6 +382,7 @@ class AssetConfigurations extends React.Component {
                       options={options}
                       insertRow={true}
                       deleteRow={true}
+                      selectRow={selectRowProp}
                       search={true}
                       cellEdit={cellEditProp}
                       version='4'
@@ -446,6 +463,7 @@ class AssetConfigurations extends React.Component {
                     height='80%' scrollTop={ 'Bottom' }
                     insertRow={ true }
                     deleteRow={true}
+                    selectRow={selectRowProp}
                     search={ true }
                     options={ options }
                     cellEdit={ cellEditProp }

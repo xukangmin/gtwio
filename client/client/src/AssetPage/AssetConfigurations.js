@@ -304,7 +304,7 @@ class AssetConfigurations extends React.Component {
 
     const createCustomDeleteButton = (onClick) => {
       return (
-        <button type="button" class="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i class="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
+        <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i className="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
       );
     }
 

@@ -89,7 +89,7 @@ class RangePicker extends React.Component {
         $(".liveDiv").css("display","none");
       });
 
-
+      this.updateLocalStorageAndTriggers();
     }
 
     applyCallback(start, end){
@@ -177,8 +177,8 @@ class RangePicker extends React.Component {
             />
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
-              {this.range.live==true?
-                "Real-time Data: "+ this.intervalToText(JSON.parse(localStorage.getItem('range')).interval) + " from Now":
+              {this.range.live?
+                "Real-time Data: "+ this.intervalToText(JSON.parse(localStorage.getItem('range')).interval.toString()) + " from Now":
                 moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
 
               }

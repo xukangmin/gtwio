@@ -17,14 +17,15 @@ class TagRadar extends React.Component {
     let CurrentValueList = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value.toFixed(2));
     CurrentValueList.push(CurrentValueList[0]);
 
-    let MeanValueList = DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Avg.toFixed(2));
-    MeanValueList.push(MeanValueList[0]);
 
-    let MaxValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg+0.5).toFixed(2));
-    MaxValueList.push(MaxValueList[0]);
+    let CurrentValueMean = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value.toFixed(2)).reduce((p,c,_,a) => p + c/a.length,0);
+    let MeanValueList = [CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean]
 
-    let MinValueList = DeviceData.map((singleDevice,i) => (singleDevice.DataStatistics.Avg-0.5).toFixed(2));
-    MinValueList.push(MinValueList[0]);
+    let ValueMax = CurrentValueMean + 0.5;
+    let MaxValueList = [ValueMax, ValueMax, ValueMax, ValueMax, ValueMax]
+
+    let ValueMin = CurrentValueMean - 0.5;
+    let MinValueList = [ValueMin, ValueMin, ValueMin, ValueMin, ValueMin]
 
     let PlotMax = Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Max)))+1;
     let PlotMin = Math.floor(Math.min(...DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Min)))-1;

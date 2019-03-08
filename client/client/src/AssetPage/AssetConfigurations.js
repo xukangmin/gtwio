@@ -11,6 +11,9 @@ import classnames from 'classnames';
 import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
 import TextInput from '../_components/TextInput';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+
 
 const DeviceTableRow = (props) => {
   return(
@@ -288,6 +291,33 @@ class AssetConfigurations extends React.Component {
 
   render() {
     const { device, parameter } = this.props;
+
+    function afterSearch(searchText, result) {
+      //although this is not used, this function has to be exist
+    }
+
+    const cellEditProp = {
+      mode: 'click'
+    };
+
+    function serialNumberFormatter(cell, row, enumObject){
+      const assetID = enumObject;
+      const deviceID = row.DeviceID;
+      const serialNumber = cell;
+      return "<a href = /asset/" + assetID + "/device/" + deviceID +">" + serialNumber+ "</a>";
+    }
+
+    function parameterFormatter(cell, row) {
+      return cell[0].DisplayName;
+    }
+
+    function caliDateFormatter(cell, row){
+      return moment(cell).format('MMMM Do YYYY');
+    }
+
+    const options = {
+      afterSearch: afterSearch  // define a after search hook
+    };
     return (
       <div>
         {device && parameter?
@@ -316,25 +346,14 @@ class AssetConfigurations extends React.Component {
                 <Row className="mt-3">
                   <Col>
                     <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
-                    <div className="table-responsive">
-                        <table className="table table-striped" style={{textAlign:'center'}}>
-                            <thead>
-                                <tr>
-                                    <th>Serial Numer</th>
-                                    <th>Description</th>
-                                    <th>Parameter</th>
-                                    <th>Location Tag</th>
-                                    <th>Last Calibration Date</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody id="main-table-content">
-                                {device.map((singleDevice,i) =>
-                                    <DeviceTableRow data={singleDevice} asset={this.asset} update={this.UpdateDevice} updateName={this.UpdateDeviceDisplayName} delete={this.DeleteDevice} key={i}/>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                    <BootstrapTable data={device} insertRow={ true } deleteRow={true} search={ true } options={ options } cellEdit={ cellEditProp } version='4'>
+                      <TableHeaderColumn isKey dataField='SerialNumber' editable={false} dataFormat={serialNumberFormatter} formatExtraData={this.asset} dataSort={ true }>Serial Number</TableHeaderColumn>
+                      <TableHeaderColumn dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
+                      <TableHeaderColumn dataField='Parameters' dataFormat={parameterFormatter} dataSort={ true } editable={{type: 'select', options: {values: ["Temperature Value", "Flow Value"]}}}>Parameter</TableHeaderColumn>
+                      <TableHeaderColumn dataField='Tag' dataSort={ true } editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>Location</TableHeaderColumn>
+                      <TableHeaderColumn dataField='Angle' dataSort={ true } editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>Angle</TableHeaderColumn>
+                      <TableHeaderColumn dataField='LastCalibrationDate' editable={false} dataFormat={caliDateFormatter} dataSort={ true }>Last Calibration Date</TableHeaderColumn>
+                    </BootstrapTable>
                   </Col>
                 </Row>
             </TabPane>

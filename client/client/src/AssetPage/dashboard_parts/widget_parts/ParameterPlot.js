@@ -36,7 +36,7 @@ class ParameterPlot extends React.Component {
         autorange: true,
         showline: false,
         autotick: true,
-        nticks: 6,
+        nticks: 10,
         ticklen: 8
       }
     };

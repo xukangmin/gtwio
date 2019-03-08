@@ -38,7 +38,8 @@ class TagPlot extends React.Component {
       xaxis: {
         showline: false,
         autotick: true,
-        ticklen: 8
+        ticklen: 8,
+        nticks: 10
       },
       margin:{
         l: 50,

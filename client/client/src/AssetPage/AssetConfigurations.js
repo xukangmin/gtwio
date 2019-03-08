@@ -300,19 +300,24 @@ class AssetConfigurations extends React.Component {
       mode: 'click'
     };
 
-    function serialNumberFormatter(cell, row, enumObject){
+    function linkFormatter(cell, row, enumObject){
       const assetID = enumObject;
-      const deviceID = row.DeviceID;
-      const serialNumber = cell;
-      return "<a href = /asset/" + assetID + "/device/" + deviceID +">" + serialNumber+ "</a>";
+      const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
+      const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
+      const displayText = cell;
+      return "<a href = /asset/" + assetID + isDeviceOrParameter + itemID +">" + displayText+ "</a>";
     }
 
     function parameterFormatter(cell, row) {
       return cell[0].DisplayName;
     }
 
-    function caliDateFormatter(cell, row){
+    function dateFormatter(cell, row){
       return moment(cell).format('MMMM Do YYYY');
+    }
+
+    function decimalFormatter(cell, row){
+      return cell.toFixed(2);
     }
 
     const options = {
@@ -347,12 +352,12 @@ class AssetConfigurations extends React.Component {
                   <Col>
                     <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
                     <BootstrapTable data={device} insertRow={ true } deleteRow={true} search={ true } options={ options } cellEdit={ cellEditProp } version='4'>
-                      <TableHeaderColumn isKey dataField='SerialNumber' editable={false} dataFormat={serialNumberFormatter} formatExtraData={this.asset} dataSort={ true }>Serial Number</TableHeaderColumn>
+                      <TableHeaderColumn isKey dataField='SerialNumber' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Serial Number</TableHeaderColumn>
                       <TableHeaderColumn dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                       <TableHeaderColumn dataField='Parameters' dataFormat={parameterFormatter} dataSort={ true } editable={{type: 'select', options: {values: ["Temperature Value", "Flow Value"]}}}>Parameter</TableHeaderColumn>
                       <TableHeaderColumn dataField='Tag' dataSort={ true } editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>Location</TableHeaderColumn>
                       <TableHeaderColumn dataField='Angle' dataSort={ true } editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>Angle</TableHeaderColumn>
-                      <TableHeaderColumn dataField='LastCalibrationDate' editable={false} dataFormat={caliDateFormatter} dataSort={ true }>Last Calibration Date</TableHeaderColumn>
+                      <TableHeaderColumn dataField='LastCalibrationDate' editable={false} dataFormat={dateFormatter} dataSort={ true }>Last Calibration Date</TableHeaderColumn>
                     </BootstrapTable>
                   </Col>
                 </Row>
@@ -361,6 +366,13 @@ class AssetConfigurations extends React.Component {
               <Row className="mt-3">
                 <Col>
                   <button type="button" className="btn btn-info mb-3" href="#" onClick={this.AddParameterModalOpen}>Add Parameter</button>
+                  <BootstrapTable data={parameter} insertRow={ true } deleteRow={true} search={ true } options={ options } cellEdit={ cellEditProp } version='4'>
+                    <TableHeaderColumn isKey dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
+                    <TableHeaderColumn dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
+                    <TableHeaderColumn dataField='CurrentValue' dataSort={ true } editable={false} dataFormat={decimalFormatter}>Current Value</TableHeaderColumn>
+                    <TableHeaderColumn dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
+                  </BootstrapTable>
                   <div className="table-responsive">
                       <table className="table table-striped" style={{textAlign:'center'}}>
                           <thead>

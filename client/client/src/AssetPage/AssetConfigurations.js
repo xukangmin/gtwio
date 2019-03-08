@@ -471,7 +471,7 @@ class AssetConfigurations extends React.Component {
                     bordered={ false }>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' isKey dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentValue' dataSort={ true } editable={false} dataFormat={decimalFormatter}>Current Value</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
                   </BootstrapTable>

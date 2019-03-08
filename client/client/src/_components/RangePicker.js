@@ -78,17 +78,30 @@ class RangePicker extends React.Component {
       $(".liveDiv").css("display","none");
       $(".inputDate").css("textAlign","center");
 
-      $( ".rangebuttontextstyle:first" ).click(function(){
+      console.log($(".rangeButtonSelectedStyle"))
+
+        // console.log($(".rangeButtonSelectedStyle").firstElementChild.text())
+      console.log($(".rangebuttontextstyle:first").text())
+      if($(".rangeButtonSelectedStyle").text()==$(".rangebuttontextstyle:first").text()){
+        console.log('same')
+      }else{
+        console.log('no')
+      }
+
+      $(".rangebuttontextstyle:first").click(function(){
         $(".fromDateTimeContainer").css("display","none");
         $(".daterangepicker:first").append(liveDiv);
         $(".liveDiv").css("display","block");
       });
 
-      $( ".rangebuttontextstyle:not(:first)" ).click(function(){
+      $(".rangebuttontextstyle:not(:first)" ).click(function(){
         $(".fromDateTimeContainer").css("display","block");
         $(".liveDiv").css("display","none");
       });
 
+      $(".rangebuttontextstyle").on("click",function(event){
+        console.log($(event.target).text());
+      })
       this.updateLocalStorageAndTriggers();
     }
 
@@ -157,7 +170,7 @@ class RangePicker extends React.Component {
         "sundayFirst" : false
       }
       let maxDate = moment(start).add(24, "hour");
-
+      console.log($(".rangeButtonSelectedStyle").children().text())
       return (
 
         <div style={{marginLeft: "-15px"}}>

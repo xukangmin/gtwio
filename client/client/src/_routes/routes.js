@@ -5,6 +5,7 @@ import NotFound from '../ErrorPage/notfound'
 import { AssetMain } from '../AssetPage/AssetMain'
 import { AssetOverview } from '../AssetPage/AssetOverview'
 import { AssetDashboard } from '../AssetPage/AssetDashboard'
+import { AssetData } from '../AssetPage/AssetData'
 import { AssetDevice } from '../AssetPage/AssetDevice'
 import { AssetConfigurations } from '../AssetPage/AssetConfigurations'
 import { AssetDeviceDetail } from '../AssetPage/AssetDeviceDetail'
@@ -64,6 +65,10 @@ const routes = [
         {
           path: '/asset/:assetID/dashboard',
           component: HxStatic
+        },
+        {
+          path: '/asset/:assetID/data',
+          component: AssetData
         },
         {
           path: '/asset/:assetID/devices',

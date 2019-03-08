@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: GTW IOT API
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:8002
 # basePath prefixes all resource paths
 basePath: /
 #
@@ -52,7 +52,7 @@ tags:
 paths:
   /asset/getAssetByUser:
     # binds a127 app logic to a route
-    x-swagger-router-controller: asset
+    x-swagger-router-controller: assetManage
     get:
       tags:
       - asset
@@ -93,7 +93,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /asset/getSingleAsset:
     # binds a127 app logic to a route
-    x-swagger-router-controller: asset
+    x-swagger-router-controller: assetManage
     get:
       tags:
       - asset
@@ -125,7 +125,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   /asset/createAsset:
-    x-swagger-router-controller: asset
+    x-swagger-router-controller: assetManage
     post:
       tags:
       - asset
@@ -148,8 +148,32 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/createAssetByConfig:
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: Create a new asset and add it to User list
+      # used as the method name of the controller
+      operationId: createAssetByConfig
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/updateAsset:
-    x-swagger-router-controller: asset
+    x-swagger-router-controller: assetManage
     put:
       tags:
       - asset
@@ -174,7 +198,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   /asset/deleteAsset:
-    x-swagger-router-controller: asset
+    x-swagger-router-controller: assetManage
     delete:
       tags:
       - asset
@@ -1010,6 +1034,37 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /data/getDataByAssetID:
+    x-swagger-router-controller: dataManage
+    get:
+      tags:
+      - data
+      description:  get a single data by parameter id and timestamp
+      # used as the method name of the controller
+      operationId: getDataByAssetID
+      parameters:
+      - name: AssetID
+        in: query
+        required: true
+        type: string
+      - name: StartTimeStamp
+        in: query
+        required: true
+        type: integer
+      - name: EndTimeStamp
+        in: query
+        required: true
+        type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DataModel"
         # responses may fall through to errors
         default:
           description: Error

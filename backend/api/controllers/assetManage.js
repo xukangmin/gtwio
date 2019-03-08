@@ -1,6 +1,7 @@
 var userManage = require('./userManage.js');
 var shareUtil = require('./shareUtil.js');
 var deviceManage = require('./deviceManage.js');
+var parameterManage = require('./parameterManage.js');
 const User = require('../db/user.js');
 const Asset = require('../db/asset.js');
 
@@ -9,7 +10,8 @@ var functions = {
   getSingleAsset: getSingleAsset,
   createAsset: createAsset,
   updateAsset: updateAsset,
-  deleteAsset: deleteAsset
+  deleteAsset: deleteAsset,
+  createAssetByConfig: createAssetByConfig
 };
 
 for (var key in functions) {
@@ -76,46 +78,19 @@ function createAsset(req, res) {
   } else {
     var displayName = assetobj.DisplayName;
     var userid = assetobj.UserID;
+
     if (displayName && userid) {
-      var uuidv1 = require('uuid/v1');
-      var crypto = require('crypto');
-
-      let asset = new Asset();
-
-      asset.AssetID = uuidv1();
-      asset.LatestTimeStamp = 0;
-      asset.DeviceCount = 0;
-      asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
-      asset.DisplayName = displayName;
-
-      asset.save(err => {
-        if (err)
-        {
-          var msg = "Asset Save Error:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res,msg);
-        }
-        else {
-          // add asset to user
-          User.findOneAndUpdate({UserID: userid},
-              {
-                $push:  {
-                  Assets: {AssetID: asset.AssetID}
-                }
-              },
-            function(err, data) {
-            if (err)
-            {
-              var msg = "User update Error:" + JSON.stringify(err, null, 2);
-              shareUtil.SendInternalErr(res,msg);
-            }
-            else {
-              shareUtil.SendSuccess(res);
-            }
-          });
-
-        }
-
-      });
+      _createAssetPromise(userid, displayName)
+        .then(
+          ret => {
+            shareUtil.SendSuccess(res);
+          }
+        )
+        .catch(
+          err => {
+            shareUtil.SendInternalErr(res,"User update Error:" + JSON.stringify(err, null, 2));
+          }
+        )
     }
     else {
       var msg = "UserID or Display Name missing";
@@ -192,5 +167,108 @@ function deleteAsset(req, res) {
   } else {
     var msg = "AssetID missing";
     shareUtil.SendInvalidInput(res, msg);
+  }
+}
+
+function _createAssetPromise(userid, name) {
+  return new Promise(
+    (resolve, reject) => {
+      const shortid = require('shortid');
+
+      let asset = new Asset();
+
+      asset.AssetID = "A" + shortid.generate();
+      asset.LatestTimeStamp = 0;
+      asset.DeviceCount = 0;
+      asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+      if (name)
+      {
+        asset.DisplayName = name;
+      } else {
+        asset.DisplayName = "Default Asset";
+      }
+
+      console.log("start save asset");
+      asset.save(err => {
+        if (err)
+        {
+          var msg = "Asset Save Error:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+        else {
+          // add asset to user
+          User.findOneAndUpdate({UserID: userid},
+              {
+                $push:  {
+                  Assets: {AssetID: asset.AssetID}
+                }
+              },
+            function(err, data) {
+            if (err)
+            {
+              var msg = "User update Error:" + JSON.stringify(err, null, 2);
+              reject(err);
+            }
+            else {
+              resolve(asset.AssetID);
+            }
+          });
+
+        }
+
+      });
+    });
+}
+
+function _createSingleAsset(userid, singleAssetConfig) {
+  return new Promise(
+    (resolve, reject) => {
+      // first create asset
+        _createAssetPromise(userid, singleAssetConfig.AssetName)
+          .then(
+            ret => {
+              // create device
+              Promise.all(singleAssetConfig.Devices.map(item => deviceManage._createDeviceWithParameter(ret, item.Name, item.SerialNumber, item.Parameters)))
+                .then(
+                  ret => {
+                    resolve();
+                  }
+                )
+                .catch(err => reject(err));
+            }
+          )
+          .catch(
+            err => {
+              reject(err);
+            }
+          )
+    });
+}
+
+function createAssetByConfig(req, res) {
+  var assetobj = req.body;
+  if (assetobj.constructor === Object && Object.keys(assetobj).length === 0) {
+    shareUtil.SendInvalidInput(res, shareUtil.constants.INVALID_INPUT);
+  } else {
+    var config = assetobj.Config;
+    var userid = assetobj.UserID;
+    if (config && userid) {
+
+      Promise.all(config.map(item => _createSingleAsset(userid, item)))
+        .then(
+          ret => {
+            shareUtil.SendSuccess(res);
+          }
+        )
+        .catch(
+          err => {
+            shareUtil.SendInvalidInput(res, "Create Asset Error:" + JSON.stringify(err, null, 2));
+          }
+        );
+    }
+    else {
+      var msg = "UserID or config missing";
+      shareUtil.SendInvalidInput(res, msg);
+    }
   }
 }

@@ -39,13 +39,13 @@ function createUser(req, res) {
           shareUtil.SendInvalidInput(res, 'User already exists');
         } else {          // auto generate user id
           var epochtime = Math.floor((new Date).getTime()/1000);
-          var uuidv1 = require('uuid/v1');
-          var crypto = require('crypto');
+          const shortid = require('shortid');
+
           let user = new User();
 
           user.EmailAddress = userobj.EmailAddress;
           user.Password = userobj.Password;
-          user.UserID =  uuidv1();
+          user.UserID =  "U" + shortid.generate();
           user.Created = epochtime;
           user.VerificationCodeExpire = epochtime + 1800; // expire in 30 minutes
           user.VerificationCode = crypto.randomBytes(20).toString('hex');

@@ -18,12 +18,76 @@ var functions = {
   getSingleParameter: getSingleParameter,
   updateRequireList: updateRequireList,
   updateRequireListByEquation: updateRequireListByEquation,
-  _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise
-
+  _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise,
+  _createParameter: _createParameter
 }
 
 for (var key in functions) {
   module.exports[key] = functions[key];
+}
+
+function _createParameter(deviceid, assetid, type, name) {
+    return new Promise(
+      (resolve, reject) => {
+        const shortid = require('shortid');
+
+        let para = new Parameter();
+
+        para.ParameterID = "P" + shortid.generate();
+        para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+        para.CurrentValue = 0;
+        para.Type = type;
+        if (name) {
+            para.DisplayName = name;
+        }
+
+        para.save(err => {
+          if (err)
+          {
+            reject(err);
+          }
+          else {
+            // add to devices
+            if (deviceid) {
+              Device.findOneAndUpdate({DeviceID: deviceid},
+                          {
+                            $push: {
+                              Parameters:  {ParameterID: para.ParameterID}
+                            }
+                          },
+                          function(err,data) {
+                            if (err) {
+                              reject(err);
+                            } else {
+                              resolve(para.ParameterID);
+                            }
+                          });
+            } else if (assetid) { // add to asset only
+                Asset.findOneAndUpdate({AssetID: assetid},
+                          {
+                              $push: {
+                                Parameters:  {ParameterID: para.ParameterID}
+                              }
+                          },
+                          function(err,data){
+                            if (err)
+                            {
+                              reject(err);
+                            }
+                            else {
+                              resolve(para.ParameterID);
+                            }
+                          }
+                        );
+            }
+
+
+
+
+          }
+
+        });
+      });
 }
 
 function createParameter(req, res) {
@@ -185,12 +249,11 @@ function _removeParameter(assetID, deviceID, paraID, callback) {
 
 function _addParameter(assetID, deviceID, paraobj, callback) {
 
-  var uuidv1 = require('uuid/v1');
-  var crypto = require('crypto');
+  const shortid = require('shortid');
 
   let para = new Parameter();
 
-  para.ParameterID = uuidv1();
+  para.ParameterID = "P" + shortid.generate();
   para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
   para.CurrentValue = 0;
 
@@ -421,7 +484,7 @@ function _updateRequireListByEquation(paraid, equation, callback) {
 
   if (paralist.length > 0) {
       paralist = paralist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
-      
+
       _updateRequireList(paraid, paralist, callback);
   }
 }

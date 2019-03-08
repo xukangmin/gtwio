@@ -2,7 +2,7 @@
 
 var shareUtil = require('./shareUtil.js');
 const Dashboard = require('../db/dashboard.js');
-const Asset = require('../db/asset.js');
+const Asset = require('../db/assetManage.js');
 
 var functions = {
   createDashboard: createDashboard,
@@ -22,12 +22,12 @@ function createDashboard(req, res) {
   //var displayName = dashboardobj.DisplayName;
   var assetid = dashboardobj.AssetID;
   if (assetid) {
-    var uuidv1 = require('uuid/v1');
-    var crypto = require('crypto');
+    const shortid = require('shortid');
+
 
     let dashboard = new Dashboard();
 
-    dashboard.DashboardID = uuidv1();
+    dashboard.DashboardID = "S" + shortid.generate();
     dashboard.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
 
     if (dashboardobj.DisplayName)

@@ -394,7 +394,7 @@ class AssetConfigurations extends React.Component {
                       bordered={false}
                       hover
                       height='80%'
-                      scrollTop={'Bottom'}
+                      scrollTop={'Top'}
                       >
 
                       <TableHeaderColumn

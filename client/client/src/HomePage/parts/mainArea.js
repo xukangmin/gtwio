@@ -10,6 +10,7 @@ class MainArea extends React.Component {
       this.state = {
         asset: '',
         displayname: '',
+        location: '',
         editModalOpen: false
       }
       this.deleteAsset = this.deleteAsset.bind(this);
@@ -17,13 +18,15 @@ class MainArea extends React.Component {
       this.editModalToggle = this.editModalToggle.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
       this.handleChange = this.handleChange.bind(this);
+      this.handleLocationChange = this.handleLocationChange.bind(this);
       this.assetSelected = this.assetSelected.bind(this);
     }
 
-    editModalToggle(asset_id, name){
+    editModalToggle(asset_id, name, location){
       this.setState(prevState => ({
         asset: asset_id,
         displayname: name,
+        location: location,
         editModalOpen: !prevState.editModalOpen
       }));
     }
@@ -36,6 +39,7 @@ class MainArea extends React.Component {
       this.setState(prevState => ({
         asset: '',
         displayname: '',
+        location: '',
         editModalOpen: !prevState.editModalOpen
       }));
     }
@@ -49,10 +53,20 @@ class MainArea extends React.Component {
           });
     }
 
+    handleLocationChange(event) {
+        const { name, value } = event.target;
+        this.setState(
+          {
+            asset: name,
+            location: value
+          });
+    }
+
     cancelButtonClicked(){
       this.setState(prevState => ({
         asset: '',
         displayname: '',
+        location: '',
         editModalOpen: !prevState.editModalOpen
       }));
     }
@@ -93,7 +107,7 @@ class MainArea extends React.Component {
                                 <td><a href={"/asset/" + singleAsset.AssetID + "/device"}>{singleAsset.Devices.length}</a></td>
                                 <td>{singleAsset.Location}</td>
                                 <td>
-                                  <Button onClick={()=>this.editModalToggle(singleAsset.AssetID, singleAsset.DisplayName)} style={{marginRight: "10px"}} >
+                                  <Button onClick={()=>this.editModalToggle(singleAsset.AssetID, singleAsset.DisplayName, singleAsset.Location)} style={{marginRight: "10px"}} >
                                     <i className="fas fa-edit"></i>
                                   </Button>
                                   <Modal isOpen={this.state.editModalOpen} toggle={this.editModalToggle}>
@@ -105,7 +119,7 @@ class MainArea extends React.Component {
                                           <Input type="text" id="displayname" name={singleAsset.AssetID} value={this.state.displayname} onChange={this.handleChange}/>
                                           <br/>
                                           <Label for="location">Location</Label>
-                                          <Input type="text" id="location"/>
+                                          <Input type="text" id="location" name={singleAsset.AssetID} value={this.state.location} onChange={this.handleLocationChange}/>
                                         </FormGroup>
                                       </Form>
                                     </ModalBody>

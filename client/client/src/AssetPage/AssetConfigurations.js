@@ -422,8 +422,8 @@ class AssetConfigurations extends React.Component {
                         dataAlign='center'
                         dataField='Parameters'
                         dataFormat={parameterFormatter}
-                        dataSort={true}
-                        editable={{type: 'select', options: {values: ["Temperature Value", "Flow Value"]}}}>
+                        editable={false}
+                        dataSort={true}>
                           Parameter
                       </TableHeaderColumn>
 

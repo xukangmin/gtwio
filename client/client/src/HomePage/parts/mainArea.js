@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { assetActions } from '../../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class MainArea extends React.Component {
     constructor(props) {
@@ -83,8 +85,100 @@ class MainArea extends React.Component {
     }
 
     render() {
+        const { assets } = this.props;
+
+        function linkFormatter(cell, row, enumObject){
+          const displayText = cell;
+          return "<a href = /asset/" + cell +"/" + enumObject + ">" + displayText+ "</a>";
+        }
+
+        function countFormatter(cell, row, enumObject){
+          const displayText = cell.length;
+          return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
+        }
+
+        const selectRowProp = {
+          mode: 'checkbox',
+          bgColor: 'pink'
+        };
+
+        const cellEditProp = {
+          mode: 'click'
+        };
+
+        const createCustomDeleteButton = (onClick) => {
+          return (
+            <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i className="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
+          );
+        }
+        
+        const options = {
+          insertText: 'Add Asset',
+          deleteText: 'Delete',
+          deleteBtn: createCustomDeleteButton
+           // afterInsertRow: onAfterInsertRow
+        }
+
+
+
         return (
           <div id="MainArea">
+          <BootstrapTable
+            data={assets}
+            insertRow={true}
+            deleteRow={true}
+            selectRow={selectRowProp}
+            search={true}
+            cellEdit={cellEditProp}
+            options={options}
+            version='4'
+            bordered={false}
+            hover
+            >
+
+            <TableHeaderColumn
+              isKey
+              headerAlign='center'
+              dataAlign='center'
+              dataField='AssetID'
+              editable={false}
+              dataFormat={linkFormatter}
+              formatExtraData={"dashboard"}
+              dataSort={true}>
+                Asset
+            </TableHeaderColumn>
+
+            <TableHeaderColumn
+              headerAlign='center'
+              dataAlign='center'
+              dataField='Status'
+              editable={false}
+              dataSort={true}
+              style={{color:"#08D800"}}>
+                Status
+            </TableHeaderColumn>
+
+            <TableHeaderColumn
+              headerAlign='center'
+              dataAlign='center'
+              dataField='Devices'
+              dataFormat={countFormatter}
+              formatExtraData={"device"}
+              editable={false}
+              dataSort={true}>
+                Device Count
+            </TableHeaderColumn>
+
+            <TableHeaderColumn
+              headerAlign='center'
+              dataAlign='center'
+              dataField='Location'
+              dataSort={true}>
+                Location
+            </TableHeaderColumn>
+          </BootstrapTable>
+
+
             <div className="table-responsive">
                 <table className="table table-striped" style={{textAlign:'center'}}>
                     <thead>

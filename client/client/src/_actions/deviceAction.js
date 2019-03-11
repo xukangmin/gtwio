@@ -36,7 +36,7 @@ const getSingleDeviceData = (deviceid, live, interval, start, end) => {
                         if (live) {
                           dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, devicedata.Parameters[0].CurrentTimeStamp - interval * 60 * 1000, devicedata.Parameters[0].CurrentTimeStamp));
                         } else {
-                          dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, start * 1000, end * 1000));
+                          dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, start, end));
                         }
 
                       }

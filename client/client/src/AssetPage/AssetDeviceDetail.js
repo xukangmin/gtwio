@@ -13,6 +13,8 @@ import { ParameterPlot } from '../AssetPage/dashboard_parts/widget_parts/Paramet
 import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
 import EditableLabel from 'react-inline-edition';
+import * as moment from 'moment';
+window['moment'] = moment;
 
 const DeviceInfo = (props) => {
   const device = props.data;

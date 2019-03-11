@@ -82,6 +82,7 @@
     "react-edit-inline": "^1.0.8",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "riek": "^1.1.0",
     "style-loader": "^0.20.3",
     "url-loader": "^0.6.2",
     "webpack": "^4.29.5",

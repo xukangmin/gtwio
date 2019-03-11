@@ -15,6 +15,8 @@ import InlineEdit from 'react-inline-edit-input';
 import EditableLabel from 'react-inline-edition';
 import * as moment from 'moment';
 window['moment'] = moment;
+import { RIEToggle, RIEInput, RIETextArea, RIENumber, RIETags, RIESelect } from 'riek'
+import _ from 'lodash'
 
 const DeviceInfo = (props) => {
   const device = props.data;
@@ -60,35 +62,26 @@ const DeviceInfo = (props) => {
             <tr>
               <th>Lower Alarm Limit</th>
               <td>
-                <InlineEdit
-                  value={device.Parameters[0].Range.LowerLimit + ' ' + device.Parameters[0].Unit}
-                  tag="span"
-                  type="text"
-                  saveLabel="Update"
-                  saveColor="#17a2b8"
-                  cancelLabel="Cancel"
-                  cancelColor="#6c757d"
-                  onSave={value => props.update(props.parameter, device.Parameters[0].Range, "LowerLimit", value)}
-                />
+                  <RIEInput
+                  value={device.Parameters[0].Range.LowerLimit}
+                  change={value => props.update(props.parameter, device.Parameters[0].Range, "LowerLimit", value)}
+                  propName='value'/>
+                  {device.Parameters[0].Unit}
               </td>
             </tr>
             <tr>
               <th>Upper Alarm Limit</th>
               <td>
-                <InlineEdit
-                  value={device.Parameters[0].Range.UpperLimit + ' ' + device.Parameters[0].Unit}
-                  tag="span"
-                  type="text"
-                  saveLabel="Update"
-                  saveColor="#17a2b8"
-                  cancelLabel="Cancel"
-                  cancelColor="#6c757d"
-                  onSave={value => props.update(props.parameter, device.Parameters[0].Range, "UpperLimit", value)}
-                />
+                  <RIEInput
+                  value={device.Parameters[0].Range.UpperLimit}
+                  change={value => props.update(props.parameter, device.Parameters[0].Range, "UpperLimit", value)}
+                  propName='value'/>
+                  {device.Parameters[0].Unit}
               </td>
             </tr>
             <tr>
               <th>Stability Criteria - Window Size</th>
+              
               <td>{device.Parameters[0].StabilityCriteria.WindowSize + ' minutes'}</td>
             </tr>
             <tr>
@@ -185,7 +178,7 @@ class AssetDeviceDetail extends React.Component {
   }
 
   updateLimit(parameter, currentValue, range, value){
-    var num_in = Number(value);
+    var num_in = Number(value.value);
 
     if (!isNaN(num_in))
     {

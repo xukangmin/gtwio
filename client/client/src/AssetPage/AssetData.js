@@ -12,7 +12,7 @@ import TextInput from '../_components/TextInput';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ReactDataGrid from "react-data-grid";
-import dummyData from '../_components/dummy_data.json'
+import dummyData from '../_components/dummy_data.json';
 
 const columns = [
   { key: "id", name: "Parameter", editable: true },

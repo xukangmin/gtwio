@@ -321,12 +321,16 @@ class AssetConfigurations extends React.Component {
       return cell[0].DisplayName;
     }
 
+    function angleFormatter(cell, row){
+      return cell+"°"
+    }
+
     function dateFormatter(cell, row){
       return moment(cell).format('MMMM Do YYYY');
     }
 
     function decimalFormatter(cell, row){
-      return cell.toFixed(2);
+      return cell.toFixed(2)+'°F';
     }
 
     function onAfterInsertRow(row) {
@@ -436,6 +440,7 @@ class AssetConfigurations extends React.Component {
                         headerAlign='center'
                         dataAlign='center'
                         dataField='Angle'
+                        dataFormat={angleFormatter}
                         dataSort={true}
                         editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>
                           Angle

@@ -23,12 +23,12 @@ class RangePicker extends React.Component {
       if (!this.range)
       {
         let now = new Date();
-         let range = {
-           live: true,
-           interval: 10,
-           start: moment(now).subtract(10, "minutes"),
-           end: moment(now),
-           polling: true
+        let range = {
+         live: true,
+         interval: 10,
+         start: moment(now).subtract(10, "minutes"),
+         end: moment(now),
+         polling: true
          };
          this.range = range;
          localStorage.setItem('range', JSON.stringify(range));
@@ -54,6 +54,7 @@ class RangePicker extends React.Component {
           device = m_res[item].match.params.deviceID;
         }
       }
+
       if (asset && device)
       {
         this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start*1000, this.range.end*1000));
@@ -73,35 +74,29 @@ class RangePicker extends React.Component {
 
     componentDidMount(){
       let rangeOptions = $(".rangecontainer");
+      let rangeInput = $(".daterangepicker:first");
       let liveDiv = $(".liveDiv");
       let timePicker = $(".fromDateTimeContainer");
-      $(".liveDiv").css("display","none");
+      liveDiv.css("display","none");
       $(".inputDate").css("textAlign","center");
 
-      console.log($(".rangeButtonSelectedStyle"))
-
-        // console.log($(".rangeButtonSelectedStyle").firstElementChild.text())
-      console.log($(".rangebuttontextstyle:first").text())
-      if($(".rangeButtonSelectedStyle").text()==$(".rangebuttontextstyle:first").text()){
-        console.log('same')
-      }else{
-        console.log('no')
+      if(this.range.live){
+        timePicker.css("display","none");
+        rangeInput.append(liveDiv);
+        liveDiv.css("display","block");
       }
 
       $(".rangebuttontextstyle:first").click(function(){
-        $(".fromDateTimeContainer").css("display","none");
-        $(".daterangepicker:first").append(liveDiv);
-        $(".liveDiv").css("display","block");
+        timePicker.css("display","none");
+        rangeInput.append(liveDiv);
+        liveDiv.css("display","block");
       });
 
       $(".rangebuttontextstyle:not(:first)" ).click(function(){
-        $(".fromDateTimeContainer").css("display","block");
-        $(".liveDiv").css("display","none");
+        timePicker.css("display","block");
+        liveDiv.css("display","none");
       });
 
-      $(".rangebuttontextstyle").on("click",function(event){
-        console.log($(event.target).text());
-      })
       this.updateLocalStorageAndTriggers();
     }
 
@@ -170,9 +165,8 @@ class RangePicker extends React.Component {
         "sundayFirst" : false
       }
       let maxDate = moment(start).add(24, "hour");
-      console.log($(".rangeButtonSelectedStyle").children().text())
-      return (
 
+      return (
         <div style={{marginLeft: "-15px"}}>
           <DateTimeRangeContainer
             ranges={ranges}
@@ -193,12 +187,9 @@ class RangePicker extends React.Component {
               {this.range.live?
                 "Real-time Data: "+ this.intervalToText(JSON.parse(localStorage.getItem('range')).interval.toString()) + " from Now":
                 moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
-
               }
               <i className="fas fa-angle-down ml-3"></i>
             </Button>
-
-
           </DateTimeRangeContainer>
 
           <div className='liveDiv p-3'>
@@ -215,7 +206,6 @@ class RangePicker extends React.Component {
         </div>
       );
     }
-
 }
 
 export default RangePicker;

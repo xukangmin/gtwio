@@ -73,13 +73,13 @@ const ParameterInfo = (props) => {
             {parameter.CurrentValue &&
               <tr>
                 <th>Current Value</th>
-                <td>{parameter.CurrentValue.toFixed(3)}</td>
+                <td>{parameter.CurrentValue.toFixed(2)+parameter.Unit}</td>
               </tr>
             }
             {parameter.CurrentTimeStamp &&
               <tr>
                 <th>Current Time Stamp</th>
-                <td>{new Date(Number(parameter.CurrentTimeStamp)).toLocaleString()}</td>
+                <td>{moment(new Date(parameter.CurrentTimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
               </tr>
             }
 
@@ -109,8 +109,8 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i}>
-                <td style={{padding: 0}}>{new Date(item.TimeStamp).toLocaleTimeString("en-US")}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2)}</td>
+                <td style={{padding: 0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2)+"°F"}</td>
               </tr>
           )}
         </tbody>

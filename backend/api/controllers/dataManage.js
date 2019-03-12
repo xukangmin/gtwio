@@ -1117,6 +1117,77 @@ function addDataByParticleEvent(req, res) {
 
 }
 
+
+function _getParameterDetailAndDataByParameterID(para, sts, ets) {
+  return new Promise(
+    (resolve, reject) => {
+      _getParameter(para)
+        .then(
+          ret => {
+            para = ret;
+            return _getDataByParameterID(para, sts, ets);
+          }
+        )
+        .then(
+          ret1 => {
+              var data_out;
+              data_out = para.toObject();
+              data_out.Data = ret1;
+              resolve(data_out);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        );
+    });
+}
+
+function _getAllDataFromParameterList(deviceobj, sts, ets) {
+  return new Promise(
+    (resolve, reject) => {
+      if (deviceobj.Parameters)
+      {
+        Promise.all(deviceobj.Parameters.map(item => _getParameterDetailAndDataByParameterID(item, sts, ets)))
+          .then(
+            ret => {
+              //console.log(ret);
+              var out = deviceobj.toObject();
+              out.Parameters = ret;
+              //console.log(out);
+              resolve(out);
+            }
+          )
+          .catch(
+            err => {
+              console.log(err);
+              reject(err);
+            }
+          );
+      } else {
+        var out = deviceobj.toObject();
+        out.Parameters = [];
+        resolve(out);
+      }
+
+    });
+}
+
+function _getParameterListByAssetID(assetid) {
+  return new Promise(
+      (resolve, reject) => {
+        Asset.findOne({AssetID: assetid}, function(err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data.Parameters);
+          }
+        });
+      }
+  );
+}
+
 function getDataByParameterTag(req, res) {
 
 }
@@ -1131,6 +1202,7 @@ function getDataByAssetID(req, res) {
   if (assetid && sTS && eTS) {
     // get device
     console.log(assetid);
+    var data_out = {};
     _getAllDeviceByAssetID(assetid)
       .then(
         devicelist => {
@@ -1138,14 +1210,33 @@ function getDataByAssetID(req, res) {
         }
       )
       .then(
-        devicelist =>
-        {
-          return Promise.all(devicelist.map(_getAllParameterByDeviceIDPromise));
+        ret => {
+          return Promise.all(ret.map(item => _getAllDataFromParameterList(item, sTS, eTS)));
         }
       )
       .then(
         ret => {
-          console.log(ret);
+          //console.log(ret);
+          data_out.Devices = ret;
+          return _getParameterListByAssetID(assetid);
+        }
+      )
+      .then(
+        ret => {
+          Promise.all(ret.map(item => _getParameterDetailAndDataByParameterID(item, sTS, eTS)))
+            .then(
+              ret => {
+                data_out.CalculatedData = ret;
+                shareUtil.SendSuccessWithData(res, data_out);
+              }
+            )
+            .catch(
+              err => {
+                console.log(err);
+                reject(err);
+              }
+            );
+
         }
       )
       .catch(

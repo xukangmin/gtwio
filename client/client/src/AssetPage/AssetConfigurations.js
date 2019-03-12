@@ -4,13 +4,14 @@ import { Redirect } from 'react-router-dom';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
 import AddNewDevice from './modal_parts/addNewDevice';
+import AddNewParameter from './modal_parts/addNewParameter';
 import Loader from '../_components/loader';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import classnames from 'classnames';
 import toastr from 'toastr';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-
+import $ from 'jquery';
 
 class AssetConfigurations extends React.Component {
   constructor(props) {
@@ -23,10 +24,11 @@ class AssetConfigurations extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.onRowSelect = this.onRowSelect.bind(this);
+    this.deleteDevices = this.deleteDevices.bind(this);
 
     this.state = {
       activeTab: '1',
-      selectedRow: []
+      selectedRows: []
     };
   }
 
@@ -38,17 +40,25 @@ class AssetConfigurations extends React.Component {
     }
   }
 
-  onRowSelect({ SerialNumber }, isSelected) {
-    console.log('123')
-    if (isSelected && this.state.selectedRow.length !== 2) {
+  onRowSelect(row, isSelected, e) {
+    let filtered = this.state.selectedRows.filter(function(value,index, arr){
+      return value!= row;
+    })
+
+    if(isSelected){
       this.setState({
-        selectedRow: [ ...this.state.selectedRow, SerialNumber ].sort()
+        selectedRows: [...this.state.selectedRows, row]
       });
-    } else {
-      this.setState({ selectedRow: this.state.selectedRow.filter(it => it !== SerialNumber) });
+    } else{
+      this.setState({
+        selectedRows: filtered
+      });
     }
-    console.log(this.state.selectedRow);
-    return false;
+  }
+
+  deleteDevices(){
+    console.log(this.state.selectedRows);
+    this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
   }
 
   render() {
@@ -87,14 +97,14 @@ class AssetConfigurations extends React.Component {
     }
 
 
+
     const options = {
     }
 
     const selectRowProp = {
       mode: 'checkbox',
       bgColor: 'pink',
-      onSelect: this.onRowSelect,
-      selected: this.state.selectedRow
+      onSelect: this.onRowSelect
     };
 
     return (
@@ -125,7 +135,7 @@ class AssetConfigurations extends React.Component {
                 <Row className="mt-3">
                   <Col>
                     <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-
+                    <Button className="deleteButton" color="danger" onClick={this.deleteDevices}><i className="fa fa-trash" aria-hidden="true"></i></Button>
                     <BootstrapTable
                       data={device}
                       options={options}
@@ -204,20 +214,18 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <button style={{display: "none"}} type="button" className="btn btn-info mb-3" href="#" onClick={this.AddParameterModalOpen}>Add Parameter</button>
+                  <AddNewParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                   <BootstrapTable
                     data={parameter}
                     hover
-                    height='80%' scrollTop={ 'Bottom' }
-                    insertRow={ true }
-                    deleteRow={true}
+                    height='80%' scrollTop={ 'Top' }
                     selectRow={selectRowProp}
                     search={ true }
                     options={ options }
                     cellEdit={ cellEditProp }
                     version='4'
                     bordered={ false }>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey={true} dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>

@@ -1,14 +1,14 @@
 import React from 'react';
-import { deviceActions } from '../../_actions/deviceAction';
+import { parameterActions } from '../../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
-class AddNewDevice extends React.Component {
+class AddNewParameter extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             displayName: '',
-            serialNumber: '',
+            equation: '',
             addModalOpen: false
         };
 
@@ -25,14 +25,14 @@ class AddNewDevice extends React.Component {
     }
 
     addButtonClicked(){
-      const newDevice = {
+      const newParameter = {
         DisplayName: this.state.displayName,
-        SerialNumber: this.state.serialNumber
+        Equation: this.state.equation
       }
-      this.props.dispatch(deviceActions.addNewDevice(this.props.user, this.props.asset, newDevice));
+      this.props.dispatch(parameterActions.addNewParameter(this.props.asset, newParameter.DisplayName, newParameter.Equation));
       this.setState(prevState => ({
         displayName: '',
-        serialNumber: '',
+        equation: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -40,7 +40,7 @@ class AddNewDevice extends React.Component {
     cancelButtonClicked(){
       this.setState(prevState => ({
         displayName: '',
-        serialNumber: '',
+        equation: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -51,21 +51,21 @@ class AddNewDevice extends React.Component {
     }
 
     render() {
-        const { displayName, serialNumber } = this.state;
+        const { displayName, equation } = this.state;
 
         return(
           <div>
-            <Button color="primary" onClick={this.addModalToggle}>Add New Device</Button>
+            <Button color="primary" onClick={this.addModalToggle}>Add New Parameter</Button>
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
-              <ModalHeader toggle={this.addModalToggle}>Add New Device</ModalHeader>
+              <ModalHeader toggle={this.addModalToggle}>Add New Parameter</ModalHeader>
               <ModalBody>
                 <Form>
                   <FormGroup>
                     <Label for="displayName">Name</Label>
                     <Input type="text" id="displayname" name="displayName" value={displayName} onChange={this.handleChange}/>
                     <br/>
-                    <Label for="serialNumber">Serial Number</Label>
-                    <Input type="text" id="serialNumber" name="serialNumber" value={serialNumber} onChange={this.handleChange}/>
+                    <Label for="serialNumber">Equation</Label>
+                    <Input type="text" id="equation" name="equation" value={equation} onChange={this.handleChange}/>
                   </FormGroup>
                 </Form>
               </ModalBody>
@@ -79,4 +79,4 @@ class AddNewDevice extends React.Component {
     }
 }
 
-export default AddNewDevice;
+export default AddNewParameter;

@@ -21,28 +21,6 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
 
-   /* this.state = {
-                    assets: [
-                      {
-                        DisplayName: 'Asset 1',
-                        LatestTimeStamp: 123,
-                        DeviceCount: 30,
-                        AssetID: '123'
-                      },
-                      {
-                        DisplayName: 'Asset 2',
-                        LatestTimeStamp: 123,
-                        DeviceCount: 40,
-                        AssetID: '789'
-                      },
-                      {
-                        DisplayName: 'Asset 3',
-                        LatestTimeStamp: 333,
-                        DeviceCount: 20,
-                        AssetID: '31'
-                      }
-                        ]
-                  }*/
     // first Get user's assets info with interval 10s
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets_local = JSON.parse(localStorage.getItem('assets'));

@@ -33,32 +33,21 @@ const rows = [
 class AssetData extends React.Component {
   constructor(props) {
     super(props);
-    console.log(dummyData)
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset =  props.match.params.assetID;
-    this.data = [];
-
-    for(var i=0; i<dummyData.Devices.length; i++){
-      this.data.push(dummyData.Devices[i])
-    }
 
 
-    // this.props.dispatch(dataActions.getAllDeviceData(this.user, this.asset));
+
+    this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552415788000, 1552416788000));
   }
 
   render() {
-    // const { data } = this.props;
-
-
+    console.log(this.props.parameters)
 
     return (
       <div>
-      <ReactDataGrid
-        columns={columns}
-        rowGetter={i => rows[i]}
-        rowsCount={3}
-        enableCellSelect={true}
-      />
+      <h1>Data Overview</h1>
+      <p>{this.props.parameters}</p>
       </div>
     );
   }
@@ -66,9 +55,11 @@ class AssetData extends React.Component {
 
 
 function mapStateToProps(state) {
-  const { data } = state.data;
+  console.log(state.data)
+  // const { CalculatedData, Devices } = state.data.data;
   return {
-      data : data
+      parameters : state.data.data.CalculatedData,
+      devices: state.data.data.Devices
   };
 }
 

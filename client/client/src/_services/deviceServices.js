@@ -42,7 +42,6 @@ const getSingleDevice = (deviceid) => {
 }
 
 const addNewDevice = (user, assetid, devicedata) => {
-  console.log(devicedata)
     const body = {
         'AssetID': assetid,
         'UserID': user.UserID,

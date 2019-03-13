@@ -60,8 +60,23 @@ const getSingleParameterData = (pid, t1, t2) => {
         });
 }
 
+const getDataByAssetID = (assetid, t1, t2) => {
+    return fetch(process.env.API_HOST + '/data/getDataByAssetID?AssetID=' + assetid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        });
+}
+
 export const dataServices = {
     loadSVGdata,
     getSingleTagData,
-    getSingleParameterData
+    getSingleParameterData,
+    getDataByAssetID
 };

@@ -240,6 +240,118 @@ const AddNewParameterModal = ({parameter,onChange,errors,onAdd,isOpen,onClose}) 
 }
 
 
+
+const DeviceTableRow = (props) => {
+  return(
+      <tr>
+        <td><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="span"
+            type="text"
+            saveLabel="Update"
+            saveColor="#17a2b8"
+            cancelLabel="Cancel"
+            cancelColor="#6c757d"
+            onSave={value => props.updateName(props.data.DeviceID, value)}
+          />
+        </td>
+        <td>
+          <Input type="select">
+            <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
+          </Input>
+        </td>
+        <td>
+          <Input type="select" name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update} style={{display: "inline", width: "50%"}}>
+            <option value = {props.data.Tag}>{props.data.Tag}</option>
+            <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
+            <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
+            <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
+            <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
+          </Input>
+          <Input type="select" name={props.data.DeviceID + " Angle"} value = {props.data.Angle ? props.data.Angle : 0} onChange={props.update} style = {{display: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline", width: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "0%" : "30%"}}>
+            <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
+            <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
+            <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>
+            <option style = {{display: props.data.Angle=="180" ? "none" : "block"}} value = "180">180°</option>
+            <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
+          </Input>
+        </td>
+        <td>{props.data.LastCalibrationDate ? moment(props.data.LastCalibrationDate).format('MMMM Do YYYY') : ""}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>
+      </tr>
+  );
+};
+
+const ParameterTableRow = (props) => {
+  return(
+      <tr>
+        <td><a href = {"/asset/"+ props.asset + "/parameter/" + props.data.ParameterID}>{props.data.ParameterID}</a></td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="span"
+            type="text"
+            saveLabel="Update"
+            saveColor="#17a2b8"
+            cancelLabel="Cancel"
+            cancelColor="#6c757d"
+            onSave={value => props.updateName(props.data.ParameterID, value)}
+          />
+        </td>
+        <td>{props.data.Equation}</td>
+        <td>{props.data.CurrentValue.toFixed(2)}</td>
+        <td>{moment(new Date(props.data.CurrentTimeStamp)).format('MMMM Do YYYY')}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.ParameterID)}></i></Button></td>
+      </tr>
+  );
+};
+
+const AddNewParameterForm = ({parameter,onChange,errors}) => {
+    return (
+        <form>
+            <TextInput
+                name="DisplayName"
+                label="Name"
+                placeholder="(required)"
+                value={parameter.DisplayName}
+                onChange={onChange}
+                error={errors.DisplayName} />
+            <TextInput
+                name="Equation"
+                label="Equation"
+                placeholder="(required)"
+                value={parameter.Equation}
+                onChange={onChange}
+                error={errors.Equation} />
+        </form>
+    );
+};
+
+const AddNewParameterModal = ({parameter,onChange,errors,onAdd,isOpen,onClose}) => {
+    return (
+        <div>
+            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
+                <ModalHeader toggle={onClose}>Add New Parameter</ModalHeader>
+                <ModalBody>
+                    <AddNewParameterForm
+                        parameter={parameter}
+                        onChange={onChange}
+                        errors={errors}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
+                    <Button color="secondary" onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+      </div>
+
+    );
+}
+
+
 class AssetConfigurations extends React.Component {
   constructor(props) {
     super(props);

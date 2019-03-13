@@ -25,9 +25,14 @@ class AssetData extends React.Component {
   render() {
     let timestamps = Object.keys(dummyData);
     let devices= dummyData[timestamps[0]].map(x=>x.DisplayName);
-    let columns = [{ key: "id", name: "time", frozen: true }];
+    let columns = [{ key: "id", name: "Time", frozen: true }];
+    const ValueFormatter = ({value}) => {
+      return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
+    };
+
     for (var i in devices){
       let new_col = {key: devices[i], name: devices[i]};
+      new_col['formatter'] = ValueFormatter;
       columns.push(new_col);
     }
 
@@ -35,18 +40,20 @@ class AssetData extends React.Component {
     for(var i in dummyData){
       let new_row = {id: i};
       for(var value in dummyData[i]){
-        new_row[dummyData[i][value].DisplayName] = dummyData[i][value].Value;
+        new_row[dummyData[i][value].DisplayName] = {value: dummyData[i][value].Value, valid: dummyData[i][value].Valid};
       }
       rows.push(new_row);
     }
 
+    console.log(columns)
+    console.log(rows)
+
     return (
       <div>
-      <h1>Data Overview</h1>
-      <ReactDataGrid
-        columns={columns}
-        rowGetter={i => rows[i]}
-        rowsCount={rows.length}/>
+        <ReactDataGrid
+          columns={columns}
+          rowGetter={i => rows[i]}
+          rowsCount={rows.length}/>
       </div>
     );
   }

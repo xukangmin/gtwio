@@ -50,12 +50,6 @@ class HomePage extends React.Component {
 
   }
 
-  componentDidMount() {
-  }
-
-  componentWillUnmount () {
-  }
-
   render() {
     //const { assets } = this.state;
     const { assets, msg } = this.props;

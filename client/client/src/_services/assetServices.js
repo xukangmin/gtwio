@@ -8,7 +8,6 @@ const getAssetsOverview = (user) => {
                    'x-api-key' : user.ApiKey},
         method: 'GET'
     };
-
     return fetch(process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])

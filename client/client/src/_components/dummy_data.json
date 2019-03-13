@@ -1,122 +1,188 @@
 {
-	"Devices": [
-		{
-			"DeviceID": "Temp0",
-			"AddTimeStamp": 1552059891,
-			"DisplayName": "Temperature Sensor 0",
-			"Tag": "ShellInlet",
-			"SerialNumber": "02A001",
-			"Angle": 0,
-			"Parameters" : [
-				{
-					"ParameterID": "TempPara0",
-					"DisplayName": "Temperature Value",
-					"Type": "Temperature",
-					"Unit": "°F",
-					"Data": [
-								{
-									"_id": "5c82c5dc37e44b396893346f",
-									"ParameterID": "TempPara0",
-									"Value": 60.813198452498725,
-									"TimeStamp": 1552074203989,
-									"__v": 0,
-									"Valid": true
-								},
-								{
-									"_id": "5c82c6201ac5d84b60ee1fce",
-									"ParameterID": "TempPara0",
-									"Value": 60.5325906161112,
-									"TimeStamp": 1552074271884,
-									"__v": 0,
-									"Valid": true
-								},
-								{
-									"_id": "5c82c65b1ac5d84b60ee1fe9",
-									"ParameterID": "TempPara0",
-									"Value": 60.144606994135266,
-									"TimeStamp": 1552074331884,
-									"__v": 0,
-									"Valid": true
-								}
-							]
-				}
-			]
-		},
-		{
-			"DeviceID": "Temp1",
-			"AddTimeStamp": 1552059891,
-			"DisplayName": "Temperature Sensor 1",
-			"Tag": "ShellInlet",
-			"SerialNumber": "02A002",
-			"Angle": 90,
-			"Parameters" : [
-				{
-					"ParameterID": "TempPara0",
-					"DisplayName": "Temperature Value",
-					"Type": "Temperature",
-					"Unit": "°F",
-					"Data": [
-								{
-									"_id": "5c82c5dc37e44b396893346f",
-									"ParameterID": "TempPara0",
-									"Value": 60.813198452498725,
-									"TimeStamp": 1552074203989,
-									"__v": 0,
-									"Valid": true
-								},
-								{
-									"_id": "5c82c6201ac5d84b60ee1fce",
-									"ParameterID": "TempPara0",
-									"Value": 60.5325906161112,
-									"TimeStamp": 1552074271884,
-									"__v": 0,
-									"Valid": true
-								},
-								{
-									"_id": "5c82c65b1ac5d84b60ee1fe9",
-									"ParameterID": "TempPara0",
-									"Value": 60.144606994135266,
-									"TimeStamp": 1552074331884,
-									"__v": 0,
-									"Valid": true
-								}
-							]
-				}
-			]
-		}
-	],
-	"CalculatedData": [
-		{
-			"ParameterID": "GenPara0",
-			"DisplayName": "Average temp value",
-			"Type": "Temperature",
-			"Unit": "°F",
-			"Data": [
-						{
-							"_id": "5c82c5dc37e44b396893346f",
-							"ParameterID": "GenPara0",
-							"Value": 60.813198452498725,
-							"TimeStamp": 1552074203989,
-							"__v": 0,
-							"Valid": true
-						},
-						{
-							"_id": "5c82c6201ac5d84b60ee1fce",
-							"ParameterID": "GenPara0",
-							"Value": 60.5325906161112,
-							"TimeStamp": 1552074271884,
-							"__v": 0,
-							"Valid": true
-						},
-						{
-							"_id": "5c82c65b1ac5d84b60ee1fe9",
-							"ParameterID": "GenPara0",
-							"Value": 60.144606994135266,
-							"TimeStamp": 1552074331884,
-							"__v": 0,
-							"Valid": true
-						}
-					]
-		}
-	]
+  "1552059891": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ],
+  "1552059892": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ],
+  "1552059893": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ],
+  "1552059894": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ],
+  "1552059895": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ],
+  "1552059896": [{
+      "DisplayName": "Temp0",
+      "Value": 60.81,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Temp1",
+      "Value": 57.84,
+      "Unit": "°F",
+      "Valid": false
+    },
+    {
+      "DisplayName": "Temp2",
+      "Value": 61.57,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para0",
+      "Value": 64.21,
+      "Unit": "°F",
+      "Valid": true
+    },
+    {
+      "DisplayName": "Para10",
+      "Value": 63.54,
+      "Unit": "°F",
+      "Valid": true
+    }
+  ]
 }

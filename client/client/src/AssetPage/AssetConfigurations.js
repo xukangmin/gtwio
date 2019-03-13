@@ -4,8 +4,12 @@ import { Redirect } from 'react-router-dom';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
+<<<<<<< HEAD
 import AddNewDevice from './modal_parts/addNewDevice';
 import AddNewParameter from './modal_parts/addNewParameter';
+=======
+import { AddNewDeviceModal } from '../AssetPage/device_parts/AddNewDeviceModal';
+>>>>>>> parent of afac92f... configuration add device
 import Loader from '../_components/loader';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import classnames from 'classnames';
@@ -15,6 +19,118 @@ import TextInput from '../_components/TextInput';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import $ from 'jquery';
+
+
+const DeviceTableRow = (props) => {
+  return(
+      <tr>
+        <td><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="span"
+            type="text"
+            saveLabel="Update"
+            saveColor="#17a2b8"
+            cancelLabel="Cancel"
+            cancelColor="#6c757d"
+            onSave={value => props.updateName(props.data.DeviceID, value)}
+          />
+        </td>
+        <td>
+          <Input type="select">
+            <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
+          </Input>
+        </td>
+        <td>
+          <Input type="select" name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update} style={{display: "inline", width: "50%"}}>
+            <option value = {props.data.Tag}>{props.data.Tag}</option>
+            <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
+            <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
+            <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
+            <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
+          </Input>
+          <Input type="select" name={props.data.DeviceID + " Angle"} value = {props.data.Angle ? props.data.Angle : 0} onChange={props.update} style = {{display: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline", width: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "0%" : "30%"}}>
+            <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
+            <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
+            <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>
+            <option style = {{display: props.data.Angle=="180" ? "none" : "block"}} value = "180">180°</option>
+            <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
+          </Input>
+        </td>
+        <td>{props.data.LastCalibrationDate ? moment(props.data.LastCalibrationDate).format('MMMM Do YYYY') : ""}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>
+      </tr>
+  );
+};
+
+const ParameterTableRow = (props) => {
+  return(
+      <tr>
+        <td><a href = {"/asset/"+ props.asset + "/parameter/" + props.data.ParameterID}>{props.data.ParameterID}</a></td>
+        <td>
+          <InlineEdit
+            value={props.data.DisplayName}
+            tag="span"
+            type="text"
+            saveLabel="Update"
+            saveColor="#17a2b8"
+            cancelLabel="Cancel"
+            cancelColor="#6c757d"
+            onSave={value => props.updateName(props.data.ParameterID, value)}
+          />
+        </td>
+        <td>{props.data.Equation}</td>
+        <td>{props.data.CurrentValue.toFixed(2)}</td>
+        <td>{moment(new Date(props.data.CurrentTimeStamp)).format('MMMM Do YYYY')}</td>
+        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.ParameterID)}></i></Button></td>
+      </tr>
+  );
+};
+
+const AddNewParameterForm = ({parameter,onChange,errors}) => {
+    return (
+        <form>
+            <TextInput
+                name="DisplayName"
+                label="Name"
+                placeholder="(required)"
+                value={parameter.DisplayName}
+                onChange={onChange}
+                error={errors.DisplayName} />
+            <TextInput
+                name="Equation"
+                label="Equation"
+                placeholder="(required)"
+                value={parameter.Equation}
+                onChange={onChange}
+                error={errors.Equation} />
+        </form>
+    );
+};
+
+const AddNewParameterModal = ({parameter,onChange,errors,onAdd,isOpen,onClose}) => {
+    return (
+        <div>
+            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
+                <ModalHeader toggle={onClose}>Add New Parameter</ModalHeader>
+                <ModalBody>
+                    <AddNewParameterForm
+                        parameter={parameter}
+                        onChange={onChange}
+                        errors={errors}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
+                    <Button color="secondary" onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+      </div>
+
+    );
+}
+
 
 
 const DeviceTableRow = (props) => {
@@ -518,6 +634,7 @@ class AssetConfigurations extends React.Component {
     }
   }
 
+<<<<<<< HEAD
   onRowSelect(row, isSelected, e) {
     let filtered = this.state.selectedRows.filter(function(value,index, arr){
       return value!= row;
@@ -539,6 +656,117 @@ class AssetConfigurations extends React.Component {
     this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
   }
 
+=======
+  AddDevice(event) {
+    if (this.state.NewDevice.DisplayName === "") {
+      this.setState({errors: {DisplayName: "Name cannot be empty"}});
+      return;
+    }
+    console.log(this.state.NewDevice)
+    this.props.dispatch(deviceActions.addNewDevice(this.user, this.asset, this.state.NewDevice));
+    this.AddDeviceModalClose();
+  }
+
+  UpdateDevice(event){
+    const device = event.target.name.split(" ")[0];
+    const item = event.target.name.split(" ")[1];
+    let updateData = {
+        'DeviceID': device
+    }
+    updateData[item] = event.target.value;
+    this.props.dispatch(deviceActions.updateDevice(this.user.UserID, this.asset, updateData));
+    toastr.success("Device location updated.");
+  }
+
+  UpdateDeviceDisplayName(id, data){
+    let updateData = {
+        'DeviceID': id,
+        'DisplayName': data
+    }
+    this.props.dispatch(deviceActions.updateDevice(this.user.UserID, this.asset, updateData));
+    toastr.success("Device description updated.");
+  }
+
+  UpdateParameterDisplayName(id, data){
+    let updateData = {
+        'ParameterID': id,
+        'DisplayName': data
+    }
+    this.props.dispatch(paramterActions.updateParameter(this.user.UserID, this.asset, updateData));
+    toastr.success("Paramter description updated.");
+  }
+
+  DeleteDevice(device){
+    if (confirm("Are you sure to delete this device?")){
+        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
+    }
+  }
+
+  updateDeviceState(event) {
+    const field = event.target.name;
+    let device = Object.assign({}, this.state.NewDevice);
+    device[field] = event.target.value;
+    this.setState({errors: {}});
+    return this.setState({NewDevice: device});
+  }
+
+  AddDeviceModalOpen() {
+    this.setState({
+      addDeviceModalOpen: true,
+      NewDevice: {
+        DisplayName: '',
+        SerialNumber: ''
+      },
+      errors: {
+      }
+    });
+  }
+
+  AddDeviceModalClose() {
+    this.setState({addDeviceModalOpen: false});
+  }
+
+  AddParameter(event) {
+    console.log(this.state);
+    if (this.state.NewParameter.DisplayName === "") {
+      this.setState({errors: {DisplayName: "Name cannot be empty"}});
+      return;
+    }
+    this.props.dispatch(parameterActions.addNewParameter(this.asset, this.state.NewParameter.DisplayName, this.state.NewParameter.Equation));
+    this.AddParameterModalClose();
+  }
+
+  updateParameterState(event) {
+    const field = event.target.name;
+    let parameter = Object.assign({}, this.state.NewParameter);
+    parameter[field] = event.target.value;
+    this.setState({errors: {}});
+    return this.setState({NewParameter: parameter});
+  }
+
+  AddParameterModalOpen() {
+    this.setState({
+      addParameterModalOpen: true,
+      NewParameter: {
+        DisplayName: '',
+        Equation: ''
+      },
+      errors: {
+      }
+    });
+  }
+
+  AddParameterModalClose() {
+    this.setState({addParameterModalOpen: false});
+  }
+
+  DeleteParameter(parameter){
+    if (confirm("Are you sure to delete this parameter?")){
+        this.props.dispatch(parameterActions.DeleteParameter(this.asset, parameter));
+    }
+  }
+
+>>>>>>> parent of afac92f... configuration add device
 
 
   render() {
@@ -600,8 +828,12 @@ class AssetConfigurations extends React.Component {
 
     const selectRowProp = {
       mode: 'checkbox',
+<<<<<<< HEAD
       bgColor: 'pink',
       onSelect: this.onRowSelect
+=======
+      bgColor: 'pink'
+>>>>>>> parent of afac92f... configuration add device
     };
 
     return (
@@ -631,8 +863,12 @@ class AssetConfigurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
+<<<<<<< HEAD
                     <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                     <Button className="deleteButton" color="danger" onClick={this.deleteDevices}><i className="fa fa-trash" aria-hidden="true"></i></Button>
+=======
+                    <button style={{display: "none"}} type="button" className="btn btn-info mb-3" href="#" onClick={this.AddDeviceModalOpen}>Add Device</button>
+>>>>>>> parent of afac92f... configuration add device
                     <BootstrapTable
                       data={device}
                       options={options}

@@ -1201,7 +1201,7 @@ function getDataByAssetID(req, res) {
   var st = req.swagger.params.StartTruncate.value;
 
   var grouping_interval = 60; // seconds
-  var grouping_method = 0; // 0=average, 1=max, 2=min, 3=count
+  var grouping_method = 0; // 0=average, 1=max, 2=min, 3=count, 4=first, 5=last
   var start_truncate = 0; // 0=no truncate, 1=truncate to whole minute
 
   if (gi) {

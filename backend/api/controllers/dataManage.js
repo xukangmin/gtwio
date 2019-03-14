@@ -1196,13 +1196,41 @@ function getDataByAssetID(req, res) {
   var assetid = req.swagger.params.AssetID.value;
   var sTS = req.swagger.params.StartTimeStamp.value;
   var eTS = req.swagger.params.EndTimeStamp.value;
+  var gi = req.swagger.params.GroupInterval.value;
+  var gm = req.swagger.params.GroupMethod.value;
+  var st = req.swagger.params.StartTruncate.value;
 
+  var grouping_interval = 60; // seconds
+  var grouping_method = 0; // 0=average, 1=max, 2=min, 3=count
+  var start_truncate = 0; // 0=no truncate, 1=truncate to whole minute
 
+  if (gi) {
+    grouping_interval = gi;
+  }
 
+  if (gm) {
+    grouping_method = gm;
+  }
+
+  if (st) {
+    start_truncate = st;
+  }
+
+  var new_s = 0;
+  var new_e = 0;
   if (assetid && sTS && eTS) {
     // get device
-    console.log(assetid);
-    var data_out = {};
+    var data_out = [];
+    var paraDataList = [];
+    if (start_truncate == 1) {
+        var tr = parseInt(sTS / 1000);
+        var res = tr % 60;
+        new_s = tr - res;
+    } else {
+      new_s = parseInt(sTS / 1000);
+    }
+    var new_e = parseInt(eTS / 1000);
+
     _getAllDeviceByAssetID(assetid)
       .then(
         devicelist => {
@@ -1217,7 +1245,27 @@ function getDataByAssetID(req, res) {
       .then(
         ret => {
           //console.log(ret);
-          data_out.Devices = ret;
+          var device_name = "";
+          var para_name = "";
+          var full_name = "";
+
+          var data_grp;
+          for (var i in ret) {
+            device_name = ret[i].DisplayName;
+            if (ret[i].Parameters) {
+              for (var j in ret[i].Parameters) {
+                if (ret[i].Parameters[j].Data.length > 0)
+                {
+                  para_name = ret[i].Parameters[j].DisplayName;
+                  full_name = device_name + "/" + para_name;
+                  var single_para_data = {};
+                  single_para_data.DisplayName = full_name;
+                  single_para_data.Data = ret[i].Parameters[j].Data;
+                  paraDataList.push(single_para_data);
+                }
+              }
+            }
+          }
           return _getParameterListByAssetID(assetid);
         }
       )
@@ -1226,7 +1274,84 @@ function getDataByAssetID(req, res) {
           Promise.all(ret.map(item => _getParameterDetailAndDataByParameterID(item, sTS, eTS)))
             .then(
               ret => {
-                data_out.CalculatedData = ret;
+                for(var i in ret) {
+                  if (ret[i].Data) {
+                    var single_para_data = {};
+                    single_para_data.DisplayName = ret[i].DisplayName;
+                    single_para_data.Data = ret[i].Data;
+                    paraDataList.push(single_para_data);
+                  }
+                }
+                // process data based on time stamp
+                for(var i = new_s; i <= new_e; i += grouping_interval) {
+                    var single_ts_data = {};
+                    single_ts_data.TimeStamp = i * 1000;
+                    var single_ts_data_part = [];
+                    for (var j in paraDataList) {
+                      if (paraDataList[j].Data) {
+                        if (paraDataList[j].Data.length > 0)
+                        {
+                          var sum = 0;
+                          var max = paraDataList[j].Data[0].Value;
+                          var min = paraDataList[j].Data[0].Value;
+                          var count = 0;
+                          var first = paraDataList[j].Data[0].Value;
+                          var last = paraDataList[j].Data[paraDataList[j].Data.length - 1].Value;
+                          var valid = false;
+
+                          for(var k in paraDataList[j].Data) {
+                            if (paraDataList[j].Data[k].TimeStamp >= i * 1000 && paraDataList[j].Data[k].TimeStamp < (i + grouping_interval) * 1000)
+                            {
+                              if (paraDataList[j].Data[k].Value > max) {
+                                max = paraDataList[j].Data[k].Value;
+                              } else if (paraDataList[j].Data[k].Value < min) {
+                                min = paraDataList[j].Data[k].Value;
+                              }
+                              count++;
+                              sum += paraDataList[j].Data[k].Value;
+                              if (paraDataList[j].Data[k].Valid) {
+                                valid = true;
+                              }
+                            }
+                          }
+                          if (count != 0) {
+                            var single_para_data1 = {};
+                            single_para_data1.DisplayName = paraDataList[j].DisplayName;
+                            switch (grouping_method) {
+                              case 0:
+                                single_para_data1.Value = sum / count;
+                                break;
+                              case 1:
+                                single_para_data1.Value = max;
+                                break;
+                              case 2:
+                                single_para_data1.Value = min;
+                                break;
+                              case 3:
+                                single_para_data1.Value = count;
+                                break;
+                              case 4:
+                                single_para_data1.Value = first;
+                                break;
+                              case 5:
+                                single_para_data1.Value = last;
+                                break;
+                              default:
+                                single_para_data1.Value = sum / count;
+                                break;
+                            }
+                            single_para_data1.Valid = valid;
+                            single_ts_data_part.push(single_para_data1);
+                          }
+                        }
+
+                      }
+                    }
+
+                    single_ts_data.Data = single_ts_data_part;
+                    data_out.push(single_ts_data);
+                }
+
                 shareUtil.SendSuccessWithData(res, data_out);
               }
             )

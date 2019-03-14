@@ -1060,6 +1060,21 @@ paths:
         in: query
         required: true
         type: integer
+      - name: GroupInterval
+        in: query
+        required: false
+        type: integer
+        description: (optional) Time Interval for grouping, in seconds
+      - name: GroupMethod
+        in: query
+        required: false
+        type: integer
+        description: (optional) Group method, 0=average, 1=max, 2=min, 3=count, 4=first, 5=last
+      - name: StartTruncate
+        in: query
+        required: false
+        type: integer
+        description: (optional) Make Start Time Stamp start at 0 second or not
       responses:
         200:
           description: Success

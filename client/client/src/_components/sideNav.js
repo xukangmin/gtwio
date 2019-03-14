@@ -7,11 +7,14 @@ import { Redirect } from 'react-router-dom'
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { FaHome } from 'react-icons/fa';
 import AssetNav from './AssetNav';
+import { matchRoutes } from 'react-router-config';
+import routes from '../_routes/routes';
+import { assetActions } from '../_actions/assetAction';
 
 const AssetSubMenu = (props) => {
     return (
         <li className="nav-item">
-            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"} onClick={()=>props.assetClick(props.singleAsset.AssetID,props.singleAsset.DisplayName)}>
+            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"} onClick={()=>props.assetClick(props.singleAsset.AssetID, props.singleAsset.DisplayName)}>
                 <i className="fas fa-fw fa-industry mr-2"></i>{props.singleAsset.DisplayName}
             </a>
         </li>
@@ -21,12 +24,19 @@ const AssetSubMenu = (props) => {
 class SideNav extends React.Component {
     constructor(props) {
         super(props);
-        this.assetSelected = this.assetSelected.bind(this);
-    }
 
-    assetSelected(assetid,assetname){
-      localStorage.setItem("selectedAssetID", assetid);
-      localStorage.setItem("selectedAssetName", assetname);
+        this.asset = [];
+        this.user = JSON.parse(localStorage.getItem('user'));
+
+        let m_res = matchRoutes(routes, window.location.pathname);
+        for(var item in m_res) {
+          if (m_res[item].match.isExact) {
+            this.asset = m_res[item].match.params.assetID;
+            this.props.dispatch(assetActions.getSingleAssetData(this.user, this.asset))
+          }
+        }
+
+        this.assetName = JSON.parse(localStorage.getItem("asset("+ this.asset + ")"))['DisplayName'];
     }
 
     render() {
@@ -47,7 +57,7 @@ class SideNav extends React.Component {
                             </a>
                             <ul className ="collapse list-unstyled" id="assetSubMenu">
                                 {this.props.assets.map((singleAsset,index) =>
-                                    <AssetSubMenu key={index} singleAsset={singleAsset} assetClick={this.assetSelected}/>
+                                    <AssetSubMenu key={index} singleAsset={singleAsset}/>
                                 )}
                             </ul>
                         </li>
@@ -61,47 +71,44 @@ class SideNav extends React.Component {
 
 
                     </ul>
-                    {localStorage.getItem("selectedAssetID")?
+                    {this.asset?
                     <ul style={{marginTop:"30px"}} className ="nav flex-column">
                       <li className ="nav-item">
-                        <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/"+localStorage.getItem("selectedAssetID")+"/dashboard"}>
-                          {localStorage.getItem("selectedAssetName")}
+                        <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/"+this.asset+"/dashboard"}>
+                          {this.assetName}
                         </a>
                       </li>
                       <li className ="nav-item" style={{marginTop:"15px"}}>
-                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/dashboard"}>
+                        <a className ="nav-link" href={"/asset/"+this.asset+"/dashboard"}>
                           <i className ="fas fa-fw fa-tachometer-alt mr-2"></i>
                           Dashboard
                         </a>
                       </li>
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/data"}>
+                        <a className ="nav-link" href={"/asset/"+this.asset+"/data"}>
                           <i className ="fas fa-fw fa-table mr-2"></i>
                           Data
                         </a>
                       </li>
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/devices"}>
+                        <a className ="nav-link" href={"/asset/"+this.asset+"/devices"}>
                           <i className ="fas fa-fw fa-thermometer-quarter mr-2"></i>
                           Devices
                         </a>
                       </li>
 
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+localStorage.getItem("selectedAssetID")+"/configurations"}>
+                        <a className ="nav-link" href={"/asset/"+this.asset+"/configurations"}>
                           <i className ="fas fa-fw fa-sliders-h mr-2"></i>
                           Configurations
                         </a>
                       </li>
                     </ul>
                     :<div></div>}
-
-
                 </div>
             </nav>
         );
     }
 }
-
 
 export default SideNav;

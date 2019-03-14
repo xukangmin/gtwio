@@ -22,7 +22,6 @@ class MainArea extends React.Component {
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.handleLocationChange = this.handleLocationChange.bind(this);
-      this.assetSelected = this.assetSelected.bind(this);
       this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
     }
 
@@ -81,21 +80,12 @@ class MainArea extends React.Component {
       }
     }
 
-    assetSelected(assetid,assetname){
-      localStorage.setItem("selectedAssetID", assetid);
-      localStorage.setItem("selectedAssetName", assetname);
-    }
-
     onAfterSaveCell(row, cellName, cellValue) {
-      // alert(`Save cell ${cellName} with value ${cellValue}`);
-
       this.props.dispatch(assetActions.updateAsset(this.user, row.AssetID, cellName, cellValue))
       let rowStr = '';
       for (const prop in row) {
         rowStr += prop + ': ' + row[prop] + '\n';
       }
-
-      // alert('Thw whole row :\n' + rowStr);
     }
 
     render() {
@@ -110,8 +100,6 @@ class MainArea extends React.Component {
           const displayText = cell.length;
           return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
         }
-
-
 
         const selectRowProp = {
           mode: 'checkbox',
@@ -132,8 +120,6 @@ class MainArea extends React.Component {
 
         const options = {
         }
-
-
 
         return (
           <div id="MainArea">
@@ -196,60 +182,10 @@ class MainArea extends React.Component {
           </BootstrapTable>
 
 
-            <div className="table-responsive">
-                <table className="table table-striped" style={{textAlign:'center'}}>
-                    <thead>
-                        <tr>
-                            <th>Asset</th>
-                            <th>Status</th>
-                            <th>Device Count</th>
-                            <th>Location</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody id="main-table-content">
-                        {this.props.assets.map((singleAsset,i) =>
-                            <tr key={i}>
-                                <td>
-                                  <a href={"/asset/" + singleAsset.AssetID + "/dashboard"} onClick={()=>this.assetSelected(singleAsset.AssetID, singleAsset.DisplayName)}>{singleAsset.DisplayName}
-                                  </a>
-                                </td>
-                                <td style={{color:"#08D800"}}>OK</td>
-                                <td><a href={"/asset/" + singleAsset.AssetID + "/device"}>{singleAsset.Devices.length}</a></td>
-                                <td>{singleAsset.Location}</td>
-                                <td>
-                                  <Button onClick={()=>this.editModalToggle(singleAsset.AssetID, singleAsset.DisplayName, singleAsset.Location)} style={{marginRight: "10px"}} >
-                                    <i className="fas fa-edit"></i>
-                                  </Button>
-                                  <Modal isOpen={this.state.editModalOpen} toggle={this.editModalToggle}>
-                                    <ModalHeader toggle={this.editModalToggle}>Edit Asset</ModalHeader>
-                                    <ModalBody>
-                                      <Form>
-                                        <FormGroup>
-                                          <Label for="displayname">Name</Label>
-                                          <Input type="text" id="displayname" name={singleAsset.AssetID} value={this.state.displayname} onChange={this.handleChange}/>
-                                          <br/>
-                                          <Label for="location">Location</Label>
-                                          <Input type="text" id="location" name={singleAsset.AssetID} value={this.state.location} onChange={this.handleLocationChange}/>
-                                        </FormGroup>
-                                      </Form>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                      <Button color="primary" id="edit" onClick={this.editButtonClicked}>Save</Button>{' '}
-                                      <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
-                                    </ModalFooter>
-                                  </Modal>
-                                  <Button color="danger"
-                                          onClick={()=>this.deleteAsset(singleAsset.AssetID, this.props.user)}>
-                                            <i className="fa fa-trash" aria-hidden="true"></i>
-                                  </Button>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+
+                                  
             </div>
-          </div>
+
         );
     }
 

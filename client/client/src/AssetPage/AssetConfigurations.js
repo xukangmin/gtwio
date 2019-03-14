@@ -16,142 +16,19 @@ import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-a
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import $ from 'jquery';
 
-
-const DeviceTableRow = (props) => {
-  return(
-      <tr>
-        <td><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></td>
-        <td>
-          <InlineEdit
-            value={props.data.DisplayName}
-            tag="span"
-            type="text"
-            saveLabel="Update"
-            saveColor="#17a2b8"
-            cancelLabel="Cancel"
-            cancelColor="#6c757d"
-            onSave={value => props.updateName(props.data.DeviceID, value)}
-          />
-        </td>
-        <td>
-          <Input type="select">
-            <option>{props.data.Parameters[0] ? props.data.Parameters[0].DisplayName : ""}</option>
-          </Input>
-        </td>
-        <td>
-          <Input type="select" name={props.data.DeviceID + " Tag"} value = {props.data.Tag} onChange={props.update} style={{display: "inline", width: "50%"}}>
-            <option value = {props.data.Tag}>{props.data.Tag}</option>
-            <option style = {{display: props.data.Tag=="ShellInlet" ? "none" : "block"}} value = "ShellInlet">ShellInlet</option>
-            <option style = {{display: props.data.Tag=="ShellOutlet" ? "none" : "block"}} value = "ShellOutlet">ShellOutlet</option>
-            <option style = {{display: props.data.Tag=="TubeInlet" ? "none" : "block"}} value = "TubeInlet">TubeInlet</option>
-            <option style = {{display: props.data.Tag=="TubeOutlet" ? "none" : "block"}} value = "TubeOutlet">TubeOutlet</option>
-          </Input>
-          <Input type="select" name={props.data.DeviceID + " Angle"} value = {props.data.Angle ? props.data.Angle : 0} onChange={props.update} style = {{display: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "none" : "inline", width: props.data.Parameters[0] && props.data.Parameters[0].DisplayName=="Flow Value" ? "0%" : "30%"}}>
-            <option value = {props.data.Angle}>{props.data.Angle+"°"}</option>
-            <option style = {{display: props.data.Angle=="0" ? "none" : "block"}} value = "0">0°</option>
-            <option style = {{display: props.data.Angle=="90" ? "none" : "block"}} value = "90">90°</option>
-            <option style = {{display: props.data.Angle=="180" ? "none" : "block"}} value = "180">180°</option>
-            <option style = {{display: props.data.Angle=="270" ? "none" : "block"}} value = "270">270°</option>
-          </Input>
-        </td>
-        <td>{props.data.LastCalibrationDate ? moment(props.data.LastCalibrationDate).format('MMMM Do YYYY') : ""}</td>
-        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.DeviceID)}></i></Button></td>
-      </tr>
-  );
-};
-
-const ParameterTableRow = (props) => {
-  return(
-      <tr>
-        <td><a href = {"/asset/"+ props.asset + "/parameter/" + props.data.ParameterID}>{props.data.ParameterID}</a></td>
-        <td>
-          <InlineEdit
-            value={props.data.DisplayName}
-            tag="span"
-            type="text"
-            saveLabel="Update"
-            saveColor="#17a2b8"
-            cancelLabel="Cancel"
-            cancelColor="#6c757d"
-            onSave={value => props.updateName(props.data.ParameterID, value)}
-          />
-        </td>
-        <td>{props.data.Equation}</td>
-        <td>{props.data.CurrentValue.toFixed(2)}</td>
-        <td>{moment(new Date(props.data.CurrentTimeStamp)).format('MMMM Do YYYY')}</td>
-        <td><Button color="danger"><i className="fa fa-trash" aria-hidden="true" onClick={()=>props.delete(props.data.ParameterID)}></i></Button></td>
-      </tr>
-  );
-};
-
-const AddNewParameterForm = ({parameter,onChange,errors}) => {
-    return (
-        <form>
-            <TextInput
-                name="DisplayName"
-                label="Name"
-                placeholder="(required)"
-                value={parameter.DisplayName}
-                onChange={onChange}
-                error={errors.DisplayName} />
-            <TextInput
-                name="Equation"
-                label="Equation"
-                placeholder="(required)"
-                value={parameter.Equation}
-                onChange={onChange}
-                error={errors.Equation} />
-        </form>
-    );
-};
-
-const AddNewParameterModal = ({parameter,onChange,errors,onAdd,isOpen,onClose}) => {
-    return (
-        <div>
-            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
-                <ModalHeader toggle={onClose}>Add New Parameter</ModalHeader>
-                <ModalBody>
-                    <AddNewParameterForm
-                        parameter={parameter}
-                        onChange={onChange}
-                        errors={errors}
-                    />
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
-                    <Button color="secondary" onClick={onClose}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-      </div>
-
-    );
-}
-
-
 class AssetConfigurations extends React.Component {
   constructor(props) {
     super(props);
 
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.asset =  props.match.params.assetID;
+    this.asset = props.match.params.assetID;
     this.props.dispatch(deviceActions.getAllDeviceData(this.user, this.asset));
     this.props.dispatch(parameterActions.getParameterByAsset(this.asset));
 
     this.toggle = this.toggle.bind(this);
-    this.AddDevice = this.AddDevice.bind(this);
-    this.updateDeviceState = this.updateDeviceState.bind(this);
-    this.AddDeviceModalOpen = this.AddDeviceModalOpen.bind(this);
-    this.AddDeviceModalClose = this.AddDeviceModalClose.bind(this);
-    this.UpdateDevice = this.UpdateDevice.bind(this);
-    this.UpdateDeviceDisplayName = this.UpdateDeviceDisplayName.bind(this);
-    this.UpdateParameterDisplayName = this.UpdateParameterDisplayName.bind(this);
-    this.DeleteDevice = this.DeleteDevice.bind(this);
-
-    this.AddParameterModalOpen = this.AddParameterModalOpen.bind(this);
-    this.AddParameterModalClose = this.AddParameterModalClose.bind(this);
-    this.AddParameter = this.AddParameter.bind(this);
-    this.updateParameterState = this.updateParameterState.bind(this);
-    this.DeleteParameter = this.DeleteParameter.bind(this);
+    this.onRowSelect = this.onRowSelect.bind(this);
+    this.deleteDevices = this.deleteDevices.bind(this);
+    this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
     this.state = {
       activeTab: '1',
@@ -168,13 +45,8 @@ class AssetConfigurations extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.dispatchParameterContinuously = setInterval(() => {
-      this.props.dispatch(parameterActions.getParameterByAsset(this.asset));
-    }, 5000);
-  }
-
   toggle(tab) {
+
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab
@@ -203,7 +75,25 @@ class AssetConfigurations extends React.Component {
     this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
   }
 
+  updateDevice(){
 
+  }
+
+  onAfterSaveCell(row, cellName, cellValue) {
+    if(row.DeviceID){
+      var data = {
+        DeviceID: row.DeviceID,
+        [cellName]: cellValue
+      };
+      this.props.dispatch(deviceActions.updateDevice(this.user, this.asset, data));
+    } else if(row.ParameterID){
+      this.props.dispatch(parameterActions.updateParameter(row.ParameterID, cellName, cellValue));
+    }
+    let rowStr = '';
+    for (const prop in row) {
+      rowStr += prop + ': ' + row[prop] + '\n';
+    }
+  }
 
   render() {
     const { device, parameter } = this.props;
@@ -211,10 +101,6 @@ class AssetConfigurations extends React.Component {
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
     }
-
-    const cellEditProp = {
-      mode: 'click'
-    };
 
     const createCustomDeleteButton = (onClick) => {
       return (
@@ -231,11 +117,11 @@ class AssetConfigurations extends React.Component {
     }
 
     function parameterFormatter(cell, row) {
-      return cell[0].DisplayName;
+      return cell[0] ? cell[0].DisplayName : '';
     }
 
     function angleFormatter(cell, row){
-      return cell+"°"
+      return cell + "°";
     }
 
     function dateFormatter(cell, row){
@@ -255,7 +141,6 @@ class AssetConfigurations extends React.Component {
       // alert('The new row is:\n ' + newRowStr);
     }
 
-
     const options = {
       insertText: 'Add Device',
       deleteText: 'Delete',
@@ -267,6 +152,12 @@ class AssetConfigurations extends React.Component {
       mode: 'checkbox',
       bgColor: 'pink',
       onSelect: this.onRowSelect
+    };
+
+    const cellEditProp = {
+      mode: 'click',
+      blurToSave: true,
+      afterSaveCell: this.onAfterSaveCell
     };
 
     return (
@@ -301,8 +192,8 @@ class AssetConfigurations extends React.Component {
                     <BootstrapTable
                       data={device}
                       options={options}
-                      insertRow={true}
-                      deleteRow={true}
+                      insertRow={false}
+                      deleteRow={false}
                       selectRow={selectRowProp}
                       search={true}
                       cellEdit={cellEditProp}
@@ -375,6 +266,7 @@ class AssetConfigurations extends React.Component {
                   </Col>
                 </Row>
             </TabPane>
+
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
@@ -399,23 +291,6 @@ class AssetConfigurations extends React.Component {
               </Row>
             </TabPane>
           </TabContent>
-
-          <AddNewDeviceModal
-            device={this.state.NewDevice}
-            onChange={this.updateDeviceState}
-            onAdd={this.AddDevice}
-            errors={this.state.errors}
-            isOpen={this.state.addDeviceModalOpen}
-            onClose={this.AddDeviceModalClose}
-          />
-          <AddNewParameterModal
-            parameter={this.state.NewParameter}
-            onChange={this.updateParameterState}
-            onAdd={this.AddParameter}
-            errors={this.state.errors}
-            isOpen={this.state.addParameterModalOpen}
-            onClose={this.AddParameterModalClose}
-          />
           </div>
         :
         <Loader/>}
@@ -425,7 +300,7 @@ class AssetConfigurations extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data, addedData } = state.device;
+  const { data } = state.device;
   const parameterData = state.parameter.data;
   return {
       device : data,

@@ -14,8 +14,8 @@ import { assetActions } from '../_actions/assetAction';
 const AssetSubMenu = (props) => {
     return (
         <li className="nav-item">
-            <a className="nav-link" href={"/asset/" + props.singleAsset.AssetID + "/dashboard"} onClick={()=>props.assetClick(props.singleAsset.AssetID, props.singleAsset.DisplayName)}>
-                <i className="fas fa-fw fa-industry mr-2"></i>{props.singleAsset.DisplayName}
+            <a className="nav-link" href={"/asset/" + props.asset.AssetID + "/dashboard"}>
+                <i className="fas fa-fw fa-industry mr-2"></i>{props.asset.DisplayName}
             </a>
         </li>
     );
@@ -56,8 +56,8 @@ class SideNav extends React.Component {
                                 Assets
                             </a>
                             <ul className ="collapse list-unstyled" id="assetSubMenu">
-                                {this.props.assets.map((singleAsset,index) =>
-                                    <AssetSubMenu key={index} singleAsset={singleAsset}/>
+                                {this.props.assets.map((asset,index) =>
+                                    <AssetSubMenu key={index} asset={asset}/>
                                 )}
                             </ul>
                         </li>
@@ -68,37 +68,35 @@ class SideNav extends React.Component {
                                 Settings
                             </a>
                         </li>
-
-
                     </ul>
+
                     {this.asset?
                     <ul style={{marginTop:"30px"}} className ="nav flex-column">
                       <li className ="nav-item">
-                        <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/"+this.asset+"/dashboard"}>
+                        <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/" + this.asset + "/dashboard"}>
                           {this.assetName}
                         </a>
                       </li>
                       <li className ="nav-item" style={{marginTop:"15px"}}>
-                        <a className ="nav-link" href={"/asset/"+this.asset+"/dashboard"}>
+                        <a className ="nav-link" href={"/asset/" + this.asset + "/dashboard"}>
                           <i className ="fas fa-fw fa-tachometer-alt mr-2"></i>
                           Dashboard
                         </a>
                       </li>
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+this.asset+"/data"}>
+                        <a className ="nav-link" href={"/asset/" + this.asset + "/data"}>
                           <i className ="fas fa-fw fa-table mr-2"></i>
                           Data
                         </a>
                       </li>
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+this.asset+"/devices"}>
+                        <a className ="nav-link" href={"/asset/" + this.asset + "/devices"}>
                           <i className ="fas fa-fw fa-thermometer-quarter mr-2"></i>
                           Devices
                         </a>
                       </li>
-
                       <li className ="nav-item">
-                        <a className ="nav-link" href={"/asset/"+this.asset+"/configurations"}>
+                        <a className ="nav-link" href={"/asset/" + this.asset + "/configurations"}>
                           <i className ="fas fa-fw fa-sliders-h mr-2"></i>
                           Configurations
                         </a>

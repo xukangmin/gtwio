@@ -3,7 +3,6 @@ import { assetServices } from '../_services/assetServices';
 import { alertActions } from './alertAction';
 
 const addAsset = (user, displayname, location) => {
-  console.log(location)
     return dispatch => {
         dispatch(request());
         assetServices.addAsset(user, displayname, location)
@@ -74,8 +73,6 @@ const getSingleAssetDetail = (user, assetid) => {
                 assetServices.getDataByTagList(assetdata.Settings.Tags)
                   .then(
                     tags => {
-                      console.log("tags");
-                      console.log(tags);
                       dispatch(success_tag(tags));
                     },
                     error => {
@@ -109,19 +106,6 @@ const getSingleAssetData = (user, assetid) => {
                     dispatch(failure(error));
                 }
             );
-    /*     dispatch(request({ username }));
-
-        userService.login(username, password)
-            .then(
-                user => {
-                    dispatch(success(user));
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error));
-                    dispatch(alertActions.error(error));
-                }
-            );*/
     };
 
     function request() { return { type: gConstants.GET_ASSET_REQUEST } }
@@ -141,19 +125,6 @@ const getAllDeviceData = (user, assetid) => {
                     dispatch(failure(error));
                 }
             );
-    /*     dispatch(request({ username }));
-
-        userService.login(username, password)
-            .then(
-                user => {
-                    dispatch(success(user));
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error));
-                    dispatch(alertActions.error(error));
-                }
-            );*/
     };
 
     function request() { return { type: gConstants.GET_ASSET_REQUEST } }

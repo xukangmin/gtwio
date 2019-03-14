@@ -8,6 +8,7 @@ class AddNewAssets extends React.Component {
 
         this.state = {
             displayname: '',
+            location: '',
             addModalOpen: false
         };
 
@@ -24,9 +25,10 @@ class AddNewAssets extends React.Component {
     }
 
     addButtonClicked(){
-      this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname));
+      this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname, this.state.location));
       this.setState(prevState => ({
         displayname: '',
+        location: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -34,6 +36,7 @@ class AddNewAssets extends React.Component {
     cancelButtonClicked(){
       this.setState(prevState => ({
         displayname: '',
+        location: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -58,7 +61,7 @@ class AddNewAssets extends React.Component {
                     <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
                     <br/>
                     <Label for="location">Location</Label>
-                    <Input type="text" id="location"/>
+                    <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
                   </FormGroup>
                 </Form>
               </ModalBody>

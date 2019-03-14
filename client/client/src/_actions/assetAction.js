@@ -2,10 +2,11 @@ import { gConstants } from '../_components/constants';
 import { assetServices } from '../_services/assetServices';
 import { alertActions } from './alertAction';
 
-const addAsset = (user, displayname) => {
+const addAsset = (user, displayname, location) => {
+  console.log(location)
     return dispatch => {
         dispatch(request());
-        assetServices.addAsset(user, displayname)
+        assetServices.addAsset(user, displayname, location)
             .then(
                 info => {
                     dispatch(success(info));

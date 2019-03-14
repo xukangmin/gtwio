@@ -89,7 +89,7 @@ class MainArea extends React.Component {
 
         function linkFormatter(cell, row, enumObject){
           const displayText = cell;
-          return "<a href = /asset/" + cell +"/" + enumObject + ">" + displayText+ "</a>";
+          return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
         }
 
         function countFormatter(cell, row, enumObject){
@@ -111,7 +111,7 @@ class MainArea extends React.Component {
             <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i className="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
           );
         }
-        
+
         const options = {
           insertText: 'Add Asset',
           deleteText: 'Delete',
@@ -140,7 +140,7 @@ class MainArea extends React.Component {
               isKey
               headerAlign='center'
               dataAlign='center'
-              dataField='AssetID'
+              dataField='DisplayName'
               editable={false}
               dataFormat={linkFormatter}
               formatExtraData={"dashboard"}

@@ -105,14 +105,15 @@ const getSingleAsset = (user, assetid) => {
         });
 }
 
-const addAsset = (user, displayname) => {
+const addAsset = (user, displayname, location) => {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
                    'x-api-key' : user.ApiKey },
         body: JSON.stringify({
             'UserID': user.UserID,
-            'DisplayName': displayname
+            'DisplayName': displayname,
+            'Location': location
         })
     };
 

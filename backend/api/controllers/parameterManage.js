@@ -480,8 +480,10 @@ function _updateRequireListByEquation(paraid, equation, callback) {
 
   var reg = /\[[^\]]+\]/g;
 
-  var paralist = equation.match(reg);
-
+  if(equation.match(reg)){
+    paralist = equation.match(reg);
+  }
+  
   if (paralist.length > 0) {
       paralist = paralist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
 

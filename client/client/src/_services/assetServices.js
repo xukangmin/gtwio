@@ -155,10 +155,13 @@ const deleteAsset = (assetid, user) => {
     });
 }
 
-const updateAsset = (data) => {
+const updateAsset = (assetid, key, value) => {
 
-    const body = data;
-
+    let body = {
+      AssetID: assetid,
+      [key]: value
+    };
+    console.log(body);
     const requestOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json'

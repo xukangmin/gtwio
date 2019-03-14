@@ -161,10 +161,10 @@ const getAllDeviceData = (user, assetid) => {
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
 }
 
-const updateAsset = (user, assetid, data) => {
-    return dispatch => {
+const updateAsset = (user, assetid, key, value) => {
+  return dispatch => {
         dispatch(request());
-        assetServices.updateAsset(data)
+        assetServices.updateAsset(assetid, key, value)
             .then(
                 info => {
                     dispatch(getAssetsOverview(user));

@@ -15,6 +15,7 @@ class MainArea extends React.Component {
         location: '',
         editModalOpen: false
       }
+      this.user = JSON.parse(localStorage.getItem('user'));
       this.deleteAsset = this.deleteAsset.bind(this);
       this.editButtonClicked = this.editButtonClicked.bind(this);
       this.editModalToggle = this.editModalToggle.bind(this);
@@ -22,6 +23,7 @@ class MainArea extends React.Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleLocationChange = this.handleLocationChange.bind(this);
       this.assetSelected = this.assetSelected.bind(this);
+      this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
     }
 
     editModalToggle(asset_id, name, location){
@@ -84,6 +86,18 @@ class MainArea extends React.Component {
       localStorage.setItem("selectedAssetName", assetname);
     }
 
+    onAfterSaveCell(row, cellName, cellValue) {
+      // alert(`Save cell ${cellName} with value ${cellValue}`);
+
+      this.props.dispatch(assetActions.updateAsset(this.user, row.AssetID, cellName, cellValue))
+      let rowStr = '';
+      for (const prop in row) {
+        rowStr += prop + ': ' + row[prop] + '\n';
+      }
+
+      // alert('Thw whole row :\n' + rowStr);
+    }
+
     render() {
         const { assets } = this.props;
 
@@ -97,13 +111,17 @@ class MainArea extends React.Component {
           return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
         }
 
+
+
         const selectRowProp = {
           mode: 'checkbox',
           bgColor: 'pink'
         };
 
         const cellEditProp = {
-          mode: 'click'
+          mode: 'click',
+          blurToSave: true,
+          afterSaveCell: this.onAfterSaveCell
         };
 
         const createCustomDeleteButton = (onClick) => {
@@ -113,10 +131,6 @@ class MainArea extends React.Component {
         }
 
         const options = {
-          insertText: 'Add Asset',
-          deleteText: 'Delete',
-          deleteBtn: createCustomDeleteButton
-           // afterInsertRow: onAfterInsertRow
         }
 
 
@@ -125,8 +139,8 @@ class MainArea extends React.Component {
           <div id="MainArea">
           <BootstrapTable
             data={assets}
-            insertRow={true}
-            deleteRow={true}
+            insertRow={false}
+            deleteRow={false}
             selectRow={selectRowProp}
             search={true}
             cellEdit={cellEditProp}
@@ -135,13 +149,16 @@ class MainArea extends React.Component {
             bordered={false}
             hover
             >
-
             <TableHeaderColumn
+              dataField='AssetID'
               isKey
+              hidden>AssetID
+            </TableHeaderColumn>
+            <TableHeaderColumn
               headerAlign='center'
               dataAlign='center'
               dataField='DisplayName'
-              editable={false}
+              editable={true}
               dataFormat={linkFormatter}
               formatExtraData={"dashboard"}
               dataSort={true}>

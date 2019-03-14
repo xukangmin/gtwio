@@ -1,0 +1,37 @@
+
+
+    {
+        [{TimeStamp: 1552059891,
+        Data :[{
+                  "DisplayName": "Temp0",
+                  "Value": 60.81,
+                  "Unit": "°F",
+                  "Valid": true
+                },
+                {
+                  "DisplayName": "Temp1",
+                  "Value": 57.84,
+                  "Unit": "°F",
+                  "Valid": false
+                },
+                {
+                  "DisplayName": "Temp2",
+                  "Value": 61.57,
+                  "Unit": "°F",
+                  "Valid": true
+                },
+                {
+                  "DisplayName": "Para0",
+                  "Value": 64.21,
+                  "Unit": "°F",
+                  "Valid": true
+                },
+                {
+                  "DisplayName": "Para10",
+                  "Value": 63.54,
+                  "Unit": "°F",
+                  "Valid": true
+                }
+                ]
+          }    ]
+    }

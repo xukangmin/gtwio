@@ -2,10 +2,11 @@ import { gConstants } from '../_components/constants';
 import { assetServices } from '../_services/assetServices';
 import { alertActions } from './alertAction';
 
-const addAsset = (user, displayname) => {
+const addAsset = (user, displayname, location) => {
+  console.log(location)
     return dispatch => {
         dispatch(request());
-        assetServices.addAsset(user, displayname)
+        assetServices.addAsset(user, displayname, location)
             .then(
                 info => {
                     dispatch(success(info));
@@ -160,10 +161,10 @@ const getAllDeviceData = (user, assetid) => {
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
 }
 
-const updateAsset = (user, assetid, data) => {
-    return dispatch => {
+const updateAsset = (user, assetid, key, value) => {
+  return dispatch => {
         dispatch(request());
-        assetServices.updateAsset(data)
+        assetServices.updateAsset(assetid, key, value)
             .then(
                 info => {
                     dispatch(getAssetsOverview(user));

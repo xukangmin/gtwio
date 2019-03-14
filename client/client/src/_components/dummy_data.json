@@ -21,7 +21,7 @@
       "DisplayName": "Para0",
       "Value": 64.21,
       "Unit": "°F",
-      "Valid": true
+      "Valid": false
     },
     {
       "DisplayName": "Para10",
@@ -58,7 +58,7 @@
       "DisplayName": "Para10",
       "Value": 63.54,
       "Unit": "°F",
-      "Valid": true
+      "Valid": false
     }
   ],
   "1552059893": [{
@@ -96,7 +96,7 @@
       "DisplayName": "Temp0",
       "Value": 60.81,
       "Unit": "°F",
-      "Valid": true
+      "Valid": false
     },
     {
       "DisplayName": "Temp1",

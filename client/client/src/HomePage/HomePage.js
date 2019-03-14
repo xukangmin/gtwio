@@ -23,7 +23,7 @@ class HomePage extends React.Component {
 
     // first Get user's assets info with interval 10s
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.assets_local = JSON.parse(localStorage.getItem('assets'));
+    // this.assets_local = JSON.parse(localStorage.getItem('assets'));
     this.range = JSON.parse(localStorage.getItem('range'));
 
     let now = new Date();
@@ -43,7 +43,7 @@ class HomePage extends React.Component {
        localStorage.setItem('range', JSON.stringify(range));
     }
 
-    if (this.user && !this.assets_local)
+    if (this.user)
     {
       this.props.dispatch(assetActions.getAssetsOverview(this.user));
     }

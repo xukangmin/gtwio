@@ -19,18 +19,11 @@ window['moment'] = moment;
 class AssetData extends React.Component {
   constructor(props) {
     super(props);
-    this.user = JSON.parse(localStorage.getItem('user'));
-    this.asset =  props.match.params.assetID;
-    this.range = JSON.parse(localStorage.getItem('range'));
-    // if(this.range.live){
-    //   this.props.dispatch(dataActions.getDataByAssetID(this.asset, Math.floor(new Date().getTime())-this.range.interval*60*1000, Math.floor(new Date().getTime())));
-    // } else{
-    //   this.props.dispatch(dataActions.getDataByAssetID(this.asset, this.range.start, this.range.end));
-    // }
   }
 
   render() {
-    const { data } = this.props;
+
+    let { data } = this.props;
 
     const ValueFormatter = ({value}) => {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
@@ -46,13 +39,13 @@ class AssetData extends React.Component {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
 
-    let col = [{ key: "id", name: "Time", frozen: true }];
+    let col = [{ key: "id", name: "Time", frozen: true, width:200 }];
     let row = [];
 
     if(data){
       var items = data[0].Data.map(x=>x.DisplayName);
       for (var itemNo in items){
-        var new_col = {key: itemNo, name:items[itemNo]};
+        var new_col = {key: itemNo, name:items};
         new_col['formatter'] = ValueFormatter;
         col.push(new_col);
       }
@@ -64,7 +57,7 @@ class AssetData extends React.Component {
           var device_id = device;
           new_row[device_id]= {value: data[time].Data[device].Value.toFixed(2)+"°F", valid: data[time].Data[device].Valid};
       }
-      row.push(new_row);
+      row.unshift(new_row);
     }
 
     return (

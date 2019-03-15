@@ -55,21 +55,24 @@ class RangePicker extends React.Component {
         }
       }
 
+      var now = new Date().getTime();
+      var liveStart = now-this.range.interval*60*1000;
+
       if (asset && device)
       {
         this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start*1000, this.range.end*1000));
       } else if (asset && tag){
         if (this.range.live){
-          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, moment(new Date()).subtract(this.range.interval, "minutes"), moment(new Date())));
+          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, liveStart, now));
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
       } else if (asset){
-        console.log('111')
         if(this.range.live){
-          this.props.dispatch(dataActions.getDataByAssetID(asset, Math.floor(new Date().getTime())-this.range.interval*60*1000, Math.floor(new Date().getTime())));
+          this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
+        }else{
+          this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
         }
-        this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
       }
     }
 

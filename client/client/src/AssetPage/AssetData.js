@@ -13,19 +13,34 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ReactDataGrid from "react-data-grid";
 import dummyData from '../_components/dummy_data.json';
+import * as moment from 'moment';
+window['moment'] = moment;
 
 class AssetData extends React.Component {
   constructor(props) {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset =  props.match.params.assetID;
-    // this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552415788000, 1552416788000));
+    this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552403863000, 1552407063000));
   }
 
   render() {
+    const { data } = this.props;
+
+    for(var i in data){
+      // console.log(moment(data[i].TimeStamp).format('MMMM Do YYYY, H:mm'))
+      for (var j in data[i]){
+        console.log(data[i])
+      }
+    }
+    //
+    // for(var i in data[0].Data){
+    //   console.log(i)
+    // }
     let timestamps = Object.keys(dummyData);
     let devices= dummyData[timestamps[0]].map(x=>x.DisplayName);
     let columns = [{ key: "id", name: "Time", frozen: true }];
+
     const ValueFormatter = ({value}) => {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
@@ -45,8 +60,8 @@ class AssetData extends React.Component {
       rows.push(new_row);
     }
 
-    console.log(columns)
-    console.log(rows)
+    // console.log(columns)
+    // console.log(rows)
 
     return (
       <div>
@@ -61,8 +76,9 @@ class AssetData extends React.Component {
 
 
 function mapStateToProps(state) {
+  const { data } = state.data
   return {
-
+    data: data
   };
 }
 

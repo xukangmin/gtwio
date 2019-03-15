@@ -108,22 +108,22 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           offset = 0;
         } else if (plist.length === 2) {
           paraid = plist[0];
-          op = "avg";
-          timerange = plist[1];
+          op = "AVG";
+          timerange = parseInt(plist[1]) * 1000;
           offset = 0;
         } else if (plist.length === 3) {
           paraid = plist[0];
           op = plist[1];
-          timerange = plist[2];
+          timerange = parseInt(plist[2]) * 1000;
           offset = 0;
         } else if (plist.length === 4) {
           paraid = plist[0];
           op = plist[1];
-          timerange = plist[2];
-          offset = plist[4];
+          timerange = parseInt(plist[2]) * 1000;
+          offset = parseInt(plist[3]) * 1000;
         }
 
-        if (timerange == 0 || compareStrings(op,"Current") || compareStrings(op,"LAST")) {
+        if (timerange == 0 || compareStrings(op,"Current", true) || compareStrings(op, "LAST", true)) {
           var result =  dataobj.find(item => item.ParameterID === paraid).Value;
           resolve(result);
         }
@@ -135,25 +135,25 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
                  if (data.length > 0) {
                    data.sort((a,b) => a.TimeStamp - b.TimeStamp);
                    var dataarr = data.map(item => item.Value);
-                   if (compareStrings(op,"AVG") || compareStrings(op,"MEAN")) { // average data
+                   if (compareStrings(op,"AVG", true) || compareStrings(op,"MEAN", true)) { // average data
                       var result = math.mean(dataarr);
                       resolve(result);
-                   } else if (compareStrings(op,"MAX")) {
+                   } else if (compareStrings(op,"MAX", true)) {
                      var result = math.max(dataarr);
                      resolve(result);
-                   } else if (compareStrings(op,"MIN")) {
+                   } else if (compareStrings(op,"MIN", true)) {
                      var result = math.min(dataarr);
                      resolve(result);
-                   } else if (compareStrings(op,"COUNT")) {
+                   } else if (compareStrings(op,"COUNT", true)) {
                      var result = dataarr.length;
                      resolve(result);
-                   } else if (compareStrings(op,"MEDIAN")) {
+                   } else if (compareStrings(op,"MEDIAN", true)) {
                      var result = math.median(dataarr);
                      resolve(result);
-                   } else if (compareStrings(op,"SUM")) {
+                   } else if (compareStrings(op,"SUM", true)) {
                      var result = math.sum(dataarr);
                      resolve(result);
-                   } else if (compareStrings(op,"FIRST")) {
+                   } else if (compareStrings(op,"FIRST", true)) {
                      var result = dataarr[0];
                      resolve(result);
                    }
@@ -235,7 +235,7 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
       if (!err) {
           var currentTimeStamp = Math.floor((new Date).getTime());
           // do calculation
-          // first gett all data;
+          // first get all data;
           if (data) {
             if (data.Require) {
               if (data.Require.length > 0) {
@@ -285,8 +285,16 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                       max_timestamp = rawdataobj[paraid][i].TimeStamp;
                     }
                   }
-
-                  _perform_calculation(rawdataobj[paraid], data.Equation, max_timestamp)
+                  var equation;
+                  if (data.ActiveEquation) {
+                    equation = data.ActiveEquation;
+                  } else if (data.Equation) {
+                    equation = data.Equation;
+                  } else {
+                    equation = "undefined";
+                  }
+                  //console.log(equation);
+                  _perform_calculation(rawdataobj[paraid], equation, max_timestamp)
                     .then(
                       ret => {
                         rawdataobj[paraid] = [];

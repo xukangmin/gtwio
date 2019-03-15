@@ -33,14 +33,20 @@ class SideNav extends React.Component {
           if (m_res[item].match.isExact) {
             this.asset = m_res[item].match.params.assetID;
             this.props.dispatch(assetActions.getSingleAssetData(this.user, this.asset));
-            if(m_res[item].match.params.assetID){
-              this.assetName = JSON.parse(localStorage.getItem("asset("+ this.asset + ")"))['DisplayName'];
-            }
           }
         }
-
-
     }
+
+    componentDidMount() {
+      let m_res = matchRoutes(routes, window.location.pathname);
+      for (var item in m_res) {
+
+          if (m_res[item].match.params.assetID) {
+            this.assetName = JSON.parse(localStorage.getItem("asset(" + this.asset + ")"))['DisplayName'];
+          }
+        }
+      }
+
 
     render() {
         return (

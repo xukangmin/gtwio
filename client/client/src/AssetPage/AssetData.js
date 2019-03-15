@@ -21,59 +21,47 @@ class AssetData extends React.Component {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset =  props.match.params.assetID;
-    this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552403863000, 1552407063000));
+    this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552580963000, 1552590963000));
   }
 
   render() {
     const { data } = this.props;
-
-    for(var i in data){
-      // console.log(moment(data[i].TimeStamp).format('MMMM Do YYYY, H:mm'))
-      for (var j in data[i]){
-        console.log(data[i])
-      }
-    }
-    //
-    // for(var i in data[0].Data){
-    //   console.log(i)
-    // }
-    let timestamps = Object.keys(dummyData);
-    let devices= dummyData[timestamps[0]].map(x=>x.DisplayName);
-    let columns = [{ key: "id", name: "Time", frozen: true }];
+    let col = [{ key: "id", name: "Time", frozen: true }];
+    let row = [];
 
     const ValueFormatter = ({value}) => {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
 
-    for (var i in devices){
-      let new_col = {key: devices[i], name: devices[i]};
-      new_col['formatter'] = ValueFormatter;
-      columns.push(new_col);
-    }
-
-    let rows=[];
-    for(var i in dummyData){
-      let new_row = {id: i};
-      for(var value in dummyData[i]){
-        new_row[dummyData[i][value].DisplayName] = {value: dummyData[i][value].Value, valid: dummyData[i][value].Valid};
+    if(data){
+      var items = data[0].Data.map(x=>x.DisplayName);
+      for (var itemNo in items){
+        var new_col = {key: itemNo, name:items[itemNo]};
+        new_col['formatter'] = ValueFormatter;
+        col.push(new_col);
       }
-      rows.push(new_row);
     }
 
-    // console.log(columns)
-    // console.log(rows)
+    for(var time in data){
+      var new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
+      for (var device in data[time].Data){
+          var device_id = device;
+          new_row[device_id]= {value: data[time].Data[device].Value.toFixed(2)+"°F", valid: data[time].Data[device].Valid};
+      }
+      row.push(new_row);
+    }
 
     return (
       <div>
-        <ReactDataGrid
-          columns={columns}
-          rowGetter={i => rows[i]}
-          rowsCount={rows.length}/>
+      <ReactDataGrid
+        columns={col}
+        rowGetter={i => row[i]}
+        rowsCount={row.length}
+        resizable={true}/>
       </div>
     );
   }
 }
-
 
 function mapStateToProps(state) {
   const { data } = state.data

@@ -19,7 +19,8 @@ var functions = {
   updateRequireList: updateRequireList,
   updateRequireListByEquation: updateRequireListByEquation,
   _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise,
-  _createParameter: _createParameter
+  _createParameter: _createParameter,
+  _updateRequireListByEquation: _updateRequireListByEquation
 }
 
 for (var key in functions) {
@@ -483,7 +484,7 @@ function _updateRequireListByEquation(paraid, equation, callback) {
   if(equation.match(reg)){
     paralist = equation.match(reg);
   }
-  
+
   if (paralist.length > 0) {
       paralist = paralist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
 

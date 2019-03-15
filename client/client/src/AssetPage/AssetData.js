@@ -21,17 +21,33 @@ class AssetData extends React.Component {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset =  props.match.params.assetID;
-    this.props.dispatch(dataActions.getDataByAssetID(this.asset, 1552580963000, 1552590963000));
+    this.range = JSON.parse(localStorage.getItem('range'));
+    // if(this.range.live){
+    //   this.props.dispatch(dataActions.getDataByAssetID(this.asset, Math.floor(new Date().getTime())-this.range.interval*60*1000, Math.floor(new Date().getTime())));
+    // } else{
+    //   this.props.dispatch(dataActions.getDataByAssetID(this.asset, this.range.start, this.range.end));
+    // }
   }
 
   render() {
     const { data } = this.props;
-    let col = [{ key: "id", name: "Time", frozen: true }];
-    let row = [];
 
     const ValueFormatter = ({value}) => {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
+
+    function TitleFormatter (value) {
+      value = value.split('/');
+      var title = '<span>';
+      for (var i in value){
+        title += value[i]+'<br>';
+      }
+      title += '</span>';
+      return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
+    };
+
+    let col = [{ key: "id", name: "Time", frozen: true }];
+    let row = [];
 
     if(data){
       var items = data[0].Data.map(x=>x.DisplayName);
@@ -57,7 +73,7 @@ class AssetData extends React.Component {
         columns={col}
         rowGetter={i => row[i]}
         rowsCount={row.length}
-        resizable={true}/>
+        minHeight={800}/>
       </div>
     );
   }

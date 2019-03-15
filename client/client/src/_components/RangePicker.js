@@ -64,6 +64,12 @@ class RangePicker extends React.Component {
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
+      } else if (asset){
+        console.log('111')
+        if(this.range.live){
+          this.props.dispatch(dataActions.getDataByAssetID(asset, Math.floor(new Date().getTime())-this.range.interval*60*1000, Math.floor(new Date().getTime())));
+        }
+        this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
       }
     }
 

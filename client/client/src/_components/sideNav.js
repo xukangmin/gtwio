@@ -34,7 +34,7 @@ class SideNav extends React.Component {
             this.asset = m_res[item].match.params.assetID;
             this.props.dispatch(assetActions.getSingleAssetData(this.user, this.asset));
             if(m_res[item].match.params.assetID){
-              his.assetName = JSON.parse(localStorage.getItem("asset("+ this.asset + ")"))['DisplayName'];
+              this.assetName = JSON.parse(localStorage.getItem("asset("+ this.asset + ")"))['DisplayName'];
             }
           }
         }

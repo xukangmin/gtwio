@@ -31,21 +31,19 @@ class SideNav extends React.Component {
         let m_res = matchRoutes(routes, window.location.pathname);
         for(var item in m_res) {
           if (m_res[item].match.isExact) {
-            this.asset = m_res[item].match.params.assetID;
-            this.props.dispatch(assetActions.getSingleAssetData(this.user, this.asset));
+            if  (m_res[item].match.params.assetID)
+            {
+              this.asset = m_res[item].match.params.assetID;
+              this.assets = JSON.parse(localStorage.getItem('assets'));
+
+              var found = this.assets.find(item => item.AssetID === this.asset);
+
+              this.assetName = found.DisplayName;
+            }
           }
         }
+
     }
-
-    componentDidMount() {
-      let m_res = matchRoutes(routes, window.location.pathname);
-      for (var item in m_res) {
-
-          if (m_res[item].match.params.assetID) {
-            this.assetName = JSON.parse(localStorage.getItem("asset(" + this.asset + ")"))['DisplayName'];
-          }
-        }
-      }
 
 
     render() {
@@ -79,7 +77,7 @@ class SideNav extends React.Component {
                         </li>
                     </ul>
 
-                    {this.asset?
+                    {this.assetName?
                     <ul style={{marginTop:"30px"}} className ="nav flex-column">
                       <li className ="nav-item">
                         <a className ="nav-link bg-dark" style={{color:"white", textAlign:"center"}} href={"/asset/" + this.asset + "/dashboard"}>

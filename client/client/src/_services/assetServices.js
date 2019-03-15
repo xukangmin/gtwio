@@ -8,6 +8,8 @@ const getAssetsOverview = (user) => {
                    'x-api-key' : user.ApiKey},
         method: 'GET'
     };
+    var rq = process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID;
+    console.log(rq);
     return fetch(process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
@@ -87,7 +89,8 @@ const getSingleAsset = (user, assetid) => {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey}
     };
-
+    var rq = process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetid;
+    console.log(rq);
     return fetch(process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetid, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])

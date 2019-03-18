@@ -163,25 +163,19 @@
 	</g>
 </g>
 <g>
+	<rect id="rect-right" x="597.5" y="210.4" class="st26" width="67.5" height="24.7"/>
 	<a id="TubeInlet_flow">
-		<rect id="rect9030-1-1" x="594.6" y="207.4" class="st22" width="72.8" height="24.7"/>
-		<g>
-			<rect id="rect9030-1-1_1_" x="597.5" y="210.4" class="st23" width="67.5" height="19.1"/>
-			<text transform="matrix(1 0 0 1 624.3043 226.2827)" class="st24 st25 st20">+</text>
-		</g>
+		<text transform="matrix(1 0 0 1 605 226)" class="st24 st8 st16">N/A gpm</text>
 	</a>
 </g>
 <g>
+	<rect id="rect-down" x="492.4" y="269.5" class="st26" width="74.8" height="26.7"/>
 	<a id="ShellOutlet_flow">
-		<rect id="rect9030-2" x="492.3" y="269.5" class="st22" width="74.8" height="26.7"/>
-		<g>
-			<rect id="rect9030-1-1_2_" x="495.7" y="273.3" class="st23" width="67.5" height="19.1"/>
-			<text transform="matrix(1 0 0 1 138 289.217)" class="st24 st25 st20">+</text>
-		</g>
+		<text transform="matrix(1 0 0 1 503 287)" class="st24 st8 st16">N/A gpm</text>
 	</a>
 </g>
 <g>
-	<rect id="rect9030" x="248.7" y="142.8" class="st26" width="87.4" height="26.7"/>
+	<rect id="rect-up" x="248.7" y="142.8" class="st26" width="87.4" height="26.7"/>
 	<a id="ShellInlet_flow">
 		<text transform="matrix(1 0 0 1 260 161)" class="st24 st8 st27">N/A gpm</text>
 	</a>

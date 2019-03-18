@@ -107,20 +107,12 @@
 			<text transform="matrix(1 0 0 1 523.6398 422.7033)" class="st8 st15">°F</text>
 		</a>
 	</g>
-	<g>
-		<text id="ShellOutlet_title" transform="matrix(1 0 0 1 411.1743 400.6553)" class="st8 st16 hide">Shell Outlet</text>
-		<text id="ShellOutlet_id" transform="matrix(1 0 0 1 408.2012 416.3193)" class="st8 st16 hide">(ID: 01A001)</text>
-	</g>
 </g>
 <line class="st17" x1="76.1" y1="218.9" x2="122.7" y2="218.9"/><!-- left arrow line-->
 <line class="st17" x1="689" y1="218.5" x2="725.6" y2="218.5"/>
 <line class="st17" x1="290.9" y1="128.4" x2="290.9" y2="91.8"/>
 <line class="st17" x1="529.5" y1="342.1" x2="529.5" y2="305.5"/>
 <g>
-	<g>
-		<text id="TubeOutlet_title" transform="matrix(1 0 0 1 8.937 271.4497)" class="st8 st16 hide">Tube Outlet</text>
-		<text id="TubeOutlet_id" transform="matrix(1 0 0 1 6.3271 288.0156)" class="st8 st16 hide">(ID: 01A001)</text>
-	</g>
 	<g>
 		<circle id="path4295-9-1" class="st18" cx="34.1" cy="217.1" r="34.3"/>
 		<g>
@@ -133,10 +125,6 @@
 </g>
 <g>
 	<g>
-		<text id="TubeInlet_title" transform="matrix(1 0 0 1 745.376 268.0825)" class="st8 st16 hide">Tube Inlet</text>
-		<text id="TubeInlet_id" transform="matrix(1 0 0 1 735.7715 282.3076)" class="st8 st16 hide">(ID: 01A001)</text>
-	</g>
-	<g>
 
 			<ellipse id="path4295-9-1-4-7" transform="matrix(0.1602 -0.9871 0.9871 0.1602 436.5919 945.0707)" class="st18" cx="773.7" cy="216" rx="34.3" ry="34.3"/>
 		<g>
@@ -148,10 +136,6 @@
 	</g>
 </g>
 <g>
-	<g>
-		<text id="ShellInlet_title" transform="matrix(1 0 0 1 345.9185 35.3428)" class="st8 st16 hide">Shell Inlet</text>
-		<text id="ShellInlet_id" transform="matrix(1 0 0 1 337.5059 53.3311)" class="st8 st16 hide">(ID: 01A001)</text>
-	</g>
 	<g>
 		<circle id="path4295" class="st21" cx="290.9" cy="43.3" r="34.3"/>
 		<g>

@@ -188,7 +188,6 @@ class AssetConfigurations extends React.Component {
                 <Row className="mt-3">
                   <Col>
                     <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-                    <Button className="deleteButton" color="danger" onClick={this.deleteDevices}><i className="fa fa-trash" aria-hidden="true"></i></Button>
                     <BootstrapTable
                       data={device}
                       options={options}

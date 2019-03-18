@@ -19,6 +19,9 @@ class RangePicker extends React.Component {
 
       this.range = JSON.parse(localStorage.getItem('range'));
       this.user = JSON.parse(localStorage.getItem('user'));
+      this.state = {
+        display: 'block'
+      }
 
       if (!this.range)
       {
@@ -46,12 +49,15 @@ class RangePicker extends React.Component {
 
       var m_res = matchRoutes(routes, window.location.pathname);
       var asset, tag, device;
-
+      console.log(m_res)
       for(var item in m_res) {
         if (m_res[item].match.isExact) {
           asset = m_res[item].match.params.assetID;
           tag = m_res[item].match.params.tagID;
           device = m_res[item].match.params.deviceID;
+        }
+        if (m_res[item].match.url.includes("configurations") || m_res[item].match.url.includes("devices")){
+          this.setState({display: 'none'});
         }
       }
 
@@ -68,9 +74,9 @@ class RangePicker extends React.Component {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
       } else if (asset){
-        if(this.range.live){
+        if (this.range.live){
           this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
-        }else{
+        } else{
           this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
         }
       }
@@ -176,7 +182,7 @@ class RangePicker extends React.Component {
       let maxDate = moment(start).add(24, "hour");
 
       return (
-        <div style={{marginLeft: "-15px"}}>
+        <div style={{marginLeft: "-15px", display: this.state.display}} >
           <DateTimeRangeContainer
             ranges={ranges}
             start={start}

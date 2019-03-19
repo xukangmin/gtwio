@@ -27,7 +27,7 @@ class AssetConfigurations extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.onRowSelect = this.onRowSelect.bind(this);
-    this.deleteDevices = this.deleteDevices.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
     this.state = {
@@ -70,13 +70,15 @@ class AssetConfigurations extends React.Component {
     }
   }
 
-  deleteDevices(){
-    console.log(this.state.selectedRows);
-    this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, device));
-  }
-
-  updateDevice(){
-
+  deleteItem(itemID, itemName, itemType){
+    console.log(itemType)
+    if (confirm("Are you sure to delete " + itemName +"?")){
+      if (itemType == "device"){
+        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, itemID));
+      } else if (itemType == "parameter"){
+        this.props.dispatch(parameterActions.deleteParameter(this.asset, itemID));
+      }
+    }
   }
 
   onAfterSaveCell(row, cellName, cellValue) {
@@ -102,10 +104,14 @@ class AssetConfigurations extends React.Component {
       //although this is not used, this function has to be exist
     }
 
-    const createCustomDeleteButton = (onClick) => {
-      return (
-        <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i className="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
-      );
+    function deleteFormatter(cell, row, enumObject){
+      let type;
+      if(row.DeviceID){
+        type = 'device';
+      } else if (row.ParameterID){
+        type = 'parameter';
+      }
+      return <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell, row.DisplayName, type)}><i className="fa fa-trash" aria-hidden="true"></i></button>
     }
 
     function linkFormatter(cell, row, enumObject){
@@ -131,28 +137,6 @@ class AssetConfigurations extends React.Component {
     function decimalFormatter(cell, row){
       return cell.toFixed(2)+'°F';
     }
-
-    function onAfterInsertRow(row) {
-      // let newRowStr = '';
-      //
-      // for (const prop in row) {
-      //   newRowStr += prop + ': ' + row[prop] + ' \n';
-      // }
-      // alert('The new row is:\n ' + newRowStr);
-    }
-
-    const options = {
-      insertText: 'Add Device',
-      deleteText: 'Delete',
-      deleteBtn: createCustomDeleteButton
-       // afterInsertRow: onAfterInsertRow
-    }
-
-    const selectRowProp = {
-      mode: 'checkbox',
-      bgColor: 'pink',
-      onSelect: this.onRowSelect
-    };
 
     const cellEditProp = {
       mode: 'click',
@@ -190,10 +174,8 @@ class AssetConfigurations extends React.Component {
                     <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                     <BootstrapTable
                       data={device}
-                      options={options}
                       insertRow={false}
                       deleteRow={false}
-                      selectRow={selectRowProp}
                       search={true}
                       cellEdit={cellEditProp}
                       version='4'
@@ -261,6 +243,16 @@ class AssetConfigurations extends React.Component {
                         dataSort={true}>
                           Last Calibration Date
                       </TableHeaderColumn>
+
+                      <TableHeaderColumn
+                        headerAlign='center'
+                        dataAlign='center'
+                        dataField='DeviceID'
+                        editable={false}
+                        formatExtraData={this.deleteItem}
+                        dataFormat={deleteFormatter}>
+                          Delete
+                      </TableHeaderColumn>
                     </BootstrapTable>
                   </Col>
                 </Row>
@@ -274,9 +266,7 @@ class AssetConfigurations extends React.Component {
                     data={parameter}
                     hover
                     height='80%' scrollTop={ 'Top' }
-                    selectRow={selectRowProp}
                     search={ true }
-                    options={ options }
                     cellEdit={ cellEditProp }
                     version='4'
                     bordered={ false }>
@@ -285,6 +275,15 @@ class AssetConfigurations extends React.Component {
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentValue' dataSort={ true } editable={false} dataFormat={decimalFormatter}>Current Value</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
+                    <TableHeaderColumn
+                      headerAlign='center'
+                      dataAlign='center'
+                      dataField='ParameterID'
+                      editable={false}
+                      formatExtraData={this.deleteItem}
+                      dataFormat={deleteFormatter}>
+                        Delete
+                    </TableHeaderColumn>
                   </BootstrapTable>
                 </Col>
               </Row>

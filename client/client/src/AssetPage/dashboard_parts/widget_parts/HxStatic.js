@@ -35,34 +35,25 @@ class HxStatic extends React.Component {
 
 
   HandleText(elem, tag, assetdata){
-    console.log(tag)
     var temp_obj = tag.Data.find(item => item.Name === "Temperature");
     var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
 
-    if (temp_obj)
+    if (temp_obj && typeof temp_obj.Value == 'number')
     {
-      if (typeof temp_obj.Value == 'number') {
-        elem.children[0].innerHTML = temp_obj.Value.toFixed(2);
-      } else {
-        elem.children[0].innerHTML = temp_obj.Value;
-      }
-
+      elem.children[0].innerHTML = temp_obj.Value.toFixed(2);
     }
+
     if (tag)
     {
       elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName);
     }
-    if (flow_obj.Value)
-    {
-      if (typeof flow_obj.Value == 'number')
-      {
-        document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
-        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/flow/" + flow_obj.ParameterID);
-        document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
-      }
-    }
 
-    //document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
+    if (flow_obj.Value && typeof flow_obj.Value == 'number')
+    {
+      document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
+      document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName);
+      document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
+    }
     if (assetdata)
     {
       document.getElementById("asset_name").innerHTML = assetdata.DisplayName;

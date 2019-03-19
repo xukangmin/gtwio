@@ -29,7 +29,7 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(process.env.API_HOST + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&Type=Temperature&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
+    return fetch(process.env.API_HOST + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })

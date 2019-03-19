@@ -21,7 +21,6 @@ const loadSVGdata = (svgname) => {
 }
 
 const getSingleTagData = (user, asset, tag, t1, t2) => {
-  console.log(t1+' '+t2)
     return dispatch => {
         dispatch(request());
         dataServices.getSingleTagData(user, asset, tag, t1, t2)

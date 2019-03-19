@@ -91,10 +91,10 @@ const updateParameter = (pid, key, value) => {
 const deleteParameter = (asset, parameterid) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.deleteParameter(parameterid)
+        parameterServices.deleteParameter(asset, parameterid)
             .then(
                 info => {
-                    dispatch(getParameterByAsset(assetid));
+                    dispatch(getParameterByAsset(asset));
                     dispatch(success(info));
                 },
                 error => {

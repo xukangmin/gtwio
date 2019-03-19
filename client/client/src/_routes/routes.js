@@ -71,10 +71,6 @@ const routes = [
           component: HxTag
         },
         {
-          path: '/asset/:assetID/flow/:flowID',
-          component: HxFlow
-        },
-        {
           path: '/asset/:assetID/report',
           component: AssetReport
         },

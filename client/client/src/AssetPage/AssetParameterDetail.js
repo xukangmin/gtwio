@@ -92,6 +92,7 @@ const ParameterInfo = (props) => {
 
 const ParameterTable = (props) => {
   const parameter = props.data;
+  console.log(parameter)
   return(
     <div>
       <Table
@@ -110,7 +111,7 @@ const ParameterTable = (props) => {
           {parameter.map((item,i) =>
               <tr key = {i}>
                 <td style={{padding: 0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2)+"°F"}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{parseFloat(item.Value).toFixed(2)+"°F"}</td>
               </tr>
           )}
         </tbody>
@@ -172,7 +173,7 @@ class AssetParameterDetail extends React.Component {
     const { AssetID } = this.state;
     const { parameter } = this.props;
     let { parameterData } = this.props;
-
+    console.log(parameterData)
     //console.log(parameter)
 /*    if(!this.props.parameter){
       this.dispatchParameterContinuously = setInterval(() => {
@@ -187,7 +188,7 @@ class AssetParameterDetail extends React.Component {
     else{
       return (
         <div className = "mt-3">
-        {parameter ?
+        {parameter && parameterData ?
           <div>
             <ParameterInfo data={parameter} update={this.updateEquation}/>
             {parameterData &&
@@ -197,7 +198,7 @@ class AssetParameterDetail extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className = "col-sm-auto col-lg-8">
-                <ParameterPlot/>
+                <ParameterPlot parameterData={this.sortTime(parameterData)}/>
               </div>
             </div>
            }

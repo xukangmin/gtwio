@@ -11,20 +11,23 @@ class ParameterPlot extends React.Component {
 
   render(){
     let { parameterData } = this.props;
+
     let unit = "(°F)";
     if (this.props.unit){
       unit = this.props.unit;
     }
     if (parameterData.length == 1){
-      parameterData = parameterData[0];
+      parameterData = parameterData[0].Parameters[0].Data;
+      console.log('#')
     }
+    console.log(parameterData)
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let tempX = [];
     let tempY = [];
     for(var i = 0; i < parameterData.length; i++){
       tempX.push(moment(new Date(parameterData[i].TimeStamp)).format('H:mm'));
-      tempY.push(parameterData[i].Value)
+      tempY.push(parameterData[i].Value.toFixed(2));
     }
 
     const data= {
@@ -60,9 +63,9 @@ class ParameterPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { data } = state.data;
+    // const { data } = state.data;
     return {
-        parameterData: data[0]
+        // parameterData: data[0]
     };
 }
 

@@ -14,27 +14,7 @@ import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
 import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
 import { HxTag } from '../AssetPage/dashboard_parts/widget_parts/HxTag'
-
-// const routes = [
-//   { component: AppRoot,
-//     routes: [
-//       { path: '/',
-//         exact: true,
-//         component: Home
-//       },
-//       { path: '/home',
-//         component: Home
-//       },
-//       { path: '/login',
-//         component: LoginMain
-//       },
-//       {
-//         path: '*',
-//         component: NotFound
-//       }
-//     ]
-//   }
-// ];
+import { HxFlow } from '../AssetPage/dashboard_parts/widget_parts/HxFlow'
 
 const routes = [
   { path: '/login',
@@ -89,6 +69,10 @@ const routes = [
         {
           path: '/asset/:assetID/tag/:tagID',
           component: HxTag
+        },
+        {
+          path: '/asset/:assetID/flow/:flowID',
+          component: HxFlow
         },
         {
           path: '/asset/:assetID/report',

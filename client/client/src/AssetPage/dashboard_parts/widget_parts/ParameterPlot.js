@@ -9,7 +9,14 @@ class ParameterPlot extends React.Component {
   }
 
   render(){
-    const { parameterData } = this.props;
+    let { parameterData } = this.props;
+    let unit = "(°F)";
+    if (this.props.unit){
+      unit = this.props.unit;
+    }
+    if (parameterData.length == 1){
+      parameterData = parameterData[0];
+    }
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let tempX = [];
@@ -30,7 +37,7 @@ class ParameterPlot extends React.Component {
       yaxis: {
         range: [Math.min(...tempY)-10, Math.max(...tempY)+10],
         ticklen: 8,
-        title: "(°F)"
+        title: unit
       },
       xaxis:{
         autorange: true,
@@ -54,7 +61,7 @@ class ParameterPlot extends React.Component {
 function mapStateToProps(state) {
     const { data } = state.data;
     return {
-        parameterData: data
+        parameterData: data[0]
     };
 }
 

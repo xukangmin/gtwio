@@ -81,7 +81,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Stability Criteria - Window Size</th>
-              
+
               <td>{device.Parameters[0].StabilityCriteria.WindowSize + ' minutes'}</td>
             </tr>
             <tr>
@@ -117,7 +117,7 @@ const ParameterTable = (props) => {
         <thead>
           <tr>
             <th>Timestamp</th>
-            <th>Temperature</th>
+            <th>Value</th>
           </tr>
         </thead>
         <tbody>

@@ -35,7 +35,7 @@ class HxStatic extends React.Component {
 
 
   HandleText(elem, tag, assetdata){
-
+    console.log(tag)
     var temp_obj = tag.Data.find(item => item.Name === "Temperature");
     var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
 
@@ -56,11 +56,10 @@ class HxStatic extends React.Component {
     {
       if (typeof flow_obj.Value == 'number')
       {
-        document.getElementById(elem.id+'_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
-      } else {
-        document.getElementById(elem.id+'_flow').children[0].innerHTML = flow_obj.Value +' gpm';
+        document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
+        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/flow/" + flow_obj.ParameterID);
+        document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
       }
-
     }
 
     //document.getElementById(elem.id+'_id').innerHTML = '(ID: '+ Settings[elem.id].id +')';
@@ -68,10 +67,6 @@ class HxStatic extends React.Component {
     {
       document.getElementById("asset_name").innerHTML = assetdata.DisplayName;
     }
-
-
-    document.getElementById("TubeInlet_flow").style.visibility = "hidden";
-    document.getElementById("ShellOutlet_flow").style.visibility = "hidden";
   }
 
   render() {

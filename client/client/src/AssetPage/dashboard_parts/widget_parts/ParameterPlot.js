@@ -6,6 +6,7 @@ import Plot from 'react-plotly.js';
 class ParameterPlot extends React.Component {
   constructor(props){
     super(props);
+    console.log('11'+props)
   }
 
   render(){

@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-const SingleDevice = (props) => {
+const SingleItem = (props) => {
   return(
     <tr>
-      <th scope = "row"><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.SerialNumber}</a></th>
-      <td>{props.data.Data[0].Value.toFixed(2)}°F</td>
-      <td>{props.data.DataStatistics.Min.toFixed(2)}°F</td>
-      <td>{props.data.DataStatistics.Max.toFixed(2)}°F</td>
-      <td>{props.data.DataStatistics.Avg.toFixed(2)}°F</td>
-      <td>{props.data.DataStatistics.STDEV.toFixed(2)}°F</td>
+      <th scope = "row"><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.DisplayName}</a></th>
+      <td>{props.data.Parameters[0].CurrentValue.toFixed(2)+props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Min.toFixed(2)+props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Max.toFixed(2)+props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Avg.toFixed(2)+props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.STDEV.toFixed(2)+props.unit}</td>
     </tr>)
 }
 
@@ -20,36 +20,37 @@ class TagTable extends React.Component {
   }
 
   render(){
-    const { DeviceData } = this.props;
+    const { data } = this.props;
+    const { asset } = this.props;
+    const { unit } = this.props;
     return(
       <div className = "table-responsive">
-          <table className = "table table-striped" style={{textAlign: "center"}}>
-            <thead>
-              <tr>
-                <th>Device</th>
-                <th>Current</th>
-                <th>Min</th>
-                <th>Max</th>
-                <th>Mean</th>
-                <th>STDEV</th>
-              </tr>
-            </thead>
-            <tbody>
-              {DeviceData.map((singleDevice,i) =>
-                  <SingleDevice data = {singleDevice} asset = {this.props.asset} key = {i}/>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <table className = "table table-striped mt-3" style={{textAlign: "center"}}>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Current</th>
+              <th>Min</th>
+              <th>Max</th>
+              <th>Mean</th>
+              <th>STDEV</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((single,i) =>
+              <SingleItem data = {single} unit={unit} asset={asset} key = {i}/>
+            )}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }
 
 
 function mapStateToProps(state) {
-  const { data } = state.data;
   return {
-      DeviceData: data
+
   };
 }
 

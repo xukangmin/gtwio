@@ -14,26 +14,27 @@ class TagPlot extends React.Component {
   }
 
   render(){
-    const { DeviceData } = this.props;
+    const { data } = this.props;
+    const { unit } = this.props;
 
     let formattedData = [];
     let allData = [];
 
-    for (var i = 0; i < DeviceData.length; i++){
+    for (var i = 0; i < data.length; i++){
       formattedData.push({
-        x: DeviceData[i].Data.map((item,i) => moment(new Date(item.TimeStamp)).format("H:mm")),
-        y: DeviceData[i].Data.map((item,i) => item.Value.toFixed(2)),
+        x: data[i].Parameters[0].Data.map((item,i) => moment(new Date(item.TimeStamp)).format("H:mm")),
+        y: data[i].Parameters[0].Data.map((item,i) => item.Value.toFixed(2)),
         type: 'scatter',
-        name: DeviceData[i].SerialNumber
-      })
-      allData.push(DeviceData[i].Data.map((item,i) => item.Value));
+        name: data[i].SerialNumber
+      });
+      allData.push(data[i].Parameters[0].Data.map((item,i) => item.Value));
     }
 
     let layout = {
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
         ticklen: 8,
-        title: "(°F)"
+        title: "("+unit+")"
       },
       xaxis: {
         showline: false,
@@ -60,9 +61,7 @@ class TagPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.data;
   return {
-      DeviceData: data
   };
 }
 

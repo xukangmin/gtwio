@@ -9,16 +9,16 @@ class TagRadar extends React.Component {
   }
 
   render(){
-    const { DeviceData } = this.props;
+    const { data } = this.props;
 
-    let SerialNumberList = DeviceData.map((singleDevice,i) => singleDevice.SerialNumber);
+    let SerialNumberList = data.map((singleDevice,i) => singleDevice.SerialNumber);
     SerialNumberList.push(SerialNumberList[0]);
 
-    let CurrentValueList = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value.toFixed(2));
+    let CurrentValueList = data.map((singleDevice,i) => singleDevice.Parameters[0].CurrentValue.toFixed(2));
     CurrentValueList.push(CurrentValueList[0]);
 
 
-    let CurrentValueMean = DeviceData.map((singleDevice,i) => singleDevice.Data[0].Value.toFixed(2)).reduce((p,c,_,a) => p + c/a.length,0);
+    let CurrentValueMean = data.map((singleDevice,i) => singleDevice.Parameters[0].CurrentValue.toFixed(2)).reduce((p,c,_,a) => p + c/a.length,0);
     let MeanValueList = [CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean]
 
     let ValueMax = CurrentValueMean + 0.5;
@@ -27,10 +27,10 @@ class TagRadar extends React.Component {
     let ValueMin = CurrentValueMean - 0.5;
     let MinValueList = [ValueMin, ValueMin, ValueMin, ValueMin, ValueMin]
 
-    let PlotMax = Math.ceil(Math.max(...DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Max)))+1;
-    let PlotMin = Math.floor(Math.min(...DeviceData.map((singleDevice,i) => singleDevice.DataStatistics.Min)))-1;
+    let PlotMax = Math.ceil(Math.max(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Max)))+1;
+    let PlotMin = Math.floor(Math.min(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Min)))-1;
 
-    const data = [{
+    const plotData = [{
       name: 'Upper Alarm Limit',
       type: 'scatterpolar',
       r: [PlotMax, PlotMax, PlotMax, PlotMax, PlotMax],
@@ -95,7 +95,7 @@ class TagRadar extends React.Component {
     }
     return(
         <Plot
-          data = {data}
+          data = {plotData}
           layout = {layout}
           style = {{width:"100%"}}
         />
@@ -104,9 +104,8 @@ class TagRadar extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.data;
+
   return {
-      DeviceData: data
   };
 }
 

@@ -180,7 +180,7 @@ function _createAssetPromise(userid, name) {
       asset.AssetID = "A" + shortid.generate();
       asset.LatestTimeStamp = 0;
       asset.DeviceCount = 0;
-      asset.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
+
       if (name)
       {
         asset.DisplayName = name;
@@ -220,6 +220,10 @@ function _createAssetPromise(userid, name) {
     });
 }
 
+
+
+
+
 function _createSingleAsset(userid, singleAssetConfig) {
   return new Promise(
     (resolve, reject) => {
@@ -228,13 +232,23 @@ function _createSingleAsset(userid, singleAssetConfig) {
           .then(
             ret => {
               // create device
-              Promise.all(singleAssetConfig.Devices.map(item => deviceManage._createDeviceWithParameter(ret, item.Name, item.SerialNumber, item.Parameters)))
-                .then(
-                  ret => {
-                    resolve();
+              //var tasks = singleAssetConfig.Devices.map(item => deviceManage._createDeviceWithParameter(ret, item));
+              //var p = Promise.resolve();
+              const _createDevices = async (assetid, devices) =>
+              {
+                  for (let i = 0; i < devices.length; i++) {
+                    let ret = await deviceManage._createDeviceWithParameter(assetid, devices[i]);
                   }
-                )
-                .catch(err => reject(err));
+                  return 'done';
+              };
+
+              return _createDevices(ret, singleAssetConfig.Devices)
+            }
+          )
+          .then(
+            ret => {
+              console.log("create device done");
+              resolve(ret);
             }
           )
           .catch(

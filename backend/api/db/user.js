@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const UserSchema = new Schema(
   {
-    UserID: String,
+    UserID: {type: String, index: true, unique: true},
     Active: Number,
     ApiKey: String,
     Created: Number,

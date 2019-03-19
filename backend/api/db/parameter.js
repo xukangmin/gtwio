@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const ParameterSchema = new Schema(
   {
-    ParameterID: String,
-    AddTimeStamp: Number,
+    ParameterID: {type: String, index: true, unique: true},
     DisplayName: String,
     CurrentValue: Number,
     CurrentTimeStamp: Number,

@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const DataSchema = new Schema(
   {
-    ParameterID: String,
-    TimeStamp: Number, // with ms accuracy
+    ParameterID: {type: String, index: true},
+    TimeStamp: {type: Number, index: true}, // with ms accuracy
     Value: Number,
     Valid: Boolean // criteria defined in the parameters
   }

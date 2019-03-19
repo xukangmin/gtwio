@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const DeviceSchema = new Schema(
   {
-    DeviceID: String,
-    AddTimeStamp: Number,
+    DeviceID: {type: String, index: true, unique: true},
     DisplayName: String,
     SerialNumber: String,
     MetaInfo: Object,

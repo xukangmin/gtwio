@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const DashboardSchema = new Schema(
   {
-    DashboardID: String,
-    AddTimeStamp: Number,
+    DashboardID: {type: String, index: true, unique: true},
     DisplayName: String,
     Widgets: [{
       WidgetID: String,

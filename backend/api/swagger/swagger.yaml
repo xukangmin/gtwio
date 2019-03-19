@@ -1171,10 +1171,6 @@ paths:
         in: query
         required: true
         type: string
-      - name: Type
-        in: query
-        required: true
-        type: string
       - name: StartTimeStamp
         in: query
         required: true

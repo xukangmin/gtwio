@@ -27,116 +27,102 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
-function _createParameter(deviceid, assetid, type, name) {
+function _createParameter(deviceid, assetid, paraobj) {
     return new Promise(
       (resolve, reject) => {
         const shortid = require('shortid');
 
-        let para = new Parameter();
+        if (typeof paraobj === 'undefined') {
+          reject(new Error('Parameter object not defined'));
+        } else {
+          let para = new Parameter();
 
-        para.ParameterID = "P" + shortid.generate();
-        para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
-        para.CurrentValue = 0;
-        para.Type = type;
-        if (name) {
-            para.DisplayName = name;
-        }
-
-        para.save(err => {
-          if (err)
-          {
-            reject(err);
+          if (typeof paraobj === 'string') {
+            // single string, treat as parameter type
+            para.Type = paraobj;
+          } else if (typeof paraobj === 'object') {
+            for (var key in paraobj) {
+              para[key] = paraobj[key];
+            }
           }
-          else {
-            // add to devices
-            if (deviceid) {
-              Device.findOneAndUpdate({DeviceID: deviceid},
-                          {
-                            $push: {
-                              Parameters:  {ParameterID: para.ParameterID}
-                            }
-                          },
-                          function(err,data) {
-                            if (err) {
-                              reject(err);
-                            } else {
-                              resolve(para.ParameterID);
-                            }
-                          });
-            } else if (assetid) { // add to asset only
-                Asset.findOneAndUpdate({AssetID: assetid},
-                          {
+
+          para.ParameterID = "P" + shortid.generate();
+          para.CurrentValue = 0;
+
+          para.save(err => {
+            if (err)
+            {
+              reject(err);
+            }
+            else {
+              // add to devices
+              if (deviceid) {
+                Device.findOneAndUpdate({DeviceID: deviceid},
+                            {
                               $push: {
                                 Parameters:  {ParameterID: para.ParameterID}
                               }
-                          },
-                          function(err,data){
-                            if (err)
+                            },
+                            function(err,data) {
+                              if (err) {
+                                reject(err);
+                              } else {
+                                resolve(para.ParameterID);
+                              }
+                            });
+              } else if (assetid) { // add to asset only
+                  Asset.findOneAndUpdate({AssetID: assetid},
                             {
-                              reject(err);
+                                $push: {
+                                  Parameters:  {ParameterID: para.ParameterID}
+                                }
+                            },
+                            function(err,data){
+                              if (err)
+                              {
+                                reject(err);
+                              }
+                              else {
+                                resolve(para.ParameterID);
+                              }
                             }
-                            else {
-                              resolve(para.ParameterID);
-                            }
-                          }
-                        );
+                          );
+              }
+
+
+
+
             }
 
-
-
-
-          }
-
-        });
+          });
+        }
       });
 }
 
 function createParameter(req, res) {
   var paraobj = req.body;
 
-  if (paraobj.AssetID) {
-    _addParameter(paraobj.AssetID, null, paraobj, function(err, data) {
-      if (err)
-      {
+  _createParameter(paraobj.DeviceID, paraobj.AssetID, paraobj)
+    .then(
+      ret => {
+        shareUtil.SendSuccess(res);
+        //console.log(data);
+        if (paraobj.Equation) { // update equation
+          _updateRequireListByEquation(ret, paraobj.Equation, function(err,data) {
+            if (err) {
+              var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+              console.error(msg);
+            }
+          });
+        }
+      }
+    )
+    .catch(
+      err => {
         var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
         shareUtil.SendInternalErr(res, msg);
-      } else {
-          shareUtil.SendSuccess(res);
-          console.log(data);
-          if (data.Equation) { // update equation
-            _updateRequireListByEquation(data.ParameterID, data.Equation, function(err,data) {
-              if (err) {
-                var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
-                console.error(msg);
-              }
-            });
-          }
       }
-    });
-  } else if (paraobj.DeviceID) {
-    _addParameter(null, paraobj.DeviceID, paraobj, function(err, data) {
-      if (err)
-      {
-        var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
-        console.error(msg);
-        shareUtil.SendInternalErr(res, msg);
-      } else {
-          shareUtil.SendSuccess(res);
-          if (data.Equation) { // update equation
-            _updateRequireListByEquation(data.ParameterID, data.Equation, function(err,data) {
-              if (err) {
-                var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
-                console.error(msg);
-              }
-            });
-          }
-      }
-    });
-  }
-  else {
-    var msg = "AssetID or DeviceID or DataType or Unit missing";
-    shareUtil.SendInvalidInput(res, msg);
-  }
+    );
 
 }
 

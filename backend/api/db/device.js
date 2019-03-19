@@ -12,6 +12,7 @@ const DeviceSchema = new Schema(
     MetaInfo: Object,
     Tag: String,
     Angle: Number,
+    Type: String,
     LastCalibrationDate: Date,
     CalibrationConstants: {A: Number, B: Number, C: Number},
     CorrectionEquation: String,

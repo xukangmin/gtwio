@@ -33,23 +33,25 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
-function _createDeviceWithParameter(assetid, name, sn, paralist) {
+function _createDeviceWithParameter(assetid, deviceobj) {
   return new Promise(
     (resolve, reject) => {
       const shortid = require('shortid');
 
       let device = new Device();
 
+      for (var key in deviceobj) {
+        device[key] = deviceobj[key];
+      }
+
       device.DeviceID = "D" + shortid.generate();
-      device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
-      device.DisplayName = name;
-      device.SerialNumber = sn;
+
+      if (!device.DisplayName || !device.SerialNumber)
 
       device.save(err => {
         if (err)
         {
-          var msg = "device Save Error:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res,msg);
+          reject(err);
         }
         else {
           // add device to asset
@@ -66,7 +68,7 @@ function _createDeviceWithParameter(assetid, name, sn, paralist) {
             }
             else {
               // create parameter
-              Promise.all(paralist.map(item => parameterManage._createParameter(device.DeviceID, null, item, item)))
+              Promise.all(paralist.map(item => parameterManage._createParameter(device.DeviceID, item)))
                 .then(
                   ret => {
                     resolve(device.DeviceID);

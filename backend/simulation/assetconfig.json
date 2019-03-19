@@ -5,99 +5,100 @@
     [
       {
         "Name": "Temperature Sensor 1",
-        "SerialNumber": "02A001",
+        "SerialNumber": "02A050",
         "Tag": "ShellInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 2",
-        "SerialNumber": "02A002",
+        "SerialNumber": "02A051",
         "Tag": "ShellInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 3",
-        "SerialNumber": "02A003",
+        "SerialNumber": "02A052",
         "Tag": "ShellInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 4",
-        "SerialNumber": "02A004",
+        "SerialNumber": "02A053",
         "Tag": "ShellInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 5",
-        "SerialNumber": "02A005",
+        "SerialNumber": "02A054",
         "Tag": "ShellOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 6",
-        "SerialNumber": "02A006",
+        "SerialNumber": "02A055",
         "Tag": "ShellOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 7",
-        "SerialNumber": "02A007",
+        "SerialNumber": "02A056",
         "Tag": "ShellOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 8",
-        "SerialNumber": "02A008",
+        "SerialNumber": "02A057",
         "Tag": "ShellOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 9",
-        "SerialNumber": "02A009",
+        "SerialNumber": "02A058",
         "Tag": "TubeInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 10",
-        "SerialNumber": "02A010",
+        "SerialNumber": "02A059",
         "Tag": "TubeInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 11",
-        "SerialNumber": "02A011",
+        "SerialNumber": "02A060",
         "Tag": "TubeInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 12",
-        "SerialNumber": "02A012",
+        "SerialNumber": "02A061",
         "Tag": "TubeInlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 13",
-        "SerialNumber": "02A013",
+        "SerialNumber": "02A062",
         "Tag": "TubeOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 14",
-        "SerialNumber": "02A014",
+        "SerialNumber": "02A063",
         "Tag": "TubeOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 15",
-        "SerialNumber": "02A015",
+        "SerialNumber": "02A064",
         "Tag": "TubeOutlet",
         "Parameters": ["Temperature"]
       },
       {
         "Name": "Temperature Sensor 16",
-        "SerialNumber": "02A016",
+        "SerialNumber": "02A065",
         "Tag": "TubeOutlet",
         "Parameters": ["Temperature"]
       }
     ]
   }
+]

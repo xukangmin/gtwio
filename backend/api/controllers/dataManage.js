@@ -670,23 +670,14 @@ function _getRawDataByDevice(deviceobj, sTS, eTS) {
     });
 }
 
-function _getRawDataByType(deviceobj, type, sTS, eTS) {
+function _getRawDataByType(deviceobj, sTS, eTS) {
     return new Promise(
       (resolve, reject) => {
+          var para;
           Promise.all(deviceobj.Parameters.map(_getParameter))
             .then(
               ret => {
-                var parameter = null;
-                ret = ret.filter(item => item.Type === type);
-                if (ret.length === 1)
-                {
-                  parameter = ret[0];
-                }
-                else {
-                  console.log(ret);
-                  reject('parameter type not unique');
-                }
-                return _getDataByParameterID(parameter, sTS, eTS);
+                return Promise.all(ret.map(item => _getDataByParameterIDWithParaInfo(item, sTS, eTS)));
               }
             )
             .then(
@@ -698,20 +689,7 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
                   {
                     let dev = deviceobj.toObject();
                     dev = _cleanDeviceObj(dev);
-                    dev.Data = data;
-                    var dataarr = data.map(item => item.Value);
-                    var stat = {};
-                    var sum = dataarr.reduce((total, p) => total + p, 0);
-                    var avg = sum / dataarr.length;
-                    var min = dataarr.reduce((min, p) => Math.min(min,p));
-                    var max = dataarr.reduce((max, p) => Math.max(max,p));
-                    var stdev = math.std(dataarr);
-                    stat.Sum = sum;
-                    stat.Avg = avg;
-                    stat.Min = min;
-                    stat.Max = max;
-                    stat.STDEV = stdev;
-                    dev.DataStatistics = stat;
+                    dev.Parameters = data;
                     resolve(dev);
                   }
 
@@ -726,7 +704,7 @@ function _getRawDataByType(deviceobj, type, sTS, eTS) {
     );
 }
 
-function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
+function _getRawDataByTag(assetid, tag, sTS, eTS, callback) {
   _getAllDeviceByAssetID(assetid)
     .then(
       devicelist => {
@@ -737,7 +715,7 @@ function _getRawDataByTagAndType(assetid, tag, type, sTS, eTS, callback) {
       devicelist =>
       {
         devicelist = devicelist.filter(item => item.Tag === tag);
-        return Promise.all(devicelist.map(item => _getRawDataByType(item, type, sTS, eTS)));
+        return Promise.all(devicelist.map(item => _getRawDataByType(item, sTS, eTS)));
       }
     )
     .then(
@@ -990,6 +968,37 @@ function _cleanData(dataobj) {
   return dataobj;
 }
 
+function _getDataByParameterIDWithParaInfo(para, sTS, eTS) {
+  return new Promise(
+    (resolve, reject) => {
+      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value Valid -_id', function(err, data) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          var paraobj = para.toObject();
+          paraobj.Data = data;
+          var dataarr = data.map(item => item.Value);
+          var stat = {};
+          var sum = dataarr.reduce((total, p) => total + p, 0);
+          var avg = sum / dataarr.length;
+          var min = dataarr.reduce((min, p) => Math.min(min,p));
+          var max = dataarr.reduce((max, p) => Math.max(max,p));
+          var stdev = math.std(dataarr);
+          stat.Sum = sum;
+          stat.Avg = avg;
+          stat.Min = min;
+          stat.Max = max;
+          stat.STDEV = stdev;
+          paraobj.DataStatistics = stat;
+          resolve(paraobj);
+        }
+      });
+    }
+  );
+}
+
+
 function _getDataByParameterID(para, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
@@ -1061,9 +1070,9 @@ function getDataByTag(req, res) {
   var tag = req.swagger.params.Tag.value;
   var sTS = req.swagger.params.StartTimeStamp.value;
   var eTS = req.swagger.params.EndTimeStamp.value;
-  var type = req.swagger.params.Type.value;
-  if (assetid && tag && type && sTS && eTS) {
-    _getRawDataByTagAndType(assetid, tag,type, sTS, eTS, function(err, data) {
+
+  if (assetid && tag && sTS && eTS) {
+    _getRawDataByTag(assetid, tag, sTS, eTS, function(err, data) {
       if (err) {
         shareUtil.SendInternalErr(res,  "tag search error:" + JSON.stringify(err, null, 2));
       } else {

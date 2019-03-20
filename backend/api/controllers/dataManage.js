@@ -1261,20 +1261,19 @@ function getDataByAssetID(req, res) {
       )
       .then(
         ret => {
-          //console.log(ret);
           var device_name = "";
           var para_name = "";
           var full_name = "";
 
           var data_grp;
           for (var i in ret) {
-            device_name = ret[i].DisplayName;
+            device_name = ret[i].Alias;
             if (ret[i].Parameters) {
               for (var j in ret[i].Parameters) {
                 if (ret[i].Parameters[j].Data.length > 0)
                 {
-                  para_name = ret[i].Parameters[j].SensorID;
-                  full_name = para_name;
+                  para_name = ret[i].Parameters[j].DisplayName;
+                  full_name = device_name;
                   var single_para_data = {};
                   single_para_data.DisplayName = full_name;
                   single_para_data.Data = ret[i].Parameters[j].Data;
@@ -1294,7 +1293,7 @@ function getDataByAssetID(req, res) {
                 for(var i in ret) {
                   if (ret[i].Data) {
                     var single_para_data = {};
-                    single_para_data.DisplayName = ret[i].SensorID;
+                    single_para_data.DisplayName = ret[i].Alias;
                     single_para_data.Data = ret[i].Data;
                     paraDataList.push(single_para_data);
                   }
@@ -1333,7 +1332,7 @@ function getDataByAssetID(req, res) {
                           }
                           if (count != 0) {
                             var single_para_data1 = {};
-                            single_para_data1.DisplayName = paraDataList[j].SensorID;
+                            single_para_data1.DisplayName = paraDataList[j].DisplayName;
                             switch (grouping_method) {
                               case 0:
                                 single_para_data1.Value = sum / count;

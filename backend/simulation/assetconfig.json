@@ -19,7 +19,12 @@
         "Tag": "AVG_TUBE_INLET"
       },
       {
-        "Name" : "Avg Shell Inlet",
+        "Name" : "Avg Tube Outlet",
+        "Equation": "Avg([TubeOutlet/Temperature])",
+        "Tag": "AVG_TUBE_OUTLET"
+      },
+      {
+        "Name" : "Delta T S",
         "Equation": "Avg([ShellInlet/Temperature])",
         "Tag": "AVG_TUBE_OUTLET"
       },

@@ -7,6 +7,7 @@ const ParameterSchema = new Schema(
   {
     ParameterID: {type: String, index: true, unique: true},
     DisplayName: String,
+    Alias: String,
     CurrentValue: Number,
     CurrentTimeStamp: Number,
     Unit: String,

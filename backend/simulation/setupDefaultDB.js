@@ -195,7 +195,7 @@ function createFlowMeter(assetid, index, tagName, sn, angle) {
         device.DeviceID = 'Flow' + index.toString();
         device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
         device.DisplayName = 'Flow Meter ' + index.toString();
-        device.SensorID = 'F' + index.toString();
+        device.Alias = 'F' + index.toString();
         device.Tag = tagName;
         device.SerialNumber = sn;
         device.Angle = angle;
@@ -285,7 +285,7 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
         device.DeviceID = 'Temp' + index.toString();
         device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
         device.DisplayName = 'Temperature Sensor ' + index.toString();
-        device.SensorID = 'T' + index.toString();
+        device.Alias = 'T' + index.toString();
         device.Tag = tagName;
         device.SerialNumber = sn;
         device.Angle = angle;
@@ -375,6 +375,7 @@ function createParameter(assetid, index, displayName, tag, equation) {
        para.ParameterID = 'GenPara' + index.toString();
        para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
        para.DisplayName = displayName;
+       para.Alias = 'P' + index.toString();
        para.Tag = tag;
        para.Equation = equation;
        para.Unit = "F";

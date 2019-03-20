@@ -39,11 +39,10 @@ class AssetData extends React.Component {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
 
-    let col = [{ key: "id", name: "Time", frozen: true, width:200 }];
+    let col = [{ key: "id", name: "Time", frozen: true, width: 185 }];
     let row = [];
 
     if(data){
-      console.log(data[0].Data)
       var items = data[0].Data.map(x=>x.DisplayName);
       for (var itemNo in items){
         var new_col = {key: itemNo, name: items[itemNo]};
@@ -56,7 +55,10 @@ class AssetData extends React.Component {
       var new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
       for (var device in data[time].Data){
           var device_id = device;
-          new_row[device_id]= {value: data[time].Data[device].Value.toFixed(2)+"°F", valid: data[time].Data[device].Valid};
+          new_row[device_id]= {
+            value: data[time].Data[device].Value.toFixed(2) + data[time].Data[device].Unit,
+            valid: data[time].Data[device].Valid
+          };
       }
       row.unshift(new_row);
     }

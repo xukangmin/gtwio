@@ -150,24 +150,11 @@ class AssetDeviceDetail extends React.Component {
         DeviceID: props.match.params.deviceID,
     }
 
-    this.range = JSON.parse(localStorage.getItem('range'));
-    this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID, this.range.live, this.range.interval, this.range.start, this.range.end));
-
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
     this.updateLimit = this.updateLimit.bind(this);
     this.updateStability = this.updateStability.bind(this);
-  }
-
-  componentDidMount() {
-    this.dispatchParameterContinuously = setInterval(() => {
-      this.range = JSON.parse(localStorage.getItem('range'));
-      if (this.range.polling)
-      {
-        this.props.dispatch(deviceActions.getSingleDeviceData(this.state.DeviceID, this.range.live, this.range.interval, this.range.start, this.range.end));
-      }
-    }, 60000);
   }
 
   sortTime(data){

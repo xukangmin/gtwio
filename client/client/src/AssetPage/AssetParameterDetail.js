@@ -134,13 +134,6 @@ class AssetParameterDetail extends React.Component {
     this.assets = JSON.parse(localStorage.getItem('assets'));
   }
 
-  componentDidMount() {
-    this.dispatchParameterContinuously = setInterval(() => {
-      this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
-    }, 5000);
-  }
-
-
   updateEquation(parameterid, value){
     console.log("updateEquation called");
     console.log(value);

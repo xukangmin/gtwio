@@ -8,8 +8,6 @@ import { assetActions } from '../_actions/assetAction';
 class AssetNav extends React.Component {
     constructor(props) {
         super(props);
-        console.log('hi',props);
-        // this.props.dispatch(assetActions.getSingleAssetData(JSON.parse(localStorage.getItem('user')),props.id));
       }
 
     render() {

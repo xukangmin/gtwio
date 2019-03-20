@@ -47,8 +47,8 @@ class RangePicker extends React.Component {
     updateLocalStorageAndTriggers() {
       localStorage.setItem('range', JSON.stringify(this.range));
 
-      var m_res = matchRoutes(routes, window.location.pathname);
-      var asset, tag, device, parameter, flow;
+      let m_res = matchRoutes(routes, window.location.pathname);
+      let asset, tag, device, parameter, flow;
       for(var item in m_res) {
         if (m_res[item].match.isExact) {
           asset = m_res[item].match.params.assetID;
@@ -62,18 +62,34 @@ class RangePicker extends React.Component {
         }
       }
 
-      var now = new Date().getTime();
-      var liveStart = now-this.range.interval*60*1000;
+      let now = new Date().getTime();
+      let liveStart = now-this.range.interval*60*1000;
+      let liveDispatchInterval = 60*1000;
 
       if (asset && device)
       {
-        this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start*1000, this.range.end*1000));
+        if(this.range.live){
+          this.props.dispatch(deviceActions.getSingleDeviceData(device, liveStart, now));
+          setInterval(() => {
+            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          }, liveDispatchInterval);
+        } else {
+            this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.start*1000, this.range.end*1000));
+        }
       }
 
       else if (asset && parameter)
       {
+        this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
+        setInterval(() => {
+          this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
+        }, liveDispatchInterval);
+
         if(this.range.live){
           this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          setInterval(() => {
+            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
         }
@@ -83,6 +99,9 @@ class RangePicker extends React.Component {
       {
         if(this.range.live){
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, liveStart, now));
+          setInterval(() => {
+            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, this.range.start*1000, this.range.end*1000));
         }
@@ -91,6 +110,9 @@ class RangePicker extends React.Component {
       else if (asset && tag){
         if (this.range.live){
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, liveStart, now));
+          setInterval(() => {
+            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
@@ -99,6 +121,9 @@ class RangePicker extends React.Component {
       else if (asset){
         if (this.range.live){
           this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
+          setInterval(() => {
+            this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
+          }, liveDispatchInterval);
         } else{
           this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
         }

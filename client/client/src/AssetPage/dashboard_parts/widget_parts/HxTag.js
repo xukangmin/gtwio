@@ -9,6 +9,7 @@ import { TagRadar } from './TagRadar';
 import { TagPlot } from './TagPlot';
 import { ParameterPlot } from './ParameterPlot';
 import { TagTable } from './TagTable';
+const queryString = require('query-string');
 
 import Loader from '../../../_components/loader';
 
@@ -19,12 +20,11 @@ class HxTag extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: '1',
+      activeTab: queryString.parse(location.search).tab ? queryString.parse(location.search).tab.toString() : '1',
     }
   }
 
   toggle(tab) {
-
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab

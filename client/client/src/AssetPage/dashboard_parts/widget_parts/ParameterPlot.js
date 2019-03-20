@@ -6,21 +6,16 @@ import Plot from 'react-plotly.js';
 class ParameterPlot extends React.Component {
   constructor(props){
     super(props);
-    console.log('11'+props)
   }
 
   render(){
     let { parameterData } = this.props;
-
-    let unit = "(°F)";
+    let { flow } = this.props;
+    let unit;
     if (this.props.unit){
       unit = this.props.unit;
     }
-    if (parameterData.length == 1){
-      parameterData = parameterData[0].Parameters[0].Data;
-      console.log('#')
-    }
-    console.log(parameterData)
+
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let tempX = [];
@@ -44,7 +39,6 @@ class ParameterPlot extends React.Component {
         title: unit
       },
       xaxis:{
-        autorange: true,
         showline: false,
         autotick: true,
         nticks: 10,
@@ -52,11 +46,13 @@ class ParameterPlot extends React.Component {
       }
     };
 
+    console.log("data")
+    console.log(data)
     return(
       <Plot
           data={[data]}
           layout={layout}
-          style={{width:"100%"}}
+          style = {{width: flow ? "80vw" : "100%"}}
       />
     );
   }

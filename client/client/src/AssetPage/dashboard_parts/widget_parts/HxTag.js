@@ -81,9 +81,9 @@ class HxTag extends React.Component {
             <TabContent activeTab={this.state.activeTab}>
               <TabPane tabId="2">
               <Row>
-                <div className = "col-8">
-                  <ParameterPlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
-                </div>
+                <Col>
+                  <ParameterPlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                </Col>
               </Row>
               <Row>
                 <Col>

@@ -189,7 +189,7 @@ class AssetParameterDetail extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className = "col-sm-auto col-lg-8">
-                <ParameterPlot parameterData={this.sortTime(parameterData)}/>
+                <ParameterPlot parameterData={this.sortTime(parameterData)} unit="(°F)"/>
               </div>
             </div>
            }

@@ -128,7 +128,21 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           resolve(result);
         }
         else {
-          _getDataByParameterID({ParameterID: paraid}, latestTimeStamp - offset - timerange, latestTimeStamp - offset)
+          var startTS;
+          var endTS;
+
+          if (compareStrings(op,"FIX", true)) {
+            if (offset === 0) {
+              offset = 300000;  // default offset 5 mins
+            }
+            startTS = timerange - offset;
+            endTS = timerange + offset;
+          } else {
+            startTS = latestTimeStamp - offset - timerange;
+            endTS = latestTimeStamp - offset;
+          }
+
+          _getDataByParameterID({ParameterID: paraid}, startTS, endTS)
             .then(
               data => {
                 // first sort data
@@ -155,6 +169,9 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
                      resolve(result);
                    } else if (compareStrings(op,"FIRST", true)) {
                      var result = dataarr[0];
+                     resolve(result);
+                   } else if (compareStrings(op,"FIX", true)) {
+                     var result = math.mean(dataarr);
                      resolve(result);
                    }
                    else {
@@ -1277,6 +1294,7 @@ function getDataByAssetID(req, res) {
                   var single_para_data = {};
                   single_para_data.DisplayName = full_name;
                   single_para_data.Data = ret[i].Parameters[j].Data;
+                  single_para_data.Unit = ret[i].Parameters[j].Unit;
                   paraDataList.push(single_para_data);
                 }
               }
@@ -1295,6 +1313,7 @@ function getDataByAssetID(req, res) {
                     var single_para_data = {};
                     single_para_data.DisplayName = ret[i].Alias;
                     single_para_data.Data = ret[i].Data;
+                    single_para_data.Unit = ret[i].Unit;
                     paraDataList.push(single_para_data);
                   }
                 }
@@ -1333,6 +1352,7 @@ function getDataByAssetID(req, res) {
                           if (count != 0) {
                             var single_para_data1 = {};
                             single_para_data1.DisplayName = paraDataList[j].DisplayName;
+                            single_para_data1.Unit = paraDataList[j].Unit;
                             switch (grouping_method) {
                               case 0:
                                 single_para_data1.Value = sum / count;

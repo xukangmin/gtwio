@@ -76,6 +76,7 @@ function _createDeviceWithParameter(assetid, deviceobj) {
               else {
                 // create parameter
                 if (deviceobj.Parameters) {
+
                     const _createAllParameter = async(deviceid, paralist) => {
                         for(let i = 0; i < paralist.length; i++) {
                           let ret = await parameterManage._createParameter(device.DeviceID, null, paralist[i]);

@@ -242,12 +242,22 @@ function _createSingleAsset(userid, singleAssetConfig) {
                   return 'done';
               };
 
-              return _createDevices(ret, singleAssetConfig.Devices)
+              return _createDevices(ret, singleAssetConfig.Devices);
             }
           )
           .then(
             ret => {
               console.log("create device done");
+
+              const _createEquation = async (assetid, equations) =>
+              {
+                  for (let i = 0; i < equations.length; i++) {
+                    let ret1 = await parameterManage._createEquation(assetid, equations[i]);
+                  }
+                  return 'done';
+              };
+
+              return _createEquation(ret, singleAssetConfig.Equations);
               resolve(ret);
             }
           )
@@ -268,17 +278,27 @@ function createAssetByConfig(req, res) {
     var userid = assetobj.UserID;
     if (config && userid) {
 
-      Promise.all(config.map(item => _createSingleAsset(userid, item)))
+      const _createAllAssetInternal = async(userid, config) => {
+        for(let i = 0; i < config.length; i++) {
+         let ret = await _createSingleAsset(userid, config[i]);
+        }
+        return 'create asset done';
+      }
+
+      _createAllAssetInternal(userid, config)
         .then(
           ret => {
+            console.log(ret);
             shareUtil.SendSuccess(res);
           }
         )
         .catch(
           err => {
+            console.error(err);
             shareUtil.SendInvalidInput(res, "Create Asset Error:" + JSON.stringify(err, null, 2));
           }
         );
+
     }
     else {
       var msg = "UserID or config missing";

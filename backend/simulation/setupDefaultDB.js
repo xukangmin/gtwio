@@ -378,7 +378,7 @@ function createParameter(assetid, index, displayName, tag, equation) {
        para.Alias = 'P' + index.toString();
        para.Tag = tag;
        para.Equation = equation;
-       para.Unit = "F";
+       para.Unit = "°F";
        para.StreamingStatus = "Unknown";
        para.Timeout = 600;
 

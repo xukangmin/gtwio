@@ -17,6 +17,7 @@ var functions = {
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
   updateRequireList: updateRequireList,
+  _createEquation: _createEquation,
   updateRequireListByEquation: updateRequireListByEquation,
   _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise,
   _createParameter: _createParameter,
@@ -25,6 +26,13 @@ var functions = {
 
 for (var key in functions) {
   module.exports[key] = functions[key];
+}
+
+function _createEquation(assetid, paraobj) {
+  return new new Promise(
+    (resolve, reject) => {
+      
+    });
 }
 
 function _createParameter(deviceid, assetid, paraobj) {

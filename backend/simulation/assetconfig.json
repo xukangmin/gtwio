@@ -25,9 +25,24 @@
       },
       {
         "Name" : "Delta T S",
-        "Equation": "Avg([ShellInlet/Temperature])",
-        "Tag": "AVG_TUBE_OUTLET"
+        "Equation": "[AVG_SHELL_INLET] - [AVG_SHELL_OUTLET]",
+        "Tag": "DELTA_T_S"
       },
+      {
+        "Name" : "Delta T 1",
+        "Equation": "[AVG_TUBE_INLET] - [AVG_SHELL_OUTLET]",
+        "Tag": "DELTA_T_1"
+      },
+      {
+        "Name" : "Delta T 2",
+        "Equation": "[AVG_TUBE_OUTLET] - [AVG_SHELL_INLET]",
+        "Tag": "DELTA_T_2"
+      },
+      {
+        "Name" : "LMTD",
+        "Equation": "([DELTA_T_1] - [DELTA_T_1]) / log([DELTA_T_1] / [DELTA_T_2])",
+        "Tag": "LMTD"
+      }
     ],
     "Devices":
     [

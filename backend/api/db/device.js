@@ -7,14 +7,13 @@ const DeviceSchema = new Schema(
   {
     DeviceID: {type: String, index: true, unique: true},
     DisplayName: String,
+    SensorID: String,
     SerialNumber: String,
     MetaInfo: Object,
     Tag: String,
     Angle: Number,
     Type: String,
     LastCalibrationDate: Date,
-    CalibrationConstants: {A: Number, B: Number, C: Number},
-    CorrectionEquation: String,
     Parameters: [{ParameterID: String}]
   },
   { timestamps: true }

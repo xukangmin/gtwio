@@ -195,12 +195,11 @@ function createFlowMeter(assetid, index, tagName, sn, angle) {
         device.DeviceID = 'Flow' + index.toString();
         device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
         device.DisplayName = 'Flow Meter ' + index.toString();
+        device.SensorID = 'F' + index.toString();
         device.Tag = tagName;
         device.SerialNumber = sn;
         device.Angle = angle;
         device.LastCalibrationDate = (new Date).getTime();
-        device.CalibrationConstants = {A: 0, B: 1, C: 0};
-        device.CorrectionEquation = 'A * A * data + B * data + C';
 
         device.save(err => {
           if (err)
@@ -286,12 +285,11 @@ function createTempSensor(assetid, index, tagName, sn, angle) {
         device.DeviceID = 'Temp' + index.toString();
         device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
         device.DisplayName = 'Temperature Sensor ' + index.toString();
+        device.SensorID = 'T' + index.toString();
         device.Tag = tagName;
         device.SerialNumber = sn;
         device.Angle = angle;
         device.LastCalibrationDate = (new Date).getTime();
-        device.CalibrationConstants = {A: 0, B: 1, C: 0};
-        device.CorrectionEquation = 'A * A * data + B * data + C';
 
         device.save(err => {
           if (err)

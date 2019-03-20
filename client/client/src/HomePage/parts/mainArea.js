@@ -16,7 +16,7 @@ class MainArea extends React.Component {
         editModalOpen: false
       }
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.deleteAsset = this.deleteAsset.bind(this);
+      this.deleteItem = this.deleteItem.bind(this);
       this.editButtonClicked = this.editButtonClicked.bind(this);
       this.editModalToggle = this.editModalToggle.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
@@ -74,9 +74,9 @@ class MainArea extends React.Component {
       }));
     }
 
-    deleteAsset(asset, user){
+    deleteItem(asset){
       if (confirm("Are you sure to delete this asset?")){
-          this.props.dispatch(assetActions.deleteAsset(asset, user));
+          this.props.dispatch(assetActions.deleteAsset(asset, this.user));
       }
     }
 
@@ -101,10 +101,9 @@ class MainArea extends React.Component {
           return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
         }
 
-        const selectRowProp = {
-          mode: 'checkbox',
-          bgColor: 'pink'
-        };
+        function deleteFormatter(cell, row, enumObject){
+          return <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+        }
 
         const cellEditProp = {
           mode: 'click',
@@ -118,19 +117,14 @@ class MainArea extends React.Component {
           );
         }
 
-        const options = {
-        }
-
         return (
           <div id="MainArea">
           <BootstrapTable
             data={assets}
             insertRow={false}
             deleteRow={false}
-            selectRow={selectRowProp}
             search={true}
             cellEdit={cellEditProp}
-            options={options}
             version='4'
             bordered={false}
             hover
@@ -179,11 +173,21 @@ class MainArea extends React.Component {
               dataSort={true}>
                 Location
             </TableHeaderColumn>
+
+            <TableHeaderColumn
+              headerAlign='center'
+              dataAlign='center'
+              dataField='AssetID'
+              editable={false}
+              formatExtraData={this.deleteItem}
+              dataFormat={deleteFormatter}>
+                Delete
+            </TableHeaderColumn>
           </BootstrapTable>
 
 
 
-                                  
+
             </div>
 
         );

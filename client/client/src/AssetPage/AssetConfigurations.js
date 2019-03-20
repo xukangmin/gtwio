@@ -71,7 +71,6 @@ class AssetConfigurations extends React.Component {
   }
 
   deleteItem(itemID, itemName, itemType){
-    console.log(itemType)
     if (confirm("Are you sure to delete " + itemName +"?")){
       if (itemType == "device"){
         this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, itemID));

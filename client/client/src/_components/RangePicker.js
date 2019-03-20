@@ -19,6 +19,7 @@ class RangePicker extends React.Component {
 
       this.range = JSON.parse(localStorage.getItem('range'));
       this.user = JSON.parse(localStorage.getItem('user'));
+
       this.state = {
         display: 'block'
       }
@@ -27,14 +28,15 @@ class RangePicker extends React.Component {
       {
         let now = new Date();
         let range = {
-         live: true,
-         interval: 10,
-         start: moment(now).subtract(10, "minutes"),
-         end: moment(now),
-         polling: true
-         };
-         this.range = range;
-         localStorage.setItem('range', JSON.stringify(range));
+          live: true,
+          interval: 10,
+          start: moment(now).subtract(10, "minutes"),
+          end: moment(now),
+          polling: true
+        };
+
+        this.range = range;
+        localStorage.setItem('range', JSON.stringify(range));
       }
 
       this.applyCallback = this.applyCallback.bind(this);
@@ -49,6 +51,7 @@ class RangePicker extends React.Component {
 
       let m_res = matchRoutes(routes, window.location.pathname);
       let asset, tag, device, parameter, flow;
+
       for(var item in m_res) {
         if (m_res[item].match.isExact) {
           asset = m_res[item].match.params.assetID;
@@ -58,7 +61,9 @@ class RangePicker extends React.Component {
           flow = m_res[item].match.params.flowID;
         }
         if (m_res[item].match.url.includes("configurations") || m_res[item].match.url.includes("devices")){
-          this.setState({display: 'none'});
+          this.setState({
+            display: 'none'
+          });
         }
       }
 
@@ -68,7 +73,7 @@ class RangePicker extends React.Component {
 
       if (asset && device)
       {
-        if(this.range.live){
+        if (this.range.live){
           this.props.dispatch(deviceActions.getSingleDeviceData(device, liveStart, now));
           setInterval(() => {
             this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
@@ -85,7 +90,7 @@ class RangePicker extends React.Component {
           this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
         }, liveDispatchInterval);
 
-        if(this.range.live){
+        if (this.range.live){
           this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
           setInterval(() => {
             this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
@@ -97,7 +102,7 @@ class RangePicker extends React.Component {
 
       else if (asset && flow)
       {
-        if(this.range.live){
+        if (this.range.live){
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, liveStart, now));
           setInterval(() => {
             this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
@@ -143,7 +148,7 @@ class RangePicker extends React.Component {
       liveDiv.css("display","none");
       $(".inputDate").css("textAlign","center");
 
-      if(this.range.live){
+      if (this.range.live){
         timePicker.css("display","none");
         rangeInput.append(liveDiv);
         liveDiv.css("display","block");
@@ -247,8 +252,9 @@ class RangePicker extends React.Component {
             />
             <Button className="my-1">
               <i className ="fas fa-calendar mr-3"></i>
-              {this.range.live?
-                "Real-time Data: "+ this.intervalToText(JSON.parse(localStorage.getItem('range')).interval.toString()) + " from Now":
+              { this.range.live ?
+                "Real-time Data: " + this.intervalToText(JSON.parse(localStorage.getItem('range')).interval.toString()) + " from Now"
+                :
                 moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
               }
               <i className="fas fa-angle-down ml-3"></i>
@@ -264,7 +270,7 @@ class RangePicker extends React.Component {
             <div className='radio'> <label><input type='radio' value={1440} checked={this.range.interval == 1440} onChange={this.handleOptionChange}/>{" "}1 Day</label> </div>
             <div className='radio'> <label><input type='radio' value={10080} checked={this.range.interval == 10080} onChange={this.handleOptionChange}/>{" "}1 Week</label> </div>
             <div className='radio'> <label><input type='radio' value={302400} checked={this.range.interval == 302400} onChange={this.handleOptionChange}/>{" "}30 Days</label> </div>
-            <Button id="DateRangePickerButton" onClick={this.handleLiveButtonApply} color="success" className="mt-2">Apply</Button>
+            <Button id="DateRangePickerButton" onClick={this.handleLiveButtonApply} className="mt-2 btn-primary">Apply</Button>
           </div>
         </div>
       );

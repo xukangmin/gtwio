@@ -31,8 +31,8 @@ class AssetData extends React.Component {
 
     function TitleFormatter (value) {
       value = value.split('/');
-      var title = '<span>';
-      for (var i in value){
+      let title = '<span>';
+      for (let i in value){
         title += value[i]+'<br>';
       }
       title += '</span>';
@@ -42,19 +42,20 @@ class AssetData extends React.Component {
     let col = [{ key: "id", name: "Time", frozen: true, width: 185 }];
     let row = [];
 
-    if(data){
-      var items = data[0].Data.map(x=>x.DisplayName);
-      for (var itemNo in items){
-        var new_col = {key: itemNo, name: items[itemNo]};
+    if (data){
+      let items = data[0].Data.map(x=>x.DisplayName);
+
+      for (let itemNo in items){
+        let new_col = {key: itemNo, name: items[itemNo], resizable: true, dragable: true};
         new_col['formatter'] = ValueFormatter;
         col.push(new_col);
       }
     }
 
-    for(var time in data){
-      var new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
-      for (var device in data[time].Data){
-          var device_id = device;
+    for (let time in data){
+      let new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
+      for (let device in data[time].Data){
+          let device_id = device;
           new_row[device_id]= {
             value: data[time].Data[device].Value.toFixed(2) + data[time].Data[device].Unit,
             valid: data[time].Data[device].Valid

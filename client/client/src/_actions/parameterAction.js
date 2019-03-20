@@ -65,11 +65,7 @@ const addNewParameter = (assetid, displayname, equation) => {
     function failure(error) { return { type: gConstants.ADD_PARAMETER_FAILURE, error } }
 }
 
-const updateParameter = (pid, key, value) => {
-    let data = {
-      ParameterID: pid,
-      [key]: value
-    }
+const updateParameter = (user, asset, data) => {
     return dispatch => {
         dispatch(request());
         parameterServices.updateParameter(data)

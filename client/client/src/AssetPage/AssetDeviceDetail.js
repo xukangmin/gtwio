@@ -20,7 +20,6 @@ import _ from 'lodash'
 
 const DeviceInfo = (props) => {
   const device = props.data;
-
   return(
     <div className = "row">
       <div className="col-12">
@@ -64,7 +63,7 @@ const DeviceInfo = (props) => {
               <td>
                   <RIEInput
                   value={device.Parameters[0].Range.LowerLimit}
-                  change={value => props.update(props.parameter, device.Parameters[0].Range, "LowerLimit", value)}
+                  change={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", value)}
                   propName='value'/>
                   {device.Parameters[0].Unit}
               </td>
@@ -74,19 +73,28 @@ const DeviceInfo = (props) => {
               <td>
                   <RIEInput
                   value={device.Parameters[0].Range.UpperLimit}
-                  change={value => props.update(props.parameter, device.Parameters[0].Range, "UpperLimit", value)}
+                  change={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", value)}
                   propName='value'/>
                   {device.Parameters[0].Unit}
               </td>
             </tr>
             <tr>
               <th>Stability Criteria - Window Size</th>
-
-              <td>{device.Parameters[0].StabilityCriteria.WindowSize + ' minutes'}</td>
+              <td>
+              <RIEInput
+              value={device.Parameters[0].StabilityCriteria.WindowSize}
+              change={value => props.updateStability(device.Parameters[0].ParameterID, "WindowSize", value, device.Parameters[0].StabilityCriteria)}
+              propName='value'/>
+              {' minutes'}</td>
             </tr>
             <tr>
               <th>Stability Criteria - Upper Threshold</th>
-              <td>{device.Parameters[0].StabilityCriteria.UpperLimit + ' ' + device.Parameters[0].Unit}</td>
+              <td>
+              <RIEInput
+              value={device.Parameters[0].StabilityCriteria.UpperLimit}
+              change={value => props.updateStability(device.Parameters[0].ParameterID, "UpperLimit", value, device.Parameters[0].StabilityCriteria)}
+              propName='value'/>
+              {' ' + device.Parameters[0].Unit}</td>
             </tr>
             <tr>
               <th>Stability</th>
@@ -149,6 +157,7 @@ class AssetDeviceDetail extends React.Component {
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
     this.updateLimit = this.updateLimit.bind(this);
+    this.updateStability = this.updateStability.bind(this);
   }
 
   componentDidMount() {
@@ -217,11 +226,19 @@ class AssetDeviceDetail extends React.Component {
     }
   }
 
+  updateStability(parameter, type, value, stabilityObj){
+    let updateData = {
+        'ParameterID': parameter,
+        'StabilityCriteria': stabilityObj
+    }
+    updateData.StabilityCriteria[type] = Number(value.value);
+    this.props.dispatch(parameterActions.updateParameter(this.user.UserID, this.state.AssetID, updateData));
+  }
+
   render() {
     const { AssetID } = this.state;
     const { deviceData, pollEnable } = this.props;
     const { parameterData } = this.props;
-
     if (!this.user)
     {
       return (<Redirect to = '/login' />);
@@ -230,7 +247,7 @@ class AssetDeviceDetail extends React.Component {
         <div className = "mt-3">
         {deviceData ?
           <div>
-            <DeviceInfo data={deviceData} update={this.updateLimit} parameter={deviceData.Parameters.ParameterID}/>
+            <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability}/>
             {parameterData &&
               <div className = "row mt-3">
                 <div className = "col-auto">

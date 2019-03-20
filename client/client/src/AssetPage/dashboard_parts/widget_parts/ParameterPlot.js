@@ -45,9 +45,7 @@ class ParameterPlot extends React.Component {
         ticklen: 8
       }
     };
-
-    console.log("data")
-    console.log(data)
+    
     return(
       <Plot
           data={[data]}

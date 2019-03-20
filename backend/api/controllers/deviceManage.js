@@ -77,14 +77,14 @@ function _createDeviceWithParameter(assetid, deviceobj) {
                 // create parameter
                 if (deviceobj.Parameters) {
 
-                    const _createAllParameter = async(deviceid, paralist) => {
+                    const _createAllParameter = async(deviceid, paralist, tag) => {
                         for(let i = 0; i < paralist.length; i++) {
-                          let ret = await parameterManage._createParameter(device.DeviceID, null, paralist[i]);
+                          let ret = await parameterManage._createParameter(device.DeviceID, null, paralist[i], tag);
                         }
                         return 'creat parameter done';
                     }
 
-                    _createAllParameter(device.DeviceID, deviceobj.Parameters)
+                    _createAllParameter(device.DeviceID, deviceobj.Parameters, deviceobj.Tag)
                       .then(
                         ret => {
                           resolve(device.DeviceID);

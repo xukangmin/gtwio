@@ -18,7 +18,8 @@ var functions = {
   getDataByAssetID: getDataByAssetID,
   getDataByDeviceID: getDataByDeviceID,
   testFunc: testFunc,
-  addDataByParticleEvent: addDataByParticleEvent
+  addDataByParticleEvent: addDataByParticleEvent,
+  _getAllParameterByAssetID: _getAllParameterByAssetID
 }
 
 for (var key in functions) {
@@ -641,13 +642,18 @@ function _getAllParameterByAssetIDPromise(assetid) {
             if (err) {
               reject(err);
             } else {
-              Promise.all(data.Parameters.map(_getParameter))
-                .then(ret => {
-                  resolve(ret);
-                })
-                .catch(err => {
-                  reject(err);
-                })
+              if (data.Parameters) {
+                Promise.all(data.Parameters.map(_getParameter))
+                  .then(ret => {
+                    resolve(ret);
+                  })
+                  .catch(err => {
+                    reject(err);
+                  });
+              } else {
+                resolve([]);
+              }
+
             }
           });
         }
@@ -661,7 +667,12 @@ function _getAllDeviceByAssetID(assetid) {
             if (err) {
               reject(err);
             } else {
-              resolve(data.Devices);
+              if (data.Devices) {
+                resolve(data.Devices);
+              } else {
+                resolve([]);
+              }
+
             }
           });
         }
@@ -747,6 +758,8 @@ function _getRawDataByTag(assetid, tag, sTS, eTS, callback) {
     )
 }
 
+
+
 function _getAllParameterByTagAndType(assetid, tag, type, sTS, eTS, callback) {
 
   var para = [];
@@ -815,31 +828,45 @@ function _getParameterByDeviceID(deviceid) {
 
 
 
-function _getAllParameterByAssetID(assetid, callback) {
+function _getAllParameterByAssetID(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      var para = [];
+      console.log("start getting parameters assetid=" + assetid);
+      _getAllParameterByAssetIDPromise(assetid)
+        .then(
+          data =>
+          {
+            para = para.concat(data);
+            console.log(para);
+            return _getAllDeviceByAssetID(assetid);
+          })
+        .then(
+          devicelist => {
+            return Promise.all(devicelist.map(_getAllParameterByDeviceIDPromise));
+          }
+        )
+        .then(
+          ret => {
+            para = para.concat(ret);
 
-  var allpara = [];
+            var paralist = [];
 
-  Asset.findOne({AssetID: assetid}, function(err, data) {
-    if (err) {
-      callback(err, null);
-    } else {
-        // first get parameter in asset
-        _getSingleParameterInternal(0, data.Parameters, [], function(paralist) {
-            if (paralist.length > 0){
-                allpara = concat(paralist);
+            for (let i in para) {
+              for (let j in para[i]) {
+                paralist = paralist.concat(para[i][j]);
+              }
             }
 
-
-            // then get all parameter for all devices
-            _getSingleDeviceParameterInternal(0, data.Devices, [], function(paralist1) {
-              if (paralist1.length > 0){
-                  allpara = concat(paralist1);
-              }
-              callback(allpara);
-            });
-        });
-    }
-  });
+            resolve(paralist);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        );
+    });
 }
 
 function addDataByDeviceID(req, res)  {
@@ -956,22 +983,6 @@ function addDataBySerialNumber(req, res) {
   } else {
     var msg = "SerialNumber or Value or DataType missing";
     shareUtil.SendInvalidInput(res, msg);
-  }
-}
-
-function _getSingleParameterInternal(index, parameters, parameterout, callback) {
-  if (index < parameters.length) {
-    if (index == 0) {
-      deviceout = [];
-    }
-    Parameter.findOne({ParameterID: parameters[index].ParameterID},function(err,data){
-      if (!err) {
-        parameterout.push(data);
-      }
-      getSingleParameterInternal(index + 1, parameters, parameterout, callback);
-    });
-  } else {
-    callback(parameterout);
   }
 }
 
@@ -1318,7 +1329,7 @@ function getDataByAssetID(req, res) {
                   }
                 }
                 // process data based on time stamp
-                for(var i = new_s; i <= new_e; i += grouping_interval) {
+                for(var i = new_s; i <= new_e - grouping_interval; i += grouping_interval) {
                     var single_ts_data = {};
                     single_ts_data.TimeStamp = i * 1000;
                     var single_ts_data_part = [];

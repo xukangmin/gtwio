@@ -5,6 +5,7 @@ const Data = require('../db/data.js');
 const Device = require('../db/device.js');
 const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
+var dataManage = require('./dataManage.js');
 // parameter is predefined like temperature, Humidity, heat transfer rate
 // with equations depending on each other
 // it can also handle unit conversions
@@ -28,14 +29,82 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
-function _createEquation(assetid, paraobj) {
-  return new new Promise(
+function _getTagList(equation) {
+  var taglist = [];
+
+  var reg = /\[[^\]]+\]/g;
+
+  if(equation.match(reg)){
+    taglist = equation.match(reg);
+  }
+
+  if (taglist.length > 0) {
+      taglist = taglist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
+  }
+
+  return taglist;
+}
+
+function _resolveSingleTagInAsset(paralist, tag) {
+  return new Promise(
     (resolve, reject) => {
-      
+
+        var filterlist = paralist.filter(item => item.Tag === tag);
+
+        if (filterlist.length === 0) {
+
+        } else if (filterlist.length === 1) {
+
+        } else {
+          var strout = "";
+          for (var i in filterlist) {
+            strout += "[" + filterlist[i].ParameterID + "],";
+          }
+          strout = strout.substring(0, strout.length - 1);
+          resolve(strout);
+        }
     });
 }
 
-function _createParameter(deviceid, assetid, paraobj) {
+function _createEquation(assetid, paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+      if (paraobj.Name && paraobj.Equation && paraobj.Tag) {
+        var taglist = _getTagList(paraobj.Equation);
+
+        // *********TO DO Remove duplicate tags ******************
+
+        console.log(taglist);
+        dataManage._getAllParameterByAssetID(assetid)
+          .then(
+            ret => {
+              Promise.all(taglist.map(item => _resolveSingleTagInAsset(ret, item)))
+                .then(
+                  ret => {
+                    console.log(ret);
+                    resolve();
+                  }
+                )
+                .catch(
+                  err => {
+                    reject(err);
+                  }
+                );
+
+            }
+          )
+          .catch(
+            err => {
+              reject(err);
+            }
+          )
+      } else {
+        resolve();
+      }
+    });
+}
+
+function _createParameter(deviceid, assetid, paraobj, devicetag) {
     return new Promise(
       (resolve, reject) => {
         const shortid = require('shortid');
@@ -52,6 +121,10 @@ function _createParameter(deviceid, assetid, paraobj) {
             for (var key in paraobj) {
               para[key] = paraobj[key];
             }
+          }
+
+          if (devicetag) {
+            para.Tag = devicetag + "/" + para.Type;
           }
 
           para.ParameterID = "P" + shortid.generate();
@@ -110,7 +183,7 @@ function _createParameter(deviceid, assetid, paraobj) {
 function createParameter(req, res) {
   var paraobj = req.body;
 
-  _createParameter(paraobj.DeviceID, paraobj.AssetID, paraobj)
+  _createParameter(paraobj.DeviceID, paraobj.AssetID, paraobj, null)
     .then(
       ret => {
         shareUtil.SendSuccess(res);

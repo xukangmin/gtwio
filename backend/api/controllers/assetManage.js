@@ -239,7 +239,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
                   for (let i = 0; i < devices.length; i++) {
                     let ret1 = await deviceManage._createDeviceWithParameter(assetid, devices[i]);
                   }
-                  return 'done';
+                  return assetid;
               };
 
               return _createDevices(ret, singleAssetConfig.Devices);
@@ -249,15 +249,20 @@ function _createSingleAsset(userid, singleAssetConfig) {
             ret => {
               console.log("create device done");
 
-              const _createEquation = async (assetid, equations) =>
+              const _createEquations = async (assetid, equations) =>
               {
                   for (let i = 0; i < equations.length; i++) {
                     let ret1 = await parameterManage._createEquation(assetid, equations[i]);
                   }
-                  return 'done';
+                  return assetid;
               };
 
-              return _createEquation(ret, singleAssetConfig.Equations);
+              return _createEquations(ret, singleAssetConfig.Equations);
+            }
+          )
+          .then(
+            ret => {
+              console.log("create equation done");
               resolve(ret);
             }
           )

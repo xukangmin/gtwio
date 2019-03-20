@@ -43,9 +43,10 @@ class AssetData extends React.Component {
     let row = [];
 
     if(data){
-      var items = data[0].Data.map(x=>x.SensorID);
+      console.log(data[0].Data)
+      var items = data[0].Data.map(x=>x.Alias);
       for (var itemNo in items){
-        var new_col = {key: itemNo, name:items};
+        var new_col = {key: itemNo, name: items};
         new_col['formatter'] = ValueFormatter;
         col.push(new_col);
       }

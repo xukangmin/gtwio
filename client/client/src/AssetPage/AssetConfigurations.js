@@ -199,7 +199,7 @@ class AssetConfigurations extends React.Component {
                       <TableHeaderColumn
                         headerAlign='center'
                         dataAlign='center'
-                        dataField='SensorID'
+                        dataField='Alias'
                         dataSort={true}>
                           SensorID
                       </TableHeaderColumn>
@@ -277,7 +277,7 @@ class AssetConfigurations extends React.Component {
                     cellEdit={ cellEditProp }
                     version='4'
                     bordered={ false }>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey={true} dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey={true} dataField='Alias' editable={true} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Sensor ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>

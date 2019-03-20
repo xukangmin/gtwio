@@ -68,15 +68,15 @@ class RangePicker extends React.Component {
       }
 
       let now = new Date().getTime();
-      let liveStart = now-this.range.interval*60*1000;
+      let liveStart = new Date().getTime()-this.range.interval*60*1000;
       let liveDispatchInterval = 60*1000;
 
       if (asset && device)
       {
         if (this.range.live){
-          this.props.dispatch(deviceActions.getSingleDeviceData(device, liveStart, now));
+          this.props.dispatch(deviceActions.getSingleDeviceData(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+            this.props.dispatch(deviceActions.getSingleDeviceData(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else {
             this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.start*1000, this.range.end*1000));
@@ -91,9 +91,9 @@ class RangePicker extends React.Component {
         }, liveDispatchInterval);
 
         if (this.range.live){
-          this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+          this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+            this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
@@ -103,9 +103,9 @@ class RangePicker extends React.Component {
       else if (asset && flow)
       {
         if (this.range.live){
-          this.props.dispatch(dataActions.getDataBySerialNumber(flow, liveStart, now));
+          this.props.dispatch(dataActions.getDataBySerialNumber(flow, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+            this.props.dispatch(dataActions.getDataBySerialNumber(flow, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, this.range.start*1000, this.range.end*1000));
@@ -114,9 +114,9 @@ class RangePicker extends React.Component {
 
       else if (asset && tag){
         if (this.range.live){
-          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, liveStart, now));
+          this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+            this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
@@ -125,9 +125,9 @@ class RangePicker extends React.Component {
 
       else if (asset){
         if (this.range.live){
-          this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
+          this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
+            this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else{
           this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));

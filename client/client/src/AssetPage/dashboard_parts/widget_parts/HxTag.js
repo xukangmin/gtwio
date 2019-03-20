@@ -51,7 +51,8 @@ class HxTag extends React.Component {
                   Temperature
                 </NavLink>
               </NavItem>
-              <NavItem>
+
+              <NavItem style={{display: DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ? "list-item" : "none"}}>
                 <NavLink
                   className={classnames({ active: this.state.activeTab === '2' })}
                   onClick={() => { this.toggle('2'); }}
@@ -62,19 +63,19 @@ class HxTag extends React.Component {
             </Nav>
 
             <TabContent activeTab={this.state.activeTab}>
-              <TabPane tabId="1">
-                <Row>
-                  <div className = "col-8"><TagPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
-                  <div className = "col-4"><TagRadar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
-                </Row>
-                <Row>
-                  <Col>
-                    <TagTable data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
-                  </Col>
-                  <Col>
-                  </Col>
-              </Row>
-              </TabPane>
+                <TabPane tabId="1">
+                  <Row>
+                    <div className = "col-8"><TagPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
+                    <div className = "col-4"><TagRadar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TagTable data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                    </Col>
+                    <Col>
+                    </Col>
+                  </Row>
+                </TabPane>
             </TabContent>
 
             <TabContent activeTab={this.state.activeTab}>

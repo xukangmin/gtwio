@@ -92,7 +92,6 @@ const ParameterInfo = (props) => {
 
 const ParameterTable = (props) => {
   const parameter = props.data;
-  console.log(parameter)
   return(
     <div>
       <Table
@@ -130,7 +129,6 @@ class AssetParameterDetail extends React.Component {
     }
 
     this.props.dispatch(parameterActions.getSingleParameter(this.state.ParameterID));
-    //this.props.dispatch(dataActions.getSingleParameterData(this.state.ParameterID, 1549470293237, 1549470453241));
     this.updateEquation = this.updateEquation.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
@@ -173,14 +171,7 @@ class AssetParameterDetail extends React.Component {
     const { AssetID } = this.state;
     const { parameter } = this.props;
     let { parameterData } = this.props;
-    console.log(parameterData)
-    //console.log(parameter)
-/*    if(!this.props.parameter){
-      this.dispatchParameterContinuously = setInterval(() => {
-        this.props.dispatch(dataActions.getSingleParameterData(parameter.ParameterID, 1549470293237, 1549470453241));
-      }, 5000);
-    }
-*/
+
     if (!this.user)
     {
       return (<Redirect to = '/login' />);

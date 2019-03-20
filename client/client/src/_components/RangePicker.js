@@ -48,12 +48,13 @@ class RangePicker extends React.Component {
       localStorage.setItem('range', JSON.stringify(this.range));
 
       var m_res = matchRoutes(routes, window.location.pathname);
-      var asset, tag, device, flow;
+      var asset, tag, device, parameter, flow;
       for(var item in m_res) {
         if (m_res[item].match.isExact) {
           asset = m_res[item].match.params.assetID;
           tag = m_res[item].match.params.tagID;
           device = m_res[item].match.params.deviceID;
+          parameter = m_res[item].match.params.parameterID;
           flow = m_res[item].match.params.flowID;
         }
         if (m_res[item].match.url.includes("configurations") || m_res[item].match.url.includes("devices")){
@@ -67,20 +68,35 @@ class RangePicker extends React.Component {
       if (asset && device)
       {
         this.props.dispatch(deviceActions.getSingleDeviceData(device, this.range.live, this.range.interval, this.range.start*1000, this.range.end*1000));
-      } else if (asset && flow)
+      }
+
+      else if (asset && parameter)
+      {
+        if(this.range.live){
+          this.props.dispatch(dataActions.getSingleParameterData(parameter, liveStart, now));
+        } else {
+          this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
+        }
+      }
+
+      else if (asset && flow)
       {
         if(this.range.live){
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, liveStart, now));
         } else {
           this.props.dispatch(dataActions.getDataBySerialNumber(flow, this.range.start*1000, this.range.end*1000));
         }
-      } else if (asset && tag){
+      }
+
+      else if (asset && tag){
         if (this.range.live){
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, liveStart, now));
         } else {
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, this.range.start*1000, this.range.end*1000));
         }
-      } else if (asset){
+      }
+
+      else if (asset){
         if (this.range.live){
           this.props.dispatch(dataActions.getDataByAssetID(asset, liveStart, now));
         } else{

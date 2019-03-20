@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 // this will be our data base's data structure
 const AssetSchema = new Schema(
   {
-    AssetID: String,
-    AddTimeStamp: Number,
+    AssetID: {type: String, index: true, unique: true},
     AssetType: String,
     DisplayName: String,
     Location: String,

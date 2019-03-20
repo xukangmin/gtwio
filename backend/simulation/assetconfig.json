@@ -1,6 +1,18 @@
 [
   {
     "AssetName" : "Aseet_DEMO_0_Flow_Meter",
+    "Equations" :
+    [
+      {
+        "Name" : "Avg Shell Inlet",
+        "Equation": "Avg([ShellInlet/Temperature])",
+        "Tag": "AVG_SHELL_INLET"
+      },
+      {
+
+      },
+
+    ],
     "Devices":
     [
       {

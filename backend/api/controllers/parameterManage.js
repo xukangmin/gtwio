@@ -241,7 +241,6 @@ function _addParameter(assetID, deviceID, paraobj, callback) {
   let para = new Parameter();
 
   para.ParameterID = "P" + shortid.generate();
-  para.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
   para.CurrentValue = 0;
 
   for (var key in paraobj) {

@@ -33,6 +33,8 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
+
+
 function _createDeviceWithParameter(assetid, deviceobj) {
   return new Promise(
     (resolve, reject) => {
@@ -41,50 +43,73 @@ function _createDeviceWithParameter(assetid, deviceobj) {
       let device = new Device();
 
       for (var key in deviceobj) {
-        device[key] = deviceobj[key];
+        if (key != 'Parameters') {
+          device[key] = deviceobj[key];
+        }
       }
 
       device.DeviceID = "D" + shortid.generate();
 
-      if (!device.DisplayName || !device.SerialNumber)
+      if (device.Name) {
+        device.DisplayName = device.Name;
+      }
 
-      device.save(err => {
-        if (err)
-        {
-          reject(err);
-        }
-        else {
-          // add device to asset
-          Asset.findOneAndUpdate({AssetID: assetid},
+      if (device.DisplayName && device.SerialNumber) {
+        device.save(err => {
+          if (err)
+          {
+            reject(err);
+          }
+          else {
+            // add device to asset
+            Asset.findOneAndUpdate({AssetID: assetid},
+                {
+                  $push:  {
+                    Devices: {DeviceID: device.DeviceID}
+                  }
+                },
+              function(err, data) {
+              if (err)
               {
-                $push:  {
-                  Devices: {DeviceID: device.DeviceID}
+                reject(err);
+              }
+              else {
+                // create parameter
+                if (deviceobj.Parameters) {
+                    const _createAllParameter = async(deviceid, paralist) => {
+                        for(let i = 0; i < paralist.length; i++) {
+                          let ret = await parameterManage._createParameter(device.DeviceID, null, paralist[i]);
+                        }
+                        return 'creat parameter done';
+                    }
+
+                    _createAllParameter(device.DeviceID, deviceobj.Parameters)
+                      .then(
+                        ret => {
+                          resolve(device.DeviceID);
+                        }
+                      )
+                      .catch(
+                        err => {
+                          reject(err);
+                        }
+                      )
+
+                } else {
+                  resolve(device.DeviceID);
                 }
-              },
-            function(err, data) {
-            if (err)
-            {
-              reject(err);
-            }
-            else {
-              // create parameter
-              Promise.all(paralist.map(item => parameterManage._createParameter(device.DeviceID, item)))
-                .then(
-                  ret => {
-                    resolve(device.DeviceID);
-                  }
-                )
-                .catch(
-                  err => {
-                    reject(err);
-                  }
-                )
-            }
-          });
 
-        }
+              }
+            });
 
-      });
+          }
+
+        });
+      } else {
+        reject(new Error('Missing Name or SerialNumber'));
+      }
+
+
     });
 }
 
@@ -99,7 +124,6 @@ function createDevice(req, res) {
     let device = new Device();
 
     device.DeviceID = "D" + shortid.generate();
-    device.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
     device.DisplayName = displayName;
 
     for (var key in deviceobj) {

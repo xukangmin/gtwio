@@ -28,8 +28,7 @@ function createDashboard(req, res) {
     let dashboard = new Dashboard();
 
     dashboard.DashboardID = "S" + shortid.generate();
-    dashboard.AddTimeStamp = Math.floor((new Date).getTime() / 1000);
-
+  
     if (dashboardobj.DisplayName)
     {
       dashboard.DisplayName = dashboardobj.DisplayName;

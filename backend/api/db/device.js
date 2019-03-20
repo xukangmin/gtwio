@@ -8,7 +8,7 @@ const DeviceSchema = new Schema(
     DeviceID: {type: String, index: true, unique: true},
     DisplayName: String,
     SensorID: String,
-    SerialNumber: String,
+    SerialNumber: {type: String, index: true},
     MetaInfo: Object,
     Tag: String,
     Angle: Number,

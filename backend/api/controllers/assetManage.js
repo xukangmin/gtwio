@@ -237,7 +237,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
               const _createDevices = async (assetid, devices) =>
               {
                   for (let i = 0; i < devices.length; i++) {
-                    let ret = await deviceManage._createDeviceWithParameter(assetid, devices[i]);
+                    let ret1 = await deviceManage._createDeviceWithParameter(assetid, devices[i]);
                   }
                   return 'done';
               };

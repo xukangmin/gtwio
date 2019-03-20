@@ -9,8 +9,20 @@
         "Tag": "AVG_SHELL_INLET"
       },
       {
-        
-      }
+        "Name" : "Avg Shell Outlet",
+        "Equation": "Avg([ShellOutlet/Temperature])",
+        "Tag": "AVG_SHELL_OUTLET"
+      },
+      {
+        "Name" : "Avg Tube Inlet",
+        "Equation": "Avg([TubeInlet/Temperature])",
+        "Tag": "AVG_TUBE_INLET"
+      },
+      {
+        "Name" : "Avg Shell Inlet",
+        "Equation": "Avg([ShellInlet/Temperature])",
+        "Tag": "AVG_TUBE_OUTLET"
+      },
     ],
     "Devices":
     [

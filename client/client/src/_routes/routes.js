@@ -14,7 +14,6 @@ import { AssetReport } from '../AssetPage/AssetReport'
 import { AssetAlert } from '../AssetPage/AssetAlert'
 import { HxStatic } from '../AssetPage/dashboard_parts/widget_parts/HxStatic'
 import { HxTag } from '../AssetPage/dashboard_parts/widget_parts/HxTag'
-import { HxFlow } from '../AssetPage/dashboard_parts/widget_parts/HxFlow'
 
 const routes = [
   { path: '/login',

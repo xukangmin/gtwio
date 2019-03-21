@@ -838,7 +838,6 @@ function _getAllParameterByAssetID(assetid) {
           data =>
           {
             para = para.concat(data);
-            console.log(para);
             return _getAllDeviceByAssetID(assetid);
           })
         .then(
@@ -849,7 +848,7 @@ function _getAllParameterByAssetID(assetid) {
         .then(
           ret => {
             para = para.concat(ret);
-
+            //console.log(para);
             var paralist = [];
 
             for (let i in para) {
@@ -857,7 +856,7 @@ function _getAllParameterByAssetID(assetid) {
                 paralist = paralist.concat(para[i][j]);
               }
             }
-
+            console.log(paralist);
             resolve(paralist);
           }
         )

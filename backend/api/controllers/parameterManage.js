@@ -29,6 +29,12 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
+function _remove_duplicates(arr) {
+    let s = new Set(arr);
+    let it = s.values();
+    return Array.from(it);
+}
+
 function _getTagList(equation) {
   var taglist = [];
 
@@ -45,25 +51,89 @@ function _getTagList(equation) {
   return taglist;
 }
 
-function _resolveSingleTagInAsset(paralist, tag) {
+function _getFullTagList(equation) {
+  var taglist = [];
+
+  var reg = /\[[^\]]+\]/g;
+
+  if(equation.match(reg)){
+    taglist = equation.match(reg);
+  }
+
+  return taglist;
+}
+
+function _resolveSingleTagInAsset(assetid, paralist, tag) {
   return new Promise(
     (resolve, reject) => {
 
         var filterlist = paralist.filter(item => item.Tag === tag);
 
         if (filterlist.length === 0) {
-
+          // create parameter with tag
+          var paraobj = {
+            Tag: tag
+          };
+          console.log("tag not exist in resolve, create one");
+          _createParameter(null, assetid, paraobj, null)
+            .then(
+              ret => {
+                resolve(ret);
+              }
+            )
+            .catch(
+              err => {
+                reject(err);
+              }
+            );
         } else if (filterlist.length === 1) {
-
+          resolve(filterlist[0].ParameterID);
         } else {
-          var strout = "";
+          var paraout = [];
+
           for (var i in filterlist) {
-            strout += "[" + filterlist[i].ParameterID + "],";
+            paraout.push(filterlist[i].ParameterID);
           }
-          strout = strout.substring(0, strout.length - 1);
-          resolve(strout);
+          resolve(paraout);
         }
     });
+}
+
+function _replaceEquation(originalEquation, taglist, newlist) {
+  var new_equation = originalEquation;
+  var fulllist = _getFullTagList(originalEquation);
+  if (taglist.length === newlist.length)
+  {
+    for(var i in taglist) {
+      var singleout = "";
+      var singlePara = fulllist[i]; // [ShellInlet/Temperature,0,0,0]
+
+      if (typeof newlist[i] === 'array')
+      {
+        for(var j in newlist[i]) {
+          singleout += singlePara.replace(taglist[i], newlist[i][j]) + ",";
+        }
+        singleout = singleout.substring(0,singleout.length - 1);
+
+      } else if (typeof newlist[i] === 'string') {
+        singleout = singlePara.replace(taglist[i], newlist[i]);
+      }
+      console.log("singleout=" + singleout);
+      console.log("fulllist[i]=" + fulllist[i]);
+      console.log("new_equation=" + new_equation);
+
+      fulllist[i] = fulllist[i].replace('[','\\[');
+      fulllist[i] = fulllist[i].replace(']','\\]');
+
+      var re = new RegExp(fulllist[i], 'g');
+      new_equation = new_equation.replace(re, singleout);
+    }
+  } else {
+    console.log("length not match, something weired happened");
+    new_equation = originalEquation;
+  }
+  console.log("new equation=" + new_equation);
+  return new_equation;
 }
 
 function _createEquation(assetid, paraobj) {
@@ -71,17 +141,37 @@ function _createEquation(assetid, paraobj) {
     (resolve, reject) => {
       if (paraobj.Name && paraobj.Equation && paraobj.Tag) {
         var taglist = _getTagList(paraobj.Equation);
-
-        // *********TO DO Remove duplicate tags ******************
-
+        taglist = _remove_duplicates(taglist);
         console.log(taglist);
         dataManage._getAllParameterByAssetID(assetid)
           .then(
-            ret => {
-              Promise.all(taglist.map(item => _resolveSingleTagInAsset(ret, item)))
+            paralist => {
+              Promise.all(taglist.map(item => _resolveSingleTagInAsset(assetid, paralist, item)))
                 .then(
                   ret => {
                     console.log(ret);
+                    paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
+                    var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
+                    if (filter_para.length === 1) {
+                      // para already exist, update equation and name
+                      paraobj.ParameterID = filter_para[0].ParameterID;
+                      console.log("para exists");
+                      console.log(paraobj);
+                      return _updateParameter(paraobj);
+                    } else if (filter_para.length === 0) {
+                      console.log("para not exists");
+                      console.log("para not exists, create para");
+                      return _createParameter(null, assetid, paraobj, null);
+                    } else {
+                      // more than one para with same Tag exists
+                      console.log("more than 1 para exists");
+                      reject(new Error('More than 1 para exists'));
+                    }
+                  }
+                )
+                .then(
+                  ret1 => {
+                    console.log(ret1);
                     resolve();
                   }
                 )
@@ -148,7 +238,19 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
                               if (err) {
                                 reject(err);
                               } else {
-                                resolve(para.ParameterID);
+                                if (paraobj.Equation) { // update equation
+                                  _updateRequireListByEquation(para.ParameterID, paraobj.Equation, function(err,data) {
+                                    if (err) {
+                                      var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                                      console.error(msg);
+                                      resolve(para.ParameterID);
+                                    } else {
+                                      resolve(para.ParameterID);
+                                    }
+                                  });
+                                } else {
+                                  resolve(para.ParameterID);
+                                }
                               }
                             });
               } else if (assetid) { // add to asset only
@@ -164,7 +266,19 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
                                 reject(err);
                               }
                               else {
-                                resolve(para.ParameterID);
+                                if (paraobj.Equation) { // update equation
+                                  _updateRequireListByEquation(para.ParameterID, paraobj.Equation, function(err,data) {
+                                    if (err) {
+                                      var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                                      console.error(msg);
+                                      resolve(para.ParameterID);
+                                    } else {
+                                      resolve(para.ParameterID);
+                                    }
+                                  });
+                                } else {
+                                  resolve(para.ParameterID);
+                                }
                               }
                             }
                           );
@@ -188,14 +302,6 @@ function createParameter(req, res) {
       ret => {
         shareUtil.SendSuccess(res);
         //console.log(data);
-        if (paraobj.Equation) { // update equation
-          _updateRequireListByEquation(ret, paraobj.Equation, function(err,data) {
-            if (err) {
-              var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
-              console.error(msg);
-            }
-          });
-        }
       }
     )
     .catch(
@@ -205,6 +311,31 @@ function createParameter(req, res) {
       }
     );
 
+}
+
+function _updateParameter(paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.findOneAndUpdate({ParameterID: paraobj.ParameterID}, paraobj, function(err,data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (paraobj.Equation) { // update equation
+            _updateRequireListByEquation(paraobj.ParameterID, paraobj.Equation, function(err,data) {
+              if (err) {
+                var msg = "Error _updateRequireListByEquation:" +  JSON.stringify(err, null, 2);
+                console.error(msg);
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          } else {
+            resolve();
+          }
+        }
+      })
+    });
 }
 
 function updateParameter(req, res) {

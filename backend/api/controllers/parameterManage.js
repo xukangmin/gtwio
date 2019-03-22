@@ -137,7 +137,6 @@ function _createEquation(assetid, paraobj) {
       if (paraobj.Name && paraobj.Equation && paraobj.Tag) {
         var taglist = _getTagList(paraobj.Equation);
         taglist = _remove_duplicates(taglist);
-        console.log(taglist);
         dataManage._getAllParameterByAssetID(assetid)
           .then(
             paralist => {

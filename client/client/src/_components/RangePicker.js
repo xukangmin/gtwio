@@ -6,23 +6,20 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
-import { FormControl, Button } from 'react-bootstrap';
-import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
+import { Button, Form, FormGroup, FormControl, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import moment from 'moment';
-import $ from 'jquery';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
+import { DatePicker } from 'antd';
+const { RangePicker } = DatePicker;
+import 'antd/dist/antd.css'
 
-class RangePicker extends React.Component {
+class Picker extends React.Component {
     constructor(props) {
       super(props);
 
       this.range = JSON.parse(localStorage.getItem('range'));
       this.user = JSON.parse(localStorage.getItem('user'));
-
-      this.state = {
-        display: 'block'
-      }
 
       if (!this.range)
       {
@@ -30,23 +27,95 @@ class RangePicker extends React.Component {
         let range = {
           live: true,
           interval: 10,
-          start: moment(now).subtract(10, "minutes"),
-          end: moment(now),
-          polling: true
+          start: now - 10*60*1000,
+          end: now
         };
-
         this.range = range;
         localStorage.setItem('range', JSON.stringify(range));
       }
 
-      this.applyCallback = this.applyCallback.bind(this);
+      this.state = {
+        pickerButtonDisplay: true,
+        pickerContentDisplay: false,
+        pickerOption: this.range.live ? 'live' : 'history',
+        interval: this.range.interval,
+        start: this.range.start,
+        end: this.range.end
+      };
+
+      this.togglePickerContent = this.togglePickerContent.bind(this);
       this.handleOptionChange = this.handleOptionChange.bind(this);
-      this.handleLiveButtonApply = this.handleLiveButtonApply.bind(this);
-      this.updateLocalStorageAndTriggers = this.updateLocalStorageAndTriggers.bind(this);
+      this.handleIntervalChange = this.handleIntervalChange.bind(this);
+      this.handleRangeChange = this.handleRangeChange.bind(this);
+      this.updateRangeState = this.updateRangeState.bind(this);
+      this.handlePickerApply = this.handlePickerApply.bind(this);
+      this.applyPickerUpdate = this.applyPickerUpdate.bind(this);
       this.intervalToText = this.intervalToText.bind(this);
     }
 
-    updateLocalStorageAndTriggers() {
+    togglePickerContent(){
+      this.setState(prevState => ({
+        pickerContentDisplay: !prevState.pickerContentDisplay
+      }));
+    }
+
+    handleOptionChange(event){
+      this.setState({
+        pickerOption: event.target.value
+      });
+    }
+
+    handleIntervalChange(event){
+      this.setState({
+        interval: event.target.value
+      });
+    }
+
+    handleRangeChange(times){
+      this.setState({
+        start: moment(times[0]).format('X'),
+        end: moment(times[1]).format('X')
+      });
+
+      this.updateRangeState(times[0],times[1]);
+    }
+
+    updateRangeState(t1, t2){
+      this.setState({
+        start: t1.format('X'),
+        end: t2.format('X')
+      });
+    }
+
+    handlePickerApply(e){
+      this.setState({
+        pickerContentDisplay: false
+      });
+
+      if (e.target.name == "apply"){
+        if (this.state.pickerOption == 'live'){
+          this.range.live = true;
+          this.range.start = this.range.start;
+          this.range.end = this.range.end;
+          this.range.interval = this.state.interval;
+        }
+        else {
+          this.range.live = false;
+          this.range.start = this.state.start;
+          this.range.end = this.state.end;
+        }
+      } else if (e.target.name == "cancel"){
+        this.setState({
+          pickerOption: this.range.live ? "live" : "history",
+          interval: this.range.interval,
+          start: this.range.start,
+          end: this.range.end
+        });
+      }
+      this.applyPickerUpdate();
+    }
+
+    applyPickerUpdate() {
       localStorage.setItem('range', JSON.stringify(this.range));
 
       let m_res = matchRoutes(routes, window.location.pathname);
@@ -62,7 +131,7 @@ class RangePicker extends React.Component {
         }
         if (m_res[item].match.url.includes("configurations") || m_res[item].match.url.includes("devices")){
           this.setState({
-            display: 'none'
+            pickerButtonDisplay: 'none'
           });
         }
       }
@@ -135,61 +204,9 @@ class RangePicker extends React.Component {
       }
     }
 
-    handleOptionChange(event) {
-      this.range.interval = event.target.value;
-      this.forceUpdate();
-    }
-
-    componentDidMount(){
-      let rangeOptions = $(".rangecontainer");
-      let rangeInput = $(".daterangepicker:first");
-      let liveDiv = $(".liveDiv");
-      let timePicker = $(".fromDateTimeContainer");
-      liveDiv.css("display","none");
-      $(".inputDate").css("textAlign","center");
-
-      if (this.range.live){
-        timePicker.css("display","none");
-        rangeInput.append(liveDiv);
-        liveDiv.css("display","block");
-      }
-
-      $(".rangebuttontextstyle:first").click(function(){
-        timePicker.css("display","none");
-        rangeInput.append(liveDiv);
-        liveDiv.css("display","block");
-      });
-
-      $(".rangebuttontextstyle:not(:first)" ).click(function(){
-        timePicker.css("display","block");
-        liveDiv.css("display","none");
-      });
-
-      this.updateLocalStorageAndTriggers();
-    }
-
-    applyCallback(start, end){
-      this.range.live = false;
-      this.range.start = moment(start).format('X');
-      this.range.end = moment(end).format('X');
-      this.range.polling = false;
-
-      this.updateLocalStorageAndTriggers();
-      this.forceUpdate();
-    }
-
-    handleLiveButtonApply(){
-      $("#reactbody").click();
-      this.range.live = true;
-
-      this.updateLocalStorageAndTriggers();
-      this.forceUpdate();
-    }
-
     intervalToText(interval){
-      let rangeText;
-      interval.toString();
-      switch(interval){
+      let rangeText = interval;
+      switch(rangeText.toString()){
         case "10":
           rangeText = "10 Minutes";
           break;
@@ -219,62 +236,61 @@ class RangePicker extends React.Component {
     }
 
     render() {
-      let now = new Date();
-      let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
-      let end = moment(start).add(1, "days").subtract(1, "seconds");
-      let ranges = {
-        "Real-time Data": [moment(start), moment(end)],
-        "Today Only": [moment(start), moment(end)],
-        "Yesterday Only": [moment(start).subtract(1, "days"), moment(end).subtract(1, "days")],
-        "3 Days": [moment(start).subtract(3, "days"), moment(end)]
-      }
-      let local = {
-        "format":"MM-DD-YYYY HH:mm",
-        "sundayFirst" : false
-      }
-      let maxDate = moment(start).add(24, "hour");
-
+      let intervalText = this.intervalToText(this.range.interval);
       return (
-        <div style={{marginLeft: "-15px", display: this.state.display}} >
-          <DateTimeRangeContainer
-            ranges={ranges}
-            start={start}
-            end={end}
-            local={local}
-            maxDate={maxDate}
-            applyCallback={this.applyCallback}
-          >
-            <FormControl
-              id="formControlsTextB"
-              type="text"
-              label="Text"
-              style={{display: "none"}}
-            />
-            <Button className="my-1">
-              <i className ="fas fa-calendar mr-3"></i>
-              { this.range.live ?
-                "Real-time Data: " + this.intervalToText(JSON.parse(localStorage.getItem('range')).interval.toString()) + " from Now"
-                :
-                moment.unix(this.range.start).format("MMMM Do YYYY, H:mm") + " - " + moment.unix(this.range.end).format("MMMM Do YYYY, H:mm")
-              }
-              <i className="fas fa-angle-down ml-3"></i>
-            </Button>
-          </DateTimeRangeContainer>
 
-          <div className='liveDiv p-3'>
-            <div className='radio'> <label><input type='radio' value={10} checked={this.range.interval == 10} onChange={this.handleOptionChange}/>{" "}10 Minutes</label> </div>
-            <div className='radio'> <label><input type='radio' value={30} checked={this.range.interval == 30} onChange={this.handleOptionChange}/>{" "}30 Minutes</label> </div>
-            <div className='radio'> <label><input type='radio' value={60} checked={this.range.interval == 60} onChange={this.handleOptionChange}/>{" "}1 Hour</label> </div>
-            <div className='radio'> <label><input type='radio' value={300} checked={this.range.interval == 300} onChange={this.handleOptionChange}/>{" "}5 Hours</label> </div>
-            <div className='radio'> <label><input type='radio' value={600} checked={this.range.interval == 600} onChange={this.handleOptionChange}/>{" "}10 Hours</label> </div>
-            <div className='radio'> <label><input type='radio' value={1440} checked={this.range.interval == 1440} onChange={this.handleOptionChange}/>{" "}1 Day</label> </div>
-            <div className='radio'> <label><input type='radio' value={10080} checked={this.range.interval == 10080} onChange={this.handleOptionChange}/>{" "}1 Week</label> </div>
-            <div className='radio'> <label><input type='radio' value={302400} checked={this.range.interval == 302400} onChange={this.handleOptionChange}/>{" "}30 Days</label> </div>
-            <Button id="DateRangePickerButton" onClick={this.handleLiveButtonApply} className="mt-2 btn-primary">Apply</Button>
+        <div style={{display: this.state.pickerButtonDisplay ? "block" : "none", marginLeft: "-15px"}} >
+
+          <Button onClick={this.togglePickerContent} className="btn-light">
+            <i className ="fas fa-calendar mr-2"></i>
+            {this.range.live ?
+              "Live Data:  " + intervalText + " from Now" :
+              "History Data:  " + moment(parseInt(this.range.start)*1000).format('YYYY-MM-DD H:mm') + " ~ " + moment(parseInt(this.range.end)*1000).format('YYYY-MM-DD H:mm')
+            }
+            <i className="fas fa-angle-down ml-3"></i>
+          </Button>
+
+          <div className="p-3" style={{display: this.state.pickerContentDisplay ? "block" : "none", backgroundColor: "white", position: "absolute", top: "45px", border: "1px gray solid"}}>
+            <div className="mb-1">
+              <label className="mr-3"><input type="radio" name="rangeType" checked={this.state.pickerOption == 'live'} onChange={this.handleOptionChange} value="live"/> Live </label>
+              <label><input type="radio" name="rangeType" checked={this.state.pickerOption == 'history'} onChange={this.handleOptionChange} value="history"/> History</label>
+            </div>
+
+            <Form style={{display: this.state.pickerOption == 'live' ? "block" : "none"}}>
+              <Input type="select" value={this.state.interval} onChange={(e)=>this.handleIntervalChange(e)}  style={{width: "130px", display: "inline-block", borderRadius: "4px", border: "1px #d9d9d9 solid", marginRight: "15px", padding: "0 5"}}>
+                <option value={10}>10 Minutes</option>
+                <option value={30}>30 Minutes</option>
+                <option value={60}>1 Hours</option>
+                <option value={300}>5 Hours</option>
+                <option value={600}>10 Hour</option>
+                <option value={1440}>1 Day</option>
+                <option value={10080}>1 Week</option>
+                <option value={302400}>30 Days</option>
+              </Input>
+              <label>from Now</label>
+            </Form>
+
+            <Form style={{display: this.state.pickerOption == 'history' ? "block" : "none"}}>
+              <div>
+                <RangePicker
+                  size="large"
+                  showTime={{ format: 'HH:mm' }}
+                  defaultValue={[moment.unix(this.range.start), moment.unix(this.range.end)]}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder={['Start Time', 'End Time']}
+                  ranges={{ Today: [moment().startOf('day'), moment().endOf('day')], Yesterday: [moment().subtract(1, "days").startOf('day'), moment().subtract(1, "days").endOf('day')], 'This Month': [moment().startOf('month'), moment().endOf('month')] }}
+                  onChange={(t)=>this.handleRangeChange(t)}
+                />
+              </div>
+            </Form>
+
+            <hr className="my-3"/>
+            <Button name="apply" onClick={e=>this.handlePickerApply(e)} className="btn-primary mr-2" style={{backgroundColor: '#007bff', borderColor: '#007bff'}}>Apply</Button>
+            <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
           </div>
         </div>
       );
     }
 }
 
-export default RangePicker;
+export default Picker;

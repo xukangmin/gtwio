@@ -74,7 +74,6 @@ function _resolveSingleTagInAsset(assetid, paralist, tag) {
           var paraobj = {
             Tag: tag
           };
-          console.log("tag not exist in resolve, create one");
           _createParameter(null, assetid, paraobj, null)
             .then(
               ret => {
@@ -102,15 +101,16 @@ function _resolveSingleTagInAsset(assetid, paralist, tag) {
 function _replaceEquation(originalEquation, taglist, newlist) {
   var new_equation = originalEquation;
   var fulllist = _getFullTagList(originalEquation);
+
   if (taglist.length === newlist.length)
   {
     for(var i in taglist) {
       var singleout = "";
       var singlePara = fulllist[i]; // [ShellInlet/Temperature,0,0,0]
-
-      if (typeof newlist[i] === 'array')
+      if (typeof newlist[i] === 'array' || typeof newlist[i] === 'object')
       {
         for(var j in newlist[i]) {
+          console.log(j);
           singleout += singlePara.replace(taglist[i], newlist[i][j]) + ",";
         }
         singleout = singleout.substring(0,singleout.length - 1);
@@ -118,10 +118,6 @@ function _replaceEquation(originalEquation, taglist, newlist) {
       } else if (typeof newlist[i] === 'string') {
         singleout = singlePara.replace(taglist[i], newlist[i]);
       }
-      console.log("singleout=" + singleout);
-      console.log("fulllist[i]=" + fulllist[i]);
-      console.log("new_equation=" + new_equation);
-
       fulllist[i] = fulllist[i].replace('[','\\[');
       fulllist[i] = fulllist[i].replace(']','\\]');
 
@@ -132,7 +128,6 @@ function _replaceEquation(originalEquation, taglist, newlist) {
     console.log("length not match, something weired happened");
     new_equation = originalEquation;
   }
-  console.log("new equation=" + new_equation);
   return new_equation;
 }
 
@@ -149,18 +144,13 @@ function _createEquation(assetid, paraobj) {
               Promise.all(taglist.map(item => _resolveSingleTagInAsset(assetid, paralist, item)))
                 .then(
                   ret => {
-                    console.log(ret);
                     paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
                     var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
                     if (filter_para.length === 1) {
                       // para already exist, update equation and name
                       paraobj.ParameterID = filter_para[0].ParameterID;
-                      console.log("para exists");
-                      console.log(paraobj);
                       return _updateParameter(paraobj);
                     } else if (filter_para.length === 0) {
-                      console.log("para not exists");
-                      console.log("para not exists, create para");
                       return _createParameter(null, assetid, paraobj, null);
                     } else {
                       // more than one para with same Tag exists

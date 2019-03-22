@@ -832,7 +832,6 @@ function _getAllParameterByAssetID(assetid) {
   return new Promise(
     (resolve, reject) => {
       var para = [];
-      console.log("start getting parameters assetid=" + assetid);
       _getAllParameterByAssetIDPromise(assetid)
         .then(
           data =>
@@ -848,16 +847,20 @@ function _getAllParameterByAssetID(assetid) {
         .then(
           ret => {
             para = para.concat(ret);
-            //console.log(para);
-            var paralist = [];
+            //console.log(para)
 
-            for (let i in para) {
-              for (let j in para[i]) {
-                paralist = paralist.concat(para[i][j]);
+            for (let i in ret) {
+              for (let j in ret[i]) {
+                para = para.concat(ret[i][j]);
               }
             }
-            console.log(paralist);
-            resolve(paralist);
+            //console.log(paralist);
+            return para;
+          }
+        )
+        .then(
+          ret => {
+            resolve(ret);
           }
         )
         .catch(

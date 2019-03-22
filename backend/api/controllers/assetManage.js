@@ -80,7 +80,7 @@ function createAsset(req, res) {
     var userid = assetobj.UserID;
 
     if (displayName && userid) {
-      _createAssetPromise(userid, displayName)
+      _createAssetPromise(userid, assetobj)
         .then(
           ret => {
             shareUtil.SendSuccess(res);
@@ -170,21 +170,23 @@ function deleteAsset(req, res) {
   }
 }
 
-function _createAssetPromise(userid, name) {
+function _createAssetPromise(userid, assetobj) {
   return new Promise(
     (resolve, reject) => {
       const shortid = require('shortid');
 
       let asset = new Asset();
 
+      for (var key in assetobj) {
+        asset[key] = assetobj[key];
+      }
+
       asset.AssetID = "A" + shortid.generate();
       asset.LatestTimeStamp = 0;
       asset.DeviceCount = 0;
 
-      if (name)
+      if (!asset.DisplayName)
       {
-        asset.DisplayName = name;
-      } else {
         asset.DisplayName = "Default Asset";
       }
 

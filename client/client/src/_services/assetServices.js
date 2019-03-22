@@ -136,6 +136,34 @@ const addAsset = (user, displayname, location) => {
     });
 }
 
+const createAssetByConfig = (user, config) => {
+    let data = {
+      'UserID': user.UserID,
+      'Config': [config]
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+                   'x-api-key' : user.ApiKey },
+        body: JSON.stringify(data)
+    };
+    return fetch(process.env.API_HOST + '/asset/createAssetByConfig', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(assetData => {
+        return assetData;
+    });
+}
+
+
 const deleteAsset = (assetid, user) => {
 
     const requestOptions = {
@@ -192,6 +220,7 @@ export const assetServices = {
     getAssetsOverview,
     getSingleAsset,
     addAsset,
+    createAssetByConfig,
     deleteAsset,
     getDataByTagList,
     updateAsset

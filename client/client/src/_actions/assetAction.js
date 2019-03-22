@@ -22,6 +22,26 @@ const addAsset = (user, displayname, location) => {
     function failure(error) { return { type: gConstants.ADD_ASSET_FAILURE, error } }
 }
 
+const createAssetByConfig = (user, config) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.createAssetByConfig(user, config)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getAssetsOverview(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.ADD_ASSET_REQUEST } }
+    function success(msg) { return { type: gConstants.ADD_ASSET_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.ADD_ASSET_FAILURE, error } }
+}
+
 const deleteAsset = (assetid, user) => {
     return dispatch => {
         dispatch(request());
@@ -156,6 +176,7 @@ export const assetActions = {
     getAssetsOverview,
     getSingleAssetData,
     addAsset,
+    createAssetByConfig,
     deleteAsset,
     getSingleAssetDetail,
     getAllDeviceData,

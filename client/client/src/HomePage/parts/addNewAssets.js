@@ -1,31 +1,40 @@
 import React from 'react';
 import { assetActions } from '../../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import template from '../../data/config';
 
 class AddNewAssets extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             displayname: '',
             location: '',
-            addModalOpen: false
+            addModalOpen: false,
+            templateContent: template,
+            type: 'manual'
         };
 
         this.addModalToggle = this.addModalToggle.bind(this);
         this.addButtonClicked = this.addButtonClicked.bind(this);
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.updateTemplate = this.updateTemplate.bind(this);
     }
 
-    addModalToggle(){
+    addModalToggle(t){
       this.setState(prevState => ({
         addModalOpen: !prevState.addModalOpen
       }));
+      this.setState({type: t.target.name});
     }
 
     addButtonClicked(){
-      this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname, this.state.location));
+      if(this.state.type == "manual"){
+        this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname, this.state.location));
+      } else {
+        this.props.dispatch(assetActions.createAssetByConfig(this.props.user, this.state.templateContent));
+      }
+
       this.setState(prevState => ({
         displayname: '',
         location: '',
@@ -46,16 +55,21 @@ class AddNewAssets extends React.Component {
         this.setState( { [name]: value} );
     }
 
+    updateTemplate(e){
+      this.setState({templateContent: JSON.parse(e.target.value)});
+    }
+
     render() {
         const { displayname } = this.state;
 
         return(
           <div>
-            <Button color="primary" onClick={this.addModalToggle}>Add New Asset</Button>
+            <Button color="primary" name="manual" onClick={e=>this.addModalToggle(e)}>Add Asset Manually</Button>
+            <Button color="primary" name="template" onClick={e=>this.addModalToggle(e)} className="ml-3">Add Asset by Template</Button>
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
               <ModalBody>
-                <Form>
+                <Form style={{display: this.state.type == "manual" ? "block" : "none"}}>
                   <FormGroup>
                     <Label for="displayname">Name</Label>
                     <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
@@ -64,6 +78,11 @@ class AddNewAssets extends React.Component {
                     <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
                   </FormGroup>
                 </Form>
+
+                <Form style={{display: this.state.type == "template" ? "block" : "none"}}>
+                  <Input type="textarea" rows="20" value={JSON.stringify(this.state.templateContent, null, 2)} onChange={this.updateTemplate}></Input>
+                </Form>
+
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" id="add" onClick={this.addButtonClicked}>Add</Button>{' '}

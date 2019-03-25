@@ -2,6 +2,10 @@ import React from 'react';
 import { assetActions } from '../../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import template from '../../data/config';
+import { Steps } from 'antd';
+const Step = Steps.Step;
+import 'antd/dist/antd.css'
+
 
 class AddNewAssets extends React.Component {
     constructor(props) {
@@ -71,11 +75,23 @@ class AddNewAssets extends React.Component {
               <ModalBody>
                 <Form style={{display: this.state.type == "manual" ? "block" : "none"}}>
                   <FormGroup>
-                    <Label for="displayname">Name</Label>
+                    <Label for="displayname">Asset Name</Label>
                     <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
                     <br/>
                     <Label for="location">Location</Label>
                     <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label for="devices">Devices</Label>
+                    <Input type="text" id="devices" name="devices" value={this.state.displayname} onChange={this.handleChange}/>
+                    <br/>
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label for="equations">Equations</Label>
+                    <Input type="text" id="equations" name="equations" value={this.state.displayname} onChange={this.handleChange}/>
+                    <br/>
                   </FormGroup>
                 </Form>
 

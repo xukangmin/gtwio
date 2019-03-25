@@ -1,11 +1,10 @@
 import { gConstants } from '../_components/constants';
 import { assetServices } from '../_services/assetServices';
-import { alertActions } from './alertAction';
 
-const addAsset = (user, displayname, location) => {
+const addAsset = (user, displayName, location) => {
     return dispatch => {
         dispatch(request());
-        assetServices.addAsset(user, displayname, location)
+        assetServices.addAsset(user, displayName, location)
             .then(
                 info => {
                     dispatch(success(info));
@@ -37,15 +36,15 @@ const createAssetByConfig = (user, config) => {
             )
     }
 
-    function request() { return { type: gConstants.ADD_ASSET_REQUEST } }
-    function success(msg) { return { type: gConstants.ADD_ASSET_SUCCESS, msg } }
-    function failure(error) { return { type: gConstants.ADD_ASSET_FAILURE, error } }
+    function request() { return { type: gConstants.ADD_ASSET_BY_CONFIG_REQUEST } }
+    function success(msg) { return { type: gConstants.ADD_ASSET_BY_CONFIG_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.ADD_ASSET_BY_CONFIG_FAILURE, error } }
 }
 
-const deleteAsset = (assetid, user) => {
+const deleteAsset = (asset, user) => {
     return dispatch => {
         dispatch(request());
-        assetServices.deleteAsset(assetid, user)
+        assetServices.deleteAsset(asset, user)
             .then(
                 info => {
                     dispatch(success(info));
@@ -76,21 +75,21 @@ const getAssetsOverview = (user) => {
             );
     };
 
-    function request() { return { type: gConstants.GET_ASSET_REQUEST } }
-    function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
+    function request() { return { type: gConstants.GET_ASSETS_REQUEST } }
+    function success(data) { return { type: gConstants.GET_ASSETS_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_ASSETS_FAILURE, error } }
 }
 
-const getSingleAssetDetail = (user, assetid) => {
+const getSingleAssetDetail = (user, asset) => {
     return dispatch => {
       dispatch(request());
-      assetServices.getSingleAsset(user, assetid)
+      assetServices.getSingleAsset(user, asset)
         .then(
-          assetdata => {
-            dispatch(success(assetdata));
-            if (assetdata.Settings) {
-              if (assetdata.Settings.Tags) {
-                assetServices.getDataByTagList(assetdata.Settings.Tags)
+          data => {
+            dispatch(success(data));
+            if (data.Settings) {
+              if (data.Settings.Tags) {
+                assetServices.getDataByTagList(data.Settings.Tags)
                   .then(
                     tags => {
                       dispatch(success_tag(tags));
@@ -108,19 +107,19 @@ const getSingleAssetDetail = (user, assetid) => {
         )
     };
 
-    function request() { return { type: gConstants.GET_ASSET_REQUEST } }
-    function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
-    function success_tag(data) { return {type: gConstants.GET_ASSET_TAG_SUCCESS, data } }
+    function request() { return { type: gConstants.GET_SINGLE_ASSET_REQUEST } }
+    function success(data) { return { type: gConstants.GET_SINGLE_ASSET_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_SINGLE_ASSET_FAILURE, error } }
+    function success_tag(data) { return {type: gConstants.GET_SINGLE_ASSET_TAG_SUCCESS, data } }
 }
 
-const getSingleAssetData = (user, assetid) => {
+const getSingleAssetData = (user, asset) => {
     return dispatch => {
         dispatch(request());
-        assetServices.getSingleAsset(user, assetid)
+        assetServices.getSingleAsset(user, asset)
             .then(
-                assetdata => {
-                    dispatch(success(assetdata));
+                data => {
+                    dispatch(success(data));
                 },
                 error => {
                     dispatch(failure(error));
@@ -128,18 +127,18 @@ const getSingleAssetData = (user, assetid) => {
             );
     };
 
-    function request() { return { type: gConstants.GET_ASSET_REQUEST } }
-    function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
+    function request() { return { type: gConstants.GET_ASSET_DATA_REQUEST } }
+    function success(data) { return { type: gConstants.GET_ASSET_DATA_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_ASSET_DATA_FAILURE, error } }
 }
 
-const getAllDeviceData = (user, assetid) => {
+const getAllDeviceData = (user, asset) => {
     return dispatch => {
         dispatch(request());
-        assetServices.getAllDevices(user, assetid)
+        assetServices.getAllDevices(user, asset)
             .then(
-                devicedata => {
-                    dispatch(success(devicedata));
+                data => {
+                    dispatch(success(data));
                 },
                 error => {
                     dispatch(failure(error));
@@ -147,15 +146,15 @@ const getAllDeviceData = (user, assetid) => {
             );
     };
 
-    function request() { return { type: gConstants.GET_ASSET_REQUEST } }
-    function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
+    function request() { return { type: gConstants.GET_ASSET_DEVICE_DATA_REQUEST } }
+    function success(data) { return { type: gConstants.GET_ASSET_DEVICE_DATA_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_ASSET_DEVICE_DATA_FAILURE, error } }
 }
 
-const updateAsset = (user, assetid, key, value) => {
+const updateAsset = (user, asset, key, value) => {
   return dispatch => {
         dispatch(request());
-        assetServices.updateAsset(assetid, key, value)
+        assetServices.updateAsset(asset, key, value)
             .then(
                 info => {
                     dispatch(getAssetsOverview(user));

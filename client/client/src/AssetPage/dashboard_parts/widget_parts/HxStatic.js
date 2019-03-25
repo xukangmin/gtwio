@@ -105,6 +105,7 @@ class HxStatic extends React.Component {
                 <Row style={Progressbars_style}>
                   <Progressbar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
                   <Progressbar type="Performance Factor" percentage="54" unit="%"/>
+                  <Progressbar type="Total Uncertainty" percentage="??" unit="??"/>
                 </Row>
                 <div style={LastUpdate_style}>
                   <span>Last updated: {new Date().toLocaleTimeString("en-US")}</span>

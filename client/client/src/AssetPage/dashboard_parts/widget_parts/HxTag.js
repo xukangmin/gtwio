@@ -10,8 +10,15 @@ import { TagPlot } from './TagPlot';
 import { ParameterPlot } from './ParameterPlot';
 import { TagTable } from './TagTable';
 const queryString = require('query-string');
+import { browserHistory } from 'react-router';
 
 import Loader from '../../../_components/loader';
+
+const removeQuery = (...queryNames) => {
+  const location = Object.assign({}, browserHistory.getCurrentLocation());
+  queryNames.forEach(q => delete location.query[q]);
+  browserHistory.push(location);
+};
 
 class HxTag extends React.Component {
   constructor(props){
@@ -20,16 +27,23 @@ class HxTag extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: queryString.parse(location.search).tab ? queryString.parse(location.search).tab.toString() : '1',
+      activeTab: '1',
     }
   }
 
   toggle(tab) {
+    // removeQuery('tab');
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab
       });
     }
+  }
+
+  componentDidMount(){
+    this.setState({
+      activeTab: queryString.parse(location.search).tab ? queryString.parse(location.search).tab.toString() : '1'
+    });
   }
 
   render(){

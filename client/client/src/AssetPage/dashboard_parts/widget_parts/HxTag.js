@@ -35,7 +35,7 @@ class HxTag extends React.Component {
   render(){
     const { AssetData } = this.props;
     const { DeviceData } = this.props;
-
+    console.log(DeviceData)
     return(
       <div>
         {AssetData && DeviceData ?

@@ -115,6 +115,10 @@ class Picker extends React.Component {
       this.applyPickerUpdate();
     }
 
+    componentDidMount(){
+      this.applyPickerUpdate();
+    }
+    
     applyPickerUpdate() {
       localStorage.setItem('range', JSON.stringify(this.range));
 
@@ -139,7 +143,7 @@ class Picker extends React.Component {
       let now = new Date().getTime();
       let liveStart = new Date().getTime()-this.range.interval*60*1000;
       let liveDispatchInterval = 60*1000;
-
+      console.log(tag)
       if (asset && device)
       {
         if (this.range.live){
@@ -182,6 +186,7 @@ class Picker extends React.Component {
       }
 
       else if (asset && tag){
+        console.log('tag')
         if (this.range.live){
           this.props.dispatch(dataActions.getSingleTagData(this.user, asset, tag, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {

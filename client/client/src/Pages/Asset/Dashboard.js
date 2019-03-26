@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';

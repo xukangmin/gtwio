@@ -1,9 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { assetActions } from '../_actions/assetAction';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-// import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class AssetList extends React.Component {
@@ -93,16 +89,16 @@ class AssetList extends React.Component {
 
         function linkFormatter(cell, row, enumObject){
           const displayText = cell;
-          return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
+          return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>;
         }
 
         function countFormatter(cell, row, enumObject){
-          const displayText = cell.length;
-          return "<a href = /asset/" + row.AssetID +"/" + enumObject + ">" + displayText+ "</a>";
+          return cell.length;
         }
 
-        function deleteFormatter(cell, row, enumObject){
-          return <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+        function actionsFormatter(cell, row, enumObject){
+          return <div><button type="button" className="btn btn-danger ml-1" onClick={()=>enumObject(cell)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+          <button type="button" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button></div>
         }
 
         const cellEditProp = {
@@ -110,12 +106,6 @@ class AssetList extends React.Component {
           blurToSave: true,
           afterSaveCell: this.onAfterSaveCell
         };
-
-        const createCustomDeleteButton = (onClick) => {
-          return (
-            <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={ onClick }><i className="fa fa-trash" aria-hidden="true"></i> Delete Selected</button>
-          );
-        }
 
         return (
           <div id="MainArea">
@@ -134,15 +124,22 @@ class AssetList extends React.Component {
               isKey
               hidden>AssetID
             </TableHeaderColumn>
+
+            <TableHeaderColumn
+              headerAlign='center'
+              dataAlign='center'
+              dataField='AssetID'
+              dataFormat={linkFormatter}>
+                Dashboard
+            </TableHeaderColumn>
+
             <TableHeaderColumn
               headerAlign='center'
               dataAlign='center'
               dataField='DisplayName'
               editable={true}
-              dataFormat={linkFormatter}
-              formatExtraData={"dashboard"}
               dataSort={true}>
-                Asset
+                Asset Name
             </TableHeaderColumn>
 
             <TableHeaderColumn
@@ -180,8 +177,8 @@ class AssetList extends React.Component {
               dataField='AssetID'
               editable={false}
               formatExtraData={this.deleteItem}
-              dataFormat={deleteFormatter}>
-                Delete
+              dataFormat={actionsFormatter}>
+                Actions
             </TableHeaderColumn>
           </BootstrapTable>
 

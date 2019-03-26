@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
 import Loader from '../../Loader';

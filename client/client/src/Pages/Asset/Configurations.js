@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { deviceActions } from '../../_actions/deviceAction';
 import { parameterActions } from '../../_actions/parameterAction';
@@ -280,7 +279,6 @@ class Configurations extends React.Component {
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
                     <TableHeaderColumn
                       headerAlign='center'
                       dataAlign='center'

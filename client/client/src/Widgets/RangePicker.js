@@ -1,15 +1,18 @@
 import React from 'react';
+import { matchRoutes } from 'react-router-config';
+import routes from '../_routes/routes';
+
 import { assetActions } from '../_actions/assetAction';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
-import { Button, Form, FormGroup, FormControl, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import moment from 'moment';
-import { matchRoutes } from 'react-router-config';
-import routes from '../_routes/routes';
+
+import { Button, Form, Input } from 'reactstrap';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
+
+import moment from 'moment';
 
 class Picker extends React.Component {
     constructor(props) {

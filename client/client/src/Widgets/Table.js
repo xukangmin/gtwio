@@ -14,7 +14,7 @@ const SingleItem = (props) => {
     </tr>)
 }
 
-class TagTable extends React.Component {
+class Table extends React.Component {
   constructor(props){
     super(props);
   }
@@ -28,7 +28,7 @@ class TagTable extends React.Component {
         <table className = "table table-striped mt-3" style={{textAlign: "center"}}>
           <thead>
             <tr>
-              <th>Parameter</th>
+              <th>Device</th>
               <th>Current</th>
               <th>Min</th>
               <th>Max</th>
@@ -54,5 +54,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TagTable);
-export { connectedPage as TagTable };
+const connectedPage = connect(mapStateToProps)(Table);
+export { connectedPage as Table };

@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 
-class TagRadar extends React.Component {
+class Radar extends React.Component {
   constructor(props){
     super(props);
   }
@@ -16,7 +15,6 @@ class TagRadar extends React.Component {
 
     let CurrentValueList = data.map((singleDevice,i) => singleDevice.Parameters[0].CurrentValue.toFixed(2));
     CurrentValueList.push(CurrentValueList[0]);
-
 
     let CurrentValueMean = data.map((singleDevice,i) => singleDevice.Parameters[0].CurrentValue.toFixed(2)).reduce((p,c,_,a) => p + c/a.length,0);
     let MeanValueList = [CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean, CurrentValueMean]
@@ -109,5 +107,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TagRadar);
-export { connectedPage as TagRadar };
+const connectedPage = connect(mapStateToProps)(Radar);
+export { connectedPage as Radar };

@@ -7,15 +7,14 @@ const Step = Steps.Step;
 import 'antd/dist/antd.css'
 
 
-class AddNewAssets extends React.Component {
+class AddAsset extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             displayname: '',
             location: '',
             addModalOpen: false,
-            templateContent: template,
-            type: 'manual'
+            templateContent: template
         };
 
         this.addModalToggle = this.addModalToggle.bind(this);
@@ -33,11 +32,11 @@ class AddNewAssets extends React.Component {
     }
 
     addButtonClicked(){
-      if(this.state.type == "manual"){
-        this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname, this.state.location));
-      } else {
-        this.props.dispatch(assetActions.createAssetByConfig(this.props.user, this.state.templateContent));
-      }
+      
+        // this.props.dispatch(assetActions.addAsset(this.props.user,this.state.displayname, this.state.location));
+      
+        // this.props.dispatch(assetActions.createAssetByConfig(this.props.user, this.state.templateContent));
+      
 
       this.setState(prevState => ({
         displayname: '',
@@ -68,12 +67,12 @@ class AddNewAssets extends React.Component {
 
         return(
           <div>
-            <Button color="primary" name="manual" onClick={e=>this.addModalToggle(e)}>Add Asset Manually</Button>
-            <Button color="primary" name="template" onClick={e=>this.addModalToggle(e)} className="ml-3">Add Asset by Template</Button>
+            <Button color="primary" name="addButton" onClick={e=>this.addModalToggle(e)}>Add New Asset</Button>
+
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
               <ModalBody>
-                <Form style={{display: this.state.type == "manual" ? "block" : "none"}}>
+                <Form>
                   <FormGroup>
                     <Label for="displayname">Asset Name</Label>
                     <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
@@ -95,11 +94,12 @@ class AddNewAssets extends React.Component {
                   </FormGroup>
                 </Form>
 
-                <Form style={{display: this.state.type == "template" ? "block" : "none"}}>
+                <Form>
                   <Input type="textarea" rows="20" value={JSON.stringify(this.state.templateContent, null, 2)} onChange={this.updateTemplate}></Input>
                 </Form>
 
               </ModalBody>
+
               <ModalFooter>
                 <Button color="primary" id="add" onClick={this.addButtonClicked}>Add</Button>{' '}
                 <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
@@ -110,4 +110,4 @@ class AddNewAssets extends React.Component {
     }
 }
 
-export default AddNewAssets
+export default AddAsset

@@ -28,8 +28,8 @@ class Picker extends React.Component {
         let range = {
           live: true,
           interval: 10,
-          start: now - 10*60*1000,
-          end: now
+          start: moment(now).subtract(10, "minutes").format('X'),
+          end: moment(now).format('X')
         };
         this.range = range;
         localStorage.setItem('range', JSON.stringify(range));
@@ -141,8 +141,6 @@ class Picker extends React.Component {
         }
       }
 
-      let now = new Date().getTime();
-      let liveStart = new Date().getTime()-this.range.interval*60*1000;
       let liveDispatchInterval = 60*1000;
       
       if (asset && device)

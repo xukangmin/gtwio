@@ -2,13 +2,14 @@ import React from 'react';
 import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
-class AddNewParameter extends React.Component {
+class AddParameter extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             displayName: '',
             equation: '',
+            sensorID: '',
             addModalOpen: false
         };
 
@@ -27,12 +28,15 @@ class AddNewParameter extends React.Component {
     addButtonClicked(){
       const newParameter = {
         DisplayName: this.state.displayName,
-        Equation: this.state.equation
-      }
-      this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter.DisplayName, newParameter.Equation));
+        Equation: this.state.equation,
+        Alias: this.state.sensorID
+      };
+
+      this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter));
       this.setState(prevState => ({
         displayName: '',
         equation: '',
+        sensorID: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -41,6 +45,7 @@ class AddNewParameter extends React.Component {
       this.setState(prevState => ({
         displayName: '',
         equation: '',
+        sensorID: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -51,7 +56,7 @@ class AddNewParameter extends React.Component {
     }
 
     render() {
-        const { displayName, equation } = this.state;
+        const { displayName, equation, sensorID } = this.state;
 
         return(
           <div>
@@ -61,8 +66,11 @@ class AddNewParameter extends React.Component {
               <ModalBody>
                 <Form>
                   <FormGroup>
-                    <Label for="displayName">Name</Label>
-                    <Input type="text" id="displayname" name="displayName" value={displayName} onChange={this.handleChange}/>
+                    <Label for="sensorID">Sensor ID</Label>
+                    <Input type="text" id="sensorID" name="sensorID" value={sensorID} onChange={this.handleChange}/>
+                    <br/>
+                    <Label for="displayName">Description</Label>
+                    <Input type="text" id="displayName" name="displayName" value={displayName} onChange={this.handleChange}/>
                     <br/>
                     <Label for="serialNumber">Equation</Label>
                     <Input type="text" id="equation" name="equation" value={equation} onChange={this.handleChange}/>
@@ -79,4 +87,4 @@ class AddNewParameter extends React.Component {
     }
 }
 
-export default AddNewParameter;
+export default AddParameter;

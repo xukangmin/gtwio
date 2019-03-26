@@ -2,7 +2,7 @@ import React from 'react';
 import { deviceActions } from '../_actions/deviceAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
-class AddNewDevice extends React.Component {
+class AddDevice extends React.Component {
     constructor(props) {
         super(props);
 
@@ -112,4 +112,4 @@ class AddNewDevice extends React.Component {
     }
 }
 
-export default AddNewDevice;
+export default AddDevice;

@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { deviceActions } from '../../_actions/deviceAction';
 import { parameterActions } from '../../_actions/parameterAction';
 
-import AddNewDevice from '../../Modals/AddDevice';
-import AddNewParameter from '../../Modals/AddParameter';
+import AddDevice from '../../Modals/AddDevice';
+import AddParameter from '../../Modals/AddParameter';
 import Loader from '../Loader';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import classnames from 'classnames';
@@ -168,7 +168,7 @@ class Configurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
-                    <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                    <AddDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                     <BootstrapTable
                       data={device}
                       insertRow={false}
@@ -275,7 +275,7 @@ class Configurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <AddNewParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                  <AddParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                   <BootstrapTable
                     data={parameter}
                     hover

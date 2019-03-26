@@ -88,8 +88,7 @@ class AssetList extends React.Component {
         const { assets } = this.props;
 
         function linkFormatter(cell, row, enumObject){
-          const displayText = cell;
-          return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>;
+          return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
         }
 
         function countFormatter(cell, row, enumObject){
@@ -129,6 +128,7 @@ class AssetList extends React.Component {
               headerAlign='center'
               dataAlign='center'
               dataField='AssetID'
+              editable={false}
               dataFormat={linkFormatter}>
                 Dashboard
             </TableHeaderColumn>

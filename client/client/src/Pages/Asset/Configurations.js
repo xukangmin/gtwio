@@ -116,7 +116,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return "<a href = /asset/" + assetID + isDeviceOrParameter + itemID +">" + displayText+ "</a>";
+      return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-tachometer-alt'></i></button>
     }
 
     function parameterFormatter(cell, row) {
@@ -182,14 +182,22 @@ class Configurations extends React.Component {
                       scrollTop={'Top'}
                       >
 
+                    <TableHeaderColumn
+                      headerAlign='center'
+                      dataAlign='center'
+                      dataField='SerialNumber'
+                      editable={false}
+                      dataFormat={linkFormatter}
+                      formatExtraData={this.asset}>
+                        Dashboard
+                    </TableHeaderColumn>
+
                       <TableHeaderColumn
                         isKey
                         headerAlign='center'
                         dataAlign='center'
                         dataField='SerialNumber'
                         editable={false}
-                        dataFormat={linkFormatter}
-                        formatExtraData={this.asset}
                         dataSort={true}>
                           Serial Number
                       </TableHeaderColumn>
@@ -216,7 +224,8 @@ class Configurations extends React.Component {
                         dataField='Parameters'
                         dataFormat={parameterFormatter}
                         editable={false}
-                        dataSort={true}>
+                        dataSort={true}
+                        hidden>
                           Parameter
                       </TableHeaderColumn>
 
@@ -275,7 +284,26 @@ class Configurations extends React.Component {
                     cellEdit={ cellEditProp }
                     version='4'
                     bordered={ false }>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey={true} dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn 
+                      headerAlign='center' 
+                      dataAlign='center' 
+                      isKey={true} 
+                      dataField='ParameterID' 
+                      editable={false} 
+                      hidden>
+                        Parameter ID
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn
+                      headerAlign='center'
+                      dataAlign='center'
+                      dataField='ParameterID'
+                      editable={false}
+                      dataFormat={linkFormatter}
+                      formatExtraData={this.asset}>
+                        Dashboard
+                    </TableHeaderColumn>
+
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>

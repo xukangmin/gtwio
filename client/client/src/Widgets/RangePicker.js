@@ -1,9 +1,5 @@
 import React from 'react';
-import Link from 'react-router-dom/Link';
-import Route from 'react-router-dom/Route';
-import { renderRoutes } from 'react-router-config';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { assetActions } from '../_actions/assetAction';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
@@ -195,7 +191,18 @@ class Picker extends React.Component {
         }
       }
 
-      else if (asset){
+      else if (asset && m_res[item].match.url.includes("dashboard")){
+        if (this.range.live){
+          this.props.dispatch(assetActions.getAsset(this.user, asset));
+          setInterval(() => {
+            this.props.dispatch(assetActions.getAsset(this.user, asset));
+          }, liveDispatchInterval);
+        } else{
+          this.props.dispatch(assetActions.getAsset(this.user, asset));
+        }
+      }
+
+      else if (asset && m_res[item].match.url.includes("data")){
         if (this.range.live){
           this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {

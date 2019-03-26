@@ -9,6 +9,9 @@ class AddNewDevice extends React.Component {
         this.state = {
             displayName: '',
             serialNumber: '',
+            sensorID: '',
+            location: '',
+            angle: '',
             addModalOpen: false
         };
 
@@ -27,12 +30,18 @@ class AddNewDevice extends React.Component {
     addButtonClicked(){
       const newDevice = {
         DisplayName: this.state.displayName,
-        SerialNumber: this.state.serialNumber
-      }
+        SerialNumber: this.state.serialNumber,
+        Alias: this.state.sensorID,
+        Tag: this.state.location,
+        Angle: this.state.angle
+      };
       this.props.dispatch(deviceActions.addDevice(this.props.user, this.props.asset, newDevice));
       this.setState(prevState => ({
         displayName: '',
         serialNumber: '',
+        sensorID: '',
+        location: '',
+        angle: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -41,6 +50,9 @@ class AddNewDevice extends React.Component {
       this.setState(prevState => ({
         displayName: '',
         serialNumber: '',
+        sensorID: '',
+        location: '',
+        angle: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -51,7 +63,7 @@ class AddNewDevice extends React.Component {
     }
 
     render() {
-        const { displayName, serialNumber } = this.state;
+        const { displayName, serialNumber, sensorID, location, angle } = this.state;
 
         return(
           <div>
@@ -61,11 +73,32 @@ class AddNewDevice extends React.Component {
               <ModalBody>
                 <Form>
                   <FormGroup>
-                    <Label for="displayName">Name</Label>
-                    <Input type="text" id="displayname" name="displayName" value={displayName} onChange={this.handleChange}/>
-                    <br/>
-                    <Label for="serialNumber">Serial Number</Label>
+                    <Label for="serialNumber"><strong>Serial Number*</strong></Label>
                     <Input type="text" id="serialNumber" name="serialNumber" value={serialNumber} onChange={this.handleChange}/>
+                    <br/>
+                    <Label for="displayName"><strong>Description*</strong></Label>
+                    <Input type="text" id="displayName" name="displayName" value={displayName} onChange={this.handleChange}/>
+                    <br/>
+                    <Label for="sensorID">Sensor ID</Label>
+                    <Input type="text" id="sensorID" name="sensorID" value={sensorID} onChange={this.handleChange}/>
+                    <br/>
+                    <Label for="location">Location</Label>
+                    <Input type="select" value={location} onChange={this.handleChange}>
+                      <option value=" "></option>
+                      <option value="ShellInlet">ShellInlet</option>
+                      <option value="ShellOutlet">ShellOutlet</option>
+                      <option value="TubeInlet">TubeInlet</option>
+                      <option value="TubeOutlet">TubeOutlet</option>
+                    </Input>
+                    <br/>
+                    <Label for="angle">Angle</Label>
+                    <Input type="select" value={angle} onChange={this.handleChange}>
+                      <option value=" "></option>
+                      <option value="0">0°</option>
+                      <option value="90">90°</option>
+                      <option value="180">180°</option>
+                      <option value="270">270°</option>
+                    </Input>
                   </FormGroup>
                 </Form>
               </ModalBody>

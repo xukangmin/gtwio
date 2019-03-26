@@ -1,7 +1,17 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 
 export const asset = (state = {}, action) => {
   switch (action.type) {
+    case gConstants.GET_ASSETS_REQUEST:
+    return {
+        ...state,
+        gettingAsset: true
+    };
+    case gConstants.GET_ASSETS_SUCCESS:
+    return {
+        gotData: true,
+        data: action.data
+    };
     case gConstants.GET_ASSET_REQUEST:
         return {
             ...state,
@@ -22,6 +32,16 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+    case gConstants.GET_DEVICES_BY_ASSET_REQUEST:
+        return {
+            ...state,
+            gettingAsset: true
+        };
+    case gConstants.GET_DEVICES_BY_ASSET_SUCCESS:
+        return {
+            gotData: true,
+            data: action.data
+        };
     case gConstants.ADD_ASSET_REQEUST:
         return state;
     case gConstants.ADD_ASSET_SUCCESS:
@@ -30,6 +50,17 @@ export const asset = (state = {}, action) => {
             msg: action.msg
         };
     case gConstants.ADD_ASSET_FAILURE:
+        return {
+            error: action.error
+        };
+    case gConstants.ADD_ASSET_BY_CONFIG_REQEUST:
+        return state;
+    case gConstants.ADD_ASSET_BY_CONFIG_SUCCESS:
+        return {
+            addedData: true,
+            msg: action.msg
+        };
+    case gConstants.ADD_ASSET_BY_CONFIG_FAILURE:
         return {
             error: action.error
         };

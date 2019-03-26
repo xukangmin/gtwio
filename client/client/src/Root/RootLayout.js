@@ -1,17 +1,14 @@
 import React, {Component} from 'react';
-import Link from 'react-router-dom/Link';
-import Route from 'react-router-dom/Route';
 import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import SideNav from '../_components/sideNav'
-import HeaderNav from '../_components/headerNav'
+import Menu from '../Pages/Menu'
+import Header from '../Pages/Header'
 
-import { dataActions } from '../_actions/dataAction'
 import { assetActions } from '../_actions/assetAction'
 
 import './root.css'
-import Loader from '../_components/loader'
+import Loader from '../Pages/Loader'
 
 class RootLayout extends Component {
   constructor(props) {
@@ -21,7 +18,7 @@ class RootLayout extends Component {
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
     if (this.user && !this.assets_local)
     {
-      this.props.dispatch(assetActions.getAssetsOverview(this.user));
+      this.props.dispatch(assetActions.getAssets(this.user));
     }
   }
 
@@ -45,11 +42,11 @@ class RootLayout extends Component {
       else{
         return (
           <div id="home-page-main">
-          <HeaderNav dispatch={this.props.dispatch}/>
+          <Header dispatch={this.props.dispatch}/>
           <div className ="container-fluid">
             {assets_display ?
             <div className ="row">
-              <SideNav assets={assets_display} dispatch={this.props.dispatch}/>
+              <Menu assets={assets_display} dispatch={this.props.dispatch}/>
               <main role="main" className ="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     {renderRoutes(this.props.route.routes, {store : this.props.store})}
               </main>

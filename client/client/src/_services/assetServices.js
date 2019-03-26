@@ -1,15 +1,13 @@
-import { gConstants } from '../_components/constants';
-import { dataServices } from './dataServices';
 import { parameterServices } from './parameterServices';
 
-const getAssetsOverview = (user) => {
+const getAssets = (user) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey},
         method: 'GET'
     };
     var rq = process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID;
-    console.log(rq);
+    
     return fetch(process.env.API_HOST + '/asset/getAssetByUser?userID=' + user.UserID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
@@ -21,25 +19,25 @@ const getAssetsOverview = (user) => {
             }
             return resJSON;
         })
-        .then(assetData => {
-            localStorage.setItem('assets', JSON.stringify(assetData));
-            return assetData;
+        .then(data => {
+            localStorage.setItem('assets', JSON.stringify(data));
+            return data;
         });
 }
 
-const _getSingleParameterCurrentValue = (dataobj) => {
+const _getSingleParameterCurrentValue = (dataObj) => {
   return new Promise(
     (resolve, reject) => {
-      if (dataobj.ParameterID == "N/A" || dataobj.ParameterID == "None" || dataobj.ParameterID == "Null")
+      if (dataObj.ParameterID == "N/A" || dataObj.ParameterID == "None" || dataObj.ParameterID == "Null")
       {
-        dataobj.Value = "N/A";
-        resolve(dataobj);
+        dataObj.Value = "N/A";
+        resolve(dataObj);
       } else {
-        parameterServices.getSingleParameter(dataobj.ParameterID)
+        parameterServices.getParameter(dataObj.ParameterID)
           .then(ret => {
-              dataobj.Value  = ret.CurrentValue;
-              dataobj.Unit = ret.Unit;
-              resolve(dataobj);
+            dataObj.Value  = ret.CurrentValue;
+            dataObj.Unit = ret.Unit;
+              resolve(dataObj);
           })
           .catch(
             err => {
@@ -47,14 +45,8 @@ const _getSingleParameterCurrentValue = (dataobj) => {
             }
           );
       }
-
-
     });
-
-
 }
-
-
 
 const _getSingleTag = (tag) => {
   return new Promise(
@@ -74,8 +66,8 @@ const _getSingleTag = (tag) => {
     });
 }
 
-const getDataByTagList = (taglist) => {
-  return Promise.all(taglist.map(_getSingleTag))
+const getDataByTagList = (tagList) => {
+  return Promise.all(tagList.map(_getSingleTag))
     .then(
       ret => {
         return ret;
@@ -83,15 +75,14 @@ const getDataByTagList = (taglist) => {
     )
 }
 
-
-const getSingleAsset = (user, assetid) => {
+const getAsset = (user, assetID) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey}
     };
-    var rq = process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetid;
+    var rq = process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetID;
     console.log(rq);
-    return fetch(process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/asset/getSingleAsset?AssetID=' + assetID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -102,20 +93,20 @@ const getSingleAsset = (user, assetid) => {
             }
             return resJSON;
         })
-        .then(assetData => {
-            localStorage.setItem('asset(' + assetid + ')', JSON.stringify(assetData));
-            return assetData;
+        .then(data => {
+            localStorage.setItem('asset(' + assetID + ')', JSON.stringify(data));
+            return data;
         });
 }
 
-const addAsset = (user, displayname, location) => {
+const addAsset = (user, displayName, location) => {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
                    'x-api-key' : user.ApiKey },
         body: JSON.stringify({
             'UserID': user.UserID,
-            'DisplayName': displayname,
+            'DisplayName': displayName,
             'Location': location
         })
     };
@@ -131,12 +122,12 @@ const addAsset = (user, displayname, location) => {
         }
         return resJSON;
     })
-    .then(assetData => {
-        return assetData;
+    .then(data => {
+        return data;
     });
 }
 
-const createAssetByConfig = (user, config) => {
+const addAssetByConfig = (user, config) => {
     let data = {
       'UserID': user.UserID,
       'Config': [config]
@@ -158,19 +149,19 @@ const createAssetByConfig = (user, config) => {
         }
         return resJSON;
     })
-    .then(assetData => {
-        return assetData;
+    .then(data => {
+        return data;
     });
 }
 
 
-const deleteAsset = (assetid, user) => {
+const deleteAsset = (assetID, user) => {
 
     const requestOptions = {
         method: 'DELETE'
     };
 
-    return fetch(process.env.API_HOST + '/asset/deleteAsset?AssetID=' + assetid + '&UserID=' + user.UserID, requestOptions)
+    return fetch(process.env.API_HOST + '/asset/deleteAsset?AssetID=' + assetID + '&UserID=' + user.UserID, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -186,10 +177,10 @@ const deleteAsset = (assetid, user) => {
     });
 }
 
-const updateAsset = (assetid, key, value) => {
+const updateAsset = (assetID, key, value) => {
 
     let body = {
-      AssetID: assetid,
+      AssetID: assetID,
       [key]: value
     };
     console.log(body);
@@ -217,11 +208,11 @@ const updateAsset = (assetid, key, value) => {
 }
 
 export const assetServices = {
-    getAssetsOverview,
-    getSingleAsset,
-    addAsset,
-    createAssetByConfig,
-    deleteAsset,
+    getAssets,
+    getAsset,
     getDataByTagList,
+    addAsset,
+    addAssetByConfig,
+    deleteAsset,
     updateAsset
 };

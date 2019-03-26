@@ -1,35 +1,12 @@
-import { gConstants } from '../_components/constants';
-import SortDevices from '../_components/SortDevices';
+import SortDevices from '../Functions/sortDevices';
 
-const loadSVGdata = (svgname) => {
-    const requestOptions = {
-        headers: { 'Access-Control-Allow-Origin': '*'}
-    };
-    return fetch('https://s3.amazonaws.com/gtwiiotres/HeatExchanger.svg',requestOptions)
-        .then(response => {
-            console.log(response);
-            return Promise.all([response, response.json()])
-        })
-        .then( ([resRaw, resJSON]) => {
-            if (!resRaw.ok)
-            {
-                return Promise.reject(resJSON.message);
-            }
-            return resJSON;
-        })
-        .then(svgData => {
-            localStorage.setItem('asset(' + assetid + ')', JSON.stringify(svgData));
-            return svgData;
-        });
-}
-
-const getSingleTagData = (user, assetid, tag, t1, t2) => {
+const getSingleTagData = (user, asset, tag, t1, t2) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(process.env.API_HOST + '/data/getDataByTag?AssetID=' + assetid + '&Tag=' + tag + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
+    return fetch(process.env.API_HOST + '/data/getDataByTag?AssetID=' + asset + '&Tag=' + tag + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -41,13 +18,13 @@ const getSingleTagData = (user, assetid, tag, t1, t2) => {
             return resJSON;
         })
         .then(TagData => {
-            localStorage.setItem('asset(' + assetid + ')', JSON.stringify(TagData));
+            localStorage.setItem('asset(' + asset + ')', JSON.stringify(TagData));
             return SortDevices(TagData);
         });
 }
 
-const getSingleParameterData = (pid, t1, t2) => {
-    return fetch(process.env.API_HOST + '/data/getDataByParameterID?ParameterID=' + pid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+const getSingleParameterData = (parameter, t1, t2) => {
+    return fetch(process.env.API_HOST + '/data/getDataByParameterID?ParameterID=' + parameter + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -60,8 +37,8 @@ const getSingleParameterData = (pid, t1, t2) => {
         });
 }
 
-const getDataByAssetID = (assetid, t1, t2) => {
-    return fetch(process.env.API_HOST + '/data/getDataByAssetID?AssetID=' + assetid + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+const getDataByAssetID = (asset, t1, t2) => {
+    return fetch(process.env.API_HOST + '/data/getDataByAssetID?AssetID=' + asset + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -74,8 +51,8 @@ const getDataByAssetID = (assetid, t1, t2) => {
         });
 }
 
-const getDataBySerialNumber = (serialnumber, t1, t2) => {
-    return fetch(process.env.API_HOST + '/data/getDataBySerialNumber?SerialNumber=' + serialnumber + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
+const getDataBySerialNumber = (serialNumber, t1, t2) => {
+    return fetch(process.env.API_HOST + '/data/getDataBySerialNumber?SerialNumber=' + serialNumber + '&StartTimeStamp=' + t1 + '&EndTimeStamp=' + t2)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -89,7 +66,6 @@ const getDataBySerialNumber = (serialnumber, t1, t2) => {
 }
 
 export const dataServices = {
-    loadSVGdata,
     getSingleTagData,
     getSingleParameterData,
     getDataByAssetID,

@@ -1,4 +1,4 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 import { userService } from '../_services/userServices';
 import { alertActions } from './alertAction';
 

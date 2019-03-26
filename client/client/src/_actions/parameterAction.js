@@ -1,15 +1,14 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 import { parameterServices } from '../_services/parameterServices';
-import { alertActions } from './alertAction';
 import { dataActions } from './dataAction';
 
-const getParameterByAsset = (assetid) => {
+const getParameters = (assetID) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.getParameterByAsset(assetid)
+        parameterServices.getParameters(assetID)
             .then(
-                parameterdata => {
-                    dispatch(success(parameterdata));
+                data => {
+                    dispatch(success(data));
                 },
                 error => {
                     dispatch(failure(error));
@@ -17,21 +16,21 @@ const getParameterByAsset = (assetid) => {
             );
     };
 
-    function request() { return { type: gConstants.GET_PARAMETER_REQUEST } }
-    function success(data) { return { type: gConstants.GET_PARAMETER_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
+    function request() { return { type: gConstants.GET_PARAMETERS_REQUEST } }
+    function success(data) { return { type: gConstants.GET_PARAMETERS_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_PARAMETERS_FAILURE, error } }
 }
 
-const getSingleParameter = (pid) => {
+const getParameter = (parameterID) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.getSingleParameter(pid)
+        parameterServices.getParameter(parameterID)
             .then(
-                parameterdata => {
-                    dispatch(success(parameterdata));
+                data => {
+                    dispatch(success(data));
 
-                    if (parameterdata.CurrentTimeStamp) {
-                      dispatch(dataActions.getSingleParameterData(parameterdata.ParameterID, parameterdata.CurrentTimeStamp - 600000, parameterdata.CurrentTimeStamp));
+                    if (data.CurrentTimeStamp) {
+                      dispatch(dataActions.getSingleParameterData(data.ParameterID, data.CurrentTimeStamp - 600000, data.CurrentTimeStamp));
                     }
                 },
                 error => {
@@ -45,13 +44,13 @@ const getSingleParameter = (pid) => {
     function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
 }
 
-const addNewParameter = (assetid, displayname, equation) => {
+const addParameter = (assetID, displayName, equation) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.addParameter(assetid, displayname, equation)
+        parameterServices.addParameter(assetID, displayName, equation)
             .then(
                 info => {
-                    dispatch(getParameterByAsset(assetid));
+                    dispatch(getParameters(assetID));
                     dispatch(success(info));
                 },
                 error => {
@@ -65,7 +64,7 @@ const addNewParameter = (assetid, displayname, equation) => {
     function failure(error) { return { type: gConstants.ADD_PARAMETER_FAILURE, error } }
 }
 
-const updateParameter = (user, asset, data) => {
+const updateParameter = (user, assetID, data) => {
     return dispatch => {
         dispatch(request());
         parameterServices.updateParameter(data)
@@ -84,13 +83,13 @@ const updateParameter = (user, asset, data) => {
     function failure(error) { return { type: gConstants.UPDATE_PARAMETER_FAILURE, error } }
 }
 
-const deleteParameter = (asset, parameterid) => {
+const deleteParameter = (asset, parameterID) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.deleteParameter(asset, parameterid)
+        parameterServices.deleteParameter(asset, parameterID)
             .then(
                 info => {
-                    dispatch(getParameterByAsset(asset));
+                    dispatch(getParameters(asset));
                     dispatch(success(info));
                 },
                 error => {
@@ -105,9 +104,9 @@ const deleteParameter = (asset, parameterid) => {
 }
 
 export const parameterActions = {
-    getParameterByAsset,
-    getSingleParameter,
-    addNewParameter,
+    getParameters,
+    getParameter,
+    addParameter,
     updateParameter,
     deleteParameter
 };

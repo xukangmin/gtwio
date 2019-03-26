@@ -1,8 +1,3 @@
-
-
-import { gConstants } from '../_components/constants'
-
-
 const getAllDashboards = (assetid) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json'}

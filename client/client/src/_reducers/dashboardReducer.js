@@ -1,4 +1,4 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 
 export const dashboard = (state = {}, action) => {
   switch (action.type) {

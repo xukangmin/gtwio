@@ -1,4 +1,4 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 
 export const alertActions = {
     success,

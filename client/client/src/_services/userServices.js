@@ -1,5 +1,3 @@
-import { gConstants } from '../_components/constants'
-
 export const userService = {
     login,
     logout,

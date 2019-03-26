@@ -1,13 +1,12 @@
-import { gConstants } from '../_components/constants'
-import SortDevices from '../_components/SortDevices';
+import SortDevices from '../Functions/sortDevices';
 
-const getAllDevices = (user, assetid) => {
+const getDevices = (user, assetID) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
                    'x-api-key' : user.ApiKey}
     };
 
-    return fetch(process.env.API_HOST + '/device/getDeviceByAsset?AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/device/getDeviceByAsset?AssetID=' + assetID, requestOptions)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -18,14 +17,13 @@ const getAllDevices = (user, assetid) => {
             }
             return resJSON;
         })
-        .then(deviceData => {
-            return SortDevices(deviceData);
+        .then(data => {
+            return SortDevices(data);
         });
 }
 
-const getSingleDevice = (deviceid) => {
-
-    return fetch(process.env.API_HOST + '/device/getSingleDevice?DeviceID=' + deviceid)
+const getDevice = (deviceID) => {
+    return fetch(process.env.API_HOST + '/device/getSingleDevice?DeviceID=' + deviceID)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -36,22 +34,22 @@ const getSingleDevice = (deviceid) => {
             }
             return resJSON;
         })
-        .then(deviceData => {
-            return deviceData;
+        .then(data => {
+            return data;
         });
 }
 
-const addNewDevice = (user, assetid, devicedata) => {
+const addDevice = (user, assetID, data) => {
     const body = {
-        'AssetID': assetid,
+        'AssetID': assetID,
         'UserID': user.UserID,
-        'DisplayName': devicedata.DisplayName,
-        'SerialNumber': devicedata.SerialNumber
+        'DisplayName': data.DisplayName,
+        'SerialNumber': data.SerialNumber
     };
 
-    if (devicedata.SerialNumber != "")
+    if (data.SerialNumber != "")
     {
-        Object.assign(body, devicedata);
+        Object.assign(body, data);
     }
 
     const requestOptions = {
@@ -72,18 +70,18 @@ const addNewDevice = (user, assetid, devicedata) => {
         }
         return resJSON;
     })
-    .then(deviceData => {
-        return deviceData;
+    .then(data => {
+        return data;
     });
 }
 
-const deleteDevice = (assetid, deviceid) => {
+const deleteDevice = (assetID, deviceID) => {
 
     const requestOptions = {
         method: 'DELETE'
     };
 
-    return fetch(process.env.API_HOST + '/device/deleteDevice?DeviceID=' + deviceid + '&AssetID=' + assetid, requestOptions)
+    return fetch(process.env.API_HOST + '/device/deleteDevice?DeviceID=' + deviceID + '&AssetID=' + assetID, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -127,9 +125,9 @@ const updateDevice = (data) => {
 }
 
 export const deviceServices = {
-    addNewDevice,
+    getDevices,
+    getDevice,
+    addDevice,
     deleteDevice,
-    getAllDevices,
-    getSingleDevice,
     updateDevice
 };

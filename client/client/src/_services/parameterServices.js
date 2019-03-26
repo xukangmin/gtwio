@@ -1,8 +1,6 @@
-import { gConstants } from '../_components/constants';
+const getParameters = (assetID) => {
 
-const getParameterByAsset = (assetid) => {
-
-    return fetch(process.env.API_HOST + '/parameter/getParameterByAsset?AssetID=' + assetid)
+    return fetch(process.env.API_HOST + '/parameter/getParameterByAsset?AssetID=' + assetID)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -13,14 +11,13 @@ const getParameterByAsset = (assetid) => {
             }
             return resJSON;
         })
-        .then(parameterdata => {
-            return parameterdata;
+        .then(data => {
+            return data;
         });
 }
 
-const getSingleParameter = (pid) => {
-
-    return fetch(process.env.API_HOST + '/parameter/getSingleParameter?ParameterID=' + pid)
+const getParameter = (parameterID) => {
+    return fetch(process.env.API_HOST + '/parameter/getSingleParameter?ParameterID=' + parameterID)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -31,15 +28,15 @@ const getSingleParameter = (pid) => {
             }
             return resJSON;
         })
-        .then(parameterdata => {
-            return parameterdata;
+        .then(data => {
+            return data;
         });
 }
 
-const addParameter = (assetid, displayname, equation) => {
+const addParameter = (assetID, displayName, equation) => {
     const body = {
-        'AssetID': assetid,
-        'DisplayName': displayname,
+        'AssetID': assetID,
+        'DisplayName': displayName,
         'Equation': equation
     };
 
@@ -61,8 +58,8 @@ const addParameter = (assetid, displayname, equation) => {
         }
         return resJSON;
     })
-    .then(parameterdata => {
-        return parameterdata;
+    .then(data => {
+        return data;
     });
 }
 
@@ -91,13 +88,13 @@ const updateParameter = (data) => {
     });
 }
 
-const deleteParameter = (assetid, parameterid) => {
+const deleteParameter = (assetID, parameterID) => {
 
     const requestOptions = {
         method: 'DELETE'
     };
 
-    return fetch(process.env.API_HOST + '/parameter/deleteParameter?AssetID=' + assetid + '&ParameterID=' + parameterid, requestOptions)
+    return fetch(process.env.API_HOST + '/parameter/deleteParameter?AssetID=' + assetID + '&ParameterID=' + parameterID, requestOptions)
     .then(response => {
         return Promise.all([response, response.json()])
     })
@@ -114,8 +111,8 @@ const deleteParameter = (assetid, parameterid) => {
 }
 
 export const parameterServices = {
-    getParameterByAsset,
-    getSingleParameter,
+    getParameters,
+    getParameter,
     addParameter,
     updateParameter,
     deleteParameter

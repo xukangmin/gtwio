@@ -1,15 +1,14 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 import { deviceServices } from '../_services/deviceServices';
-import { alertActions } from './alertAction';
 import { dataActions } from './dataAction';
 
-const getAllDeviceData = (user, assetid) => {
+const getDevices = (user, assetID) => {
     return dispatch => {
         dispatch(request());
-        deviceServices.getAllDevices(user, assetid)
+        deviceServices.getDevices(user, assetID)
             .then(
-                devicedata => {
-                    dispatch(success(devicedata));
+                data => {
+                    dispatch(success(data));
                 },
                 error => {
                     dispatch(failure(error));
@@ -17,23 +16,21 @@ const getAllDeviceData = (user, assetid) => {
             );
     };
 
-    function request() { return { type: gConstants.GET_DEVICE_REQUEST } }
-    function success(data) { return { type: gConstants.GET_DEVICE_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
+    function request() { return { type: gConstants.GET_DEVICES_REQUEST } }
+    function success(data) { return { type: gConstants.GET_DEVICES_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_DEVICES_FAILURE, error } }
 }
 
-const getSingleDeviceData = (deviceid, start, end) => {
-
+const getDevice = (deviceID, t1, t2) => {
     return dispatch => {
         dispatch(request());
-        deviceServices.getSingleDevice(deviceid)
+        deviceServices.getDevice(deviceID)
             .then(
-                devicedata => {
-                    dispatch(success(devicedata));
-
-                    if (devicedata.Parameters) {
-                      if (devicedata.Parameters.length === 1) {
-                        dispatch(dataActions.getSingleParameterData(devicedata.Parameters[0].ParameterID, start, end));
+                data => {
+                    dispatch(success(data));
+                    if (data.Parameters) {
+                      if (data.Parameters.length === 1) {
+                        dispatch(dataActions.getSingleParameterData(data.Parameters[0].ParameterID, t1, t2));
                       }
                     }
                 },
@@ -48,13 +45,13 @@ const getSingleDeviceData = (deviceid, start, end) => {
     function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
 }
 
-const addNewDevice = (user, assetid, devicedata) => {
+const addDevice = (user, assetID, data) => {
     return dispatch => {
         dispatch(request());
-        deviceServices.addNewDevice(user, assetid, devicedata)
+        deviceServices.addDevice(user, assetID, data)
             .then(
                 info => {
-                    dispatch(getAllDeviceData(user, assetid));
+                    dispatch(getDevices(user, assetID));
                     dispatch(success(info));
                 },
                 error => {
@@ -68,13 +65,13 @@ const addNewDevice = (user, assetid, devicedata) => {
     function failure(error) { return { type: gConstants.ADD_DEVICE_FAILURE, error } }
 }
 
-const deleteDevice = (user, assetid, deviceid) => {
+const deleteDevice = (user, assetID, deviceID) => {
     return dispatch => {
         dispatch(request());
-        deviceServices.deleteDevice(assetid, deviceid)
+        deviceServices.deleteDevice(assetID, deviceID)
             .then(
                 info => {
-                    dispatch(getAllDeviceData(user, assetid));
+                    dispatch(getDevices(user, assetID));
                     dispatch(success(info));
                 },
                 error => {
@@ -88,13 +85,13 @@ const deleteDevice = (user, assetid, deviceid) => {
     function failure(error) { return { type: gConstants.DELETE_DEVICE_FAILURE, error } }
 }
 
-const updateDevice = (user, assetid, data) => {
+const updateDevice = (user, assetID, data) => {
     return dispatch => {
         dispatch(request());
         deviceServices.updateDevice(data)
             .then(
                 info => {
-                    dispatch(getAllDeviceData(user, assetid));
+                    dispatch(getDevices(user, assetID));
                     dispatch(success(info));
                 },
                 error => {
@@ -109,9 +106,9 @@ const updateDevice = (user, assetid, data) => {
 }
 
 export const deviceActions = {
-    addNewDevice,
+    getDevices,
+    getDevice,
+    addDevice,
     deleteDevice,
-    getAllDeviceData,
-    getSingleDeviceData,
     updateDevice
 };

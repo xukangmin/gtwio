@@ -1,7 +1,21 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 
 export const parameter = (state = {}, action) => {
   switch (action.type) {
+    case gConstants.GET_PARAMETERS_REQUEST:
+        return {
+            ...state,
+            gettingPARAMETER: true
+        };
+    case gConstants.GET_PARAMETERS_SUCCESS:
+        return {
+            gotData: true,
+            data: action.data
+        };
+    case gConstants.GET_PARAMETERS_FAILURE:
+        return {
+            error: action.error
+        };
     case gConstants.GET_PARAMETER_REQUEST:
         return {
             ...state,

@@ -7,7 +7,7 @@ import './login.css'
 import { alertActions } from '../_actions/alertAction'
 import { userActions } from '../_actions/userAction'
 import LoginInfo from './parts/info'
-import { gConstants } from '../_components/constants'
+import { gConstants } from '../Constants/constants'
 import queryString  from 'query-string'
 import { ForgotPasswordForm } from './parts/forgotpassword';
 import { ResetPasswordForm } from './parts/resetpassword';

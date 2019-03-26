@@ -1,6 +1,5 @@
-import { gConstants } from '../_components/constants';
+import { gConstants } from '../Constants/constants';
 import { dashboardServices } from '../_services/dashboardServices';
-import { alertActions } from './alertAction';
 
 const addDashboard = (assetid, dashboardData) => {
     return dispatch => {

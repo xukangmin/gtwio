@@ -24,6 +24,7 @@ var functions = {
   createDevice: createDevice,
   updateDevice: updateDevice,
   deleteDevice: deleteDevice,
+  _deleteSingleDevice: _deleteSingleDevice,
   getDeviceByAsset: getDeviceByAsset,
   getSingleDevice: getSingleDevice,
   _createDeviceWithParameter: _createDeviceWithParameter
@@ -187,6 +188,19 @@ function updateDevice(req, res) {
       });
     }
   }
+}
+
+function _deleteSingleDevice(deviceobj){
+  return new Promise(
+    (resolve, reject) => {
+      Device.deleteOne({DeviceID: deviceobj.DeviceID}, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    });
 }
 
 // Delete device by deviceID or by AssetID

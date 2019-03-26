@@ -2,6 +2,7 @@ var userManage = require('./userManage.js');
 var shareUtil = require('./shareUtil.js');
 var deviceManage = require('./deviceManage.js');
 var parameterManage = require('./parameterManage.js');
+var dataManage = require('./dataManage.js');
 const User = require('../db/user.js');
 const Asset = require('../db/asset.js');
 
@@ -11,7 +12,8 @@ var functions = {
   createAsset: createAsset,
   updateAsset: updateAsset,
   deleteAsset: deleteAsset,
-  createAssetByConfig: createAssetByConfig
+  createAssetByConfig: createAssetByConfig,
+  createAssetByConfigFile: createAssetByConfigFile
 };
 
 for (var key in functions) {
@@ -136,30 +138,68 @@ function deleteAsset(req, res) {
   var userid = req.swagger.params.UserID.value;
   if (assetid) {
     if (userid) {
-      // remove in user table and asset
-      Asset.deleteOne({AssetID: assetid}, function(err) {
-        if (err)
-        {
-          var msg = "Error:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res);
-        }
-        else{
-          User.findOneAndUpdate({UserID: userid}, {
-            $pull: {
-              Assets: {AssetID: assetid}
-            }
-          }, function(err, data){
-            if (err)
-            {
-              var msg = "Error:" + JSON.stringify(err, null, 2);
-              shareUtil.SendInternalErr(res);
-            } else {
-                shareUtil.SendSuccess(res);
-            }
-          });
+      var devicelist = [];
+      var paralist = [];
+      
+      dataManage._getAllDeviceByAssetID(assetid)
+        .then(
+          ret => {
+            devicelist = devicelist.concat(ret);
+            return dataManage._getAllParameterByAssetID(assetid);
+          }
+        )
+        .then(
+          ret1 => {
+            paralist = paralist.concat(ret1);
+            return Promise.all(paralist.map(dataManage._deleteAllData));
+          }
+        )
+        .then(
+          ret2 => {
+            return Promise.all(paralist.map(parameterManage._deleteSingleParameter));
+          }
+        )
+        .then(
+          ret3 => {
+            return Promise.all(devicelist.map(deviceManage._deleteSingleDevice));
+          }
+        )
+        .then(
+          ret4 => {
+            // remove in user table and asset
+            Asset.deleteOne({AssetID: assetid}, function(err) {
+              if (err)
+              {
+                var msg = "Error:" + JSON.stringify(err, null, 2);
+                shareUtil.SendInternalErr(res);
+              }
+              else{
+                User.findOneAndUpdate({UserID: userid}, {
+                  $pull: {
+                    Assets: {AssetID: assetid}
+                  }
+                }, function(err, data){
+                  if (err)
+                  {
+                    var msg = "Error:" + JSON.stringify(err, null, 2);
+                    console.log(msg);
+                    shareUtil.SendInternalErr(res);
+                  } else {
+                      shareUtil.SendSuccess(res);
+                  }
+                });
 
-        }
-      });
+              }
+            });
+          }
+        )
+        .catch(
+          err => {
+            var msg = "Error:" + JSON.stringify(err, null, 2);
+            shareUtil.SendInternalErr(res, msg);
+          }
+        )
+
     } else {
       var msg = "UserID missing";
       shareUtil.SendInvalidInput(res, msg);
@@ -230,7 +270,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
   return new Promise(
     (resolve, reject) => {
       // first create asset
-        _createAssetPromise(userid, singleAssetConfig.AssetName)
+        _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName})
           .then(
             ret => {
               // create device
@@ -275,6 +315,48 @@ function _createSingleAsset(userid, singleAssetConfig) {
           )
     });
 }
+function createAssetByConfigFile(req, res) {
+  var data  = req.files.configFile.buffer.toString('utf8');
+  var userid = req.body.UserID;
+  var config;
+  try{
+    config = JSON.parse(data);
+  }
+  catch(e) {
+    shareUtil.SendInvalidInput(res, 'Invalid JSON FILE');
+  }
+  
+  if (config && userid) {
+    console.log(config);
+    console.log(userid);
+    
+    const _createAllAssetInternal = async(userid, config) => {
+      for(let i = 0; i < config.length; i++) {
+       let ret = await _createSingleAsset(userid, config[i]);
+      }
+      return 'create asset done';
+    }
+
+    _createAllAssetInternal(userid, config)
+      .then(
+        ret => {
+          console.log(ret);
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          console.error(err);
+          shareUtil.SendInvalidInput(res, "Create Asset Error:" + JSON.stringify(err, null, 2));
+        }
+      );
+  } else {
+    shareUtil.SendInvalidInput(res, 'User ID or Json file missing');
+  }
+
+  
+}
+
 
 function createAssetByConfig(req, res) {
   var assetobj = req.body;

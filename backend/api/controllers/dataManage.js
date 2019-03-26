@@ -19,7 +19,9 @@ var functions = {
   getDataByDeviceID: getDataByDeviceID,
   testFunc: testFunc,
   addDataByParticleEvent: addDataByParticleEvent,
-  _getAllParameterByAssetID: _getAllParameterByAssetID
+  _getAllParameterByAssetID: _getAllParameterByAssetID,
+  _getAllDeviceByAssetID: _getAllDeviceByAssetID,
+  _deleteAllData:_deleteAllData
 }
 
 for (var key in functions) {
@@ -29,41 +31,31 @@ for (var key in functions) {
 var datareq = [];
 var rawdataobj = {};
 
+function _deleteAllData(paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+      Data.deleteMany({ParameterID: paraobj.ParameterID}, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+}
+
 function testFunc(req, res) {
-    var dataobj = req.body;
+    console.log(req.headers);
+    console.log(req.files.configFile);
+    var data  = req.files.configFile.buffer.toString('utf8');
 
-    var devicearr = dataobj.Devices;
-
-    var getDeviceData = function(deviceobj) {
-      return new Promise(function(resolve, reject) {
-          Device.findOne({DeviceID: deviceobj.DeviceID}, function(err, data) {
-            if (data.DeviceID === 'Temp1')
-            {
-              reject('error');
-            } else {
-              resolve(data);
-            }
-            /*
-            if (err) {
-                reject(err);
-            } else {
-              resolve(data);
-            }*/
-          });
-      });
-
-    }
-
-    Promise.all(devicearr.map(getDeviceData))
-      .then(data =>
-        {
-          console.log(data)
-          shareUtil.SendSuccessWithData(res, data);
-        })
-      .catch(function(err) {
-          console.log(err);
-          shareUtil.SendInternalErr(res, err);
-      });
+    var jdata = JSON.parse(data);
+    
+    console.log(jdata[0].AssetName);
+    
+    shareUtil.SendSuccess(res);
+    
 
 }
 function _getSingleDataPoint(paraid, currentTimeStamp) {

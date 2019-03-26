@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { deviceActions } from '../../_actions/deviceAction';
 import { parameterActions } from '../../_actions/parameterAction';
 
-import AddNewDevice from '../../Modals/AddDevice';
-import AddNewParameter from '../../Modals/AddParameter';
+import AddDevice from '../../Modals/AddDevice';
+import AddParameter from '../../Modals/AddParameter';
 import Loader from '../Loader';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import classnames from 'classnames';
@@ -117,7 +116,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return "<a href = /asset/" + assetID + isDeviceOrParameter + itemID +">" + displayText+ "</a>";
+      return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-tachometer-alt'></i></button>
     }
 
     function parameterFormatter(cell, row) {
@@ -169,7 +168,7 @@ class Configurations extends React.Component {
             <TabPane tabId="1">
                 <Row className="mt-3">
                   <Col>
-                    <AddNewDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                    <AddDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                     <BootstrapTable
                       data={device}
                       insertRow={false}
@@ -183,14 +182,22 @@ class Configurations extends React.Component {
                       scrollTop={'Top'}
                       >
 
+                    <TableHeaderColumn
+                      headerAlign='center'
+                      dataAlign='center'
+                      dataField='SerialNumber'
+                      editable={false}
+                      dataFormat={linkFormatter}
+                      formatExtraData={this.asset}>
+                        Dashboard
+                    </TableHeaderColumn>
+
                       <TableHeaderColumn
                         isKey
                         headerAlign='center'
                         dataAlign='center'
                         dataField='SerialNumber'
                         editable={false}
-                        dataFormat={linkFormatter}
-                        formatExtraData={this.asset}
                         dataSort={true}>
                           Serial Number
                       </TableHeaderColumn>
@@ -217,7 +224,8 @@ class Configurations extends React.Component {
                         dataField='Parameters'
                         dataFormat={parameterFormatter}
                         editable={false}
-                        dataSort={true}>
+                        dataSort={true}
+                        hidden>
                           Parameter
                       </TableHeaderColumn>
 
@@ -267,7 +275,7 @@ class Configurations extends React.Component {
             <TabPane tabId="2">
               <Row className="mt-3">
                 <Col>
-                  <AddNewParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                  <AddParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                   <BootstrapTable
                     data={parameter}
                     hover
@@ -276,11 +284,29 @@ class Configurations extends React.Component {
                     cellEdit={ cellEditProp }
                     version='4'
                     bordered={ false }>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' isKey={true} dataField='ParameterID' editable={false} dataFormat={linkFormatter} formatExtraData={this.asset} dataSort={ true }>Parameter ID</TableHeaderColumn>
+                    <TableHeaderColumn 
+                      headerAlign='center' 
+                      dataAlign='center' 
+                      isKey={true} 
+                      dataField='ParameterID' 
+                      editable={false} 
+                      hidden>
+                        Parameter ID
+                    </TableHeaderColumn>
+
+                    <TableHeaderColumn
+                      headerAlign='center'
+                      dataAlign='center'
+                      dataField='ParameterID'
+                      editable={false}
+                      dataFormat={linkFormatter}
+                      formatExtraData={this.asset}>
+                        Dashboard
+                    </TableHeaderColumn>
+
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='CurrentTimeStamp' editable={false} dataFormat={dateFormatter} dataSort={ true }>Time Stamp</TableHeaderColumn>
                     <TableHeaderColumn
                       headerAlign='center'
                       dataAlign='center'

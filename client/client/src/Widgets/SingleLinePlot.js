@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 
-class ParameterPlot extends React.Component {
+class SingleLinePlot extends React.Component {
   constructor(props){
     super(props);
   }
@@ -63,5 +63,5 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedPage = connect(mapStateToProps)(ParameterPlot);
-export { connectedPage as ParameterPlot };
+const connectedPage = connect(mapStateToProps)(SingleLinePlot);
+export { connectedPage as SingleLinePlot };

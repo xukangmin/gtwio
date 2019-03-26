@@ -33,12 +33,9 @@ const getParameter = (parameterID) => {
         });
 }
 
-const addParameter = (assetID, displayName, equation) => {
-    const body = {
-        'AssetID': assetID,
-        'DisplayName': displayName,
-        'Equation': equation
-    };
+const addParameter = (assetID, data) => {
+    let body = data;
+    data.AssetID = assetID;
 
     const requestOptions = {
         method: 'POST',

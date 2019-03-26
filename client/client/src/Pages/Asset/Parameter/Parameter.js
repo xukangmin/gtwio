@@ -1,12 +1,12 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
 import Loader from '../../Loader';
 
 import { Table } from 'reactstrap';
-import { ParameterPlot } from '../../../Widgets/ParameterPlot';
+import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import InlineEdit from 'react-inline-edit-input';
 import toastr from 'toastr';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -176,7 +176,7 @@ class Parameter extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className = "col-sm-auto col-lg-8">
-                <ParameterPlot parameterData={this.sortTime(parameterData)} unit="(°F)"/>
+                <SingleLinePlot parameterData={this.sortTime(parameterData)} unit="(°F)"/>
               </div>
             </div>
            }

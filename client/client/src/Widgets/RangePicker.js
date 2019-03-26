@@ -1,19 +1,18 @@
 import React from 'react';
-import Link from 'react-router-dom/Link';
-import Route from 'react-router-dom/Route';
-import { renderRoutes } from 'react-router-config';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { matchRoutes } from 'react-router-config';
+import routes from '../_routes/routes';
+
+import { assetActions } from '../_actions/assetAction';
 import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
-import { Button, Form, FormGroup, FormControl, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import moment from 'moment';
-import { matchRoutes } from 'react-router-config';
-import routes from '../_routes/routes';
+
+import { Button, Form, Input } from 'reactstrap';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
+
+import moment from 'moment';
 
 class Picker extends React.Component {
     constructor(props) {
@@ -28,8 +27,8 @@ class Picker extends React.Component {
         let range = {
           live: true,
           interval: 10,
-          start: now - 10*60*1000,
-          end: now
+          start: moment(now).subtract(10, "minutes").format('X'),
+          end: moment(now).format('X')
         };
         this.range = range;
         localStorage.setItem('range', JSON.stringify(range));
@@ -141,8 +140,6 @@ class Picker extends React.Component {
         }
       }
 
-      let now = new Date().getTime();
-      let liveStart = new Date().getTime()-this.range.interval*60*1000;
       let liveDispatchInterval = 60*1000;
       
       if (asset && device)
@@ -197,7 +194,18 @@ class Picker extends React.Component {
         }
       }
 
-      else if (asset){
+      else if (asset && m_res[item].match.url.includes("dashboard")){
+        if (this.range.live){
+          this.props.dispatch(assetActions.getAsset(this.user, asset));
+          setInterval(() => {
+            this.props.dispatch(assetActions.getAsset(this.user, asset));
+          }, liveDispatchInterval);
+        } else{
+          this.props.dispatch(assetActions.getAsset(this.user, asset));
+        }
+      }
+
+      else if (asset && m_res[item].match.url.includes("data")){
         if (this.range.live){
           this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';
@@ -14,7 +13,7 @@ import { Progressbar } from '../../Widgets/ProgressBar';
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
+    // this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
     this.state = {
        AssetID: props.match.params.assetID,
     }
@@ -24,11 +23,11 @@ class Dashboard extends React.Component {
 
   }
 
-  componentDidMount() {
-    this.dispatchParameterContinuously = setInterval(() => {
-      this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),this.state.AssetID));
-    }, 60000);
-  }
+  // componentDidMount() {
+  //   this.dispatchParameterContinuously = setInterval(() => {
+  //     this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),this.state.AssetID));
+  //   }, 60000);
+  // }
 
 
   HandleText(elem, tag, assetdata){

@@ -44,10 +44,10 @@ const getParameter = (parameterID) => {
     function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
 }
 
-const addParameter = (assetID, displayName, equation) => {
+const addParameter = (assetID, data) => {
     return dispatch => {
         dispatch(request());
-        parameterServices.addParameter(assetID, displayName, equation)
+        parameterServices.addParameter(assetID, data)
             .then(
                 info => {
                     dispatch(getParameters(assetID));

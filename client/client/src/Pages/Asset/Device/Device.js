@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { parameterActions } from '../../../_actions/parameterAction';
 import Loader from '../../Loader';
 import { Table } from 'reactstrap';
-import { ParameterPlot } from '../../../Widgets/ParameterPlot';
+import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import toastr from 'toastr';
 import * as moment from 'moment';
 window['moment'] = moment;
@@ -236,7 +236,7 @@ class Device extends React.Component {
                   <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">
-                  <ParameterPlot parameterData={this.sortTime(parameterData)}/>
+                  <SingleLinePlot parameterData={this.sortTime(parameterData)}/>
                 </div>
               </div>
             }

@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 import moment from "moment";
 
-class TagPlot extends React.Component {
+class MultipleLinesPlot extends React.Component {
   constructor(props){
     super(props);
   }
@@ -61,5 +60,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(TagPlot);
-export { connectedPage as TagPlot };
+const connectedPage = connect(mapStateToProps)(MultipleLinesPlot);
+export { connectedPage as MultipleLinesPlot };

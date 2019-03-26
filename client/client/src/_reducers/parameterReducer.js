@@ -30,7 +30,7 @@ export const parameter = (state = {}, action) => {
         return {
             error: action.error
         };
-    case gConstants.ADD_PARAMETER_REQEUST:
+    case gConstants.ADD_PARAMETER_REQUEST:
         return state;
     case gConstants.ADD_PARAMETER_SUCCESS:
         return {

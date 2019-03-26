@@ -1,13 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { assetActions } from '../../../_actions/assetAction';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import { TagRadar } from '../../../Widgets/TagRadar';
-import { TagPlot } from '../../../Widgets/TagPlot';
-import { ParameterPlot } from '../../../Widgets/ParameterPlot';
-import { TagTable } from '../../../Widgets/TagTable';
+import { Radar } from '../../../Widgets/Radar';
+import { MultipleLinesPlot } from '../../../Widgets/MultipleLinesPlot';
+import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
+import { Table } from '../../../Widgets/Table';
 const queryString = require('query-string');
 
 import Loader from '../../Loader';
@@ -33,9 +32,9 @@ class Tag extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({
-      activeTab: queryString.parse(location.search).tab ? queryString.parse(location.search).tab.toString() : '1'
-    });
+    if(document.getElementById("flowTab") && queryString.parse(location.search).tab.toString()=="2"){
+      document.getElementById("flowTab").click();
+    }
   }
 
   render(){
@@ -59,6 +58,7 @@ class Tag extends React.Component {
 
               <NavItem style={{display: DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ? "list-item" : "none"}}>
                 <NavLink
+                  id="flowTab"
                   className={classnames({ active: this.state.activeTab === '2' })}
                   onClick={() => { this.toggle('2'); }}
                 >
@@ -70,12 +70,12 @@ class Tag extends React.Component {
             <TabContent activeTab={this.state.activeTab}>
                 <TabPane tabId="1">
                   <Row>
-                    <div className = "col-8"><TagPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
-                    <div className = "col-4"><TagRadar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
+                    <div className = "col-8"><MultipleLinesPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
+                    <div className = "col-4"><Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
                   </Row>
                   <Row>
                     <Col>
-                      <TagTable data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                      <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
                     </Col>
                     <Col>
                     </Col>
@@ -87,12 +87,12 @@ class Tag extends React.Component {
               <TabPane tabId="2">
               <Row>
                 <Col>
-                  <ParameterPlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
                 </Col>
               </Row>
               <Row>
                 <Col>
-                  <TagTable data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
                 </Col>
                 <Col>
                 </Col>

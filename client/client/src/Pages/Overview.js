@@ -12,38 +12,16 @@ class Overview extends React.Component {
   constructor(props) {
     super(props);
 
-    // first Get user's assets info with interval 10s
     this.user = JSON.parse(localStorage.getItem('user'));
-    // this.assets_local = JSON.parse(localStorage.getItem('assets'));
-    this.range = JSON.parse(localStorage.getItem('range'));
-
-    let now = new Date();
-    let start = moment(now).subtract(10, "minutes").format('X');
-    let end = moment(now).format('X');
-
-    if (!this.range)
-    {
-       var range = {
-         live: true,
-         interval: 30,
-         start: start,
-         end: end,
-         polling: true
-       };
-       this.range = range;
-       localStorage.setItem('range', JSON.stringify(range));
-    }
 
     if (this.user)
     {
       this.props.dispatch(assetActions.getAssets(this.user));
     }
-
   }
 
   render() {
-    //const { assets } = this.state;
-    const { assets, msg } = this.props;
+    const { assets } = this.props;
     let assets_display = null;
     if (assets)
     {

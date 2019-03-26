@@ -40,12 +40,9 @@ const getDevice = (deviceID) => {
 }
 
 const addDevice = (user, assetID, data) => {
-    const body = {
-        'AssetID': assetID,
-        'UserID': user.UserID,
-        'DisplayName': data.DisplayName,
-        'SerialNumber': data.SerialNumber
-    };
+    let body = data;
+    body.AssetID = assetID;
+    body.UserID = user.UserID;
 
     if (data.SerialNumber != "")
     {

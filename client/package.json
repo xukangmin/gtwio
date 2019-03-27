@@ -59,6 +59,7 @@
     "react-redux": "^5.0.7",
     "react-router-config": "^1.0.0-beta.4",
     "react-samy-svg": "^3.0.6",
+    "react-stepper-horizontal": "^1.0.11",
     "react-switch": "^4.1.0",
     "react-transition-group": "^1.2.1",
     "react-widgets": "^4.4.10",

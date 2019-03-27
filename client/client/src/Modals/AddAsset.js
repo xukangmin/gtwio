@@ -2,9 +2,7 @@ import React from 'react';
 import { assetActions } from '../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import template from '../Data/config';
-import { Steps } from 'antd';
-const Step = Steps.Step;
-import 'antd/dist/antd.css'
+import Stepper from 'react-stepper-horizontal';
 
 
 class AddAsset extends React.Component {
@@ -14,8 +12,34 @@ class AddAsset extends React.Component {
             displayname: '',
             location: '',
             addModalOpen: false,
-            templateContent: template
+            templateContent: template,
+            
+            steps: [{
+              title: 'Asset Info',
+              onClick: (e) => {
+                this.setState({currentStep:0})
+                e.preventDefault()
+                console.log('onClick', 1)
+              }
+            }, {
+              title: 'Add Devices',
+              onClick: (e) => {
+                this.setState({currentStep:1})
+                e.preventDefault()
+                console.log('onClick', 2)
+              }
+            }, {
+              title: 'Add Equations',
+              onClick: (e) => {
+                this.setState({currentStep:2})
+                e.preventDefault()
+                console.log('onClick', 3)
+              }
+            }],
+            currentStep: 0,
         };
+
+        this.onClickNext = this.onClickNext.bind(this);
 
         this.addModalToggle = this.addModalToggle.bind(this);
         this.addButtonClicked = this.addButtonClicked.bind(this);
@@ -23,6 +47,14 @@ class AddAsset extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.updateTemplate = this.updateTemplate.bind(this);
     }
+
+    onClickNext() {
+      const { steps, currentStep } = this.state;
+      this.setState({
+        currentStep: currentStep + 1,
+      });
+    }
+
 
     addModalToggle(t){
       this.setState(prevState => ({
@@ -64,6 +96,8 @@ class AddAsset extends React.Component {
 
     render() {
         const { displayname } = this.state;
+        const { steps, currentStep } = this.state;
+    const buttonStyle = { background: '#E0E0E0', width: 200, padding: 16, textAlign: 'center', margin: '0 auto', marginTop: 32 };
 
         return(
           <div>
@@ -74,33 +108,61 @@ class AddAsset extends React.Component {
               <ModalBody>
                 <Form>
                   <FormGroup>
-                    <Label for="displayname">Asset Name</Label>
-                    <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
-                    <br/>
-                    <Label for="location">Location</Label>
-                    <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
-                  </FormGroup>
+                  <div>
+                    <Stepper steps={ steps } activeStep={ currentStep } className="mb-2"/>
+                    <hr/>
+                    
+                    <div className="step1" style={{display: this.state.currentStep == 0 ? "block" : "none"}}>
+                      <Label for="displayname"><strong>Asset Name*</strong></Label>
+                      <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
+                      <br/>
+                      <Label for="location">Location</Label>
+                      <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
+                    </div>
 
-                  <FormGroup>
-                    <Label for="devices">Devices</Label>
-                    <Input type="text" id="devices" name="devices" value={this.state.displayname} onChange={this.handleChange}/>
-                    <br/>
-                  </FormGroup>
+                    <div className="step2" style={{display: this.state.currentStep == 1 ? "block" : "none"}}>
+                      <Label for="displayname"><strong>Serial Number*</strong></Label>
+                      <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
+                      <br/>
+                      <Label for="location">Description</Label>
+                      <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
 
-                  <FormGroup>
-                    <Label for="equations">Equations</Label>
-                    <Input type="text" id="equations" name="equations" value={this.state.displayname} onChange={this.handleChange}/>
-                    <br/>
-                  </FormGroup>
-                </Form>
+                      <Label for="location">Type</Label>
+                      <Input type="select" value={this.state.type} onChange={(e)=>this.handleChange(e)}>
+                        <option value="Temp">Temperature</option>
+                        <option value="Flowrate">Flow Rate</option>
+                      </Input>
 
-                <Form>
-                  <Input type="textarea" rows="20" value={JSON.stringify(this.state.templateContent, null, 2)} onChange={this.updateTemplate}></Input>
+                      <Label for="location">Location</Label>
+                      <Input type="select" value={this.state.type} onChange={(e)=>this.handleChange(e)}>
+                        <option value="Temp">Temperature</option>
+                        <option value="Flowrate">Flow Rate</option>
+                      </Input>
+
+                      <Label for="location">Angle</Label>
+                      <Input type="select" value={this.state.type} onChange={(e)=>this.handleChange(e)}>
+                        <option value="Temp">Temperature</option>
+                        <option value="Flowrate">Flow Rate</option>
+                      </Input>
+                    </div>
+
+                    <div className="step3" style={{display: this.state.currentStep == 2 ? "block" : "none"}}>
+                      <Label for="displayname">Equation</Label>
+                      <Input type="text" id="displayname" name="displayname" value={this.state.displayname} onChange={this.handleChange}/>
+                      <br/>
+                      <Label for="location">Location</Label>
+                      <Input type="text" id="location" name="location" value={this.state.location} onChange={this.handleChange}/>
+                    </div>
+                  </div>
+
+                    
+                  </FormGroup>
                 </Form>
 
               </ModalBody>
 
               <ModalFooter>
+                <Button color="primary" id="add" onClick={this.onClickNext}>Next</Button>{' '}
                 <Button color="primary" id="add" onClick={this.addButtonClicked}>Add</Button>{' '}
                 <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
               </ModalFooter>

@@ -18,18 +18,18 @@ function generate_simulation_data1(paraID, lowRange, highRange) {
   });
 }
 
-function generate_simulation_data(paraID, lowRange, highRange) {
+function generate_simulation_data(sn, type, lowRange, highRange) {
   const requestOptions = {
       headers: { 'Content-Type': 'application/json'},
       method: 'POST',
       body: JSON.stringify({
-          'ParameterID': paraID,
+          'SerialNumber': sn,
           'Value': Math.random() * (highRange-lowRange) + lowRange,
-          "TimeStamp": Math.floor((new Date).getTime())
+          'DataType': type
       })
   };
-
-  fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataByParameterID', requestOptions)
+  
+  fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataBySerialNumber', requestOptions)
       .then(response => {
           return Promise.all([response, response.json()])
       })
@@ -41,7 +41,7 @@ function generate_simulation_data(paraID, lowRange, highRange) {
           return resJSON;
       })
       .then(ret => {
-
+        
       })
       .catch(err => {
         console.error(err);
@@ -52,24 +52,26 @@ module.exports.simualte = (interval) => {
   function myFunc(arg) {
     // console.log(`arg was => ${arg}`);
     //console.log("generate simulation data");
-    generate_simulation_data('TempPara0', 60, 61);
-    generate_simulation_data('TempPara1', 60, 61);
-    generate_simulation_data('TempPara2', 60, 61);
-    generate_simulation_data('TempPara3', 60, 61);
-    generate_simulation_data('TempPara4', 75, 76);
-    generate_simulation_data('TempPara5', 75, 76);
-    generate_simulation_data('TempPara6', 75, 76);
-    generate_simulation_data('TempPara7', 75, 76);
-    generate_simulation_data('TempPara8', 90, 91);
-    generate_simulation_data('TempPara9', 90, 91);
-    generate_simulation_data('TempPara10', 90, 91);
-    generate_simulation_data('TempPara11', 90, 91);
-    generate_simulation_data('TempPara12', 80, 81);
-    generate_simulation_data('TempPara13', 80, 81);
-    generate_simulation_data('TempPara14', 80, 81);
-    generate_simulation_data('TempPara15', 80, 81);
-    generate_simulation_data('FlowPara0', 50, 60);
-    generate_simulation_data('FlowPara1', 50, 60);
+
+    for(var j = 0; j <= 32; j+= 16)
+    {
+      for(var i = j + 50; i <= j + 53; i++) {
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 60, 61);
+      }
+      for(var i = j + 54; i <= j + 57; i++) {
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 75, 76);
+      }
+      for(var i = j + 58; i <= j + 61; i++) {
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 90, 91);
+      }
+      for(var i = j + 62; i <= j + 65; i++) {
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 80, 81);
+      }
+    }
+
+    generate_simulation_data('05A001', "FlowRate", 300, 350);
+    generate_simulation_data('05A002', "FlowRate", 300, 350);
+    generate_simulation_data('05A003', "FlowRate", 300, 350);
   }
 
   setInterval(myFunc, interval, 'funky');

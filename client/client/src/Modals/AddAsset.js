@@ -46,6 +46,8 @@ class AddAsset extends React.Component {
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.updateTemplate = this.updateTemplate.bind(this);
+        this.handleUploadImage = this.handleUploadImage.bind(this);
+        
     }
 
     onClickNext() {
@@ -93,6 +95,26 @@ class AddAsset extends React.Component {
     updateTemplate(e){
       this.setState({templateContent: JSON.parse(e.target.value)});
     }
+    
+
+    handleUploadImage(ev) {
+      ev.preventDefault();
+  
+      const data = new FormData();
+      data.append('configFile', this.uploadInput.files[0]);
+      data.append('UserID', 'USERID0');
+      fetch('http://localhost:8002/asset/createAssetByConfigFile', {
+        method: 'POST',
+        body: data,
+      }).then((response) => {
+        response.json().then((body) => {
+          //this.setState({ imageURL: `http://localhost:8000/${body.file}` });
+          console.log(body);
+          
+        });
+      });
+      
+    }
 
     render() {
         const { displayname } = this.state;
@@ -102,6 +124,15 @@ class AddAsset extends React.Component {
         return(
           <div>
             <Button color="primary" name="addButton" onClick={e=>this.addModalToggle(e)}>Add New Asset</Button>
+            <form onSubmit={this.handleUploadImage}>
+              <div>
+                <input ref={(ref) => { this.uploadInput = ref; }} type="file" accept='.json' />
+              </div>
+              <br />
+              <div>
+                <button>Upload</button>
+              </div>
+            </form>
 
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>

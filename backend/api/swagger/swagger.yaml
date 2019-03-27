@@ -172,6 +172,36 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/createAssetByConfigFile:
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: Create a new asset by configuration file
+      # used as the method name of the controller
+      operationId: createAssetByConfigFile
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: UserID
+        in: formData
+        description: UserID
+        required: true
+        type: string
+      - in: formData
+        name: configFile
+        type: file
+        description: The file to upload
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"    
   /asset/updateAsset:
     x-swagger-router-controller: assetManage
     put:
@@ -1252,18 +1282,13 @@ paths:
       description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName. ApiKey of user is needed in header of request
       # used as the method name of the controller
       operationId: testFunc
+      consumes:
+      - multipart/form-data
       parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          properties:
-            Data:
-            # type: object
-              #items:
-              $ref: '#/definitions/AddDataByDeviceIDModel'
-            Timestamp:
-              type: integer
+      - in: formData
+        name: configFile
+        type: file
+        description: The file to upload.
       responses:
         200:
           description: Success

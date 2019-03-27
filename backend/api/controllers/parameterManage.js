@@ -14,6 +14,7 @@ var functions = {
   createParameter: createParameter,
   updateParameter: updateParameter,
   deleteParameter: deleteParameter,
+  _deleteSingleParameter, _deleteSingleParameter,
   getParameterByAsset: getParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
@@ -357,6 +358,19 @@ function updateParameter(req, res) {
       });
     }
   }
+}
+
+function _deleteSingleParameter(paraobj) {
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.deleteOne({ParameterID: paraobj.ParameterID},function(err){
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
 }
 
 function deleteParameter(req, res) {

@@ -198,8 +198,8 @@ function _math_op_convert(streval) {
 function _perform_calculation(dataobj, equation, latestTimeStamp) {
   return new Promise(
     (resolve, reject) => {
-      //console.log("_perform_calculation:");
-      //console.log(dataobj);
+      // console.log("_perform_calculation:");
+      // console.log(dataobj);
       var new_eval = equation;
 
       var reg = /\[[^\]]+\]/g;
@@ -838,7 +838,7 @@ function _getAllParameterByAssetID(assetid) {
         )
         .then(
           ret => {
-            para = para.concat(ret);
+            //para = para.concat(ret);
             //console.log(para)
 
             for (let i in ret) {
@@ -998,22 +998,35 @@ function _getDataByParameterIDWithParaInfo(para, sTS, eTS) {
           console.log(err);
           reject(err);
         } else {
-          var paraobj = para.toObject();
-          paraobj.Data = data;
-          var dataarr = data.map(item => item.Value);
-          var stat = {};
-          var sum = dataarr.reduce((total, p) => total + p, 0);
-          var avg = sum / dataarr.length;
-          var min = dataarr.reduce((min, p) => Math.min(min,p));
-          var max = dataarr.reduce((max, p) => Math.max(max,p));
-          var stdev = math.std(dataarr);
-          stat.Sum = sum;
-          stat.Avg = avg;
-          stat.Min = min;
-          stat.Max = max;
-          stat.STDEV = stdev;
-          paraobj.DataStatistics = stat;
-          resolve(paraobj);
+          if (data.length > 0)
+          {
+            try{
+              var paraobj = para.toObject();
+              paraobj.Data = data;
+              var dataarr = data.map(item => item.Value);
+              var stat = {};
+              var sum = dataarr.reduce((total, p) => total + p, 0);
+              var avg = sum / dataarr.length;
+              var min = dataarr.reduce((min, p) => Math.min(min,p));
+              var max = dataarr.reduce((max, p) => Math.max(max,p));
+              var stdev = math.std(dataarr);
+              stat.Sum = sum;
+              stat.Avg = avg;
+              stat.Min = min;
+              stat.Max = max;
+              stat.STDEV = stdev;
+              paraobj.DataStatistics = stat;
+            } catch(err) {
+              reject(err);
+            }
+            resolve(paraobj);
+          } else {
+            var paraobj = para.toObject();
+            paraobj.Data = data;
+            resolve(paraobj)
+          }
+
+          
         }
       });
     }

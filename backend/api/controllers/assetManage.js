@@ -101,6 +101,23 @@ function createAsset(req, res) {
   }
 }
 
+function _updateAsset(assetobj) {
+  return new Promise(
+    (resolve, reject) => {
+      if (assetobj.AssetID) {
+        Asset.findOneAndUpdate({AssetID: assetobj.AssetID}, assetobj, function(err, data){
+          if (err) {
+            reject(err);
+          } else {
+            resolve(assetobj.AssetID);
+          }
+        });
+      } else {
+        reject(new Error('No asset ID'));
+      }
+    });
+}
+
 // USE by website only
 function updateAsset(req, res) {
   var assetobj = req.body;
@@ -270,12 +287,14 @@ function _createSingleAsset(userid, singleAssetConfig) {
   return new Promise(
     (resolve, reject) => {
       // first create asset
+        var assetid;
         _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName})
           .then(
             ret => {
               // create device
               //var tasks = singleAssetConfig.Devices.map(item => deviceManage._createDeviceWithParameter(ret, item));
               //var p = Promise.resolve();
+              assetid = ret;
               const _createDevices = async (assetid, devices) =>
               {
                   for (let i = 0; i < devices.length; i++) {
@@ -304,6 +323,40 @@ function _createSingleAsset(userid, singleAssetConfig) {
           )
           .then(
             ret => {
+              return dataManage._getAllParameterByAssetID(ret);
+            }
+          )
+          .then(
+            paralist => {
+              var assetobj = {};
+              if (singleAssetConfig.Dashboard)
+              {
+                for(var i in singleAssetConfig.Dashboard) {
+                  for(var j in singleAssetConfig.Dashboard[i].Data) {
+                    if (singleAssetConfig.Dashboard[i].Data[j].AssignedTag) {
+                      var filterlist = paralist.filter(item => item.Tag === singleAssetConfig.Dashboard[i].Data[j].AssignedTag);
+                      if (filterlist.length > 0) {
+                        singleAssetConfig.Dashboard[i].Data[j].ParameterID = filterlist[0].ParameterID;
+                      } else {
+                        singleAssetConfig.Dashboard[i].Data[j].ParameterID = 'N/A';
+                      }
+                    }
+                  }
+                }
+
+                
+                assetobj.AssetID = assetid;
+                assetobj.Settings = {};
+                assetobj.Settings.Tags = singleAssetConfig.Dashboard;
+                return _updateAsset(assetobj);
+              } else {
+                return assetid;
+              }
+              
+            }
+          )
+          .then(
+            ret => {
               console.log("create equation done");
               resolve(ret);
             }
@@ -327,8 +380,8 @@ function createAssetByConfigFile(req, res) {
   }
   
   if (config && userid) {
-    console.log(config);
-    console.log(userid);
+   // console.log(config);
+   // console.log(userid);
     
     const _createAllAssetInternal = async(userid, config) => {
       for(let i = 0; i < config.length; i++) {
@@ -340,7 +393,7 @@ function createAssetByConfigFile(req, res) {
     _createAllAssetInternal(userid, config)
       .then(
         ret => {
-          console.log(ret);
+          //console.log(ret);
           shareUtil.SendSuccess(res);
         }
       )
@@ -365,20 +418,26 @@ function createAssetByConfig(req, res) {
   } else {
     var config = assetobj.Config;
     var userid = assetobj.UserID;
+    
     if (config && userid) {
 
       const _createAllAssetInternal = async(userid, config) => {
+        var assetids = [];
+
         for(let i = 0; i < config.length; i++) {
          let ret = await _createSingleAsset(userid, config[i]);
+         assetids.push(ret);
         }
-        return 'create asset done';
+
+        return assetids;
       }
 
       _createAllAssetInternal(userid, config)
         .then(
           ret => {
+            console.log('create asset done');
             console.log(ret);
-            shareUtil.SendSuccess(res);
+            shareUtil.SendSuccessWithData(res, ret);
           }
         )
         .catch(

@@ -16,6 +16,7 @@ var functions = {
   deleteParameter: deleteParameter,
   _deleteSingleParameter, _deleteSingleParameter,
   getParameterByAsset: getParameterByAsset,
+  getAllParameterByAsset: getAllParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
   updateRequireList: updateRequireList,
@@ -35,6 +36,7 @@ function _remove_duplicates(arr) {
     let it = s.values();
     return Array.from(it);
 }
+
 
 function _getTagList(equation) {
   var taglist = [];
@@ -69,9 +71,11 @@ function _resolveSingleTagInAsset(assetid, paralist, tag) {
     (resolve, reject) => {
 
         var filterlist = paralist.filter(item => item.Tag === tag);
-
+        
         if (filterlist.length === 0) {
           // create parameter with tag
+          console.log('create parameter with tag');
+          
           var paraobj = {
             Tag: tag
           };
@@ -102,6 +106,7 @@ function _resolveSingleTagInAsset(assetid, paralist, tag) {
 function _replaceEquation(originalEquation, taglist, newlist) {
   var new_equation = originalEquation;
   var fulllist = _getFullTagList(originalEquation);
+  fulllist = _remove_duplicates(fulllist);
 
   if (taglist.length === newlist.length)
   {
@@ -111,7 +116,6 @@ function _replaceEquation(originalEquation, taglist, newlist) {
       if (typeof newlist[i] === 'array' || typeof newlist[i] === 'object')
       {
         for(var j in newlist[i]) {
-          console.log(j);
           singleout += singlePara.replace(taglist[i], newlist[i][j]) + ",";
         }
         singleout = singleout.substring(0,singleout.length - 1);
@@ -138,6 +142,7 @@ function _createEquation(assetid, paraobj) {
       if (paraobj.Name && paraobj.Equation && paraobj.Tag) {
         var taglist = _getTagList(paraobj.Equation);
         taglist = _remove_duplicates(taglist);
+
         dataManage._getAllParameterByAssetID(assetid)
           .then(
             paralist => {
@@ -145,10 +150,12 @@ function _createEquation(assetid, paraobj) {
                 .then(
                   ret => {
                     paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
+                    
                     var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
                     if (filter_para.length === 1) {
                       // para already exist, update equation and name
                       paraobj.ParameterID = filter_para[0].ParameterID;
+                      
                       return _updateParameter(paraobj);
                     } else if (filter_para.length === 0) {
                       return _createParameter(null, assetid, paraobj, null);
@@ -161,8 +168,7 @@ function _createEquation(assetid, paraobj) {
                 )
                 .then(
                   ret1 => {
-                    console.log(ret1);
-                    resolve();
+                    resolve(ret1);
                   }
                 )
                 .catch(
@@ -196,11 +202,31 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
 
           if (typeof paraobj === 'string') {
             // single string, treat as parameter type
-            para.Type = paraobj;
+            para.Type = paraobj; 
+            if (paraobj === 'Temperature') { //populate default parameters for temperature
+              para.DisplayName = 'Temperature Value';
+              para.Unit = '°F';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
+              para.Range = {UpperLimit: 100, LowerLimit: 32};
+            } else if (paraobj === 'FlowRate') { // populate default parameters for flowrate
+              para.DisplayName = 'Flow Rate Value';
+              para.Unit = 'gpm';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
+              para.Range = {UpperLimit: 100, LowerLimit: -100};
+            }
+
           } else if (typeof paraobj === 'object') {
             for (var key in paraobj) {
               para[key] = paraobj[key];
             }
+          }
+
+          if (paraobj.Name) {
+            para.DisplayName = paraobj.Name;
+          }
+
+          if (paraobj.ParameterName) {
+            para.DisplayName = paraobj.ParameterName;
           }
 
           if (devicetag) {
@@ -209,6 +235,9 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
 
           para.ParameterID = "P" + shortid.generate();
           para.CurrentValue = 0;
+          para.CurrentTimeStamp = 0;
+          para.StreamingStatus = "Unknown";
+          para.Timeout = 600;
 
           para.save(err => {
             if (err)
@@ -306,6 +335,12 @@ function createParameter(req, res) {
 function _updateParameter(paraobj) {
   return new Promise(
     (resolve, reject) => {
+      if (paraobj.Name) {
+        paraobj.DisplayName = paraobj.Name;
+      }
+      if (paraobj.ParameterName) {
+        paraobj.DisplayName = paraobj.ParameterName;
+      }
       Parameter.findOneAndUpdate({ParameterID: paraobj.ParameterID}, paraobj, function(err,data) {
         if (err) {
           reject(err);
@@ -553,6 +588,28 @@ function _getAllParameterByDeviceIDPromise(deviceid) {
 
 }
 
+function getAllParameterByAsset(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+
+  if (assetid) {
+    dataManage._getAllParameterByAssetID(assetid)
+      .then(
+        ret => {
+          shareUtil.SendSuccessWithData(res, ret);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "Error parameter:" +  JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res, msg);
+        }
+      )
+  } else {
+    var msg = "missing Asset ID";
+    shareUtil.SendInvalidInput(res, msg);
+  }
+}
+
 function getParameterByAsset(req, res) {
   var assetid = req.swagger.params.AssetID.value;
 
@@ -627,6 +684,7 @@ function _add_single_parameter_require(paraid, ori_para_id){
         if (err) {
           reject(err);
         } else {
+          //console.log(data);
           if (!data.RequiredBy.includes(ori_para_id)) {
             // add paraid to required by list
             Parameter.update({ParameterID: paraid}, {

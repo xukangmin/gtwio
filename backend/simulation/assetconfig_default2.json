@@ -1,0 +1,240 @@
+[
+  {
+    "AssetName" : "demo_hx_asset(2)",
+    "Equations" :
+    [
+      {
+        "Name" : "Avg Shell Inlet",
+        "Equation": "Avg([ShellInlet/Temperature])",
+        "Tag": "AVG_SHELL_INLET"
+      },
+      {
+        "Name" : "Avg Shell Outlet",
+        "Equation": "Avg([ShellOutlet/Temperature])",
+        "Tag": "AVG_SHELL_OUTLET"
+      },
+      {
+        "Name" : "Avg Tube Inlet",
+        "Equation": "Avg([TubeInlet/Temperature])",
+        "Tag": "AVG_TUBE_INLET"
+      },
+      {
+        "Name" : "Avg Tube Outlet",
+        "Equation": "Avg([TubeOutlet/Temperature])",
+        "Tag": "AVG_TUBE_OUTLET"
+      },
+      {
+        "Name" : "Delta T S",
+        "Equation": "[AVG_SHELL_INLET] - [AVG_SHELL_OUTLET]",
+        "Tag": "DELTA_T_S"
+      },
+      {
+        "Name" : "Delta T 1",
+        "Equation": "[AVG_TUBE_INLET] - [AVG_SHELL_OUTLET]",
+        "Tag": "DELTA_T_1"
+      },
+      {
+        "Name" : "Delta T 2",
+        "Equation": "[AVG_TUBE_OUTLET] - [AVG_SHELL_INLET]",
+        "Tag": "DELTA_T_2"
+      },
+      {
+        "Name" : "LMTD",
+        "Equation": "([DELTA_T_1] - [DELTA_T_2]) / log([DELTA_T_1] / [DELTA_T_2])",
+        "Tag": "LMTD"
+      }
+    ],
+    "Devices":
+    [
+      {
+        "Name": "Temperature Sensor 1",
+        "SerialNumber": "02A082",
+        "Tag": "ShellInlet",
+        "Alias": "T1",
+        "Angle": 0,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 2",
+        "SerialNumber": "02A083",
+        "Tag": "ShellInlet",
+        "Alias": "T2",
+        "Angle": 90,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 3",
+        "SerialNumber": "02A084",
+        "Tag": "ShellInlet",
+        "Alias": "T3",
+        "Angle": 180,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 4",
+        "SerialNumber": "02A085",
+        "Tag": "ShellInlet",
+        "Alias": "T4",
+        "Angle": 270,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 5",
+        "SerialNumber": "02A086",
+        "Tag": "ShellOutlet",
+        "Alias": "T5",
+        "Angle": 0,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 6",
+        "SerialNumber": "02A087",
+        "Tag": "ShellOutlet",
+        "Alias": "T6",
+        "Angle": 90,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 7",
+        "SerialNumber": "02A088",
+        "Tag": "ShellOutlet",
+        "Alias": "T7",
+        "Angle": 180,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 8",
+        "SerialNumber": "02A089",
+        "Tag": "ShellOutlet",
+        "Alias": "T8",
+        "Angle": 270,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 9",
+        "SerialNumber": "02A090",
+        "Tag": "TubeInlet",
+        "Alias": "T9",
+        "Angle": 0,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 10",
+        "SerialNumber": "02A091",
+        "Tag": "TubeInlet",
+        "Alias": "T10",
+        "Angle": 90,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 11",
+        "SerialNumber": "02A092",
+        "Tag": "TubeInlet",
+        "Alias": "T11",
+        "Angle": 180,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 12",
+        "SerialNumber": "02A093",
+        "Tag": "TubeInlet",
+        "Alias": "T12",
+        "Angle": 270,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 13",
+        "SerialNumber": "02A094",
+        "Tag": "TubeOutlet",
+        "Alias": "T13",
+        "Angle": 0,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 14",
+        "SerialNumber": "02A095",
+        "Tag": "TubeOutlet",
+        "Alias": "T14",
+        "Angle": 90,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 15",
+        "SerialNumber": "02A096",
+        "Tag": "TubeOutlet",
+        "Alias": "T15",
+        "Angle": 180,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Temperature Sensor 16",
+        "SerialNumber": "02A097",
+        "Tag": "TubeOutlet",
+        "Alias": "T16",
+        "Angle": 270,
+        "Parameters": ["Temperature"]
+      },
+      {
+        "Name": "Flow Meter 0",
+        "SerialNumber": "05A002",
+        "Tag": "ShellInlet",
+        "Alias": "F0",
+        "Parameters": ["FlowRate"]
+      },
+      {
+        "Name": "Flow Meter 1",
+        "SerialNumber": "05A003",
+        "Tag": "TubeOutlet",
+        "Alias": "F1",
+        "Parameters": ["FlowRate"]
+      }
+    ],
+    "Dashboard": 
+    [
+      {
+        "TagName": "ShellInlet",
+        "Data": [
+          {
+            "Name": "Temperature",
+            "AssignedTag": "AVG_SHELL_INLET"
+          },
+          {
+            "Name": "FlowRate",
+            "AssignedTag": "ShellInlet/FlowRate"
+          }
+        ]
+      },
+      {
+        "TagName": "ShellOutlet",
+        "Data": [
+          {
+            "Name": "Temperature",
+            "AssignedTag": "AVG_SHELL_OUTLET"
+          }
+        ]
+      },
+      {
+        "TagName": "TubeInlet",
+        "Data": [
+          {
+            "Name": "Temperature",
+            "AssignedTag": "AVG_TUBE_INLET"
+          }
+        ]
+      },
+      {
+        "TagName": "TubeOutlet",
+        "Data": [
+          {
+            "Name": "Temperature",
+            "AssignedTag": "AVG_TUBE_OUTLET"
+          },
+          {
+            "Name": "FlowRate",
+            "AssignedTag": "TubeOutlet/FlowRate"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -44,12 +44,18 @@ class Dashboard extends React.Component {
       elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=1");
     }
 
-    if (flow_obj.Value && typeof flow_obj.Value == 'number')
+    if (flow_obj)
     {
-      document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
-      document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=2");
-      document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
+      // console.log(flow_obj);
+      
+      if (typeof flow_obj.Value == 'number')
+      {
+        document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
+        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=2");
+        document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
+      }
     }
+
     if (assetdata)
     {
       document.getElementById("asset_name").innerHTML = assetdata.DisplayName;

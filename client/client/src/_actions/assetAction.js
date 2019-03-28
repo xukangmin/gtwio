@@ -61,19 +61,6 @@ const getConfigByAssetID = (user, assetID) => {
         .then(
           data => {
             dispatch(success(data));
-            if (data.Settings) {
-              if (data.Settings.Tags) {
-                assetServices.getDataByTagList(data.Settings.Tags)
-                  .then(
-                    tags => {
-                      dispatch(success_tag(tags));
-                    },
-                    error => {
-                      dispatch(failure(error));
-                    }
-                  );
-              }
-            }
           },
           error => {
             dispatch(failure(error));
@@ -84,7 +71,6 @@ const getConfigByAssetID = (user, assetID) => {
     function request() { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_REQUEST } }
     function success(data) { toastr.success("Config File Downloaded"); return { type: gConstants.GET_CONFIG_BY_ASSET_ID_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_FAILURE, error } }
-    function success_tag(data) { return {type: gConstants.GET_CONFIG_BY_ASSET_ID__SUCCESS, data } }
 }
 
 const getDevicesByAsset = (user, assetID) => {
@@ -127,7 +113,6 @@ const addAsset = (user, displayName, location) => {
 }
 
 const addAssetByConfig = (user, config) => {
-    console.log(config)
     return dispatch => {
         dispatch(request());
         assetServices.addAssetByConfig(user, config)
@@ -183,10 +168,7 @@ const deleteAsset = (assetID, user) => {
     }
 
     function request() { return { type: gConstants.DELETE_ASSET_REQUEST } }
-    function success(msg) { 
-        console.log('success')
-        toastr.success("Equation updated."); 
-        return { type: gConstants.DELETE_ASSET_SUCCESS, msg } }
+    function success(msg) { return { type: gConstants.DELETE_ASSET_SUCCESS, msg } }
     function failure(error) { return { type: gConstants.DELETE_ASSET_FAILURE, error } }
 }
 
@@ -207,7 +189,7 @@ const updateAsset = (user, assetID, key, value) => {
 
     function request() { return { type: gConstants.UPDATE_ASSET_REQUEST } }
     function success(data) { toastr.success("Asset Updated"); return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
+    function failure(error) { toastr.warning("Failed to Update Asset"); return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
 }
 
 export const assetActions = {

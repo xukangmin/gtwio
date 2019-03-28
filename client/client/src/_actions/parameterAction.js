@@ -29,7 +29,6 @@ const getParameter = (parameterID) => {
             .then(
                 data => {
                     dispatch(success(data));
-
                     if (data.CurrentTimeStamp) {
                       dispatch(dataActions.getSingleParameterData(data.ParameterID, data.CurrentTimeStamp - 600000, data.CurrentTimeStamp));
                     }
@@ -81,7 +80,7 @@ const updateParameter = (user, assetID, data) => {
 
     function request() { return { type: gConstants.UPDATE_PARAMETER_REQUEST } }
     function success(data) { toastr.success("Parameter Updated"); return { type: gConstants.UPDATE_PARAMETER_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.UPDATE_PARAMETER_FAILURE, error } }
+    function failure(error) { toastr.warning("Failed to Update Parameter"); return { type: gConstants.UPDATE_PARAMETER_FAILURE, error } }
 }
 
 const deleteParameter = (asset, parameterID) => {

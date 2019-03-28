@@ -104,9 +104,7 @@ const getConfigByAssetID = (user, assetID) => {
     return fetch(process.env.API_HOST + '/asset/getConfigByAssetID?AssetID=' + assetID, requestOptions)
         .then(response => {
             response.json().then((body) => {
-                let blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-                console.log(body);
-                
+                let blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});                
                 saveAs(blob, body[0].AssetName.toString() + '.json');
             });
             return Promise.all([response, response.json()])

@@ -103,7 +103,7 @@ const updateDevice = (user, assetID, data) => {
 
     function request() { return { type: gConstants.UPDATE_DEVICE_REQUEST } }
     function success(data) { toastr.success("Device Updated"); return { type: gConstants.UPDATE_DEVICE_SUCCESS, data } }
-    function failure(error) { return { type: gConstants.UPDATE_DEVICE_FAILURE, error } }
+    function failure(error) { toastr.warning("Failed to Update Device"); return { type: gConstants.UPDATE_DEVICE_FAILURE, error } }
 }
 
 export const deviceActions = {

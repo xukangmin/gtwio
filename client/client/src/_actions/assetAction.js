@@ -112,6 +112,26 @@ const addAssetByConfig = (user, config) => {
     function failure(error) { return { type: gConstants.ADD_ASSET_BY_CONFIG_FAILURE, error } }
 }
 
+const addAssetByConfigFile = (user, file) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.addAssetByConfigFile(file)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getAssets(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.ADD_ASSET_BY_CONFIG_FILE_REQUEST } }
+    function success(msg) { return { type: gConstants.ADD_ASSET_BY_CONFIG_FILE_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.ADD_ASSET_BY_CONFIG_FILE_FAILURE, error } }
+}
+
 const deleteAsset = (assetID, user) => {
     return dispatch => {
         dispatch(request());
@@ -159,6 +179,7 @@ export const assetActions = {
     getDevicesByAsset,
     addAsset,
     addAssetByConfig,
+    addAssetByConfigFile,
     deleteAsset,
     updateAsset
 };

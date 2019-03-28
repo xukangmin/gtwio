@@ -116,7 +116,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-tachometer-alt'></i></button>
+      return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
     }
 
     function parameterFormatter(cell, row) {
@@ -189,7 +189,7 @@ class Configurations extends React.Component {
                       editable={false}
                       dataFormat={linkFormatter}
                       formatExtraData={this.asset}>
-                        Dashboard
+                        Data
                     </TableHeaderColumn>
 
                       <TableHeaderColumn
@@ -301,7 +301,7 @@ class Configurations extends React.Component {
                       editable={false}
                       dataFormat={linkFormatter}
                       formatExtraData={this.asset}>
-                        Dashboard
+                        Data
                     </TableHeaderColumn>
 
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>

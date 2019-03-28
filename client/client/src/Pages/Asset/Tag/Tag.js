@@ -56,6 +56,7 @@ class Tag extends React.Component {
                 </NavLink>
               </NavItem>
 
+              {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
               <NavItem style={{display: DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ? "list-item" : "none"}}>
                 <NavLink
                   id="flowTab"
@@ -65,6 +66,9 @@ class Tag extends React.Component {
                   Flow Rate
                 </NavLink>
               </NavItem>
+              :
+              <div></div>}
+              
             </Nav>
 
             <TabContent activeTab={this.state.activeTab}>
@@ -83,22 +87,26 @@ class Tag extends React.Component {
                 </TabPane>
             </TabContent>
 
-            <TabContent activeTab={this.state.activeTab}>
-              <TabPane tabId="2">
-              <Row>
-                <Col>
-                  <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
-                </Col>
-                <Col>
-                </Col>
-              </Row>
-              </TabPane>
-            </TabContent>
+            {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
+              <TabContent activeTab={this.state.activeTab}>
+                <TabPane tabId="2">
+                <Row>
+                  <Col>
+                    <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  </Col>
+                  <Col>
+                  </Col>
+                </Row>
+                </TabPane>
+              </TabContent>
+              :
+              <div></div>
+            }
 
           </div>
           :

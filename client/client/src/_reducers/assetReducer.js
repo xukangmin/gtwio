@@ -42,7 +42,7 @@ export const asset = (state = {}, action) => {
             gotData: true,
             data: action.data
         };
-    case gConstants.ADD_ASSET_REQEUST:
+    case gConstants.ADD_ASSET_REQUEST:
         return state;
     case gConstants.ADD_ASSET_SUCCESS:
         return {
@@ -53,7 +53,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-    case gConstants.ADD_ASSET_BY_CONFIG_REQEUST:
+    case gConstants.ADD_ASSET_BY_CONFIG_REQUeST:
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_SUCCESS:
         return {
@@ -61,6 +61,17 @@ export const asset = (state = {}, action) => {
             msg: action.msg
         };
     case gConstants.ADD_ASSET_BY_CONFIG_FAILURE:
+        return {
+            error: action.error
+        };
+    case gConstants.ADD_ASSET_BY_CONFIG_FILE_REQUeST:
+        return state;
+    case gConstants.ADD_ASSET_BY_CONFIG_FILE_SUCCESS:
+        return {
+            addedData: true,
+            msg: action.msg
+        };
+    case gConstants.ADD_ASSET_BY_CONFIG_FILE_FAILURE:
         return {
             error: action.error
         };

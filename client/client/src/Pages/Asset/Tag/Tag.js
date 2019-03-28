@@ -14,6 +14,7 @@ import Loader from '../../Loader';
 class Tag extends React.Component {
   constructor(props){
     super(props);
+
     this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
 
     this.toggle = this.toggle.bind(this);
@@ -40,6 +41,7 @@ class Tag extends React.Component {
   render(){
     const { AssetData } = this.props;
     const { DeviceData } = this.props;
+
     return(
       <div>
         {AssetData && DeviceData ?
@@ -67,8 +69,7 @@ class Tag extends React.Component {
                 </NavLink>
               </NavItem>
               :
-              <div></div>}
-              
+              <div></div>}              
             </Nav>
 
             <TabContent activeTab={this.state.activeTab}>
@@ -107,7 +108,6 @@ class Tag extends React.Component {
               :
               <div></div>
             }
-
           </div>
           :
           <Loader/>

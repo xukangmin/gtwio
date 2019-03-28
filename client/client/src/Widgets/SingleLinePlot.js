@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 
@@ -9,13 +8,7 @@ class SingleLinePlot extends React.Component {
   }
 
   render(){
-    let { parameterData } = this.props;
-    let { flow } = this.props;
-    let unit;
-    if (this.props.unit){
-      unit = this.props.unit;
-    }
-
+    let { parameterData, flow, unit } = this.props;
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let tempX = [];
@@ -48,19 +41,15 @@ class SingleLinePlot extends React.Component {
     
     return(
       <Plot
-          data={[data]}
-          layout={layout}
-          style = {{width: flow ? "80vw" : "100%"}}
+        data={[data]}
+        layout={layout}
+        style = {{width: flow ? "80vw" : "100%"}}
       />
     );
   }
 }
 
 function mapStateToProps(state) {
-    // const { data } = state.data;
-    return {
-        // parameterData: data[0]
-    };
 }
 
 const connectedPage = connect(mapStateToProps)(SingleLinePlot);

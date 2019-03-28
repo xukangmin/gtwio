@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import moment from 'moment';
 
 import AssetsList from '../Pages/AssetsList';
 import AddAsset from '../Modals/AddAsset';
@@ -23,37 +22,34 @@ class Overview extends React.Component {
   render() {
     const { assets } = this.props;
     let assets_display = null;
-    if (assets)
-    {
+    if (assets){
       assets_display = assets;
     }
-    else if (this.assets_local)
-    {
+    else if (this.assets_local){
       assets_display = this.assets_local;
     }
 
-    if (!this.user)
-    {
+    if (!this.user){
       return (<Redirect to='/login' />);
     }
-    else{
+    else {
       return (
-          <div>
+        <div>
           {assets_display ?
-           <div>
+          <div>
               <div style={{marginBottom: "15px"}}>
                 <AddAsset user={this.user} dispatch={this.props.dispatch}/>
               </div>
               <div>
                 <AssetsList assets={assets_display} user={this.user} dispatch={this.props.dispatch}/>
               </div>
-
-          </div> :
-          <div></div>}
-          </div>
+          </div> 
+          :
+          <div></div>
+          }
+        </div>
       );
     }
-
   }
 }
 

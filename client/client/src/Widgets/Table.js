@@ -1,16 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
 const SingleItem = (props) => {
   return(
     <tr>
       <th scope = "row"><a href = {"/asset/" + props.asset + "/device/" + props.data.DeviceID}>{props.data.DisplayName}</a></th>
-      <td>{props.data.Parameters[0].CurrentValue.toFixed(2)+props.unit}</td>
-      <td>{props.data.Parameters[0].DataStatistics.Min.toFixed(2)+props.unit}</td>
-      <td>{props.data.Parameters[0].DataStatistics.Max.toFixed(2)+props.unit}</td>
-      <td>{props.data.Parameters[0].DataStatistics.Avg.toFixed(2)+props.unit}</td>
-      <td>{props.data.Parameters[0].DataStatistics.STDEV.toFixed(2)+props.unit}</td>
+      <td>{props.data.Parameters[0].CurrentValue.toFixed(2) + props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Min.toFixed(2) + props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Max.toFixed(2) + props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.Avg.toFixed(2) + props.unit}</td>
+      <td>{props.data.Parameters[0].DataStatistics.STDEV.toFixed(2) + props.unit}</td>
     </tr>)
 }
 
@@ -20,9 +19,8 @@ class Table extends React.Component {
   }
 
   render(){
-    const { data } = this.props;
-    const { asset } = this.props;
-    const { unit } = this.props;
+    const { data, asset, unit } = this.props;
+
     return(
       <div className = "table-responsive">
         <table className = "table table-striped mt-3" style={{textAlign: "center"}}>
@@ -49,9 +47,6 @@ class Table extends React.Component {
 
 
 function mapStateToProps(state) {
-  return {
-
-  };
 }
 
 const connectedPage = connect(mapStateToProps)(Table);

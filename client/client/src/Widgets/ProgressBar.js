@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import CircularProgressbar from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -53,7 +51,6 @@ class Progressbar extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return({});
 }
 
 const connectedPage = connect(mapStateToProps)(Progressbar);

@@ -92,19 +92,16 @@ class Radar extends React.Component {
       }
     }
     return(
-        <Plot
-          data = {plotData}
-          layout = {layout}
-          style = {{width:"100%"}}
-        />
+      <Plot
+        data = {plotData}
+        layout = {layout}
+        style = {{width:"100%"}}
+      />
     );
   }
 }
 
 function mapStateToProps(state) {
-
-  return {
-  };
 }
 
 const connectedPage = connect(mapStateToProps)(Radar);

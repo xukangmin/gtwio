@@ -250,8 +250,8 @@ class Picker extends React.Component {
 
     render() {
       let intervalText = this.intervalToText(this.range.interval);
+      
       return (
-
         <div style={{display: this.state.pickerButtonDisplay ? "block" : "none", marginLeft: "-15px"}} >
 
           <Button onClick={this.togglePickerContent} className="btn-light">

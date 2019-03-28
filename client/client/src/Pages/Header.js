@@ -2,14 +2,12 @@ import React from 'react';
 import Link from 'react-router-dom/Link';
 import Picker from '../Widgets/RangePicker';
 
-
 class Header extends React.Component {
     constructor(props) {
         super(props);
-      }
+    }
 
     render() {
-
         return (
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <a className="navbar-brand nav-link col-sm-3 col-md-2 mx-0" style={{textAlign: "center", fontWeight: "bold"}} href="/">IIoT Monitor</a>
@@ -24,8 +22,6 @@ class Header extends React.Component {
             </nav>
         );
     }
-
 }
 
-
-export default Header
+export default Header;

@@ -11,7 +11,6 @@ class Data extends React.Component {
   }
 
   render() {
-
     let { data } = this.props;
 
     const ValueFormatter = ({value}) => {
@@ -55,11 +54,11 @@ class Data extends React.Component {
 
     return (
       <div>
-      <ReactDataGrid
-        columns={col}
-        rowGetter={i => row[i]}
-        rowsCount={row.length}
-        minHeight={800}/>
+        <ReactDataGrid
+          columns={col}
+          rowGetter={i => row[i]}
+          rowsCount={row.length}
+          minHeight={800}/>
       </div>
     );
   }

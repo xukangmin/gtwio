@@ -7,7 +7,7 @@ import { parameterActions } from '../../_actions/parameterAction';
 import AddDevice from '../../Modals/AddDevice';
 import AddParameter from '../../Modals/AddParameter';
 import Loader from '../Loader';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Table, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col} from 'reactstrap';
 import classnames from 'classnames';
 
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -20,6 +20,7 @@ class Configurations extends React.Component {
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset = props.match.params.assetID;
+
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
     this.props.dispatch(parameterActions.getParameters(this.asset));
 
@@ -44,7 +45,6 @@ class Configurations extends React.Component {
   }
 
   toggle(tab) {
-
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab

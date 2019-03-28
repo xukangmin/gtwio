@@ -56,8 +56,6 @@ class MultipleLinesPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {
-  };
 }
 
 const connectedPage = connect(mapStateToProps)(MultipleLinesPlot);

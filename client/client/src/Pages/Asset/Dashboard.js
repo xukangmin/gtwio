@@ -5,49 +5,33 @@ import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import svgcontents from 'raw-loader!../../Images/Hx.svg';
 import Loader from '../Loader';
-
-import { assetActions} from '../../_actions/assetAction';
-
 import { Progressbar } from '../../Widgets/ProgressBar';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    // this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
+    this.user = JSON.parse(localStorage.getItem('user'));
+
     this.state = {
        AssetID: props.match.params.assetID,
     }
 
-    this.HandleText = this.HandleText.bind(this);
-    this.user = JSON.parse(localStorage.getItem('user'));
-
+    this.HandleText = this.HandleText.bind(this);    
   }
 
-  // componentDidMount() {
-  //   this.dispatchParameterContinuously = setInterval(() => {
-  //     this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),this.state.AssetID));
-  //   }, 60000);
-  // }
-
-
-  HandleText(elem, tag, assetdata){
+  HandleText(elem, tag, assetData){
     var temp_obj = tag.Data.find(item => item.Name === "Temperature");
     var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
 
-    if (temp_obj && typeof temp_obj.Value == 'number')
-    {
+    if (temp_obj && typeof temp_obj.Value == 'number') {
       elem.children[0].innerHTML = temp_obj.Value.toFixed(2);
     }
 
-    if (tag)
-    {
+    if (tag) {
       elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=1");
     }
 
-    if (flow_obj)
-    {
-      // console.log(flow_obj);
-      
+    if (flow_obj) {      
       if (typeof flow_obj.Value == 'number')
       {
         document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
@@ -56,15 +40,13 @@ class Dashboard extends React.Component {
       }
     }
 
-    if (assetdata)
-    {
-      document.getElementById("asset_name").innerHTML = assetdata.DisplayName;
+    if (assetData) {
+      document.getElementById("asset_name").innerHTML = assetData.DisplayName;
     }
   }
 
   render() {
-    const { AssetID } = this.state;
-    const { AssetData, AssetTags } = this.props;
+    const { assetData, AssetTags } = this.props;
     const Hx_style = {
       maxWidth: "1200px",
       maxHeight: "560px"
@@ -87,12 +69,12 @@ class Dashboard extends React.Component {
     else{
       return (
         <div>
-          {AssetData ?
+          {assetData ?
             <div className="container-fluid">
               <div style={{display: "none"}}>
                 <Breadcrumb>
                   <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                  <BreadcrumbItem><a href="#">{AssetData.DisplayName}</a></BreadcrumbItem>
+                  <BreadcrumbItem><a href="#">{assetData.DisplayName}</a></BreadcrumbItem>
                 </Breadcrumb>
               </div>
               <div style={Hx_style} className="mx-auto">
@@ -100,7 +82,7 @@ class Dashboard extends React.Component {
                     {
                       AssetTags &&
                       AssetTags.map((item,i) =>
-                        <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, AssetData))} />
+                        <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
                       )
                     }
                 </Samy>
@@ -125,7 +107,7 @@ class Dashboard extends React.Component {
 function mapStateToProps(state) {
   const { data, tags } = state.asset;
   return {
-      AssetData : data,
+      assetData : data,
       AssetTags : tags
   };
 }

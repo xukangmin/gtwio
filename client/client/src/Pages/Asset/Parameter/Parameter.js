@@ -8,7 +8,6 @@ import Loader from '../../Loader';
 import { Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import InlineEdit from 'react-inline-edit-input';
-import toastr from 'toastr';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
@@ -30,13 +29,12 @@ const AddNewParameterModal = ({device,onChange,errors,onAdd,isOpen,onClose}) => 
                 </ModalFooter>
             </Modal>
       </div>
-
     );
 }
 
-
 const ParameterInfo = (props) => {
   const parameter = props.data;
+
   return(
     <div className = "row">
       <div className="col-12">
@@ -80,7 +78,6 @@ const ParameterInfo = (props) => {
                 <td>{moment(new Date(parameter.CurrentTimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
               </tr>
             }
-
           </tbody>
         </Table>
       </div>
@@ -125,17 +122,17 @@ class Parameter extends React.Component {
         AssetID : props.match.params.assetID,
         ParameterID: props.match.params.parameterID
     }
+
     this.updateEquation = this.updateEquation.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
   }
 
-  updateEquation(parameterid, value){
-    var paradata = {};
-    paradata.ParameterID = parameterid;
-    paradata.Equation = value;
-    this.props.dispatch(parameterActions.updateParameter(paradata));
-    toastr.success("Equation updated.");
+  updateEquation(parameterID, value){
+    var paraData = {};
+    paraData.ParameterID = parameterID;
+    paraData.Equation = value;
+    this.props.dispatch(parameterActions.updateParameter(paraData));
   }
 
   sortTime(data){

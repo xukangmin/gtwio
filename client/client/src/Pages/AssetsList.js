@@ -104,8 +104,9 @@ class AssetList extends React.Component {
 
         function actionsFormatter(cell, row, enumObject){
           return <div><button type="button" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
+          <button type="button" className="btn btn-info ml-1" name="download" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-download" aria-hidden="true"></i></button>
           <button type="button" className="btn btn-danger ml-1" name="delete" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-trash" aria-hidden="true"></i></button>
-          <button type="button" className="btn btn-info ml-1" name="download" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-download" aria-hidden="true"></i></button></div>
+          </div>
         }
 
         const cellEditProp = {
@@ -116,7 +117,7 @@ class AssetList extends React.Component {
 
         return (
           <div id="MainArea">
-          
+
           <BootstrapTable
             data={assets}
             insertRow={false}

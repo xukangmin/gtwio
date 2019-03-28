@@ -8,12 +8,12 @@ class AssetList extends React.Component {
       super(props);
       this.state = {
         asset: '',
-        displayname: '',
+        displayName: '',
         location: '',
         editModalOpen: false
       }
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.deleteItem = this.deleteItem.bind(this);
+
       this.editButtonClicked = this.editButtonClicked.bind(this);
       this.editModalToggle = this.editModalToggle.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
@@ -21,40 +21,26 @@ class AssetList extends React.Component {
       this.handleLocationChange = this.handleLocationChange.bind(this);
       this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
-      this.downloadFile = this.downloadFile.bind(this);
+      this.applyAssetAction = this.applyAssetAction.bind(this);
     }
 
     editModalToggle(asset_id, name, location){
       this.setState(prevState => ({
         asset: asset_id,
-        displayname: name,
+        displayName: name,
         location: location,
         editModalOpen: !prevState.editModalOpen
       }));
     }
 
-    downloadFile(e){
-      fetch('http://localhost:8002/asset/getConfigByAssetID?AssetID=AWMWqQUfjj', {
-        method: 'GET',
-      }).then((response) => {
-        response.json().then((body) => {
-          //action
-          //this.setState({ imageURL: `http://localhost:8000/${body.file}` });
-          var blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-          console.log(body[0].AssetName);
-          saveAs(blob, body[0].AssetName.toString() + '.json');
-        });
-      });
-    }
-
     editButtonClicked(){
       let updateData = {
-        DisplayName: this.state.displayname
+        DisplayName: this.state.displayName
       }
       this.props.dispatch(assetActions.updateAsset(this.props.user,this.state.asset,updateData));
       this.setState(prevState => ({
         asset: '',
-        displayname: '',
+        displayName: '',
         location: '',
         editModalOpen: !prevState.editModalOpen
       }));
@@ -65,7 +51,7 @@ class AssetList extends React.Component {
         this.setState(
           {
             asset: name,
-            displayname: value
+            displayName: value
           });
     }
 
@@ -81,16 +67,10 @@ class AssetList extends React.Component {
     cancelButtonClicked(){
       this.setState(prevState => ({
         asset: '',
-        displayname: '',
+        displayName: '',
         location: '',
         editModalOpen: !prevState.editModalOpen
       }));
-    }
-
-    deleteItem(asset){
-      if (confirm("Are you sure to delete this asset?")){
-          this.props.dispatch(assetActions.deleteAsset(asset, this.user));
-      }
     }
 
     onAfterSaveCell(row, cellName, cellValue) {
@@ -98,6 +78,16 @@ class AssetList extends React.Component {
       let rowStr = '';
       for (const prop in row) {
         rowStr += prop + ': ' + row[prop] + '\n';
+      }
+    }
+
+    applyAssetAction(asset, event){
+      if (event.target.name == "delete"){
+        if (confirm("Are you sure to delete this asset?")){
+          this.props.dispatch(assetActions.deleteAsset(asset, this.user));
+        }
+      } else if (event.target.name == "download"){
+        this.props.dispatch(assetActions.getConfigByAssetID(this.user, asset));
       }
     }
 
@@ -114,7 +104,9 @@ class AssetList extends React.Component {
 
         function actionsFormatter(cell, row, enumObject){
           return <div><button type="button" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
-          <button type="button" className="btn btn-danger ml-1" onClick={()=>enumObject(cell)}><i className="fa fa-trash" aria-hidden="true"></i></button></div>
+          <button type="button" className="btn btn-info ml-1" name="download" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-download" aria-hidden="true"></i></button>
+          <button type="button" className="btn btn-danger ml-1" name="delete" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+          </div>
         }
 
         const cellEditProp = {
@@ -125,9 +117,7 @@ class AssetList extends React.Component {
 
         return (
           <div id="MainArea">
-          <div>
-            <button label="Download file" onClick={this.downloadFile}>Download</button>
-          </div>
+
           <BootstrapTable
             data={assets}
             insertRow={false}
@@ -196,7 +186,7 @@ class AssetList extends React.Component {
               dataAlign='center'
               dataField='AssetID'
               editable={false}
-              formatExtraData={this.deleteItem}
+              formatExtraData={this.applyAssetAction}
               dataFormat={actionsFormatter}>
                 Actions
             </TableHeaderColumn>
@@ -207,4 +197,5 @@ class AssetList extends React.Component {
     }
 
 }
- export default AssetList
+
+export default AssetList;

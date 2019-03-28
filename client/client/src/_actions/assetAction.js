@@ -50,7 +50,40 @@ const getAsset = (user, assetID) => {
     function request() { return { type: gConstants.GET_ASSET_REQUEST } }
     function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
-    function success_tag(data) { return {type: gConstants.GET_ASSET_TAG_SUCCESS, data } }
+    function success_tag(data) { return {type: gConstants.GET_ASSET_SUCCESS, data } }
+}
+
+const getConfigByAssetID = (user, assetID) => {
+    return dispatch => {
+      dispatch(request());
+      assetServices.getConfigByAssetID(user, assetID)
+        .then(
+          data => {
+            dispatch(success(data));
+            if (data.Settings) {
+              if (data.Settings.Tags) {
+                assetServices.getDataByTagList(data.Settings.Tags)
+                  .then(
+                    tags => {
+                      dispatch(success_tag(tags));
+                    },
+                    error => {
+                      dispatch(failure(error));
+                    }
+                  );
+              }
+            }
+          },
+          error => {
+            dispatch(failure(error));
+          }
+        )
+    };
+
+    function request() { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_REQUEST } }
+    function success(data) { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_FAILURE, error } }
+    function success_tag(data) { return {type: gConstants.GET_CONFIG_BY_ASSET_ID__SUCCESS, data } }
 }
 
 const getDevicesByAsset = (user, assetID) => {
@@ -93,6 +126,7 @@ const addAsset = (user, displayName, location) => {
 }
 
 const addAssetByConfig = (user, config) => {
+    console.log(config)
     return dispatch => {
         dispatch(request());
         assetServices.addAssetByConfig(user, config)
@@ -176,6 +210,7 @@ const updateAsset = (user, assetID, key, value) => {
 export const assetActions = {
     getAssets,
     getAsset,
+    getConfigByAssetID,
     getDevicesByAsset,
     addAsset,
     addAssetByConfig,

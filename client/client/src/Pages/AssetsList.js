@@ -1,7 +1,7 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { saveAs } from 'file-saver';
+import toastr from 'toastr';
 
 class AssetList extends React.Component {
     constructor(props) {
@@ -92,6 +92,7 @@ class AssetList extends React.Component {
     }
 
     render() {
+      toastr.success("Equation updated.");
         const { assets } = this.props;
 
         function linkFormatter(cell, row, enumObject){

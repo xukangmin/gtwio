@@ -1,5 +1,6 @@
 import { gConstants } from '../Constants/constants';
 import { assetServices } from '../_services/assetServices';
+import toastr from 'toastr';
 
 const getAssets = (user) => {
     return dispatch => {
@@ -182,7 +183,10 @@ const deleteAsset = (assetID, user) => {
     }
 
     function request() { return { type: gConstants.DELETE_ASSET_REQUEST } }
-    function success(msg) { return { type: gConstants.DELETE_ASSET_SUCCESS, msg } }
+    function success(msg) { 
+        console.log('success')
+        toastr.success("Equation updated."); 
+        return { type: gConstants.DELETE_ASSET_SUCCESS, msg } }
     function failure(error) { return { type: gConstants.DELETE_ASSET_FAILURE, error } }
 }
 
@@ -203,7 +207,10 @@ const updateAsset = (user, assetID, key, value) => {
     };
 
     function request() { return { type: gConstants.UPDATE_ASSET_REQUEST } }
-    function success(data) { return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
+    function success(data) { 
+        console.log('success')
+        toastr.success("Equation updated."); 
+    return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
 }
 

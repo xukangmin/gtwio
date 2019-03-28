@@ -108,7 +108,7 @@ class Configurations extends React.Component {
       } else if (row.ParameterID){
         type = 'parameter';
       }
-      return <button type="button" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell, row.DisplayName, type)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+      return <button type="button" title="Delete this Item" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell, row.DisplayName, type)}><i className="fa fa-trash" aria-hidden="true"></i></button>
     }
 
     function linkFormatter(cell, row, enumObject){
@@ -116,7 +116,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
+      return <button type="button" title="Go to Data Page" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
     }
 
     function parameterFormatter(cell, row) {

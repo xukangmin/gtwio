@@ -81,13 +81,12 @@ class AssetList extends React.Component {
       }
     }
 
-    applyAssetAction(asset, event){
-      console.log(event)
-      if (event == "delete"){
-        if (confirm("Are you sure to delete this asset?")){
+    applyAssetAction(asset, action, assetName){
+      if (action == "delete"){
+        if (confirm(`Are you sure to delete ${assetName}?`)){
           this.props.dispatch(assetActions.deleteAsset(asset, this.user));
         }
-      } else if (event == "download"){
+      } else if (action == "download"){
         this.props.dispatch(assetActions.getConfigByAssetID(this.user, asset));
       }
     }
@@ -96,7 +95,7 @@ class AssetList extends React.Component {
         const { assets } = this.props;
 
         function linkFormatter(cell, row, enumObject){
-          return <button type="button" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
+          return <button type="button" title="Go to Asset's Dashboard Page" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
         }
 
         function countFormatter(cell, row, enumObject){
@@ -104,9 +103,9 @@ class AssetList extends React.Component {
         }
 
         function actionsFormatter(cell, row, enumObject){
-          return <div><button type="button" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
-          <button type="button" className="btn btn-info ml-1" name="download" onClick={()=>enumObject(cell, "download")}><i className="fa fa-download" aria-hidden="true"></i></button>
-          <button type="button" className="btn btn-danger ml-1" name="delete" onClick={()=>enumObject(cell, "delete")}><i className="fa fa-trash" aria-hidden="true"></i></button>
+          return <div><button type="button" title="Go to Asset's Configuration Page" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
+          <button type="button" title="Download Asset Configuration File" className="btn btn-info ml-1" name="download" onClick={()=>enumObject(cell, "download")}><i className="fa fa-download" aria-hidden="true"></i></button>
+          <button type="button" title="Delete this Asset" className="btn btn-danger ml-1" name="delete" onClick={()=>enumObject(cell, "delete", row.DisplayName)}><i className="fa fa-trash" aria-hidden="true"></i></button>
           </div>
         }
 

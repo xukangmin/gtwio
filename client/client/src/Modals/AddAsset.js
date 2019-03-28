@@ -317,7 +317,7 @@ class AddAsset extends React.Component {
                         </tbody>
                       </table>
                     </div>                             
-                    <Button color="secondary" id="add" onClick={this.addDevice}><i className="fas fa-plus"></i> Add Device</Button>
+                    <Button color="secondary" id="add" onClick={this.addDevice}><i className="fas fa-plus"></i> Add Another Device</Button>
                     <br/><br/>
                     <Button color="link" className="pull-right mt-3" id="next" onClick={this.onClickNext}>Next></Button>          
                     <Button color="link" className="pull-right mt-3 mr-3" id="prev" onClick={this.onClickPrev}>{"<"}Previous</Button>
@@ -347,7 +347,7 @@ class AddAsset extends React.Component {
                         </tbody>
                       </table>
                     </div>   
-                    <Button color="secondary" id="add" onClick={this.addEquation}><i className="fas fa-plus"></i> Add Equation</Button>
+                    <Button color="secondary" id="add" onClick={this.addEquation}><i className="fas fa-plus"></i> Add Another Equation</Button>
                     <br/><br/>
                     <Button color="success" className="pull-right mt-3" id="add" onClick={this.addButtonClicked}>Add Asset</Button>           
                     <Button color="link" className="pull-right mt-3 mr-3" id="prev" onClick={this.onClickPrev}>{"<"}Previous</Button>

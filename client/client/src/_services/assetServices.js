@@ -154,6 +154,27 @@ const addAssetByConfig = (user, config) => {
     });
 }
 
+const addAssetByConfigFile = (file) => {
+    const requestOptions = {
+        method: 'POST',
+        body: file
+    };
+    return fetch(process.env.API_HOST + '/asset/createAssetByConfigFile', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(data => {
+        return data;
+    });
+}
+
 
 const deleteAsset = (assetID, user) => {
 
@@ -213,6 +234,7 @@ export const assetServices = {
     getDataByTagList,
     addAsset,
     addAssetByConfig,
+    addAssetByConfigFile,
     deleteAsset,
     updateAsset
 };

@@ -181,11 +181,7 @@ class AssetList extends React.Component {
                 Actions
             </TableHeaderColumn>
           </BootstrapTable>
-
-
-
-
-            </div>
+        </div>
 
         );
     }

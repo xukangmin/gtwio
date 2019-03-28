@@ -1,6 +1,6 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { Badge, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 
 class AddAsset extends React.Component {
     constructor(props) {
@@ -110,7 +110,7 @@ class AddAsset extends React.Component {
       let data = new FormData();
       data.append('configFile', this.uploadInput.files[0]);
       data.append('UserID', this.user.UserID);
-      
+
       this.props.dispatch(assetActions.addAssetByConfigFile(this.user, data));
     }
 
@@ -194,9 +194,9 @@ class AddAsset extends React.Component {
                   </div>     
               </Form>
 
-              <div className="py-5 px-3" style={{border: "1px solid #dee2e6"}}>
+              <div className="pb-5 pt-3 px-3" style={{border: "1px solid #dee2e6"}}>
                 
-                <Form onSubmit={this.handleUploadFile} style={{display: this.state.addType == "import" ? "block" : "none"}}>
+                <Form className="mt-3" onSubmit={this.handleUploadFile} style={{display: this.state.addType == "import" ? "block" : "none"}}>
                   <div style={{textAlign: "center"}}>
                     <input ref={(ref) => { this.uploadInput = ref; }} type="file" accept='.json' />
                   </div>
@@ -207,57 +207,84 @@ class AddAsset extends React.Component {
                 </Form>
 
                 <Form style={{display: this.state.addType == "manual" ? "block" : "none"}} >
-                  
+                  <Row>
+                    <Col md="1"></Col>
+                    <Col md="2" className="p-0 m-0 text-center">
+                    <h3><Badge pill color="primary">1</Badge></h3>
+                    <p>Asset Info</p>
+                    </Col>
+                    <Col md="2" className="p-0 m-0 text-center">
+                      <hr/>
+                    </Col>
+                    <Col md="2" className="p-0 m-0 text-center">
+                    <h3><Badge pill color={this.state.manualPage >= 2 ? "primary" : "light"}>2</Badge></h3>
+                    <p>Devices</p>
+                    </Col>
+                    <Col md="2" className="p-0 m-0 text-center">
+                      <hr/>
+                    </Col>
+                    <Col md="2" className="p-0 m-0 text-center">
+                    <h3><Badge pill color={this.state.manualPage >= 3 ? "primary" : "light"}>3</Badge></h3>
+                    <p>Equations</p>
+                    </Col>
+                    <Col md="1"></Col>
+                  </Row>
+
                   <FormGroup style={{display: this.state.manualPage == 1 ? "block" : "none"}}>
-                    <h2>Asset Information</h2>
-                    <Row>
-                      <Col md="6">
-                        <Label for="assetName"><strong>Asset Name*</strong></Label>
-                        <Input type="text" id="assetName" name="DisplayName" 
+                    <div className = "table-responsive">
+                      <table className = "table mt-3" style={{textAlign: "center"}}>
+                        <thead>
+                          <tr>
+                            <th>Asset Name*</th>
+                            <td>Location</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope = "row">
+                              <Input type="text" id="assetName" name="DisplayName" 
                                value={this.state.DisplayName} 
                                onChange={e=>this.handleInfoChange(e)}/>
-                        <br/>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col md="6">
-                        <Label for="location">Location</Label>
-                        <Input type="text" id="location" name="Location" 
+                            </th>
+                            <td>
+                              <Input type="text" id="location" name="Location" 
                                value={this.state.Location} 
                                onChange={e=>this.handleInfoChange(e)}/>
-                      </Col>
-                    </Row>
-                    
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>   
+                                        
                     <Button color="link" className="pull-right mt-3" id="next" onClick={this.onClickNext}>Next></Button>
                   </FormGroup>
                   
                   <FormGroup style={{display: this.state.manualPage == 2 ? "block" : "none"}} >
                     
-                    <h2>Devices</h2>
+                    
                     <div className = "table-responsive">
                       <table className = "table mt-3" style={{textAlign: "center"}}>
                         <thead>
                           <tr>
                             <th>Serial Number*</th>
                             <th>Description*</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Angle</th>
+                            <td>Type</td>
+                            <td>Location</td>
+                            <td>Angle</td>
                           </tr>
                         </thead>
                         <tbody>
                           {devices.map((x,i) =>
                             <tr key={x.key}>
-                              <th scope = "row" className="p-0">
+                              <th scope = "row" className="p-1">
                                 <Input type="text" id={x.key} name="SerialNumber" 
                                        value={devices[x.key].SerialNumber} onChange={e=>this.handleDevicesChange(e)}/>
                               </th>
-                              <td className="p-0">
+                              <td className="p-1">
                                 <Input type="text" id={x.key} name="DisplayName" 
                                        value={devices[x.key].DisplayName} onChange={e=>this.handleDevicesChange(e)}/>
                               </td>
-                              <td className="p-0">
+                              <td className="p-1">
                                 <Input type="select" id={x.key} name="Parameters" 
                                        value={devices[x.key].Parameters} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
@@ -265,7 +292,7 @@ class AddAsset extends React.Component {
                                   <option value="FlowRate">Flow Rate</option>
                                 </Input>  
                               </td>
-                              <td className="p-0">
+                              <td className="p-1">
                                 <Input type="select" id={x.key} name="Tag" 
                                        value={devices[x.key].Tag} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
@@ -275,7 +302,7 @@ class AddAsset extends React.Component {
                                   <option value="ShellOutlet">Shell Outlet</option>
                                 </Input>
                               </td>
-                              <td className="p-0">
+                              <td className="p-1">
                                 <Input type="select" id={x.key} name="Angle" 
                                        value={devices[x.key].Angle} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
@@ -297,7 +324,7 @@ class AddAsset extends React.Component {
                   </FormGroup>
 
                   <FormGroup style={{display: this.state.manualPage == 3 ? "block" : "none"}}>
-                    <h2>Equations</h2>
+                    
                     <div className = "table-responsive">
                       <table className = "table mt-3" style={{textAlign: "center"}}>
                         <thead>
@@ -310,10 +337,10 @@ class AddAsset extends React.Component {
                           {equations.map((x,i) =>
                             <tr key={x.key}>
                               <th scope = "row">
-                                <Input type="text" id={x.key} name="DisplayName" value={devices[x.key].DisplayName} onChange={e=>this.handleEquationsChange(e)}/>
+                                <Input type="text" id={x.key} name="DisplayName" value={equations[x.key].DisplayName} onChange={e=>this.handleEquationsChange(e)}/>
                               </th>
                               <td>
-                                <Input type="text" id={x.key} name="Equation" value={devices[x.key].Equation} onChange={e=>this.handleEquationsChange(e)}/>
+                                <Input type="text" id={x.key} name="Equation" value={equations[x.key].Equation} onChange={e=>this.handleEquationsChange(e)}/>
                               </td>
                             </tr>
                           )}

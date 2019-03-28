@@ -1,4 +1,5 @@
 import { parameterServices } from './parameterServices';
+import { saveAs } from 'file-saver';
 
 const getAssets = (user) => {
     const requestOptions = {
@@ -96,6 +97,33 @@ const getAsset = (user, assetID) => {
         .then(data => {
             localStorage.setItem('asset(' + assetID + ')', JSON.stringify(data));
             return data;
+        });
+}
+
+const getConfigByAssetID = (user, assetID) => {
+    const requestOptions = {
+        headers: { 'Content-Type': 'application/json' ,
+                   'x-api-key' : user.ApiKey}
+    };
+    var rq = process.env.API_HOST + '/asset/getConfigByAssetID?AssetID=' + assetID;
+    console.log(rq);
+    return fetch(process.env.API_HOST + '/asset/getConfigByAssetID?AssetID=' + assetID, requestOptions)
+        .then(response => {
+            response.json().then((body) => {
+            //action
+            //this.setState({ imageURL: `http://localhost:8000/${body.file}` });
+            var blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
+            console.log(body.AssetName);
+            saveAs(blob, body.AssetName.toString() + '.json');
+            });
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
         });
 }
 
@@ -231,6 +259,7 @@ const updateAsset = (assetID, key, value) => {
 export const assetServices = {
     getAssets,
     getAsset,
+    getConfigByAssetID,
     getDataByTagList,
     addAsset,
     addAssetByConfig,

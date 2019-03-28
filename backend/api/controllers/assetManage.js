@@ -15,11 +15,146 @@ var functions = {
   createAssetByConfig: createAssetByConfig,
   createAssetByConfigFile: createAssetByConfigFile,
   getConfigByAssetID: getConfigByAssetID,
+  getAllConfigByUserID: getAllConfigByUserID
 };
 
 for (var key in functions) {
   module.exports[key] = functions[key];
 }
+
+
+
+function getAllConfigByUserID(req, res) {
+  var userid = req.swagger.params.UserID.value;
+  if (userid) {
+    _getAssetByUser(userid)
+      .then(
+        ret => {
+          Promise.all(ret.map(item => _getConfigByAssetID(item.AssetID)))
+            .then(
+              ret => {
+                shareUtil.SendSuccessWithData(res, ret);
+              }
+            )
+            .catch(
+              err => {
+                var msg = "getConfigByAssetID Error:" + JSON.stringify(err, null, 2);
+                shareUtil.SendInternalErr(res, msg);
+              }
+            )
+        }
+      )
+  } else {
+    shareUtil.SendInvalidInput(res, 'userid not found');
+  }
+  
+}
+
+function _getConfigByAssetID(assetID) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOne({AssetID: assetID}, function(err, assetData) {
+        if (err) {
+          reject(err);
+        } else {
+          var config = {};
+          config.AssetName = assetData.DisplayName;
+  
+          dataManage._getAllParameterByAssetIDPromise(assetID)
+            .then(
+              equations => {
+                var eqs = [];
+  
+                for(var i in equations) {
+                  var singleEquation = {};
+                  if (equations[i].Tag) {
+                    singleEquation.Tag = equations[i].Tag;
+                  }
+  
+                  if (equations[i].DisplayName) {
+                    singleEquation.Name = equations[i].DisplayName;
+                  }
+  
+                  if (equations[i].OriginalEquation) {
+                    singleEquation.Equation = equations[i].OriginalEquation;
+                  }
+                  eqs.push(singleEquation);
+                }
+  
+                config.Equations = eqs;
+                return deviceManage._getDeviceByAsset(assetID);
+              }
+            )
+            .then(
+              devices => {  
+  
+                var dv = [];
+                for(var i in devices) {
+                  var singleDevice = {};
+                  var paras = [];
+                  if (devices[i].SerialNumber) {
+                    singleDevice.SerialNumber = devices[i].SerialNumber;
+                  }
+  
+                  if (devices[i].Tag) {
+                    singleDevice.Tag = devices[i].Tag;
+                  }
+  
+                  if (devices[i].DisplayName) {
+                    singleDevice.Name = devices[i].DisplayName;
+                  }
+  
+                  if (devices[i].Alias) {
+                    singleDevice.Alias = devices[i].Alias;
+                  }
+  
+                  if (typeof devices[i].Angle == 'number') {
+                    singleDevice.Angle = devices[i].Angle;
+                  }
+  
+                  if (devices[i].Parameters) {
+                    for(var j in devices[i].Parameters) {
+                      paras.push(devices[i].Parameters[j].Type);
+                    } 
+                  }
+                  singleDevice.Parameters = paras;
+                  dv.push(singleDevice);
+                }
+                config.Devices = dv;
+  
+                var originaltags = assetData.Settings.Tags.toObject();
+  
+                var dashboardtags = [];
+                for(var i in originaltags) {
+                  var singleTag = {};
+                  singleTag.TagName = originaltags[i].TagName;
+                  var arrData = [];
+                  for(var j in originaltags[i].Data) {
+                    var singleData = {};
+                    singleData.Name = originaltags[i].Data[j].Name;
+                    singleData.AssignedTag = originaltags[i].Data[j].AssignedTag;
+                    arrData.push(singleData);
+                  }
+                  singleTag.Data = arrData;
+                  dashboardtags.push(singleTag);
+                }
+  
+                config.Dashboard = dashboardtags;
+
+                resolve(config);
+              }
+            )
+            .catch(
+              err => {
+                reject(err);
+              }
+            );
+          
+        }
+      });
+    });
+}
+
 
 function getConfigByAssetID(req, res) {
   
@@ -27,111 +162,44 @@ function getConfigByAssetID(req, res) {
   var config = {};
   if (assetID)
   {
-    Asset.findOne({AssetID: assetID}, function(err, assetData) {
-      if (err) {
-        var msg = "Unable to scan the assets table.(getAssets) Error JSON:" + JSON.stringify(err, null, 2);
-        shareUtil.SendInternalErr(res,msg);
-      } else {
-        config.AssetName = assetData.DisplayName;
-
-        dataManage._getAllParameterByAssetIDPromise(assetID)
-          .then(
-            equations => {
-              var eqs = [];
-
-              for(var i in equations) {
-                var singleEquation = {};
-                if (equations[i].Tag) {
-                  singleEquation.Tag = equations[i].Tag;
-                }
-
-                if (equations[i].DisplayName) {
-                  singleEquation.Name = equations[i].DisplayName;
-                }
-
-                if (equations[i].OriginalEquation) {
-                  singleEquation.Equation = equations[i].OriginalEquation;
-                }
-                eqs.push(singleEquation);
-              }
-
-              config.Equations = eqs;
-              return deviceManage._getDeviceByAsset(assetID);
-            }
-          )
-          .then(
-            devices => {  
-
-              var dv = [];
-              for(var i in devices) {
-                var singleDevice = {};
-                var paras = [];
-                if (devices[i].SerialNumber) {
-                  singleDevice.SerialNumber = devices[i].SerialNumber;
-                }
-
-                if (devices[i].Tag) {
-                  singleDevice.Tag = devices[i].Tag;
-                }
-
-                if (devices[i].DisplayName) {
-                  singleDevice.Name = devices[i].DisplayName;
-                }
-
-                if (devices[i].Alias) {
-                  singleDevice.Alias = devices[i].Alias;
-                }
-
-                if (typeof devices[i].Angle == 'number') {
-                  singleDevice.Angle = devices[i].Angle;
-                }
-
-                if (devices[i].Parameters) {
-                  for(var j in devices[i].Parameters) {
-                    paras.push(devices[i].Parameters[j].Type);
-                  } 
-                }
-                singleDevice.Parameters = paras;
-                dv.push(singleDevice);
-              }
-              config.Devices = dv;
-
-              var originaltags = assetData.Settings.Tags.toObject();
-              
-              var dashboardtags = [];
-              for(var i in originaltags) {
-                var singleTag = {};
-                singleTag.TagName = originaltags[i].TagName;
-                var arrData = [];
-                for(var j in originaltags[i].Data) {
-                  var singleData = {};
-                  singleData.Name = originaltags[i].Data[j].Name;
-                  singleData.AssignedTag = originaltags[i].Data[j].AssignedTag;
-                  arrData.push(singleData);
-                }
-                singleTag.Data = arrData;
-                dashboardtags.push(singleTag);
-              }
-
-              config.Dashboard = dashboardtags;
-
-              shareUtil.SendSuccessWithData(res, config);
-            }
-          )
-          .catch(
-            err => {
-              var msg = "Unable to scan the assets table.(getAssets) Error JSON:" + JSON.stringify(err, null, 2);
-              shareUtil.SendInternalErr(res,msg);
-            }
-          );
-        
-      }
-    });
-
+    _getConfigByAssetID(assetID)
+      .then(
+        ret => {
+          var configarr = [];
+          configarr.push(ret);
+          shareUtil.SendSuccessWithData(res, configarr);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "getConfigByAssetID Error:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+      );
   } else {
     shareUtil.SendInvalidInput(res, 'Asset ID not found');
   }
   
+}
+
+function _getAssetByUser(userid) {
+  return new Promise(
+    (resolve, reject) => {
+      User.findOne({UserID: userid}, function(err, data)
+      {
+        if (err) {
+          reject(err);
+        }
+        else {
+          if (data)
+          {
+            resolve(data.Assets);
+          } else {
+            reject(new Error('Not Found'));
+          }
+        }
+      });
+    });
 }
 
 function getAssetByUser(req, res) {

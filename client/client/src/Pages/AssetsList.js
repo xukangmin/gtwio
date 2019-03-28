@@ -116,9 +116,7 @@ class AssetList extends React.Component {
 
         return (
           <div id="MainArea">
-          <div>
-            <button label="Download file" onClick={this.downloadFile}>Download</button>
-          </div>
+          
           <BootstrapTable
             data={assets}
             insertRow={false}

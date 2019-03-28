@@ -149,6 +149,7 @@ function _createEquation(assetid, paraobj) {
               Promise.all(taglist.map(item => _resolveSingleTagInAsset(assetid, paralist, item)))
                 .then(
                   ret => {
+                    paraobj.OriginalEquation = paraobj.Equation;
                     paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
                     
                     var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);

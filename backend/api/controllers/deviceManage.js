@@ -27,7 +27,8 @@ var functions = {
   _deleteSingleDevice: _deleteSingleDevice,
   getDeviceByAsset: getDeviceByAsset,
   getSingleDevice: getSingleDevice,
-  _createDeviceWithParameter: _createDeviceWithParameter
+  _createDeviceWithParameter: _createDeviceWithParameter,
+  _getDeviceByAsset: _getDeviceByAsset
 }
 
 for (var key in functions) {
@@ -243,6 +244,47 @@ function deleteDevice(req, res) {
     var msg = "AssetID missing";
     shareUtil.SendInvalidInput(res, msg);
   }
+}
+
+function _getDeviceByAsset(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOne({AssetID: assetid}, function(err, data)
+      {
+        if (err) {
+          reject(err);
+        }
+        else {
+          if (data)
+          {
+            var deviceslist = data.Devices;
+            if (deviceslist) {
+              Promise.all(deviceslist.map(_getSingleDevice))
+              .then(
+                ret => {
+                  resolve(ret);
+                }
+              )
+              .catch(
+                err => {
+                  reject(err);
+                }
+              );
+
+            } else {
+              resolve([]);
+            }
+
+
+            //getSingleDeviceInternal(0, deviceslist, [], function(deviceout){
+            //  shareUtil.SendSuccessWithData(res, deviceout);
+            //});
+          } else {
+            resolve([]);
+          }
+        }
+      });
+    });
 }
 
 function getDeviceByAsset(req, res) {

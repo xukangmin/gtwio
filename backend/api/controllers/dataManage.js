@@ -6,6 +6,7 @@ const Device = require('../db/device.js');
 const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
 const math = require('mathjs');
+const path = require('path');
 //const Promise = require('bluebird');
 
 var functions = {
@@ -20,6 +21,7 @@ var functions = {
   testFunc: testFunc,
   addDataByParticleEvent: addDataByParticleEvent,
   _getAllParameterByAssetID: _getAllParameterByAssetID,
+  _getAllParameterByAssetIDPromise: _getAllParameterByAssetIDPromise,
   _getAllDeviceByAssetID: _getAllDeviceByAssetID,
   _deleteAllData:_deleteAllData
 }
@@ -46,16 +48,15 @@ function _deleteAllData(paraobj) {
 }
 
 function testFunc(req, res) {
-    console.log(req.headers);
-    console.log(req.files.configFile);
-    var data  = req.files.configFile.buffer.toString('utf8');
+   
+  
+    //res.download('./delpayManage.js');
+    //shareUtil.SendSuccess(res);
+    var testvar = {};
+    testvar.AssetID = "test";
+    testvar.WWW = "123";
 
-    var jdata = JSON.parse(data);
-    
-    console.log(jdata[0].AssetName);
-    
-    shareUtil.SendSuccess(res);
-    
+    res.status(200).sendFile(testvar);
 
 }
 function _getSingleDataPoint(paraid, currentTimeStamp) {

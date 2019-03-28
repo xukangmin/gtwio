@@ -124,6 +124,39 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/getConfigByAssetID:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    get:
+      tags:
+      - asset
+      description: Return Asset Configuration
+      # used as the method name of the controller
+      operationId: getConfigByAssetID
+      parameters:
+        - name: AssetID
+          in: query
+          description: AssetID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /asset/createAsset:
     x-swagger-router-controller: assetManage
     post:
@@ -1304,19 +1337,17 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /data/testFunc:
     x-swagger-router-controller: dataManage
-    post:
+    get:
       tags:
       - data
       description:  Add Data by device's name, ApiKey, and timestamp. Have to be tested with Postman and replace ParameterName in JSON by actual ParameterName. ApiKey of user is needed in header of request
       # used as the method name of the controller
       operationId: testFunc
-      consumes:
-      - multipart/form-data
       parameters:
-      - in: formData
-        name: configFile
-        type: file
-        description: The file to upload.
+      - name: AssetID
+        in: query
+        required: true
+        type: string
       responses:
         200:
           description: Success

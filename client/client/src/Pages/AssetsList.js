@@ -1,6 +1,7 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { saveAs } from 'file-saver';
 
 class AssetList extends React.Component {
     constructor(props) {
@@ -19,6 +20,8 @@ class AssetList extends React.Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleLocationChange = this.handleLocationChange.bind(this);
       this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
+
+      this.downloadFile = this.downloadFile.bind(this);
     }
 
     editModalToggle(asset_id, name, location){
@@ -28,6 +31,20 @@ class AssetList extends React.Component {
         location: location,
         editModalOpen: !prevState.editModalOpen
       }));
+    }
+
+    downloadFile(e){
+      fetch('http://localhost:8002/asset/getConfigByAssetID?AssetID=AWMWqQUfjj', {
+        method: 'GET',
+      }).then((response) => {
+        response.json().then((body) => {
+          //action
+          //this.setState({ imageURL: `http://localhost:8000/${body.file}` });
+          var blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
+          console.log(body.AssetName);
+          saveAs(blob, body.AssetName.toString() + '.json');
+        });
+      });
     }
 
     editButtonClicked(){
@@ -108,6 +125,9 @@ class AssetList extends React.Component {
 
         return (
           <div id="MainArea">
+          <div>
+            <button label="Download file" onClick={this.downloadFile}>Download</button>
+          </div>
           <BootstrapTable
             data={assets}
             insertRow={false}

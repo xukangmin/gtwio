@@ -13,7 +13,7 @@ const AssetSchema = new Schema(
     Parameters: [{ParameterID: String}],
     Devices: [{DeviceID: String}],
     Dashboards: [{DashboardID: String}],
-    Settings: {Tags: [{TagName: String, Data: [{Name: String, ParameterID: String}]}]}
+    Settings: {Tags: [{TagName: String, Data: [{Name: String, ParameterID: String, AssignedTag: String}]}]}
   },
   { timestamps: true }
 );

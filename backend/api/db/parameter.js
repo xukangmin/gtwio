@@ -15,6 +15,7 @@ const ParameterSchema = new Schema(
     Tag: {type: String, index: true},
     Equation: String,
     ActiveEquation: String,
+    OriginalEquation: String,
     RequiredBy: [String], // ParameterID List
     Require: [String], // ParameterID List
     Status: String,

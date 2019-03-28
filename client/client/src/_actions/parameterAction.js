@@ -1,6 +1,7 @@
 import { gConstants } from '../Constants/constants';
 import { parameterServices } from '../_services/parameterServices';
 import { dataActions } from './dataAction';
+import toastr from 'toastr';
 
 const getParameters = (assetID) => {
     return dispatch => {
@@ -79,7 +80,7 @@ const updateParameter = (user, assetID, data) => {
     };
 
     function request() { return { type: gConstants.UPDATE_PARAMETER_REQUEST } }
-    function success(data) { return { type: gConstants.UPDATE_PARAMETER_SUCCESS, data } }
+    function success(data) { toastr.success("Parameter Updated"); return { type: gConstants.UPDATE_PARAMETER_SUCCESS, data } }
     function failure(error) { return { type: gConstants.UPDATE_PARAMETER_FAILURE, error } }
 }
 

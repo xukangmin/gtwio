@@ -1,6 +1,7 @@
 import { gConstants } from '../Constants/constants';
 import { deviceServices } from '../_services/deviceServices';
 import { dataActions } from './dataAction';
+import toastr from 'toastr';
 
 const getDevices = (user, assetID) => {
     return dispatch => {
@@ -101,7 +102,7 @@ const updateDevice = (user, assetID, data) => {
     };
 
     function request() { return { type: gConstants.UPDATE_DEVICE_REQUEST } }
-    function success(data) { return { type: gConstants.UPDATE_DEVICE_SUCCESS, data } }
+    function success(data) { toastr.success("Device Updated"); return { type: gConstants.UPDATE_DEVICE_SUCCESS, data } }
     function failure(error) { return { type: gConstants.UPDATE_DEVICE_FAILURE, error } }
 }
 

@@ -82,7 +82,7 @@ const getConfigByAssetID = (user, assetID) => {
     };
 
     function request() { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_REQUEST } }
-    function success(data) { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_SUCCESS, data } }
+    function success(data) { toastr.success("Config File Downloaded"); return { type: gConstants.GET_CONFIG_BY_ASSET_ID_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_CONFIG_BY_ASSET_ID_FAILURE, error } }
     function success_tag(data) { return {type: gConstants.GET_CONFIG_BY_ASSET_ID__SUCCESS, data } }
 }
@@ -190,7 +190,6 @@ const deleteAsset = (assetID, user) => {
     function failure(error) { return { type: gConstants.DELETE_ASSET_FAILURE, error } }
 }
 
-
 const updateAsset = (user, assetID, key, value) => {
   return dispatch => {
         dispatch(request());
@@ -207,10 +206,7 @@ const updateAsset = (user, assetID, key, value) => {
     };
 
     function request() { return { type: gConstants.UPDATE_ASSET_REQUEST } }
-    function success(data) { 
-        console.log('success')
-        toastr.success("Equation updated."); 
-    return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
+    function success(data) { toastr.success("Asset Updated"); return { type: gConstants.UPDATE_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
 }
 

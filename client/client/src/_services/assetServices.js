@@ -105,7 +105,9 @@ const getConfigByAssetID = (user, assetID) => {
         .then(response => {
             response.json().then((body) => {
                 let blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-                saveAs(blob, body.AssetName.toString() + '.json');
+                console.log(body);
+                
+                saveAs(blob, body[0].AssetName.toString() + '.json');
             });
             return Promise.all([response, response.json()])
         })

@@ -82,17 +82,17 @@ class AssetList extends React.Component {
     }
 
     applyAssetAction(asset, event){
-      if (event.target.name == "delete"){
+      console.log(event)
+      if (event == "delete"){
         if (confirm("Are you sure to delete this asset?")){
           this.props.dispatch(assetActions.deleteAsset(asset, this.user));
         }
-      } else if (event.target.name == "download"){
+      } else if (event == "download"){
         this.props.dispatch(assetActions.getConfigByAssetID(this.user, asset));
       }
     }
 
     render() {
-      toastr.success("Equation updated.");
         const { assets } = this.props;
 
         function linkFormatter(cell, row, enumObject){
@@ -105,8 +105,8 @@ class AssetList extends React.Component {
 
         function actionsFormatter(cell, row, enumObject){
           return <div><button type="button" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
-          <button type="button" className="btn btn-info ml-1" name="download" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-download" aria-hidden="true"></i></button>
-          <button type="button" className="btn btn-danger ml-1" name="delete" onClick={(e)=>enumObject(cell, e)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+          <button type="button" className="btn btn-info ml-1" name="download" onClick={()=>enumObject(cell, "download")}><i className="fa fa-download" aria-hidden="true"></i></button>
+          <button type="button" className="btn btn-danger ml-1" name="delete" onClick={()=>enumObject(cell, "delete")}><i className="fa fa-trash" aria-hidden="true"></i></button>
           </div>
         }
 

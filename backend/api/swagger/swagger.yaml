@@ -156,7 +156,40 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"            
+            $ref: "#/definitions/ErrorResponse"       
+  /asset/getAllConfigByUserID:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    get:
+      tags:
+      - asset
+      description: Return Asset Configuration
+      # used as the method name of the controller
+      operationId: getAllConfigByUserID
+      parameters:
+        - name: UserID
+          in: query
+          description: UserID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
   /asset/createAsset:
     x-swagger-router-controller: assetManage
     post:

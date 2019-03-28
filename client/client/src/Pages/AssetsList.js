@@ -41,8 +41,8 @@ class AssetList extends React.Component {
           //action
           //this.setState({ imageURL: `http://localhost:8000/${body.file}` });
           var blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-          console.log(body.AssetName);
-          saveAs(blob, body.AssetName.toString() + '.json');
+          console.log(body[0].AssetName);
+          saveAs(blob, body[0].AssetName.toString() + '.json');
         });
       });
     }

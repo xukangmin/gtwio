@@ -28,6 +28,16 @@ class AddDevice extends React.Component {
     }
 
     addButtonClicked(){
+      if (this.state.serialNumber == "" && this.state.displayName == ""){
+        alert("Serial Number and Description are required.")
+        return;
+      } else if (this.state.serialNumber == ""){
+        alert("Serial Number is required.")
+        return;
+      } else if (this.state.displayName == ""){
+        alert("Description is required.")
+        return;
+      }
       const newDevice = {
         DisplayName: this.state.displayName,
         SerialNumber: this.state.serialNumber,
@@ -83,7 +93,7 @@ class AddDevice extends React.Component {
                     <Input type="text" id="sensorID" name="sensorID" value={sensorID} onChange={this.handleChange}/>
                     <br/>
                     <Label for="location">Location</Label>
-                    <Input type="select" value={location} onChange={this.handleChange}>
+                    <Input type="select" name="location" value={location} onChange={this.handleChange}>
                       <option value=" "></option>
                       <option value="ShellInlet">ShellInlet</option>
                       <option value="ShellOutlet">ShellOutlet</option>
@@ -92,7 +102,7 @@ class AddDevice extends React.Component {
                     </Input>
                     <br/>
                     <Label for="angle">Angle</Label>
-                    <Input type="select" value={angle} onChange={this.handleChange}>
+                    <Input type="select" name="angle" value={angle} onChange={this.handleChange}>
                       <option value=" "></option>
                       <option value="0">0°</option>
                       <option value="90">90°</option>

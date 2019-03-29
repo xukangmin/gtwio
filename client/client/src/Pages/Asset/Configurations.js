@@ -25,7 +25,6 @@ class Configurations extends React.Component {
     this.props.dispatch(parameterActions.getParameters(this.asset));
 
     this.toggle = this.toggle.bind(this);
-    this.onRowSelect = this.onRowSelect.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
@@ -48,22 +47,6 @@ class Configurations extends React.Component {
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab
-      });
-    }
-  }
-
-  onRowSelect(row, isSelected, e) {
-    let filtered = this.state.selectedRows.filter(function(value,index, arr){
-      return value!= row;
-    })
-
-    if(isSelected){
-      this.setState({
-        selectedRows: [...this.state.selectedRows, row]
-      });
-    } else{
-      this.setState({
-        selectedRows: filtered
       });
     }
   }
@@ -135,15 +118,11 @@ class Configurations extends React.Component {
       return moment(cell).format('MMMM Do YYYY');
     }
 
-    function decimalFormatter(cell, row){
-      return cell.toFixed(2)+'°F';
-    }
-
     const cellEditProp = {
       mode: 'click',
       blurToSave: true,
       afterSaveCell: this.onAfterSaveCell
-    };
+    };    
 
     return (
       <div>

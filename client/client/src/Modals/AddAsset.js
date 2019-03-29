@@ -1,7 +1,6 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
 import { Badge, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
-import toastr from 'toastr';
 
 class AddAsset extends React.Component {
     constructor(props) {
@@ -265,8 +264,6 @@ class AddAsset extends React.Component {
                   </FormGroup>
                   
                   <FormGroup style={{display: this.state.manualPage == 2 ? "block" : "none"}} >
-                    
-                    
                     <div className = "table-responsive">
                       <table className = "table mt-3" style={{textAlign: "center"}}>
                         <thead>

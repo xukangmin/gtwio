@@ -9,8 +9,26 @@ class ProgressBar extends React.Component {
   }
 
   render() {
-    const percentage = this.props.percentage;
-    const barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+    let { type, percentage, unit } = this.props;
+    let barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+        
+    if (type == "HeatTransferRate"){
+      percentage = percentage * 100;
+      unit = "%";
+      type = "Heat Transfer Rate";
+      barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+    } else if (type == "PerformanceFactor"){
+      // percentage = percentage * 100;
+      unit = "-";
+      type = "Heat Transfer Rate";
+      barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+    } else if (type == "TotalUncertainty"){
+      // percentage = percentage * 100;
+      unit = "-";
+      type = "Total Uncertainty";
+      barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
+    }
+
     const barStyle = {
       maxWidth: "200px",
       margin: "0 50px",
@@ -26,6 +44,7 @@ class ProgressBar extends React.Component {
       top: "-40px",
       textAlign: "center"
     }
+
     return(
       <div style = {barStyle}>
         <div className = "mx-auto" style = {{width: "100px"}}>
@@ -42,10 +61,10 @@ class ProgressBar extends React.Component {
                 fontSize: '30px' }
             }}
           />
-          <span style = {unitStyle}>{this.props.unit}</span>
+          <span style = {unitStyle}>{unit}</span>
         </div>
 
-        <span style = {titleStyle}>{this.props.type}</span>
+        <span style = {titleStyle}>{type}</span>
       </div>)
   }
 }

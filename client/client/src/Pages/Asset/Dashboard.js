@@ -47,6 +47,7 @@ class Dashboard extends React.Component {
 
   render() {
     const { assetData, AssetTags } = this.props;
+    // const progressBars = this.props.AssetTags.filter(item => item.TagName == "ProgressBars");
     const Hx_style = {
       maxWidth: "1200px",
       maxHeight: "560px"
@@ -87,9 +88,9 @@ class Dashboard extends React.Component {
                     }
                 </Samy>
                 <Row style={ProgressBars_style}>
-                  <ProgressBar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
-                  <ProgressBar type="Performance Factor" percentage="54" unit="%"/>
-                  <ProgressBar type="Total Uncertainty" percentage="??" unit="??"/>
+                  {AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.map((item, i) =>                    
+                    <ProgressBar key={item} type={item.Name} percentage={item.Value.toFixed(2)} unit={item.Unit}/>                    
+                  )}
                 </Row>
                 <div style={LastUpdate_style}>
                   <span>Last updated: {new Date().toLocaleTimeString("en-US")}</span>

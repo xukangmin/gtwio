@@ -51,6 +51,7 @@ class Progressbar extends React.Component {
 }
 
 function mapStateToProps(state) {
+  return {};
 }
 
 const connectedPage = connect(mapStateToProps)(Progressbar);

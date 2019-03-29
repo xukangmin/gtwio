@@ -16,16 +16,6 @@ class Data extends React.Component {
       return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
 
-    function TitleFormatter (value) {
-      value = value.split('/');
-      let title = '<span>';
-      for (let i in value){
-        title += value[i]+'<br>';
-      }
-      title += '</span>';
-      return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
-    };
-
     let col = [{ key: "id", name: "Time", frozen: true, width: 185 }];
     let row = [];
 
@@ -43,8 +33,9 @@ class Data extends React.Component {
       let new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
       for (let device in data[time].Data){
           let device_id = device;
+          let unit = data[time].Data[device].Unit ? data[time].Data[device].Unit : ""
           new_row[device_id] = {
-            value: data[time].Data[device].Value.toFixed(2) + data[time].Data[device].Unit,
+            value: data[time].Data[device].Value.toFixed(2) + unit,
             valid: data[time].Data[device].Valid
           };
       }

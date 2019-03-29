@@ -1,8 +1,9 @@
+
 import React from 'react';
-import { assetActions } from '../_actions/assetAction';
+import { assetActions } from '../../_actions/assetAction';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-class AssetList extends React.Component {
+class List extends React.Component {
   constructor(props) {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -134,4 +135,4 @@ class AssetList extends React.Component {
   }
 }
 
-export default AssetList;
+export default List;

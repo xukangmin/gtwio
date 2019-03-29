@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import CircularProgressbar from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-class Progressbar extends React.Component {
+class ProgressBar extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -54,5 +54,5 @@ function mapStateToProps(state) {
   return {};
 }
 
-const connectedPage = connect(mapStateToProps)(Progressbar);
-export { connectedPage as Progressbar };
+const connectedPage = connect(mapStateToProps)(ProgressBar);
+export { connectedPage as ProgressBar };

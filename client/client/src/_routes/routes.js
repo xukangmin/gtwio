@@ -1,7 +1,7 @@
 import { RootLayout } from '../Root/RootLayout';
 import { LoginMain } from '../UserManagement/LoginMain';
 
-import { Overview } from '../Pages/Overview';
+import { Home } from '../Pages/Home';
 import { Dashboard } from '../Pages/Asset/Dashboard';
 import { Data } from '../Pages/Asset/Data';
 import { Configurations } from '../Pages/Asset/Configurations';
@@ -10,7 +10,7 @@ import { Device } from '../Pages/Asset/Device/Device';
 import { Parameter } from '../Pages/Asset/Parameter/Parameter';
 import { Tag } from '../Pages/Asset/Tag/Tag';
 
-import NotFound from '../Pages/Error/notfound'
+import NotFound from '../Pages/Error/notfound';
 
 const routes = [
   { path: '/login',
@@ -32,7 +32,7 @@ const routes = [
     routes: [
       { path: '/',
         exact: true,
-        component: Overview
+        component: Home
       },
         {
           path: '/asset/:assetID/dashboard',

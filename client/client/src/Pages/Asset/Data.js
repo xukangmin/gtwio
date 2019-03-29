@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import ReactDataGrid from "react-data-grid";
-import * as moment from 'moment';
-window['moment'] = moment;
+import moment from 'moment';
 
 class Data extends React.Component {
   constructor(props) {
@@ -44,7 +43,7 @@ class Data extends React.Component {
       let new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
       for (let device in data[time].Data){
           let device_id = device;
-          new_row[device_id]= {
+          new_row[device_id] = {
             value: data[time].Data[device].Value.toFixed(2) + data[time].Data[device].Unit,
             valid: data[time].Data[device].Valid
           };

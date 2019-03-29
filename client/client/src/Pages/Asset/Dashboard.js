@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
-import svgcontents from 'raw-loader!../../Images/Hx.svg';
+import HxSvg from 'raw-loader!../../Images/Hx.svg';
 import Loader from '../Loader';
-import { Progressbar } from '../../Widgets/ProgressBar';
+import { ProgressBar } from '../../Widgets/ProgressBar';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class Dashboard extends React.Component {
       maxWidth: "1200px",
       maxHeight: "560px"
     }
-    const Progressbars_style={
+    const ProgressBars_style={
       marginTop: "-150px",
       textAlign: "center"
     }
@@ -78,7 +78,7 @@ class Dashboard extends React.Component {
                 </Breadcrumb>
               </div>
               <div style={Hx_style} className="mx-auto">
-                <Samy svgXML={svgcontents} >
+                <Samy svgXML={HxSvg} >
                     {
                       AssetTags &&
                       AssetTags.map((item,i) =>
@@ -86,10 +86,10 @@ class Dashboard extends React.Component {
                       )
                     }
                 </Samy>
-                <Row style={Progressbars_style}>
-                  <Progressbar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
-                  <Progressbar type="Performance Factor" percentage="54" unit="%"/>
-                  <Progressbar type="Total Uncertainty" percentage="??" unit="??"/>
+                <Row style={ProgressBars_style}>
+                  <ProgressBar type="Heat Transfer Rate" percentage="77" unit="btu/hr"/>
+                  <ProgressBar type="Performance Factor" percentage="54" unit="%"/>
+                  <ProgressBar type="Total Uncertainty" percentage="??" unit="??"/>
                 </Row>
                 <div style={LastUpdate_style}>
                   <span>Last updated: {new Date().toLocaleTimeString("en-US")}</span>

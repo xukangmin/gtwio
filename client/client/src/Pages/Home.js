@@ -1,33 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
-import AssetsList from '../Pages/AssetsList';
+import Loader from './Loader';
+ 
+import List from './Asset/List';
 import AddAsset from '../Modals/AddAsset';
 
 import { assetActions } from '../_actions/assetAction';
 
-class Overview extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
 
     this.user = JSON.parse(localStorage.getItem('user'));
-
-    if (this.user)
-    {
+    if (this.user){
       this.props.dispatch(assetActions.getAssets(this.user));
     }
   }
 
   render() {
     const { assets } = this.props;
-    let assets_display = null;
-    if (assets){
-      assets_display = assets;
-    }
-    else if (this.assets_local){
-      assets_display = this.assets_local;
-    }
 
     if (!this.user){
       return (<Redirect to='/login' />);
@@ -35,17 +27,17 @@ class Overview extends React.Component {
     else {
       return (
         <div>
-          {assets_display ?
+          {assets?
           <div>
               <div style={{marginBottom: "15px"}}>
                 <AddAsset user={this.user} dispatch={this.props.dispatch}/>
               </div>
               <div>
-                <AssetsList assets={assets_display} user={this.user} dispatch={this.props.dispatch}/>
+                <List assets={assets} user={this.user} dispatch={this.props.dispatch}/>
               </div>
           </div> 
           :
-          <div></div>
+          <Loader/>
           }
         </div>
       );
@@ -61,5 +53,5 @@ function mapStateToProps(state) {
   };
 }
 
-const connectedPage = connect(mapStateToProps)(Overview);
-export { connectedPage as Overview };
+const connectedPage = connect(mapStateToProps)(Home);
+export { connectedPage as Home };

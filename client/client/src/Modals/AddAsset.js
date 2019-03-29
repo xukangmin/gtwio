@@ -223,14 +223,14 @@ class AddAsset extends React.Component {
                     </Col>
                     <Col md="2" className="p-0 m-0 text-center">
                     <h3><Badge pill color={this.state.manualPage >= 2 ? "primary" : "light"}>2</Badge></h3>
-                    <p>Devices</p>
+                    <p>Add Devices</p>
                     </Col>
                     <Col md="2" className="p-0 m-0 text-center">
                       <hr/>
                     </Col>
                     <Col md="2" className="p-0 m-0 text-center">
                     <h3><Badge pill color={this.state.manualPage >= 3 ? "primary" : "light"}>3</Badge></h3>
-                    <p>Equations</p>
+                    <p>Add Equations</p>
                     </Col>
                     <Col md="1"></Col>
                   </Row>

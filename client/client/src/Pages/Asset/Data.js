@@ -65,7 +65,7 @@ class Data extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.data
+  const { data } = state.data;
   return {
     data: data
   };

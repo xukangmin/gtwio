@@ -80,13 +80,17 @@ class Configurations extends React.Component {
 
   onAfterSaveCell(row, cellName, cellValue) {
     if(row.DeviceID){
-      var data = {
+      let data = {
         DeviceID: row.DeviceID,
         [cellName]: cellValue
       };
       this.props.dispatch(deviceActions.updateDevice(this.user, this.asset, data));
     } else if(row.ParameterID){
-      this.props.dispatch(parameterActions.updateParameter(row.ParameterID, cellName, cellValue));
+      let data = {
+        ParameterID: row.ParameterID,
+        [cellName]: cellValue
+      }
+      this.props.dispatch(parameterActions.updateParameter(data));
     }
     let rowStr = '';
     for (const prop in row) {

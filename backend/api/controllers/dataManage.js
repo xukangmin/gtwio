@@ -167,7 +167,10 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
                    } else if (compareStrings(op,"FIX", true)) {
                      var result = math.mean(dataarr);
                      resolve(result);
-                   }
+                   } else if (compareStrings(op,"STD", true)) {
+                    var result = math.std(dataarr);
+                    resolve(result);
+                  }
                    else {
                      reject(new Error('Operation not defined'))
                    }

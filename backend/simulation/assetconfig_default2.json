@@ -42,6 +42,21 @@
         "Name" : "LMTD",
         "Equation": "([DELTA_T_1] - [DELTA_T_2]) / log([DELTA_T_1] / [DELTA_T_2])",
         "Tag": "LMTD"
+      },
+      {
+        "Name": "Total Uncertainty",
+        "Equation": "sqrt(sqrt([AVG_SHELL_INLET,STD,1800]) + sqrt([AVG_SHELL_OUTLET,STD,1800]) + sqrt([AVG_TUBE_INLET,STD,1800]) + sqrt([AVG_TUBE_OUTLET,STD,1800]))",
+        "Tag": "TOTAL_UNCERTAINTY"
+      },
+      {
+        "Name": "Heat Transfer",
+        "Equation": "([AVG_TUBE_INLET] - [AVG_TUBE_OUTLET]) / ([AVG_SHELL_OUTLET] - [AVG_SHELL_INLET])",
+        "Tag": "HEAT_TRANSFER_RATE"
+      },
+      {
+        "Name": "Performance factor",
+        "Equation": "([DELTA_T_1] - [DELTA_T_2]) / log([DELTA_T_1] / [DELTA_T_2])",
+        "Tag": "PERFORMANCE_FACTOR"
       }
     ],
     "Devices":
@@ -232,6 +247,23 @@
           {
             "Name": "FlowRate",
             "AssignedTag": "TubeOutlet/FlowRate"
+          }
+        ]
+      },
+      {
+        "TagName": "ProgressBars",
+        "Data": [
+          {
+            "Name": "HeatTransferRate",
+            "AssignedTag": "HEAT_TRANSFER_RATE"
+          },
+          {
+            "Name": "PerformanceFactor",
+            "AssignedTag": "PERFORMANCE_FACTOR"
+          },
+          {
+            "Name": "TotalUncertainty",
+            "AssignedTag": "TOTAL_UNCERTAINTY"
           }
         ]
       }

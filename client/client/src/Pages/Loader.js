@@ -1,5 +1,5 @@
-import React from 'react'
-import loader from '../Images/flask.gif'
+import React from 'react';
+import loader from '../Images/flask.gif';
 
 const Loader = () => {
     return (

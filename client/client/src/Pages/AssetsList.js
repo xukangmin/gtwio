@@ -6,18 +6,14 @@ class AssetList extends React.Component {
   constructor(props) {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.state = {
-      asset: '',
-      displayName: '',
-      location: ''
-    }
+           
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
     this.applyAssetAction = this.applyAssetAction.bind(this);
   }
 
   onAfterSaveCell(row, cellName, cellValue) {
-    this.props.dispatch(assetActions.updateAsset(this.user, row.AssetID, cellName, cellValue))
-    let rowStr = '';
+    this.props.dispatch(assetActions.updateAsset(this.user, row.AssetID, cellName, cellValue));
+    let rowStr = "";
     for (const prop in row) {
       rowStr += prop + ': ' + row[prop] + '\n';
     }

@@ -50,6 +50,7 @@ class SingleLinePlot extends React.Component {
 }
 
 function mapStateToProps(state) {
+  return {};
 }
 
 const connectedPage = connect(mapStateToProps)(SingleLinePlot);

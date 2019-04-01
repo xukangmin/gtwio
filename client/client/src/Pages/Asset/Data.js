@@ -33,10 +33,12 @@ class Data extends React.Component {
       let new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
       for (let device in data[time].Data){
           let device_id = device;
-          let unit = data[time].Data[device].Unit ? data[time].Data[device].Unit : ""
+          let value = data[time].Data[device].Value ? data[time].Data[device].Value.toFixed(2) : "N/A";
+          let unit = data[time].Data[device].Unit ? data[time].Data[device].Unit : "";
+          let valid = data[time].Data[device].Valid ? data[time].Data[device].Valid : true;
           new_row[device_id] = {
-            value: data[time].Data[device].Value.toFixed(2) + unit,
-            valid: data[time].Data[device].Valid
+            value: value+ unit,
+            valid: valid
           };
       }
       row.unshift(new_row);

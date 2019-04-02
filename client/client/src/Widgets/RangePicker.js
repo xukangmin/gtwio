@@ -133,7 +133,7 @@ class Picker extends React.Component {
           parameter = m_res[item].match.params.parameterID;
           flow = m_res[item].match.params.flowID;
         }
-        if (m_res[item].match.url.includes("configurations") || m_res[item].match.url.includes("devices")){
+        if (m_res[item].match.url.includes("configurations")){
           this.setState({
             pickerButtonDisplay: 'none'
           });
@@ -252,7 +252,7 @@ class Picker extends React.Component {
       let intervalText = this.intervalToText(this.range.interval);
       
       return (
-        <div style={{display: this.state.pickerButtonDisplay ? "block" : "none", marginLeft: "-15px"}} >
+        <div style={{display: this.state.pickerButtonDisplay ? "block" : "none"}} >
 
           <Button onClick={this.togglePickerContent} className="btn-light">
             <i className ="fas fa-calendar mr-2"></i>

@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
 import Picker from '../Widgets/RangePicker';
-
+import BaselinePicker from '../Widgets/BaselinePicker';
 import { assetActions } from '../_actions/assetAction';
 import Loader from '../Pages/Loader';
 import 'antd/dist/antd.css';
@@ -80,16 +80,16 @@ class RootLayout extends Component {
             </Menu.Item>
             
             <SubMenu
-              key="sub1"
+              key="sub-1"
               title={<span><Icon type="user" /><span>Assets</span></span>}
             >
             {assets_display ?
-              assets_display.map((asset,index) => <Menu.Item key={index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
+              assets_display.map((asset,index) => <Menu.Item key={'asset-' + index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
             :<Loader/>}
               
             </SubMenu>
             
-            <Menu.Item key="9">
+            <Menu.Item key="3">
               <a href="/settings">
                 <Icon type="file" />
                 <span>Settings</span>
@@ -99,21 +99,21 @@ class RootLayout extends Component {
 
           {this.asset ? 
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1">
+            <Menu.Item key="4">
               <a href={"/asset/" + this.asset + "/dashboard"}>
                 <Icon type="pie-chart" />
                 <span>{assets_display.find(item => item.AssetID === this.asset).DisplayName}</span>
               </a>
             </Menu.Item> 
 
-            <Menu.Item key="1">
+            <Menu.Item key="5">
               <a href={"/asset/" + this.asset + "/dashboard"}>
                 <Icon type="pie-chart" />
                 <span>Dashboard</span>
               </a>
             </Menu.Item>          
                         
-            <Menu.Item key="9">
+            <Menu.Item key="6">
               <a href={"/asset/" + this.asset + "/data"}>
                 <Icon type="file" />
                 <span>Data</span>
@@ -134,14 +134,12 @@ class RootLayout extends Component {
 
         </Sider>
         <Layout>
-          <Header style={{ background: '#fff', padding: '16px'}}><Picker dispatch={this.props.dispatch}/></Header>
-          <Content style={{ margin: '16px' }}>
-            {assets ?
-              <div>{renderRoutes(this.props.route.routes, {store : this.props.store})}</div>
-                    
-            
-            : <Loader />
-            }
+          <Header style={{ background: '#fff', padding: '16px', position: 'fixed', zIndex: 999}}>
+            <Picker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
+            <BaselinePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
+          </Header>
+          <Content style={{ margin: '36px 16px 16px 16px'}}>
+              {renderRoutes(this.props.route.routes, {store : this.props.store})}            
           </Content>
           <Footer style={{ textAlign: 'center' }}>
             GTW Labs ©2019

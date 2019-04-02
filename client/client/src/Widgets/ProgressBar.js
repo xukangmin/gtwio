@@ -12,20 +12,15 @@ class ProgressBar extends React.Component {
     let { type, percentage, unit } = this.props;
     let barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
         
-    if (type == "HeatTransferRate"){
+    if (type == "HEAT_TRANSFER_RATE"){
       percentage = percentage * 100;
       unit = "%";
-      type = "Heat Transfer Rate";
       barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
-    } else if (type == "PerformanceFactor"){
-      // percentage = percentage * 100;
+    } else if (type == "PERFORMANCE_FACTOR"){
       unit = "-";
-      type = "Performance Factor";
       barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
-    } else if (type == "TotalUncertainty"){
-      // percentage = percentage * 100;
+    } else if (type == "TOTAL_UNCERTAINTY"){
       unit = "-";
-      type = "Total Uncertainty";
       barColor = percentage > 60 ? "rgb(8, 216, 0)" : "red";
     }
 

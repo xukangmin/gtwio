@@ -252,7 +252,7 @@ class Picker extends React.Component {
       let intervalText = this.intervalToText(this.range.interval);
       
       return (
-        <div style={{display: this.state.pickerButtonDisplay ? "block" : "none"}} >
+        <div style={{display: this.state.pickerButtonDisplay ? "inline-block" : "none"}} >
 
           <Button onClick={this.togglePickerContent} className="btn-light">
             <i className ="fas fa-calendar mr-2"></i>

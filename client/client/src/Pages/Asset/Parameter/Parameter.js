@@ -8,29 +8,6 @@ import Loader from '../../Loader';
 import { Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import InlineEdit from 'react-inline-edit-input';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-
-const AddNewParameterModal = ({device,onChange,errors,onAdd,isOpen,onClose}) => {
-    return (
-        <div>
-            <Modal isOpen={isOpen} toggle={onClose} className="modal-dialog-centered">
-                <ModalHeader toggle={onClose}>Add New Device</ModalHeader>
-                <ModalBody>
-                    <AddNewDeviceForm
-                        device={device}
-                        onChange={onChange}
-                        errors={errors}
-                    />
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={onAdd}>Add</Button>{' '}
-                    <Button color="secondary" onClick={onClose}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-      </div>
-    );
-}
 
 const ParameterInfo = (props) => {
   const parameter = props.data;

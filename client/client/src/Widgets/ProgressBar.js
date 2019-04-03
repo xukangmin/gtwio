@@ -26,7 +26,7 @@ class ProgressBar extends React.Component {
 
     const barStyle = {
       maxWidth: "200px",
-      margin: "0 50px",
+      margin: "0 20px",
       textAlign: "center"
     }
     const titleStyle = {

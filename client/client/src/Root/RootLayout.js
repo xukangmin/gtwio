@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Link from 'react-router-dom/Link';
 import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -47,6 +48,9 @@ class RootLayout extends Component {
   }
 
   render() {
+    let headerWidth = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - (this.state.collapsed ? 80 : 200) +'px';
+    console.log(headerWidth)
+    let { assets } = this.props;
     let assets_display = null;
     if (this.assets_local){
       assets_display = this.assets_local;
@@ -63,15 +67,8 @@ class RootLayout extends Component {
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
-            style={{position: 'fixed', backgroundColor: '#002140', height: '100vh'}}>
-          
-            <Menu theme="light" mode="inline" style={{height: '58px', paddingRight: '24px', paddingTop: '6px', textAlign: 'center'}}>
-              <Menu.Item key="1">
-                <span><strong>IIOT Monitor</strong></span>
-              </Menu.Item>     
-            </Menu>
-
-            <Menu theme="dark" mode="inline" className="pt-3">
+            style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
+            <Menu mode="inline">
               <Menu.Item key="2">
                 <a href="/">
                   <Icon type="home" />
@@ -95,9 +92,9 @@ class RootLayout extends Component {
             </Menu>
 
             {this.asset ? 
-              <div>
-                <Menu theme="light" mode="inline" className="mt-5">   
-                  <Menu.Item key="4">
+              <div>                
+                <Menu mode="inline" className="mt-5 pt-1" style={{backgroundColor: '#f6f6f6', height: '58px'}}> 
+                  <Menu.Item key="4">                    
                     <a href={"/asset/" + this.asset + "/dashboard"}>
                     <Icon type="folder" />
                     <span><strong>{assets_display.find(item => item.AssetID === this.asset).DisplayName}</strong></span>
@@ -105,7 +102,7 @@ class RootLayout extends Component {
                   </Menu.Item>     
                 </Menu>
               
-                <Menu theme="dark" mode="inline">
+                <Menu mode="inline">
                   <Menu.Item key="5">
                     <a href={"/asset/" + this.asset + "/dashboard"}>
                       <Icon type="dashboard" />
@@ -134,10 +131,20 @@ class RootLayout extends Component {
           </Sider>
 
           <Layout style={{background: 'white'}}>
-            <Header style={{ marginLeft: this.state.collapsed ? '80px' : '200px', padding: '10px 16px', position: 'fixed', height: '58px', width: '100%', zIndex: 999}}>
-              <TimePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
-              <div style={{display: "inline-block", width: "16px"}}></div>
-              <BaselinePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
+            <Header style={{position: 'fixed', width: '100%', zIndex: 999}}>
+              <div className="row justify-content-md-center" style={{height: '100%'}}>
+                <div className="col-md-auto" style={{padding: '15px 0 0 25px', display: 'none'}}>
+                  <span><strong>IIOT Monitor</strong></span>
+                </div>
+                <div className="col text-center" style={{paddingTop: '10px'}}>
+                  <TimePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
+                  <div style={{display: "inline-block", width: "16px"}}></div>
+                  <BaselinePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
+                </div>
+                <div className="col-md-auto" style={{paddingTop: '18px'}}>
+                  <Link to="/login">Logout</Link>
+                </div>
+              </div>          
             </Header>
             <Content style={{ padding: '70px 16px 16px 16px', marginLeft: this.state.collapsed ? '80px' : '200px'}} >
               {renderRoutes(this.props.route.routes, {store : this.props.store})}            

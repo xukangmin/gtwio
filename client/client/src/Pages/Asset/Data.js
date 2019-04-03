@@ -10,6 +10,7 @@ class Data extends React.Component {
   }
 
   render() {
+    let gridHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 90;
     let { data } = this.props;
 
     const ValueFormatter = ({value}) => {
@@ -45,12 +46,12 @@ class Data extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{height: '100vh !important'}}>
         <ReactDataGrid
           columns={col}
           rowGetter={i => row[i]}
           rowsCount={row.length}
-          minHeight={800}/>
+          minHeight={gridHeight}/>
       </div>
     );
   }

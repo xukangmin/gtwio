@@ -124,6 +124,114 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/getBaselineByAssetID:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    get:
+      tags:
+      - asset
+      description: Return list of asset's attributes for a given AssetID
+      # used as the method name of the controller
+      operationId: getBaselineByAssetID
+      parameters:
+        - name: AssetID
+          in: query
+          description: AssetID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/addBaselineByAssetID:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: add baseline to addset
+      # used as the method name of the controller
+      operationId: addBaselineByAssetID
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/deleteBaselineByAssetID:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    delete:
+      tags:
+      - asset
+      description: delete baseline to asset
+      # used as the method name of the controller
+      operationId: deleteBaselineByAssetID
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /asset/setBaselineActive:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: set baseline active
+      # used as the method name of the controller
+      operationId: setBaselineActive
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/getConfigByAssetID:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

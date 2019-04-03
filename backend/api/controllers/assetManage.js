@@ -15,13 +15,250 @@ var functions = {
   createAssetByConfig: createAssetByConfig,
   createAssetByConfigFile: createAssetByConfigFile,
   getConfigByAssetID: getConfigByAssetID,
-  getAllConfigByUserID: getAllConfigByUserID
+  getAllConfigByUserID: getAllConfigByUserID,
+  getBaselineByAssetID: getBaselineByAssetID,
+  addBaselineByAssetID: addBaselineByAssetID,
+  deleteBaselineByAssetID: deleteBaselineByAssetID,
+  setBaselineActive: setBaselineActive
 };
 
 for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
+function _getBaselineByAssetID(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOne({AssetID: assetid}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (data.Settings)
+          {
+            if (data.Settings.Baselines) {
+              resolve(data.Settings.Baselines);
+            } else {
+              resolve([]);
+            }
+          } else 
+          {
+            resolve([]);
+          }
+          
+        }
+      });
+    });
+}
+
+function getBaselineByAssetID(req, res) {
+  var assetID = req.swagger.params.AssetID.value;
+  if (assetID) {
+    _getBaselineByAssetID(assetID)
+      .then(
+        ret => {
+          shareUtil.SendSuccessWithData(res, ret);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "getBaselineByAssetID:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+      );
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
+}
+
+function _addBaselineByAssetID(baseline_body) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOneAndUpdate({AssetID: baseline_body.AssetID}, 
+        {
+          $addToSet:  {
+            "Settings.Baselines": {TimeStamp: baseline_body.TimeStamp, Active: 0}
+          }
+        }, function(err, data){
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+}
+
+
+
+function addBaselineByAssetID(req, res) { 
+  var baseline_body = req.body;
+
+  if (baseline_body.AssetID)
+  {
+    _getBaselineByAssetID(baseline_body.AssetID)
+      .then(
+        ret => {
+          // check if exists
+          var exists = false;
+          for(var i in ret) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
+              exists = true;
+            }
+          }
+          
+          if (!exists) {
+            return _addBaselineByAssetID(baseline_body);
+          } else {
+            return "exists";
+          }
+        }
+      )
+      .then(
+        ret => {
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "addBaselineByAssetID:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+      )
+
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
+
+  
+  
+}
+
+function _deleteBaselineByAssetID(baseline_body) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOneAndUpdate({AssetID: baseline_body.AssetID}, {
+        $pull: {
+          "Settings.Baselines": {TimeStamp: baseline_body.TimeStamp}
+        }
+      }, function(err, data){
+        if (err)
+        {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+}
+
+function deleteBaselineByAssetID(req, res) { 
+  var baseline_body = req.body;
+
+  if (baseline_body.AssetID)
+  {
+    _getBaselineByAssetID(baseline_body.AssetID)
+      .then(
+        ret => {
+          // check if exists
+          var exists = false;
+          for(var i in ret) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
+              exists = true;
+            }
+          }
+          
+          if (!exists) {
+            return "not exists"
+          } else {
+            return _deleteBaselineByAssetID(baseline_body);
+          }
+        }
+      )
+      .then(
+        ret => {
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "deleteBaselineByAssetID:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+      )
+
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
+}
+
+function _setBaselineActive(baseline_body) {
+  return new Promise(
+    (resolve, reject) => {
+      console.log(baseline_body);
+      Asset.findOne({AssetID: baseline_body.AssetID}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (data.Settings) {
+            if (data.Settings.Baselines) {
+              for(var i in data.Settings.Baselines) {
+                if (data.Settings.Baselines[i].TimeStamp == baseline_body.TimeStamp)
+                {
+                  data.Settings.Baselines[i].Active = baseline_body.Active;
+                  data.save();
+                }
+              }
+              resolve();
+            } else {
+              reject(new Error('Not exist'));
+            }
+          } else {
+            reject(new Error('Not exist'));
+          }
+        }
+      });
+    });
+}
+
+function setBaselineActive(req, res) {
+  var baseline_body = req.body;
+
+  if (baseline_body.AssetID)
+  {
+    _getBaselineByAssetID(baseline_body.AssetID)
+      .then(
+        ret => {
+          // check if exists
+          var exists = false;
+          for(var i in ret) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
+              exists = true;
+            }
+          }
+          
+          if (!exists) {
+            return "not exists"
+          } else {
+            return _setBaselineActive(baseline_body);
+          }
+        }
+      )
+      .then(
+        ret => {
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          var msg = "deleteBaselineByAssetID:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        }
+      )
+
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
+}
 
 
 function getAllConfigByUserID(req, res) {

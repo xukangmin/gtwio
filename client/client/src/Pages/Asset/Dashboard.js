@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import HxSvg from 'raw-loader!../../Images/Hx.svg';
-import Loader from '../Loader';
+import Loader from '../../Widgets/Loader';
 import { ProgressBar } from '../../Widgets/ProgressBar';
 
 class Dashboard extends React.Component {

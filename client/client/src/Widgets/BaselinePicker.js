@@ -1,17 +1,8 @@
 import React from 'react';
-import { matchRoutes } from 'react-router-config';
-import routes from '../_routes/routes';
-
 import { assetActions } from '../_actions/assetAction';
-import { dataActions } from '../_actions/dataAction';
-import { deviceActions } from '../_actions/deviceAction';
-import { parameterActions } from '../_actions/parameterAction';
-
-
 import { DatePicker } from 'antd';
 import 'antd/dist/antd.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-import moment from 'moment';
 
 class BaselinePicker extends React.Component {
     constructor(props) {
@@ -110,11 +101,6 @@ class BaselinePicker extends React.Component {
                 <Button color="secondary" id="cancel" onClick={this.addModalToggle}>Cancel</Button>
               </ModalFooter>
             </Modal>
-          
-         
-
-            
-          
         </div>
       );
     }

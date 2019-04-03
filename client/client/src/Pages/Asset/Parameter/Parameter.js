@@ -129,7 +129,6 @@ class Parameter extends React.Component {
   }
 
   render() {
-    const { AssetID } = this.state;
     const { parameter } = this.props;
     let { parameterData } = this.props;
 

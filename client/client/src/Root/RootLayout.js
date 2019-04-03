@@ -48,8 +48,6 @@ class RootLayout extends Component {
   }
 
   render() {
-    let headerWidth = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - (this.state.collapsed ? 80 : 200) +'px';
-    console.log(headerWidth)
     let { assets } = this.props;
     let assets_display = null;
     if (this.assets_local){

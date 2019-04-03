@@ -7,14 +7,14 @@ import { dataActions } from '../_actions/dataAction';
 import { deviceActions } from '../_actions/deviceAction';
 import { parameterActions } from '../_actions/parameterAction';
 
-import { Button, Form, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
 import 'antd/dist/antd.css';
 
 import moment from 'moment';
 
-class Picker extends React.Component {
+class TimePicker extends React.Component {
     constructor(props) {
       super(props);
 
@@ -40,7 +40,8 @@ class Picker extends React.Component {
         pickerOption: this.range.live ? 'live' : 'history',
         interval: this.range.interval,
         start: this.range.start,
-        end: this.range.end
+        end: this.range.end,
+        addModalOpen: false
       };
 
       this.togglePickerContent = this.togglePickerContent.bind(this);
@@ -51,6 +52,14 @@ class Picker extends React.Component {
       this.handlePickerApply = this.handlePickerApply.bind(this);
       this.applyPickerUpdate = this.applyPickerUpdate.bind(this);
       this.intervalToText = this.intervalToText.bind(this);
+
+      this.addModalToggle = this.addModalToggle.bind(this);
+    }
+
+    addModalToggle(t){
+      this.setState(prevState => ({
+        addModalOpen: !prevState.addModalOpen
+      }));
     }
 
     togglePickerContent(){
@@ -217,36 +226,7 @@ class Picker extends React.Component {
       }
     }
 
-    intervalToText(interval){
-      let rangeText = interval;
-      switch(rangeText.toString()){
-        case "10":
-          rangeText = "10 Minutes";
-          break;
-        case "30":
-          rangeText = "30 Minutes";
-          break;
-        case "60":
-          rangeText = "1 Hour";
-          break;
-        case "300":
-          rangeText = "5 Hours";
-          break;
-        case "600":
-          rangeText = "10 Hours";
-          break;
-        case "1440":
-          rangeText = "1 Day";
-          break;
-        case "10080":
-          rangeText = "1 Week";
-          break;
-        case "302400":
-          rangeText = "30 Days";
-          break;
-      }
-      return rangeText;
-    }
+    
 
     render() {
       let intervalText = this.intervalToText(this.range.interval);
@@ -254,7 +234,7 @@ class Picker extends React.Component {
       return (
         <div style={{display: this.state.pickerButtonDisplay ? "inline-block" : "none"}} >
 
-          <Button onClick={this.togglePickerContent} className="btn-light">
+          <Button onClick={this.addModalToggle} className="btn-light">
             <i className ="fas fa-calendar mr-2"></i>
             {this.range.live ?
               "Live Data:  " + intervalText + " from Now" :
@@ -263,7 +243,9 @@ class Picker extends React.Component {
             <i className="fas fa-angle-down ml-3"></i>
           </Button>
 
-          <div className="p-3" style={{display: this.state.pickerContentDisplay ? "block" : "none", backgroundColor: "white", position: "absolute", top: "45px", border: "1px gray solid"}}>
+          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "750px"}}>
+            <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
+            <ModalBody>
             <div className="mb-1">
               <label className="mr-3"><input type="radio" name="rangeType" checked={this.state.pickerOption == 'live'} onChange={this.handleOptionChange} value="live"/> Live </label>
               <label><input type="radio" name="rangeType" checked={this.state.pickerOption == 'history'} onChange={this.handleOptionChange} value="history"/> History</label>
@@ -300,10 +282,44 @@ class Picker extends React.Component {
             <hr className="my-3"/>
             <Button name="apply" onClick={e=>this.handlePickerApply(e)} className="btn-primary mr-2" style={{backgroundColor: '#007bff', borderColor: '#007bff'}}>Apply</Button>
             <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
-          </div>
+          
+            </ModalBody>
+          </Modal>
+          
         </div>
       );
     }
+
+    intervalToText(interval){
+      let rangeText = interval;
+      switch(rangeText.toString()){
+        case "10":
+          rangeText = "10 Minutes";
+          break;
+        case "30":
+          rangeText = "30 Minutes";
+          break;
+        case "60":
+          rangeText = "1 Hour";
+          break;
+        case "300":
+          rangeText = "5 Hours";
+          break;
+        case "600":
+          rangeText = "10 Hours";
+          break;
+        case "1440":
+          rangeText = "1 Day";
+          break;
+        case "10080":
+          rangeText = "1 Week";
+          break;
+        case "302400":
+          rangeText = "30 Days";
+          break;
+      }
+      return rangeText;
+    }
 }
 
-export default Picker;
+export default TimePicker;

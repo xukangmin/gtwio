@@ -8,11 +8,10 @@ import routes from '../_routes/routes';
 import TimePicker from '../Widgets/RangePicker';
 import BaselinePicker from '../Widgets/BaselinePicker';
 import { assetActions } from '../_actions/assetAction';
-import Loader from '../Pages/Loader';
+import Loader from '../Widgets/Loader';
 import 'antd/dist/antd.css';
-
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Menu, Icon } from 'antd';
+const { Header, Content, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 class RootLayout extends Component {
@@ -154,13 +153,13 @@ class RootLayout extends Component {
   }
 }
   
-  function mapStateToProps(state) {
-    const { data, msg } = state.asset;
-    return {
-        assets : data,
-        msg: msg
-    };
-  }
+function mapStateToProps(state) {
+  const { data, msg } = state.asset;
+  return {
+      assets : data,
+      msg: msg
+  };
+}
 
-  const connectedPage = connect(mapStateToProps)(RootLayout);
-  export { connectedPage as RootLayout };
+const connectedPage = connect(mapStateToProps)(RootLayout);
+export { connectedPage as RootLayout };

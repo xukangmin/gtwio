@@ -68,7 +68,7 @@ class RootLayout extends Component {
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
             style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
-            <Menu mode="inline">
+            <Menu mode="inline" className="pt-2">
               <Menu.Item key="2">
                 <a href="/">
                   <Icon type="home" />
@@ -146,7 +146,7 @@ class RootLayout extends Component {
                 </div>
               </div>          
             </Header>
-            <Content style={{ padding: '70px 16px 16px 16px', marginLeft: this.state.collapsed ? '80px' : '200px'}} >
+            <Content style={{ padding: '70px 16px 16px 16px', overflow: 'hidden', marginLeft: this.state.collapsed ? '80px' : '200px'}} >
               {renderRoutes(this.props.route.routes, {store : this.props.store})}            
             </Content>
           </Layout>

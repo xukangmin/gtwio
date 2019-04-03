@@ -44,7 +44,6 @@ class TimePicker extends React.Component {
         addModalOpen: false
       };
 
-      this.togglePickerContent = this.togglePickerContent.bind(this);
       this.handleOptionChange = this.handleOptionChange.bind(this);
       this.handleIntervalChange = this.handleIntervalChange.bind(this);
       this.handleRangeChange = this.handleRangeChange.bind(this);
@@ -59,12 +58,6 @@ class TimePicker extends React.Component {
     addModalToggle(t){
       this.setState(prevState => ({
         addModalOpen: !prevState.addModalOpen
-      }));
-    }
-
-    togglePickerContent(){
-      this.setState(prevState => ({
-        pickerContentDisplay: !prevState.pickerContentDisplay
       }));
     }
 
@@ -97,9 +90,7 @@ class TimePicker extends React.Component {
     }
 
     handlePickerApply(e){
-      this.setState({
-        pickerContentDisplay: false
-      });
+      this.addModalToggle();
 
       if (e.target.name == "apply"){
         if (this.state.pickerOption == 'live'){
@@ -243,8 +234,8 @@ class TimePicker extends React.Component {
             <i className="fas fa-angle-down ml-3"></i>
           </Button>
 
-          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "750px"}}>
-            <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
+          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "450px"}}>
+            <ModalHeader toggle={this.addModalToggle}>Data Time Range Setting</ModalHeader>
             <ModalBody>
             <div className="mb-1">
               <label className="mr-3"><input type="radio" name="rangeType" checked={this.state.pickerOption == 'live'} onChange={this.handleOptionChange} value="live"/> Live </label>

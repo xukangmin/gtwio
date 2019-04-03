@@ -69,35 +69,45 @@ class BaselinePicker extends React.Component {
           <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Baseline Setting</ModalHeader>
               <ModalBody>
-                <Form>
-                <FormGroup><div className = "table-responsive" style={{position: "absolute"}}>
-            <table className = "table mt-3" style={{textAlign: "center"}}>
-              <tbody>
-                {baselines.map((x,i) =>
-                  <tr key={x.key}>
-                    <th scope = "row" className="p-1">
-                      <DatePicker
-                        showTime={{ format: 'HH:mm' }}
-                        format="YYYY-MM-DD HH:mm"
-                        placeholder={['Time']}
-                        onChange={this.updateBaseline}
-                      />
-                    </th>
-                    <td className="p-1">
-                      <i className ="fas fa-trash"></i>
-                    </td>                              
-                  </tr>
-                )}
-              </tbody>
-            </table>
-            <Button color="secondary" id="add" onClick={this.addBaseline}><i className="fas fa-plus"></i> Add Another Baseline</Button>
-          </div>        </FormGroup>
+              <Form>
+                <FormGroup>
+                  <div className = "table-responsive">
+                    <table className = "table mt-3" style={{textAlign: "center"}}>
+                      <thead>
+                        <tr>
+                          <th>Select</th>
+                          <th>TimeStamp</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                        {baselines.map((x,i) =>
+                          <tr key={x.key}>
+                            <th><input type="radio" name="baseline" value="1"/></th>
+                            <th scope = "row" className="p-1">
+                              <DatePicker
+                                showTime={{ format: 'HH:mm' }}
+                                format="YYYY-MM-DD HH:mm"
+                                placeholder={['Time']}
+                                onChange={this.updateBaseline}
+                              />
+                            </th>
+                            <th className="p-1">
+                              <Button color="danger"><i className ="fas fa-trash"></i></Button>
+                            </th>                              
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                    <Button color="secondary" id="add" onClick={this.addBaseline}><i className="fas fa-plus"></i> Add Another Baseline</Button>
+                  </div>        
+                </FormGroup>
                    
-                </Form>
+              </Form>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" id="add" >Add</Button>{' '}
-                <Button color="secondary" id="cancel">Cancel</Button>
+                <Button color="primary" id="add" onClick={this.addModalToggle}>Add</Button>{' '}
+                <Button color="secondary" id="cancel" onClick={this.addModalToggle}>Cancel</Button>
               </ModalFooter>
             </Modal>
           

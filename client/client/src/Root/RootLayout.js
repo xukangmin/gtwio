@@ -36,7 +36,7 @@ class RootLayout extends Component {
     }
     
     this.state = {
-      collapsed: false,
+      collapsed: true,
     };
 
     this.onCollapse = this.onCollapse.bind(this)

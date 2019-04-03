@@ -70,18 +70,25 @@ class RootLayout extends Component {
           collapsed={this.state.collapsed}
           onCollapse={this.onCollapse}
         >
-          <div className="logo">IIOT Monitor</div>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+          <Menu theme="light" mode="inline">
+            
+
+            <Menu.Item key="5">
+          <span>IIOT Monitor</span>
+            </Menu.Item>     
+          </Menu>
+
+          <Menu theme="dark" mode="inline">
             <Menu.Item key="1">
               <a href="/">
-                <Icon type="pie-chart" />
+                <Icon type="home" />
                 <span>Overview</span>
               </a>
             </Menu.Item>
             
             <SubMenu
               key="sub-1"
-              title={<span><Icon type="user" /><span>Assets</span></span>}
+              title={<span><Icon type="bars" /><span>Assets</span></span>}
             >
             {assets_display ?
               assets_display.map((asset,index) => <Menu.Item key={'asset-' + index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
@@ -91,50 +98,56 @@ class RootLayout extends Component {
             
             <Menu.Item key="3">
               <a href="/settings">
-                <Icon type="file" />
+                <Icon type="setting" />
                 <span>Settings</span>
               </a>
             </Menu.Item>
           </Menu>
 
           {this.asset ? 
+          <div>
+        <Menu theme="light" defaultSelectedKeys={['5']} mode="inline" className="mt-5">
+            
+
+            <Menu.Item key="5">
+            <a href={"/asset/" + this.asset + "/dashboard"}>
+          <Icon type="folder" />
+          <span>{assets_display.find(item => item.AssetID === this.asset).DisplayName}</span>
+        </a>
+            </Menu.Item>     
+          </Menu>
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="4">
-              <a href={"/asset/" + this.asset + "/dashboard"}>
-                <Icon type="pie-chart" />
-                <span>{assets_display.find(item => item.AssetID === this.asset).DisplayName}</span>
-              </a>
-            </Menu.Item> 
+            
 
             <Menu.Item key="5">
               <a href={"/asset/" + this.asset + "/dashboard"}>
-                <Icon type="pie-chart" />
+                <Icon type="dashboard" />
                 <span>Dashboard</span>
               </a>
             </Menu.Item>          
                         
             <Menu.Item key="6">
               <a href={"/asset/" + this.asset + "/data"}>
-                <Icon type="file" />
+                <Icon type="table" />
                 <span>Data</span>
               </a>
             </Menu.Item>
 
             <Menu.Item key="9">
               <a href={"/asset/" + this.asset + "/configurations"}>
-                <Icon type="file" />
+                <Icon type="setting" />
                 <span>Configurations</span>
               </a>
             </Menu.Item>
-          </Menu>
+          </Menu></div>
           :
           <div></div>
           }
           
 
         </Sider>
-        <Layout>
-          <Header style={{ background: '#fff', padding: '16px', position: 'fixed', zIndex: 999}}>
+        <Layout style={{background: 'white'}}>
+          <Header style={{ padding: '16px', position: 'fixed', zIndex: 999}}>
             <Picker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
             <BaselinePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
           </Header>

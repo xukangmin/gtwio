@@ -225,7 +225,7 @@ class TimePicker extends React.Component {
       return (
         <div style={{display: this.state.pickerButtonDisplay ? "inline-block" : "none"}} >
 
-          <Button onClick={this.addModalToggle} className="btn-light">
+          <Button onClick={this.addModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-calendar mr-2"></i>
             {this.range.live ?
               "Live Data:  " + intervalText + " from Now" :
@@ -269,14 +269,12 @@ class TimePicker extends React.Component {
                 />
               </div>
             </Form>
-
-            <hr className="my-3"/>
-            <Button name="apply" onClick={e=>this.handlePickerApply(e)} className="btn-primary mr-2" style={{backgroundColor: '#007bff', borderColor: '#007bff'}}>Apply</Button>
-            <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
-          
             </ModalBody>
+            <ModalFooter>
+              <Button name="apply" color="primary" onClick={e=>this.handlePickerApply(e)}>Apply</Button>
+              <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
+            </ModalFooter>
           </Modal>
-          
         </div>
       );
     }

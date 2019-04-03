@@ -22,6 +22,7 @@
   padding: 15px;
   margin: 0 auto;
   border: 3px dotted rgba(0,0,0,0.1);
+  background-color: white;
 }
 
 .panel-login>.panel-heading {

@@ -1,17 +1,8 @@
 import React from 'react';
-import { matchRoutes } from 'react-router-config';
-import routes from '../_routes/routes';
-
 import { assetActions } from '../_actions/assetAction';
-import { dataActions } from '../_actions/dataAction';
-import { deviceActions } from '../_actions/deviceAction';
-import { parameterActions } from '../_actions/parameterAction';
-
-
 import { DatePicker } from 'antd';
 import 'antd/dist/antd.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-import moment from 'moment';
 
 class BaselinePicker extends React.Component {
     constructor(props) {
@@ -59,7 +50,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
 
 
-          <Button onClick={this.addModalToggle} className="btn-light">
+          <Button onClick={this.addModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
             Baseline:
             <i className="fas fa-angle-down ml-3"></i>
@@ -75,7 +66,7 @@ class BaselinePicker extends React.Component {
                     <table className = "table mt-3" style={{textAlign: "center"}}>
                       <thead>
                         <tr>
-                          <th>Select</th>
+                          <th>Active</th>
                           <th>TimeStamp</th>
                           <th>Delete</th>
                         </tr>
@@ -106,15 +97,10 @@ class BaselinePicker extends React.Component {
               </Form>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" id="add" onClick={this.addModalToggle}>Add</Button>{' '}
+                <Button color="primary" id="add" onClick={this.addModalToggle}>Add</Button>
                 <Button color="secondary" id="cancel" onClick={this.addModalToggle}>Cancel</Button>
               </ModalFooter>
             </Modal>
-          
-         
-
-            
-          
         </div>
       );
     }

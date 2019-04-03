@@ -6,7 +6,7 @@ import { parameterActions } from '../../_actions/parameterAction';
 
 import AddDevice from '../../Modals/AddDevice';
 import AddParameter from '../../Modals/AddParameter';
-import Loader from '../Loader';
+import Loader from '../../Widgets/Loader';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col} from 'reactstrap';
 import classnames from 'classnames';
 

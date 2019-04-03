@@ -9,7 +9,7 @@ import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import { Table } from '../../../Widgets/Table';
 const queryString = require('query-string');
 
-import Loader from '../../Loader';
+import Loader from '../../../Widgets/Loader';
 
 class Tag extends React.Component {
   constructor(props){

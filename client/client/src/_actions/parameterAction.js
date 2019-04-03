@@ -29,9 +29,6 @@ const getParameter = (parameterID) => {
             .then(
                 data => {
                     dispatch(success(data));
-                    if (data.CurrentTimeStamp) {
-                      dispatch(dataActions.getSingleParameterData(data.ParameterID, data.CurrentTimeStamp - 600000, data.CurrentTimeStamp));
-                    }
                 },
                 error => {
                     dispatch(failure(error));

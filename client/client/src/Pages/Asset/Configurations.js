@@ -103,7 +103,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return <button type="button" title="Go to Data Page" className="btn btn-link" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
+      return <button type="button" title="Go to Data Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
     }
 
     function parameterFormatter(cell, row) {

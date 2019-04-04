@@ -34,7 +34,7 @@ class List extends React.Component {
     const { assets } = this.props;
 
     function linkFormatter(cell){
-      return <button type="button" title="Go to Asset's Dashboard Page" className="btn btn-link" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
+      return <button type="button" title="Go to Asset's Dashboard Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
     }
 
     function countFormatter(cell){

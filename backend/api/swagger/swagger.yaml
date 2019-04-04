@@ -182,6 +182,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/updateBaseline:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: updateBaseline baseline to addset
+      # used as the method name of the controller
+      operationId: updateBaseline
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/deleteBaselineByAssetID:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

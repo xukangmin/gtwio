@@ -202,8 +202,8 @@ function _math_op_convert(streval) {
 function _perform_calculation(dataobj, equation, latestTimeStamp) {
   return new Promise(
     (resolve, reject) => {
-      // console.log("_perform_calculation:");
-      // console.log(dataobj);
+      //console.log("_perform_calculation:");
+      //console.log(dataobj);
       var new_eval = equation;
 
       var reg = /\[[^\]]+\]/g;

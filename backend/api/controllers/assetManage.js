@@ -19,11 +19,69 @@ var functions = {
   getBaselineByAssetID: getBaselineByAssetID,
   addBaselineByAssetID: addBaselineByAssetID,
   deleteBaselineByAssetID: deleteBaselineByAssetID,
-  setBaselineActive: setBaselineActive
+  setBaselineActive: setBaselineActive,
+  updateBaseline: updateBaseline
 };
 
 for (var key in functions) {
   module.exports[key] = functions[key];
+}
+
+function _remove_duplicates(arr) {
+  var new_arr = [];
+
+  var exists;
+  for(var i in arr) {
+    exists = false;
+    for(var j in new_arr) {
+      if (arr[i].TimeStamp === new_arr[j].TimeStamp) {
+        exists = true;
+      }
+    }
+    if (!exists) {
+      new_arr.push(arr[i]);
+    }
+  }
+
+  return new_arr;
+}
+
+function updateBaseline(req, res) {
+  var baseline_body = req.body;
+
+  if (baseline_body.AssetID)
+  {
+    if (baseline_body.Baselines)
+    {
+      Asset.findOne({AssetID: baseline_body.AssetID}, function(err, data) {
+        if (err) {
+          var msg = "updateBaseline:" + JSON.stringify(err, null, 2);
+          shareUtil.SendInternalErr(res,msg);
+        } else {
+          if (data) {
+             if (typeof data.Settings === 'undefined') {
+                data.Settings = {};
+             }
+
+
+             baseline_body.Baselines = _remove_duplicates(baseline_body.Baselines);
+
+             data.Settings.Baselines = baseline_body.Baselines;
+
+             data.save();
+             
+             shareUtil.SendSuccess(res);
+          } else {
+            shareUtil.SendInternalErr(res,'Asset Not found');
+          }
+        }
+      });
+    } else {
+      shareUtil.SendInvalidInput(res, 'Baseline not found');
+    }
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
 }
 
 function _getBaselineByAssetID(assetid) {
@@ -33,15 +91,19 @@ function _getBaselineByAssetID(assetid) {
         if (err) {
           reject(err);
         } else {
-          if (data.Settings)
-          {
-            if (data.Settings.Baselines) {
-              resolve(data.Settings.Baselines);
-            } else {
+          if (data) {
+            if (data.Settings)
+            {
+              if (data.Settings.Baselines) {
+                resolve(data.Settings.Baselines);
+              } else {
+                resolve([]);
+              }
+            } else 
+            {
               resolve([]);
             }
-          } else 
-          {
+          } else {
             resolve([]);
           }
           

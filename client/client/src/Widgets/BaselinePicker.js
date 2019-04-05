@@ -15,13 +15,13 @@ class BaselinePicker extends React.Component {
 
       const {data} = props;
       this.asset = data.AssetID;
-      this.baselines = data.Settings.Baselines;
+      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
       this.user = JSON.parse(localStorage.getItem('user'));
 
       this.state = {
         asset: this.asset,
         baselines: this.baselines,
-        activeBaseline: this.baselines.findIndex(x=>x.Active==1),
+        activeBaseline: this.baselines.findIndex(x=>x.Active==1) ? this.baselines.findIndex(x=>x.Active==1) : "",
         baselineModalOpen: false
       }
 
@@ -54,7 +54,7 @@ class BaselinePicker extends React.Component {
     }
 
     deleteBaseline(t){
-      let newBaselines = this.state.baselines.filter(x=>x.TimeStamp != t);
+      let newBaselines = this.state.baselines.filter(x=>x.TimeStamp != t) || [];
       this.setState({
         baselines: newBaselines
       });
@@ -96,7 +96,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
           <i className ="fas fa-clock mr-2"></i>
-          Baseline: {this.state.activeBaseline!=undefined ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+          Baseline: {this.state.activeBaseline+1>0 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
           <i className="fas fa-angle-down ml-3"></i>
         </Button>    
 

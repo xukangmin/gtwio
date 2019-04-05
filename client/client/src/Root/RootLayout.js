@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
-import TimePicker from '../Widgets/RangePicker';
-import BaselinePicker from '../Widgets/BaselinePicker';
+import { Pickers } from '../Widgets/Pickers';
+// import { BaselinePicker } from '../Widgets/BaselinePicker';
 import { assetActions } from '../_actions/assetAction';
 import Loader from '../Widgets/Loader';
 import 'antd/dist/antd.css';
@@ -18,27 +18,31 @@ class RootLayout extends Component {
   constructor(props) {
     super(props);
     
+    this.state = {
+      collapsed: true,
+      pickersDisplay: true
+    };
+
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
 
     if (this.user && !this.assets_local)
     {
       this.props.dispatch(assetActions.getAssets(this.user));
-    }
+    }    
 
     let m_res = matchRoutes(routes, window.location.pathname);
-    for (var item in m_res) {
+    for(var item in m_res) {
       if (m_res[item].match.isExact) {
-        if (m_res[item].match.params.assetID) {
-          this.asset = m_res[item].match.params.assetID;
-        }
+        this.asset = m_res[item].match.params.assetID;
       }
+      // if (m_res[item].match.url.includes("configurations") || !this.asset){
+      //   this.setState({
+      //     pickersDisplay: false
+      //   });
+      // }
     }
-    
-    this.state = {
-      collapsed: true,
-    };
-
+        
     this.onCollapse = this.onCollapse.bind(this)
   }
   
@@ -134,10 +138,11 @@ class RootLayout extends Component {
                   <span><strong>IIOT Monitor</strong></span>
                 </div>
                 <div className="col text-center" style={{paddingTop: '10px'}}>
-                  <TimePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
-                  <div style={{display: "inline-block", width: "16px"}}></div>
-                  <BaselinePicker style={{display: "inline-block"}} dispatch={this.props.dispatch}/>
-                </div>
+                  {this.asset ?
+                  <Pickers style={{display: "inline-block"}} assets={assets_display} dispatch={this.props.dispatch}/>
+                  :
+                  <div></div>}
+                  </div>
                 <div className="col-md-auto" style={{paddingTop: '18px'}}>
                   <Link to="/login">Logout</Link>
                 </div>

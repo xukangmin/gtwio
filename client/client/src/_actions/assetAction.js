@@ -192,6 +192,85 @@ const updateAsset = (user, assetID, key, value) => {
     function failure(error) { toastr.warning("Failed to Update Asset"); return { type: gConstants.UPDATE_ASSET_FAILURE, error } }
 }
 
+const getBaselines = (user, assetID) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.getBaselines(user, assetID)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_BASELINES_REQUEST } }
+    function success(data) { return { type: gConstants.GET_BASELINES_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_BASELINES_FAILURE, error } }
+}
+
+const addBaseline = (user, assetID, timestamp) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.addBaseline(user, assetID, timestamp)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getBaselines(assetID));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.ADD_BASELINE_REQUEST } }
+    function success(msg) { return { type: gConstants.ADD_BASELINE_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.ADD_BASELINE_FAILURE, error } }
+}
+
+const deleteBaseline = (user, assetID, timestamp) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.deleteBaseline(user, assetID, timestamp)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getBaselines(assetID));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.DELETE_BASELINE_REQUEST } }
+    function success(msg) { return { type: gConstants.DELETE_BASELINE_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.DELETE_BASELINE_FAILURE, error } }
+}
+
+const updateBaseline = (user, assetID, data) => {
+  return dispatch => {
+        dispatch(request());
+        assetServices.updateBaseline(assetID, data)
+            .then(
+                info => {
+                    dispatch(getAsset(user, assetID));
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.UPDATE_BASELINE_REQUEST } }
+    function success(data) { toastr.success("Baseline Updated"); return { type: gConstants.UPDATE_BASELINE_SUCCESS, data } }
+    function failure(error) { toastr.warning("Failed to Update Baseline"); return { type: gConstants.UPDATE_BASELINE_FAILURE, error } }
+}
+
 export const assetActions = {
     getAssets,
     getAsset,
@@ -201,5 +280,9 @@ export const assetActions = {
     addAssetByConfig,
     addAssetByConfigFile,
     deleteAsset,
-    updateAsset
+    updateAsset,
+    getBaselines,
+    addBaseline,
+    deleteBaseline,
+    updateBaseline
 };

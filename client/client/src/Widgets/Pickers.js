@@ -1,6 +1,7 @@
 import React from 'react';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
+import { connect } from 'react-redux';
 
 import { assetActions } from '../_actions/assetAction';
 import { dataActions } from '../_actions/dataAction';
@@ -11,10 +12,10 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, La
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
 import 'antd/dist/antd.css';
-
 import moment from 'moment';
+import { BaselinePicker } from './BaselinePicker.js';
 
-class TimePicker extends React.Component {
+class Pickers extends React.Component {
     constructor(props) {
       super(props);
 
@@ -35,13 +36,11 @@ class TimePicker extends React.Component {
       }
 
       this.state = {
-        pickerButtonDisplay: true,
-        pickerContentDisplay: false,
         pickerOption: this.range.live ? 'live' : 'history',
         interval: this.range.interval,
         start: this.range.start,
         end: this.range.end,
-        addModalOpen: false
+        rangeModalOpen: false
       };
 
       this.handleOptionChange = this.handleOptionChange.bind(this);
@@ -51,13 +50,12 @@ class TimePicker extends React.Component {
       this.handlePickerApply = this.handlePickerApply.bind(this);
       this.applyPickerUpdate = this.applyPickerUpdate.bind(this);
       this.intervalToText = this.intervalToText.bind(this);
-
-      this.addModalToggle = this.addModalToggle.bind(this);
+      this.rangeModalToggle = this.rangeModalToggle.bind(this);
     }
 
-    addModalToggle(t){
+    rangeModalToggle(t){
       this.setState(prevState => ({
-        addModalOpen: !prevState.addModalOpen
+        rangeModalOpen: !prevState.rangeModalOpen
       }));
     }
 
@@ -76,9 +74,9 @@ class TimePicker extends React.Component {
     handleRangeChange(times){
       this.setState({
         start: moment(times[0]).format('X'),
-        end: moment(times[1]).format('X')
+        end: moment(times[1]).format('X'),
+        rangeModalOpen: true
       });
-
       this.updateRangeState(times[0],times[1]);
     }
 
@@ -90,7 +88,7 @@ class TimePicker extends React.Component {
     }
 
     handlePickerApply(e){
-      this.addModalToggle();
+      this.rangeModalToggle();
 
       if (e.target.name == "apply"){
         if (this.state.pickerOption == 'live'){
@@ -133,15 +131,10 @@ class TimePicker extends React.Component {
           parameter = m_res[item].match.params.parameterID;
           flow = m_res[item].match.params.flowID;
         }
-        if (m_res[item].match.url.includes("configurations")){
-          this.setState({
-            pickerButtonDisplay: 'none'
-          });
-        }
       }
 
       let liveDispatchInterval = 60*1000;
-      
+            
       if (asset && device)
       {
         if (this.range.live){
@@ -217,25 +210,25 @@ class TimePicker extends React.Component {
       }
     }
 
-    
-
     render() {
       let intervalText = this.intervalToText(this.range.interval);
-      
-      return (
-        <div style={{display: this.state.pickerButtonDisplay ? "inline-block" : "none"}} >
 
-          <Button onClick={this.addModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
+      return (
+        <div style={{display: 'inline-block'}}>
+          <Button onClick={this.rangeModalToggle} className="btn-light mr-3" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-calendar mr-2"></i>
             {this.range.live ?
               "Live Data:  " + intervalText + " from Now" :
               "History Data:  " + moment(parseInt(this.range.start)*1000).format('YYYY-MM-DD H:mm') + " ~ " + moment(parseInt(this.range.end)*1000).format('YYYY-MM-DD H:mm')
             }
             <i className="fas fa-angle-down ml-3"></i>
-          </Button>
-
-          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "450px"}}>
-            <ModalHeader toggle={this.addModalToggle}>Data Time Range Setting</ModalHeader>
+          </Button>          
+          {this.props.assetData?
+           <BaselinePicker data={this.props.assetData}/>:
+           <span></span>
+          }               
+          <Modal isOpen={this.state.rangeModalOpen} toggle={this.rangeModalToggle} backdrop={false} style={{maxWidth: "450px"}}>
+            <ModalHeader toggle={this.rangeModalToggle}>Data Time Range Setting</ModalHeader>
             <ModalBody>
             <div className="mb-1">
               <label className="mr-3"><input type="radio" name="rangeType" checked={this.state.pickerOption == 'live'} onChange={this.handleOptionChange} value="live"/> Live </label>
@@ -275,6 +268,8 @@ class TimePicker extends React.Component {
               <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
             </ModalFooter>
           </Modal>
+
+          
         </div>
       );
     }
@@ -311,4 +306,12 @@ class TimePicker extends React.Component {
     }
 }
 
-export default TimePicker;
+function mapStateToProps(state) {
+  const { data } = state.asset;
+  return {
+    assetData: data
+  };
+}
+
+const connectedPage = connect(mapStateToProps)(Pickers);
+export { connectedPage as Pickers };

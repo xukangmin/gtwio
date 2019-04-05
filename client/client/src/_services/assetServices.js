@@ -247,6 +247,107 @@ const updateAsset = (assetID, key, value) => {
     });
 }
 
+const getBaselines = (user, assetID) => {
+    const requestOptions = {
+        headers: { 'Content-Type': 'application/json' ,
+                   'x-api-key' : user.ApiKey},
+        method: 'GET'
+    };
+    return fetch(process.env.API_HOST + '/asset/getBaselineByAssetID?AssetID=' + assetID, requestOptions)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        })
+        .then(data => {
+            localStorage.setItem('assets', JSON.stringify(data));
+            return data;
+        });
+}
+
+const addBaseline = (user, assetID, timestamp) => {
+    let data = {
+      'AssetID': assetID,
+      'TimeStamp': timestamp
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json',
+                   'x-api-key' : user.ApiKey },
+        body: JSON.stringify(data)
+    };
+    return fetch(process.env.API_HOST + '/asset/addBaselineByAssetID', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(data => {
+        return data;
+    });
+}
+
+const deleteBaseline = (user, assetID, timestamp) => {
+
+    const requestOptions = {
+        method: 'DELETE'
+    };
+
+    return fetch(process.env.API_HOST + '/asset/deleteBaselineByAssetID?AssetID=' + assetID + '&TimeStamp=' + timestamp, requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
+const updateBaseline = (assetID, data) => {
+    let body = {
+      AssetID: assetID,
+      Baselines: data
+    };
+    console.log(body);
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(process.env.API_HOST + '/asset/updateBaseline', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const assetServices = {
     getAssets,
     getAsset,
@@ -256,5 +357,9 @@ export const assetServices = {
     addAssetByConfig,
     addAssetByConfigFile,
     deleteAsset,
-    updateAsset
+    updateAsset,
+    getBaselines,
+    addBaseline,
+    deleteBaseline,
+    updateBaseline
 };

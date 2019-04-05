@@ -2,16 +2,22 @@ import { gConstants } from '../Constants/constants';
 
 export const asset = (state = {}, action) => {
   switch (action.type) {
+    
     case gConstants.GET_ASSETS_REQUEST:
-    return {
-        ...state,
-        gettingAsset: true
-    };
+        return {
+            ...state,
+            gettingAsset: true
+        };
     case gConstants.GET_ASSETS_SUCCESS:
-    return {
-        gotData: true,
-        data: action.data
-    };
+        return {
+            gotData: true,
+            data: action.data
+        };
+    case gConstants.GET_ASSETS_FAILURE:
+        return {
+            error: action.error
+        };
+    //
     case gConstants.GET_ASSET_REQUEST:
         return {
             ...state,
@@ -22,16 +28,18 @@ export const asset = (state = {}, action) => {
             gotData: true,
             data: action.data
         };
+    case gConstants.GET_ASSET_FAILURE:
+        return {
+            error: action.error
+        };
+    //
     case gConstants.GET_ASSET_TAG_SUCCESS:
         return {
           ...state,
           gotData: true,
           tags: action.data
         };
-    case gConstants.GET_ASSET_FAILURE:
-        return {
-            error: action.error
-        };
+    
     case gConstants.GET_DEVICES_BY_ASSET_REQUEST:
         return {
             ...state,
@@ -53,7 +61,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-    case gConstants.ADD_ASSET_BY_CONFIG_REQUeST:
+    case gConstants.ADD_ASSET_BY_CONFIG_REQUEST:
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_SUCCESS:
         return {
@@ -64,7 +72,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-    case gConstants.ADD_ASSET_BY_CONFIG_FILE_REQUeST:
+    case gConstants.ADD_ASSET_BY_CONFIG_FILE_REQUEST:
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_FILE_SUCCESS:
         return {
@@ -75,6 +83,35 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+
+    case gConstants.GET_BASELINES_REQUEST:
+        return {
+            ...state,
+            gettingAsset: true
+        };
+    case gConstants.GET_BASELINES_SUCCESS:
+        return {
+            ...state,
+            baselines: action.data
+        };
+    case gConstants.GET_BASELINES_FAILURE:
+        return {
+            error: action.error
+        };
+
+    case gConstants.ADD_BASELINE_REQUEST:
+        return state;
+    case gConstants.ADD_BASELINE_SUCCESS:
+        return {
+            addedData: true,
+            msg: action.msg
+        };
+    case gConstants.ADD_BASELINE_FAILURE:
+        return {
+            error: action.error
+        };
+
+
     default:
         return state;
   }

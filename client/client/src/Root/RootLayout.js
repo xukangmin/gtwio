@@ -143,7 +143,7 @@ class RootLayout extends Component {
                   :
                   <div></div>}
                   </div>
-                <div className="col-md-auto" style={{paddingTop: '18px'}}>
+                <div className="col-md-auto" style={{paddingTop: '0'}}>
                   <Link to="/login">Logout</Link>
                 </div>
               </div>          

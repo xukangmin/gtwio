@@ -107,26 +107,39 @@ function _replaceEquation(originalEquation, taglist, newlist) {
   var new_equation = originalEquation;
   var fulllist = _getFullTagList(originalEquation);
   fulllist = _remove_duplicates(fulllist);
-
+  //console.log(taglist);
+  //console.log(newlist);
+  //console.log(fulllist);
   if (taglist.length === newlist.length)
   {
-    for(var i in taglist) {
+    for(var i in fulllist) {
       var singleout = "";
-      var singlePara = fulllist[i]; // [ShellInlet/Temperature,0,0,0]
-      if (typeof newlist[i] === 'array' || typeof newlist[i] === 'object')
+      var singlein = fulllist[i];
+
+      // lookup parameter in taglist
+      var tag_index = 0;
+      for(var j in taglist) {
+        if (singlein.includes(taglist[j]))
+        {
+          tag_index = j;
+          break;
+        }
+      }
+
+      if (typeof newlist[tag_index] === 'array' || typeof newlist[tag_index] === 'object')
       {
-        for(var j in newlist[i]) {
-          singleout += singlePara.replace(taglist[i], newlist[i][j]) + ",";
+        for(var j in newlist[tag_index]) {
+          singleout += singlein.replace(taglist[tag_index], newlist[tag_index][j]) + ",";
         }
         singleout = singleout.substring(0,singleout.length - 1);
-
-      } else if (typeof newlist[i] === 'string') {
-        singleout = singlePara.replace(taglist[i], newlist[i]);
+      } else {
+        singleout = singlein.replace(taglist[tag_index], newlist[tag_index]);
       }
-      fulllist[i] = fulllist[i].replace('[','\\[');
-      fulllist[i] = fulllist[i].replace(']','\\]');
 
-      var re = new RegExp(fulllist[i], 'g');
+      singlein = singlein.replace('[','\\[');
+      singlein = singlein.replace(']','\\]');
+
+      var re = new RegExp(singlein, 'g');
       new_equation = new_equation.replace(re, singleout);
     }
   } else {
@@ -152,6 +165,8 @@ function _createEquation(assetid, paraobj) {
                     paraobj.OriginalEquation = paraobj.Equation;
                     paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
                     
+                    //console.log("OriginalEquation=" + paraobj.OriginalEquation);
+                    //console.log("resolved equation=" + paraobj.Equation);
                     var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
                     if (filter_para.length === 1) {
                       // para already exist, update equation and name
@@ -685,21 +700,26 @@ function _add_single_parameter_require(paraid, ori_para_id){
         if (err) {
           reject(err);
         } else {
-          //console.log(data);
-          if (!data.RequiredBy.includes(ori_para_id)) {
-            // add paraid to required by list
-            Parameter.update({ParameterID: paraid}, {
-              $push: {
-                RequiredBy: ori_para_id
-              }
-            },function(err, data){
-              if (!err) {
-                resolve();
-              }
-            });
+          if (data)
+          {
+            if (!data.RequiredBy.includes(ori_para_id)) {
+              // add paraid to required by list
+              Parameter.update({ParameterID: paraid}, {
+                $push: {
+                  RequiredBy: ori_para_id
+                }
+              },function(err, data){
+                if (!err) {
+                  resolve();
+                }
+              });
+            } else {
+              resolve();
+            }
           } else {
             resolve();
           }
+
 
         }
       });
@@ -747,6 +767,8 @@ function _updateRequireListByEquation(paraid, equation, callback) {
   if (paralist.length > 0) {
       paralist = paralist.map(item => item.replace(/[\[\]]/g,'').split(',')[0]);
 
+      paralist = _remove_duplicates(paralist);
+      
       _updateRequireList(paraid, paralist, callback);
   }
 }

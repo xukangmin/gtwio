@@ -794,6 +794,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
               const _createEquations = async (assetid, equations) =>
               {
                   for (let i = 0; i < equations.length; i++) {
+                    //console.log("creating equation" + i + "," + JSON.stringify(equations[i],null,2));
                     let ret1 = await parameterManage._createEquation(assetid, equations[i]);
                   }
                   return assetid;
@@ -804,6 +805,8 @@ function _createSingleAsset(userid, singleAssetConfig) {
           )
           .then(
             ret => {
+              console.log("create equation done");
+
               return dataManage._getAllParameterByAssetID(ret);
             }
           )

@@ -204,6 +204,7 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
     (resolve, reject) => {
       //console.log("_perform_calculation:");
       //console.log(dataobj);
+      //console.log(equation);
       var new_eval = equation;
 
       var reg = /\[[^\]]+\]/g;
@@ -219,10 +220,10 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            //console.log(new_eval);
+            //console.log("new_eval=" + new_eval);
             try {
               var result = math.eval(new_eval);
-              //console.log(result);
+              // console.log("result=" + result);
               resolve(result);
             }
             catch(err) {
@@ -618,13 +619,19 @@ function _getAllParameterBySerialNumber(sn, callback) {
     if (err) {
       callback(err, null);
     } else {
-      Promise.all(data.Parameters.map(_getParameter))
+      if (data)
+      {
+        Promise.all(data.Parameters.map(_getParameter))
         .then(ret => {
           callback(null, ret);
         })
         .catch(err => {
           callback(err, null);
-        })
+        });
+      } else {
+        callback('No device match serial number', null);
+      }
+
     }
 
   });
@@ -876,8 +883,8 @@ function addDataByDeviceID(req, res)  {
     // find parameter id
     _getAllParameterByDeviceID(dataobj.DeviceID, function(err, data){
       if (err) {
-        var msg = "Device find Error:" + JSON.stringify(err, null, 2);
-        shareUtil.SendInternalErr(res,msg);
+        var msg = "Device find Error1:" + JSON.stringify(err, null, 2);
+        shareUtil.SendInvalidInput(res,msg);
       } else {
         // add same data to all qualified parameters
         var timestamp = 0;
@@ -952,8 +959,8 @@ function addDataBySerialNumber(req, res) {
     // find parameter id
     _getAllParameterBySerialNumber(dataobj.SerialNumber, function(err, data){
       if (err) {
-        var msg = "Device find Error:" + JSON.stringify(err, null, 2);
-        shareUtil.SendInternalErr(res,msg);
+        var msg = "Device find Error2:" + JSON.stringify(err, null, 2);
+        shareUtil.SendInvalidInput(res,msg);
       } else {
         // add same data to all qualified parameters
         var timestamp = 0;

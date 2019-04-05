@@ -133,7 +133,6 @@ function createDemoAccount() {
   )
   .then(
     ret => {
-      
       return createAsset(userid, asconfig1);
     }
   )

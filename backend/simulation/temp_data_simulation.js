@@ -44,7 +44,7 @@ function generate_simulation_data(sn, type, lowRange, highRange) {
         
       })
       .catch(err => {
-        console.error(err);
+        //console.error(err);
       });
 }
 

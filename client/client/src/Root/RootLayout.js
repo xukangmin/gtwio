@@ -9,7 +9,7 @@ import { Pickers } from '../Widgets/Pickers';
 // import { BaselinePicker } from '../Widgets/BaselinePicker';
 import { assetActions } from '../_actions/assetAction';
 import Loader from '../Widgets/Loader';
-import 'antd/dist/antd.css';
+import './antd.css';
 import { Layout, Menu, Icon } from 'antd';
 const { Header, Content, Sider } = Layout;
 const SubMenu = Menu.SubMenu;

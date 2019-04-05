@@ -25,8 +25,8 @@ class Radar extends React.Component {
     let ValueMin = CurrentValueMean - 0.5;
     let MinValueList = [ValueMin, ValueMin, ValueMin, ValueMin, ValueMin]
 
-    let PlotMax = Math.ceil(Math.max(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Max)))+1;
-    let PlotMin = Math.floor(Math.min(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Min)))-1;
+    let PlotMax = Math.ceil(Math.max(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Max)))+1 || 0;
+    let PlotMin = Math.floor(Math.min(...data.map((singleDevice,i) => singleDevice.Parameters[0].DataStatistics.Min)))-1 || 0;
 
     const plotData = [{
       name: 'Upper Alarm Limit',

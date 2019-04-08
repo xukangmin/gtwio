@@ -25,6 +25,7 @@ class RootLayout extends Component {
 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
+    this.activeNav = 'home';
 
     if (this.user && !this.assets_local)
     {
@@ -34,15 +35,19 @@ class RootLayout extends Component {
     let m_res = matchRoutes(routes, window.location.pathname);
     for(var item in m_res) {
       if (m_res[item].match.isExact) {
-        this.asset = m_res[item].match.params.assetID;
+        this.asset = m_res[item].match.params.assetID;        
       }
-      // if (m_res[item].match.url.includes("configurations") || !this.asset){
-      //   this.setState({
-      //     pickersDisplay: false
-      //   });
-      // }
-    }
-        
+
+      if(m_res[item].match.url.includes("dashboard")){
+        this.activeNav = "dashboard";
+      } else if (m_res[item].match.url.includes("data")){
+        this.activeNav = "data";
+      } else if (m_res[item].match.url.includes("configurations")){
+        this.activeNav = "configurations";
+      } else if (m_res[item].match.url.includes("settings")){
+        this.activeNav = "settings";
+      }
+    } 
     this.onCollapse = this.onCollapse.bind(this)
   }
   
@@ -69,8 +74,8 @@ class RootLayout extends Component {
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
             style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
-            <Menu mode="inline" className="pt-2">
-              <Menu.Item key="2">
+            <Menu defaultSelectedKeys={[this.activeNav]} mode="inline" className="pt-2">
+              <Menu.Item key="home">
                 <a href="/">
                   <Icon type="home" />
                   <span>Overview</span>
@@ -84,7 +89,7 @@ class RootLayout extends Component {
                 :<Loader/>}
               </SubMenu>
               
-              <Menu.Item key="3">
+              <Menu.Item key="settings">
                 <a href="/settings">
                   <Icon type="setting" />
                   <span>Settings</span>
@@ -94,7 +99,7 @@ class RootLayout extends Component {
 
             {this.asset ? 
               <div>                
-                <Menu mode="inline" className="mt-5 pt-1" style={{backgroundColor: '#f6f6f6', height: '58px'}}> 
+                <Menu defaultSelectedKeys={[this.activeNav]} mode="inline" className="mt-5 pt-1" style={{backgroundColor: '#f6f6f6', height: '58px'}}> 
                   <Menu.Item key="4">                    
                     <a href={"/asset/" + this.asset + "/dashboard"}>
                     <Icon type="folder" />
@@ -103,22 +108,22 @@ class RootLayout extends Component {
                   </Menu.Item>     
                 </Menu>
               
-                <Menu mode="inline">
-                  <Menu.Item key="5">
+                <Menu defaultSelectedKeys={[this.activeNav]} mode="inline">
+                  <Menu.Item key="dashboard">
                     <a href={"/asset/" + this.asset + "/dashboard"}>
                       <Icon type="dashboard" />
                       <span>Dashboard</span>
                     </a>
                   </Menu.Item>          
                             
-                  <Menu.Item key="6">
+                  <Menu.Item key="data">
                     <a href={"/asset/" + this.asset + "/data"}>
                       <Icon type="table" />
                       <span>Data</span>
                     </a>
                   </Menu.Item>
 
-                  <Menu.Item key="7">
+                  <Menu.Item key="configurations">
                     <a href={"/asset/" + this.asset + "/configurations"}>
                       <Icon type="setting" />
                       <span>Configurations</span>

@@ -74,7 +74,7 @@ class RootLayout extends Component {
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
             style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
-            <Menu defaultSelectedKeys={[this.activeNav]} mode="inline" className="pt-2">
+            <Menu defaultSelectedKeys={[this.activeNav, this.asset]} mode="inline" className="pt-2">
               <Menu.Item key="home">
                 <a href="/">
                   <Icon type="home" />
@@ -85,7 +85,7 @@ class RootLayout extends Component {
               <SubMenu
                 key="sub-1"
                 title={<span><Icon type="bars" /><span>Assets</span></span>}>
-                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={'asset-' + index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
+                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
                 :<Loader/>}
               </SubMenu>
               

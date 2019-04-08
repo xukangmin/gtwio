@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 import { matchRoutes } from 'react-router-config';
 import routes from '../_routes/routes';
 import { Pickers } from '../Widgets/Pickers';
-// import { BaselinePicker } from '../Widgets/BaselinePicker';
 import { assetActions } from '../_actions/assetAction';
 import Loader from '../Widgets/Loader';
 import './antd.css';
@@ -19,7 +18,7 @@ class RootLayout extends Component {
     super(props);
     
     this.state = {
-      collapsed: true,
+      sideNavCollapsed: true,
       pickersDisplay: true
     };
 
@@ -27,8 +26,7 @@ class RootLayout extends Component {
     this.assets_local = JSON.parse(localStorage.getItem('assets'));
     this.activeNav = 'home';
 
-    if (this.user && !this.assets_local)
-    {
+    if (this.user && !this.assets_local) {
       this.props.dispatch(assetActions.getAssets(this.user));
     }    
 
@@ -38,29 +36,31 @@ class RootLayout extends Component {
         this.asset = m_res[item].match.params.assetID;        
       }
 
-      if(m_res[item].match.url.includes("dashboard")){
+      if(m_res[item].match.url.includes("dashboard")) {
         this.activeNav = "dashboard";
-      } else if (m_res[item].match.url.includes("data")){
+      } else if (m_res[item].match.url.includes("data")) {
         this.activeNav = "data";
-      } else if (m_res[item].match.url.includes("configurations")){
+      } else if (m_res[item].match.url.includes("configurations")) {
         this.activeNav = "configurations";
-      } else if (m_res[item].match.url.includes("settings")){
+      } else if (m_res[item].match.url.includes("settings")) {
         this.activeNav = "settings";
       }
     } 
+    
     this.onCollapse = this.onCollapse.bind(this)
   }
   
-  onCollapse(collapsed){
-    this.setState({ collapsed });
+  onCollapse(sideNavCollapsed){
+    this.setState({ sideNavCollapsed });
   }
 
   render() {
     let { assets } = this.props;
+
     let assets_display = null;
-    if (this.assets_local){
+    if(this.assets_local) {
       assets_display = this.assets_local;
-    } else{
+    } else {
       assets_display = assets;
     }
 
@@ -71,7 +71,7 @@ class RootLayout extends Component {
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
             collapsible
-            collapsed={this.state.collapsed}
+            sideNavCollapsed={this.state.sideNavCollapsed}
             onCollapse={this.onCollapse}
             style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
             <Menu defaultSelectedKeys={[this.activeNav, this.asset]} mode="inline" className="pt-2">
@@ -153,7 +153,7 @@ class RootLayout extends Component {
                 </div>
               </div>          
             </Header>
-            <Content style={{ padding: '70px 16px 16px 16px', overflow: 'hidden', marginLeft: this.state.collapsed ? '80px' : '200px'}} >
+            <Content style={{ padding: '70px 16px 16px 16px', overflow: 'hidden', marginLeft: this.state.sideNavCollapsed ? '80px' : '200px'}} >
               {renderRoutes(this.props.route.routes, {store : this.props.store})}            
             </Content>
           </Layout>

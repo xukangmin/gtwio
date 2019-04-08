@@ -24,7 +24,8 @@ const ParameterSchema = new Schema(
     Range: {UpperLimit: Number, LowerLimit: Number},
     StandardDeviation: Number,
     StreamingStatus: String,
-    Timeout: Number // in seconds
+    Timeout: Number, // in seconds
+    Baseline: Number // epoch timestamp miliseconds
   },
   { timestamps: true }
 );

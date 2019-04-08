@@ -46,6 +46,15 @@ function _remove_duplicates(arr) {
   return new_arr;
 }
 
+function _updateBaseLineforSingleParameter(baseline, ParameterID) {
+  return new Promise(
+    (resolve, reject) => {
+      
+    });
+}
+
+
+
 function updateBaseline(req, res) {
   var baseline_body = req.body;
 
@@ -53,29 +62,40 @@ function updateBaseline(req, res) {
   {
     if (baseline_body.Baselines)
     {
-      Asset.findOne({AssetID: baseline_body.AssetID}, function(err, data) {
-        if (err) {
-          var msg = "updateBaseline:" + JSON.stringify(err, null, 2);
-          shareUtil.SendInternalErr(res,msg);
-        } else {
-          if (data) {
-             if (typeof data.Settings === 'undefined') {
-                data.Settings = {};
-             }
+      var active_baseline = baseline_body.Baselines.filter(item => item.Active === 1);
 
-
-             baseline_body.Baselines = _remove_duplicates(baseline_body.Baselines);
-
-             data.Settings.Baselines = baseline_body.Baselines;
-
-             data.save();
-             
-             shareUtil.SendSuccess(res);
+      if (active_baseline.length === 1)
+      {
+        Asset.findOne({AssetID: baseline_body.AssetID}, function(err, data) {
+          if (err) {
+            var msg = "updateBaseline:" + JSON.stringify(err, null, 2);
+            shareUtil.SendInternalErr(res,msg);
           } else {
-            shareUtil.SendInternalErr(res,'Asset Not found');
+            if (data) {
+               if (typeof data.Settings === 'undefined') {
+                  data.Settings = {};
+               }
+  
+               baseline_body.Baselines = _remove_duplicates(baseline_body.Baselines);
+  
+               data.Settings.Baselines = baseline_body.Baselines;
+  
+               data.save();
+               
+               console.log(active_baseline);
+
+               parameterManage._updateBaselineforAllParameters(baseline_body.AssetID, active_baseline[0].TimeStamp);
+
+               shareUtil.SendSuccess(res);
+            } else {
+              shareUtil.SendInternalErr(res,'Asset Not found');
+            }
           }
-        }
-      });
+        });
+      } else {
+        shareUtil.SendInvalidInput(res, 'Must have one active baseline');
+      }
+
     } else {
       shareUtil.SendInvalidInput(res, 'Baseline not found');
     }

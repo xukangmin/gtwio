@@ -47,6 +47,7 @@
     "react-bootstrap-daterangepicker": "^4.1.0",
     "react-bootstrap-table": "^4.3.1",
     "react-circular-progressbar": "^1.0.0",
+    "react-contenteditable": "^3.2.6",
     "react-data-grid": "^6.0.2-0",
     "react-data-grid-addons": "^6.1.0-0",
     "react-date-time-range": "^5.0.0",

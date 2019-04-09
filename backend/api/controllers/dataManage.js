@@ -7,6 +7,7 @@ const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
 const math = require('mathjs');
 const path = require('path');
+var parameterManage = require('./parameterManage.js');
 //const Promise = require('bluebird');
 
 var functions = {
@@ -81,13 +82,18 @@ function compareStrings (string1, string2, ignoreCase) {
             string2 = string2.toLowerCase();
     }
 
-    return string1 === string2;
+    return string1.includes(string2);
 }
 
 function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
   // [ParaID, Operation, Time to look back, offset]
   return new Promise(
     (resolve, reject) => {
+      // console.log(strpara);
+      // console.log(latestTimeStamp);
+      // console.log(dataobj);
+      
+      
       var plist = strpara.replace(/[\[\]]/g,'').split(',');
       var paraid, op, timerange, offset;
 
@@ -102,22 +108,33 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           offset = 0;
         } else if (plist.length === 2) {
           paraid = plist[0];
-          op = "AVG";
-          timerange = parseInt(plist[1]) * 1000;
-          offset = 0;
+
+          if (compareStrings(plist[1], "Baseline", true)) {  
+            op = "BASELINE";
+            timerange = 0;
+            offset = 0;
+          } else {
+            op = "AVG";
+            timerange = parseInt(plist[1]);
+            offset = 0;
+          }
+
         } else if (plist.length === 3) {
           paraid = plist[0];
           op = plist[1];
-          timerange = parseInt(plist[2]) * 1000;
+          timerange = parseInt(plist[2]);
           offset = 0;
         } else if (plist.length === 4) {
           paraid = plist[0];
           op = plist[1];
-          timerange = parseInt(plist[2]) * 1000;
-          offset = parseInt(plist[3]) * 1000;
+          timerange = parseInt(plist[2]);
+          offset = parseInt(plist[3]);
         }
 
-        if (timerange == 0 || compareStrings(op,"Current", true) || compareStrings(op, "LAST", true)) {
+        if (compareStrings(op,"BASELINE", true)) {
+          reject("Baseline not defined in parameter");
+        }
+        else if (timerange == 0 || compareStrings(op,"Current", true) || compareStrings(op, "LAST", true)) {
           var result =  dataobj.find(item => item.ParameterID === paraid).Value;
           resolve(result);
         }
@@ -126,6 +143,8 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           var endTS;
 
           if (compareStrings(op,"FIX", true)) {
+            // console.log("FIX DATA");
+            
             if (offset === 0) {
               offset = 300000;  // default offset 5 mins
             }
@@ -135,7 +154,8 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
             startTS = latestTimeStamp - offset - timerange;
             endTS = latestTimeStamp - offset;
           }
-
+          // console.log("startTS=" + startTS);
+          // console.log("endTS=" + endTS);
           _getDataByParameterID({ParameterID: paraid}, startTS, endTS)
             .then(
               data => {
@@ -214,27 +234,29 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
       Promise.all(paralist.map(item => _resolve_parameter(item, latestTimeStamp, dataobj)))
         .then(
           ret => {
-            //console.log(ret);
+            // console.log(ret);
             for(var i = 0; i < paralist.length; i++) {
               new_eval = new_eval.replace(paralist[i], ret[i].toString());
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            //console.log("new_eval=" + new_eval);
+            // console.log("new_eval=" + new_eval);
             try {
               var result = math.eval(new_eval);
               // console.log("result=" + result);
               resolve(result);
             }
             catch(err) {
-              console.error(err);
+              // console.log("error1:");
+              // console.error(err);
               reject(err);
             }
           }
         )
         .catch(
           err => {
-            console.error(err);
+            console.log(err);
+            reject(err);
           }
         );
 
@@ -314,12 +336,19 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                       ret => {
                         rawdataobj[paraid] = [];
                         //console.log(ret);
+                        
                         _addDataByParameterID(paraid, ret, max_timestamp, err => {if(err) console.error(err)});
                       }
                     )
                     .catch(
                       err => {
-                        console.error(err);
+                        parameterManage._updateParameter({ParameterID: paraid, StreamingStatus: err})
+                          .then()
+                          .catch(
+                            err => {
+                              console.log(err);
+                            }
+                          )
                       }
                     )
                 }

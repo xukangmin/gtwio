@@ -45,23 +45,23 @@
       },
       {
         "Name" : "Delta T Ratio",
-        "Equation": "[DELTA_T_S] / [DELTA_T_S,BASELINE]",
+        "Equation": "[DELTA_T_S, BASELINE] / [DELTA_T_S]",
         "Tag": "DELTA_T_RATIO"
       },
       {
-        "Name" : "LMTD Ratio",
-        "Equation": "[LMTD,BASELINE] / [LMTD]",
-        "Tag": "LMTD_RATIO"
+        "Name": "Total Uncertainty",
+        "Equation": "sqrt(sqrt([AVG_SHELL_INLET,STD,1800]) + sqrt([AVG_SHELL_OUTLET,STD,1800]) + sqrt([AVG_TUBE_INLET,STD,1800]) + sqrt([AVG_TUBE_OUTLET,STD,1800]))",
+        "Tag": "TOTAL_UNCERTAINTY"
       },
       {
-        "Name" : "Mass Flow Ratio",
-        "Equation": "[ShellInlet/FlowRate] / [ShellInlet/FlowRate,BASELINE]",
-        "Tag": "MASS_FLOW_RATIO"
+        "Name": "Heat Transfer",
+        "Equation": "([AVG_TUBE_INLET] - [AVG_TUBE_OUTLET]) / ([AVG_SHELL_OUTLET] - [AVG_SHELL_INLET])",
+        "Tag": "HEAT_TRANSFER_RATE"
       },
       {
-        "Name" : "Heat Transfer Coef. Ratio",
-        "Equation": "[DELTA_T_RATIO] * [LMTD_RATIO] * [MASS_FLOW_RATIO]",
-        "Tag": "HEAT_TRANSFER_COEF_RATIO"
+        "Name": "Performance factor",
+        "Equation": "([DELTA_T_1] - [DELTA_T_2]) / log([DELTA_T_1] / [DELTA_T_2])",
+        "Tag": "PERFORMANCE_FACTOR"
       }
     ],
     "Devices":

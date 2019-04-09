@@ -13,6 +13,7 @@ var dataManage = require('./dataManage.js');
 var functions = {
   createParameter: createParameter,
   updateParameter: updateParameter,
+  _updateParameter: _updateParameter,
   deleteParameter: deleteParameter,
   _deleteSingleParameter, _deleteSingleParameter,
   getParameterByAsset: getParameterByAsset,
@@ -24,7 +25,8 @@ var functions = {
   updateRequireListByEquation: updateRequireListByEquation,
   _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise,
   _createParameter: _createParameter,
-  _updateRequireListByEquation: _updateRequireListByEquation
+  _updateRequireListByEquation: _updateRequireListByEquation,
+  _updateBaselineforAllParameters: _updateBaselineforAllParameters
 }
 
 for (var key in functions) {
@@ -348,6 +350,89 @@ function createParameter(req, res) {
 
 }
 
+
+
+function compareStrings (string1, string2, ignoreCase) {
+  if (ignoreCase) {
+          string1 = string1.toLowerCase();
+          string2 = string2.toLowerCase();
+  }
+
+  return string1.includes(string2);
+}
+
+
+
+function _updateBaselineforSingleParameter(paralist, paraobj, baseline_timestamp) {
+  return new Promise(
+    (resolve, reject) => {
+      var new_paraobj = {};
+      
+      new_paraobj.ParameterID = paraobj.ParameterID;
+      new_paraobj.Baseline = baseline_timestamp;
+
+      // have to generate Equation from Original Equation
+
+
+      if (paraobj.OriginalEquation) {
+        if (compareStrings(paraobj.OriginalEquation, "baseline", true)){
+          var taglist = _getTagList(paraobj.OriginalEquation);
+          taglist = _remove_duplicates(taglist);
+
+          console.log(paraobj.OriginalEquation);
+          new_paraobj.Equation = paraobj.OriginalEquation;
+          for(var i in taglist) {
+            var filter_tags = paralist.filter(item => item.Tag === taglist[i]);
+
+            if (filter_tags.length === 1) {
+              var re = new RegExp(taglist[i], 'g');
+              new_paraobj.Equation = new_paraobj.Equation.replace(re, filter_tags[0].ParameterID);
+            }
+          }
+          new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, "FIX," + baseline_timestamp.toString());
+        }
+      }
+
+      console.log(new_paraobj);
+      _updateParameter(new_paraobj)
+        .then(
+          ret => {
+            resolve();
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+
+    });
+}
+
+function _updateBaselineforAllParameters(assetid, baseline_timestamp) {
+  dataManage._getAllParameterByAssetID(assetid)
+    .then(
+      paralist => {
+        Promise.all(paralist.map(item => _updateBaselineforSingleParameter(paralist, item, baseline_timestamp)))
+          .then(
+            ret => {
+              console.log("update ok");
+            }
+          )
+          .catch(
+            err => {
+              console.log(err);
+            }
+          )
+      }
+    )
+    .catch(
+      err => {
+        console.log(err);
+      }
+    )
+}
+
 function _updateParameter(paraobj) {
   return new Promise(
     (resolve, reject) => {
@@ -625,6 +710,8 @@ function getAllParameterByAsset(req, res) {
     shareUtil.SendInvalidInput(res, msg);
   }
 }
+
+
 
 function getParameterByAsset(req, res) {
   var assetid = req.swagger.params.AssetID.value;

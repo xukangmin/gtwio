@@ -89,9 +89,9 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
   // [ParaID, Operation, Time to look back, offset]
   return new Promise(
     (resolve, reject) => {
-      console.log(strpara);
-      console.log(latestTimeStamp);
-      console.log(dataobj);
+      // console.log(strpara);
+      // console.log(latestTimeStamp);
+      // console.log(dataobj);
       
       
       var plist = strpara.replace(/[\[\]]/g,'').split(',');
@@ -143,7 +143,7 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           var endTS;
 
           if (compareStrings(op,"FIX", true)) {
-            console.log("FIX DATA");
+            // console.log("FIX DATA");
             
             if (offset === 0) {
               offset = 300000;  // default offset 5 mins
@@ -154,8 +154,8 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
             startTS = latestTimeStamp - offset - timerange;
             endTS = latestTimeStamp - offset;
           }
-          console.log("startTS=" + startTS);
-          console.log("endTS=" + endTS);
+          // console.log("startTS=" + startTS);
+          // console.log("endTS=" + endTS);
           _getDataByParameterID({ParameterID: paraid}, startTS, endTS)
             .then(
               data => {
@@ -234,21 +234,21 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
       Promise.all(paralist.map(item => _resolve_parameter(item, latestTimeStamp, dataobj)))
         .then(
           ret => {
-            console.log(ret);
+            // console.log(ret);
             for(var i = 0; i < paralist.length; i++) {
               new_eval = new_eval.replace(paralist[i], ret[i].toString());
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            console.log("new_eval=" + new_eval);
+            // console.log("new_eval=" + new_eval);
             try {
               var result = math.eval(new_eval);
-              console.log("result=" + result);
+              // console.log("result=" + result);
               resolve(result);
             }
             catch(err) {
-              console.log("error1:");
-              console.error(err);
+              // console.log("error1:");
+              // console.error(err);
               reject(err);
             }
           }

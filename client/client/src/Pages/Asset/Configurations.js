@@ -91,6 +91,7 @@ class Configurations extends React.Component {
     }
 
     function modalFormatter(cell, row, enumObject){
+      console.log(cell)
       let type;
       if(row.DeviceID){
         type = 'device';

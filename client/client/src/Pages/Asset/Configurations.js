@@ -13,6 +13,8 @@ import classnames from 'classnames';
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
+import EditEquation from '../../Modals/EditEquation';
+
 
 class Configurations extends React.Component {
   constructor(props) {
@@ -86,6 +88,16 @@ class Configurations extends React.Component {
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
+    }
+
+    function modalFormatter(cell, row, enumObject){
+      let type;
+      if(row.DeviceID){
+        type = 'device';
+      } else if (row.ParameterID){
+        type = 'parameter';
+      }
+      return <EditEquation equation={cell} parameters={enumObject} devices={device}/>
     }
 
     function deleteFormatter(cell, row, enumObject){
@@ -289,7 +301,17 @@ class Configurations extends React.Component {
 
                     <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
                     <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' width='50%' dataField='Equation' dataSort={ true }>Equation</TableHeaderColumn>
+                    <TableHeaderColumn 
+                      headerAlign='center' 
+                      dataAlign='center' 
+                      width='50%' 
+                      dataField='OriginalEquation' 
+                      editable={false}
+                      formatExtraData={parameter}
+                      dataFormat={modalFormatter}
+                      dataSort={ true }>
+                        Equation
+                    </TableHeaderColumn>
                     <TableHeaderColumn
                       headerAlign='center'
                       dataAlign='center'

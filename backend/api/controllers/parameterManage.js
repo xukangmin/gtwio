@@ -389,7 +389,7 @@ function _updateBaselineforSingleParameter(paralist, paraobj, baseline_timestamp
               new_paraobj.Equation = new_paraobj.Equation.replace(re, filter_tags[0].ParameterID);
             }
           }
-          new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, "FIX," + baseline_timestamp.toString());
+          new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timestamp.toString());
         }
       }
 

@@ -44,19 +44,79 @@
         "Tag": "LMTD"
       },
       {
-        "Name": "Total Uncertainty",
-        "Equation": "sqrt(sqrt([AVG_SHELL_INLET,STD,1800]) + sqrt([AVG_SHELL_OUTLET,STD,1800]) + sqrt([AVG_TUBE_INLET,STD,1800]) + sqrt([AVG_TUBE_OUTLET,STD,1800]))",
-        "Tag": "TOTAL_UNCERTAINTY"
+        "Name" : "Delta T Ratio",
+        "Equation" : "[DELTA_T_S] / [DELTA_T_S,BASELINE]",
+        "Tag": "DELTA_T_RATIO"
       },
       {
-        "Name": "Heat Transfer",
-        "Equation": "([AVG_TUBE_INLET] - [AVG_TUBE_OUTLET]) / ([AVG_SHELL_OUTLET] - [AVG_SHELL_INLET])",
-        "Tag": "HEAT_TRANSFER_RATE"
+        "Name" : "LMTD Ratio",
+        "Equation": "[LMTD] / [LMTD,BASELINE]",
+        "Tag" : "LMTD_RATIO"
       },
       {
-        "Name": "Performance factor",
-        "Equation": "([DELTA_T_1] - [DELTA_T_2]) / log([DELTA_T_1] / [DELTA_T_2])",
-        "Tag": "PERFORMANCE_FACTOR"
+        "Name" : "Heat Transfer Coef Ratio",
+        "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO]",
+        "Tag" : "HEAT_TRANSFER_COEF_RATIO"
+      },
+      {
+        "Name" : "Number Of Data Sets",
+        "Equation" : "sum([ShellInlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Tag": "SHELLINLET_NUMBER_DATA_SETS"
+      },
+      {
+        "Name" : "ShellInlet Degree of Freedom",
+        "Equation" : "[SHELLINLET_NUMBER_DATA_SETS] - 1",
+        "Tag": "SHELLINLET_DEGREE_OF_FREEDOM"
+      },
+      {
+        "Name" : "Two Tailed Student T Value",
+        "Equation" : "t_value(0.05,[SHELLINLET_DEGREE_OF_FREEDOM])",
+        "Tag": "SHELLINLET_STUDENT_T_VALUE"
+      },
+      {
+        "Name" : "Number of sensors",
+        "Equation" : "count([ShellInlet/Temperature])",
+        "Tag": "SHELLINLET_SENSOR_COUNT"
+      },
+      {
+        "Name" : "Instument Bias",
+        "Equation" : "0.1",
+        "Tag": "INSTRUMENT_BIAS"
+      },
+      {
+        "Name" : "Method Uncertainty",
+        "Equation" : "0.05",
+        "Tag": "METHOD_UNCERTAINTY"
+      },
+      {
+        "Name" : "ShellInlet STDEV of all data",
+        "Equation" : "std([ShellInlet/Temperature,RAW,SC,BASELINE,0])",
+        "Tag": "SHELLINLET_STD_ALL_DATA"
+      },
+      {
+        "Name" : "ShellInlet Spatial Bias Uncertainty",
+        "Equation" : "[SHELLINLET_STUDENT_T_VALUE] * [SHELLINLET_STD_ALL_DATA] / sqrt([SHELLINLET_SENSOR_COUNT])",
+        "Tag": "SHELLINLET_SPATIAL_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "Total Measurement Bias Uncertainty",
+        "Equation" : "sqrt([INSTRUMENT_BIAS]^2 + [METHOD_UNCERTAINTY]^2 + [SHELLINLET_STD_ALL_DATA]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
+        "Tag": "SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "STDEV Data set",
+        "Equation" : "std([AVG_SHELL_INLET,RAW,SC,BASELINE,0]",
+        "Tag": "SHELLINLET_STDEV_DATA_SET"
+      },
+      {
+        "Name" : "STDEV Sample Mean",
+        "Equation" : "[SHELLINLET_STDEV_DATA_SET] / sqrt([SHELLINLET_NUMBER_DATA_SETS])",
+        "Tag": "SHELLINLET_STDEV_SAMPLE_MEAN"
+      },
+      {
+        "Name" : "Shell Inlet TMU",
+        "Equation" : "sqrt([SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE] * [SHELLINLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Tag": "SHELLINLET_TMU"
       }
     ],
     "Devices":

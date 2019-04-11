@@ -3,10 +3,6 @@ import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
 import ContentEditable from 'react-contenteditable';
-import {UnControlled as CodeMirror} from 'react-codemirror2'
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-import Markdown from 'react-mark';
 
 class EditEquation extends React.Component {
     constructor(props) {

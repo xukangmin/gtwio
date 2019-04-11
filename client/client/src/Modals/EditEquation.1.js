@@ -13,11 +13,11 @@ class EditEquation extends React.Component {
         super(props);
         this.contentEditable = React.createRef();
 
+        let equation = props.equation;
         this.state = {
-            equation: props.equation,
             devices: props.devices,
             parameters: props.parameters,
-            equationToEdit: props.equation,
+            equation: equation,
             ModalOpen: false
         };
 
@@ -26,7 +26,7 @@ class EditEquation extends React.Component {
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.addParameter = this.addParameter.bind(this);
         this.addOperator = this.addOperator.bind(this);
-        this.updateEquation = this.updateEquation.bind(this);
+        this.updateCode = this.updateCode.bind(this);
         this.updateEdit = this.updateEdit.bind(this);
     }
 
@@ -37,9 +37,6 @@ class EditEquation extends React.Component {
     }
 
     addButtonClicked(){
-      console.log(this.state.equationToEdit.replace(/<button class='btn btn-info m-1'>/g,"[").replace(/<\/button>/g,"]"))
-      console.log(this.state.equationToEdit)
-      let newParameter = this.state.equationToEdit.replace(/<button class='btn btn-info m-1'>/g,"[").replace(/<\/button>/g,"]");
       this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter));
       this.setState(prevState => ({
         ModalOpen: !prevState.ModalOpen
@@ -56,73 +53,85 @@ class EditEquation extends React.Component {
       console.log(x)    
       console.log(x.target.getAttribute('value'))
       this.setState({
-        equationToEdit: this.state.equationToEdit + "<button class='btn btn-info m-1'>" + x.target.getAttribute('value') + "</button>"
+        equation: this.state.equation + "&nbsp<span class='badge badge-info badge-pill contentEditable='false''>" + x.target.getAttribute('value') + "</span>&nbsp"
       });
-      // this.updateEquation();
+      // this.updateCode();
     }
 
     addOperator(x){  
       console.log(x)    
       console.log(x.target.getAttribute('value'))
       this.setState({
-        equationToEdit: this.state.equationToEdit + x.target.getAttribute('value')
+        equation: this.state.equation + x.target.getAttribute('value')
       });
-      // this.updateEquation();
+      // this.updateCode();
     }
 
-    updateEquation(){
+    updateCode(){
       this.setState({
-        equationToEdit: this.state.equationToEdit.replace(/\[/g,"<button class='btn btn-info m-1'>").replace(/\]/g,"</button>")
+        equation: this.state.equation.replace(/\[/g,"<span class='badge badge-info badge-pill'>").replace(/\]/g,"</span>")
       });
-      console.log('state'+this.state.equationToEdit)
+      console.log('state'+this.state.equation)
     }
 
-    updateEdit(){
-      console.log('input')
-      
+    updateEdit(x){
+      console.log(x.target.getAttribute('value'))
       this.setState({
-        equationToEdit: document.getElementById('editEquation').innerHTML
+        equation: x.target.getAttribute('value')
       })
-      console.log(this.state.equationToEdit)
+      console.log(this.state.equation)
     }
 
     componentDidMount(){
-      this.updateEquation();
+      this.updateCode();
+      console.log(this.state.equation)
     }
     
     render() {
         const devices = this.state.devices;
         const parameters = this.state.parameters;
-        const operators = [{Name: 'Avg'},{Name: 'sqrt'},{Name: 'log'},{Name: '('},{Name: ')'},{Name: '+'}, {Name:'-'}, {Name:'*'}, {Name:'/'}]
+        const operators = [{Name: 'Avg'},{Name: '('},{Name: ')'},{Name: '+'}, {Name:'-'}]
 
         return(
+
+          
           <div>
             <span onClick={this.ModalToggle}>{this.state.equation}</span>
-            <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: "1000px"}}>
-              <ModalHeader toggle={this.ModalToggle}></ModalHeader>
+            <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: "750px"}}>
+              <ModalHeader toggle={this.ModalToggle}>Edit Equation</ModalHeader>
               <ModalBody>
                 <Row>
-                  <Col md="8">
-                    <Label for="equation"><h5>Edit Equation</h5></Label> 
-                    <div id="editEquation" style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5px'}} onInput={this.updateEdit} contentEditable dangerouslySetInnerHTML={{__html: this.state.equationToEdit}}></div>
-                  </Col>
-                  <Col md="4">
+                  <Col>
+                    <Label for="equation">Equation</Label>
                     <div>
-                      <h5>Group Data</h5>
-                      {devices.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x.Parameters[0].Tag} key={i}>{x.Parameters[0].Tag}</Tag>)}
+                     
+                    
+                   
+
+                    </div>
+                    <div >
+                    </div>
+                    <div onBlur={this.updateEdit} value={this.state.equation} contentEditable dangerouslySetInnerHTML={{__html: this.state.equation}}></div>
+                    </Col>
+                  <Col>
+                    <div>
+                      <h3>Group Data</h3>
+                        {devices.map((x,i)=>
+                          <Tag onClick={this.addParameter} value={x.Parameters[0].Tag} key={i}>{x.Parameters[0].Tag}</Tag>)}
                     </div>
                     <hr/>
                     <div>
-                      <h5>Parameters</h5>
-                      {parameters.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x.Tag} key={i}>{x.Tag}</Tag>)}
+                      <h3>Parameters</h3>
+                      {parameters.map((x,i)=><Tag onClick={this.addParameter} value={x.Tag} key={i}>{x.Tag}</Tag>)}
                     </div>
-                    <hr/>
+
                     <div>
-                      <h5>Operators</h5>
-                      {operators.map((x,i)=><Tag className="mb-2" onClick={this.addOperator} value={x.Name} key={i}>{x.Name}</Tag>)}
+                      <h3>Operators</h3>
+                      {operators.map((x,i)=><Tag onClick={this.addOperator} value={x.Name} key={i}>{x.Name}</Tag>)}
                     </div>
                   </Col>
-                </Row>                
+                </Row>
+                
               </ModalBody>
               <ModalFooter>
                 <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}

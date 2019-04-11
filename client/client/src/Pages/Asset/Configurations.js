@@ -85,20 +85,20 @@ class Configurations extends React.Component {
 
   render() {
     const { device, parameter } = this.props;
+    const asset = this.asset;
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
     }
 
     function modalFormatter(cell, row, enumObject){
-      console.log(cell)
       let type;
       if(row.DeviceID){
         type = 'device';
       } else if (row.ParameterID){
         type = 'parameter';
       }
-      return <EditEquation equation={cell} parameters={enumObject} devices={device}/>
+      return <EditEquation equation={cell} parameters={parameter} devices={device} asset={asset} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){
@@ -308,7 +308,7 @@ class Configurations extends React.Component {
                       width='50%' 
                       dataField='OriginalEquation' 
                       editable={false}
-                      formatExtraData={parameter}
+                      formatExtraData={this.props.dispatch}
                       dataFormat={modalFormatter}
                       dataSort={ true }>
                         Equation

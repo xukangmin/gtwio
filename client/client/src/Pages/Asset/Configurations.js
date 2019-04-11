@@ -85,7 +85,6 @@ class Configurations extends React.Component {
 
   render() {
     const { device, parameter } = this.props;
-    const asset = this.asset;
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
@@ -93,12 +92,12 @@ class Configurations extends React.Component {
 
     function modalFormatter(cell, row, enumObject){
       let type;
-      if(row.DeviceID){
+      if (row.DeviceID){
         type = 'device';
       } else if (row.ParameterID){
         type = 'parameter';
       }
-      return <EditEquation equation={cell} parameters={parameter} devices={device} asset={asset} dispatch={enumObject}/>
+      return <EditEquation equation={cell} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){

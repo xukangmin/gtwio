@@ -91,14 +91,13 @@ class Configurations extends React.Component {
     }
 
     function modalFormatter(cell, row, enumObject){
-      console.log(cell)
       let type;
-      if(row.DeviceID){
+      if (row.DeviceID){
         type = 'device';
       } else if (row.ParameterID){
         type = 'parameter';
       }
-      return <EditEquation equation={cell} parameters={enumObject} devices={device}/>
+      return <EditEquation equation={cell} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){
@@ -308,7 +307,7 @@ class Configurations extends React.Component {
                       width='50%' 
                       dataField='OriginalEquation' 
                       editable={false}
-                      formatExtraData={parameter}
+                      formatExtraData={this.props.dispatch}
                       dataFormat={modalFormatter}
                       dataSort={ true }>
                         Equation

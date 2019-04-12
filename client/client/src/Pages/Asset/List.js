@@ -34,7 +34,9 @@ class List extends React.Component {
     const { assets } = this.props;
 
     function linkFormatter(cell){
-      return <button type="button" title="Go to Asset's Dashboard Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
+      return <div><button type="button" title="Go to Asset's Dashboard Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
+      <button type="button" title="Go to Asset's Data Page" className="btn btn-info ml-1" onClick={()=>location.href='/asset/'+ cell + '/data'}><i className="fas fa-table"></i></button>
+      <button type="button" title="Go to Asset's Configuration Page" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button></div>
     }
 
     function countFormatter(cell){
@@ -42,7 +44,7 @@ class List extends React.Component {
     }
 
     function actionsFormatter(cell, row, enumObject){
-      return <div><button type="button" title="Go to Asset's Configuration Page" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button>
+      return <div>
       <button type="button" title="Download Asset Configuration File" className="btn btn-info ml-1" name="download" onClick={()=>enumObject(cell, "download")}><i className="fa fa-download" aria-hidden="true"></i></button>
       <button type="button" title="Delete this Asset" className="btn btn-danger ml-1" name="delete" onClick={()=>enumObject(cell, "delete", row.DisplayName)}><i className="fa fa-trash" aria-hidden="true"></i></button>
       </div>
@@ -79,7 +81,7 @@ class List extends React.Component {
           dataField='AssetID'
           editable={false}
           dataFormat={linkFormatter}>
-            Dashboard
+            Pages
         </TableHeaderColumn>
 
         <TableHeaderColumn

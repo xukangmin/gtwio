@@ -89,7 +89,7 @@ class Dashboard extends React.Component {
                 </Samy>
                 <Row style={ProgressBars_style}>
                   {AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.map((item, i) =>                    
-                    <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}><ProgressBar key={item} type={item.AssignedTag} percentage={item.Value ? item.Value.toFixed(2) : 0} unit={item.Unit}/></a>                    
+                    <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}><ProgressBar key={item} type={item.AssignedTag} percentage={typeof(item.Value) == 'number' ? item.Value.toFixed(2) : item.Value} unit={item.Unit}/></a>                    
                   )}
                 </Row>
                 <div style={LastUpdate_style}>

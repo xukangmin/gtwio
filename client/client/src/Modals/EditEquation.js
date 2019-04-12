@@ -113,6 +113,7 @@ class EditEquation extends React.Component {
               <Col md="8">
                 <ContentEditable
                   id="equationEdit"
+                  className="form-control"
                   style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
                   html={this.state.html} // innerHTML of the editable div
                   disabled={false}       // use true to disable edition

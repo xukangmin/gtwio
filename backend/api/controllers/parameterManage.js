@@ -403,7 +403,7 @@ function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_
                     new_paraobj.Equation = _replaceEquation(paraobj.OriginalEquation, taglist, ret);
                     new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timestamp.toString());
 
-                    console.log(new_paraobj);
+                    // console.log(new_paraobj);
                     _updateParameter(new_paraobj)
                       .then(
                         ret => {

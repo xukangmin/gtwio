@@ -181,7 +181,7 @@ class AddAsset extends React.Component {
         <div>
           <Button color="primary" name="addButton" onClick={e=>this.addModalToggle(e)}>Add New Asset</Button>
                   
-          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "750px"}}>
+          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "950px"}}>
             <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
             <ModalBody>
               <Form>

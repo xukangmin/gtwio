@@ -7,18 +7,19 @@ import ContentEditable from "react-contenteditable";
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-      this.contentEditable = React.createRef();
+      
       this.parameter = props.parameter;
       this.asset = props.asset;
-      this.anchor;
+      let devices = [...new Set(props.devices.map(x=> x.Parameters[0].Tag))];
 
       this.state = {
           equation: props.equation,
-          devices: props.devices,
+          devices: devices,
           parameters: props.parameters,
           html: props.equation,
           ModalOpen: false
       };
+      this.contentEditable = React.createRef();
 
       this.ModalToggle = this.ModalToggle.bind(this);
       this.addButtonClicked = this.addButtonClicked.bind(this);
@@ -28,6 +29,8 @@ class EditEquation extends React.Component {
       this.updateEquation = this.updateEquation.bind(this);
       this.updateEdit = this.updateEdit.bind(this);
       this.getCursor = this.getCursor.bind(this);
+
+
   }
 
   ModalToggle(){
@@ -44,6 +47,7 @@ class EditEquation extends React.Component {
     }
     this.props.dispatch(parameterActions.updateParameter(this.asset, data));
     this.setState(prevState => ({
+      equation: equation,
       ModalOpen: !prevState.ModalOpen
     }));
   }
@@ -55,18 +59,18 @@ class EditEquation extends React.Component {
     }));
   }
 
-  addParameter(x){  
+  addParameter(e){  
     let newParameter = document.createElement('button');
     newParameter.classList.add("btn", "btn-info", "m-1");
     newParameter.setAttribute("contenteditable", "false")
-    newParameter.appendChild(document.createTextNode(x.target.getAttribute('value')));
+    newParameter.appendChild(document.createTextNode(e.target.getAttribute('value')));
 
     this.anchor.insertNode(newParameter);
     this.anchor.setStart(document.getElementById('equationEdit'),this.anchor.startOffset+1);
   }
 
-  addOperator(x){  
-    this.anchor.insertNode(document.createTextNode(x.target.getAttribute('value')));
+  addOperator(e){  
+    this.anchor.insertNode(document.createTextNode(e.target.getAttribute('value')));
   }
 
   updateEquation(){
@@ -100,7 +104,17 @@ class EditEquation extends React.Component {
   render() {
     const devices = this.state.devices;
     const parameters = this.state.parameters;
-    const operators = [{Name: 'Avg'},{Name: 'sqrt'},{Name: 'log'},{Name: '('},{Name: ')'},{Name: '+'}, {Name:'-'}, {Name:'*'}, {Name:'/'}]
+    const operators = [
+      { Name: 'Avg'},
+      { Name: 'sqrt'},
+      { Name: 'log'},
+      { Name: '('},
+      { Name: ')'},
+      { Name: '+'}, 
+      { Name: '-'}, 
+      { Name: '*'}, 
+      { Name: '/'}
+    ]
 
     return(
       <div>
@@ -125,13 +139,12 @@ class EditEquation extends React.Component {
                 <div align="right" className="mt-3">
                   <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}
                   <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
-                </div>
-                
+                </div>                
               </Col>
               <Col md="4">
                 <div>
                   <h5>Group Data</h5>
-                  {devices.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x.Parameters[0].Tag} key={i}>{x.Parameters[0].Tag}</Tag>)}
+                  {devices.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x} key={i}>{x}</Tag>)}
                 </div>
                 <hr/>
                 <div>

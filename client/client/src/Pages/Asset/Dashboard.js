@@ -54,7 +54,9 @@ class Dashboard extends React.Component {
     }
     const ProgressBars_style={
       marginTop: "-150px",
-      textAlign: "center"
+      marginLeft: "-200px",
+      textAlign: "center",
+      width: "70%"
     }
     const LastUpdate_style={
       float: "right",

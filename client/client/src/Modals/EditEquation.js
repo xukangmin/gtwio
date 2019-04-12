@@ -3,7 +3,6 @@ import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
 import ContentEditable from "react-contenteditable";
-import sanitizeHtml from "sanitize-html";
 
 class EditEquation extends React.Component {
   constructor(props) {

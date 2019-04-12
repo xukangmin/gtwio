@@ -45,18 +45,18 @@
       },
       {
         "Name" : "Delta T Ratio",
-        "Equation" : "[DELTA_T_S] / [DELTA_T_S,BASELINE]",
+        "Equation" : "[DELTA_T_S] / [DELTA_T_S,FIX,BASELINE]",
         "Tag": "DELTA_T_RATIO"
       },
       {
         "Name" : "LMTD Ratio",
-        "Equation": "[LMTD] / [LMTD,BASELINE]",
+        "Equation": "[LMTD] / [LMTD,FIX,BASELINE]",
         "Tag" : "LMTD_RATIO"
       },
       {
-        "Name" : "Heat Transfer Coef Ratio",
+        "Name" : "Cleanliness Factor",
         "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO]",
-        "Tag" : "HEAT_TRANSFER_COEF_RATIO"
+        "Tag" : "CLEANLINESS_FACTOR"
       },
       {
         "Name" : "Number Of Data Sets",
@@ -79,16 +79,6 @@
         "Tag": "SHELLINLET_SENSOR_COUNT"
       },
       {
-        "Name" : "Instument Bias",
-        "Equation" : "0.1",
-        "Tag": "INSTRUMENT_BIAS"
-      },
-      {
-        "Name" : "Method Uncertainty",
-        "Equation" : "0.05",
-        "Tag": "METHOD_UNCERTAINTY"
-      },
-      {
         "Name" : "ShellInlet STDEV of all data",
         "Equation" : "std([ShellInlet/Temperature,RAW,SC,BASELINE,0])",
         "Tag": "SHELLINLET_STD_ALL_DATA"
@@ -100,12 +90,12 @@
       },
       {
         "Name" : "Total Measurement Bias Uncertainty",
-        "Equation" : "sqrt([INSTRUMENT_BIAS]^2 + [METHOD_UNCERTAINTY]^2 + [SHELLINLET_STD_ALL_DATA]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLINLET_STD_ALL_DATA]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
         "Tag": "SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "STDEV Data set",
-        "Equation" : "std([AVG_SHELL_INLET,RAW,SC,BASELINE,0]",
+        "Equation" : "std([AVG_SHELL_INLET,RAW,SC,BASELINE,0])",
         "Tag": "SHELLINLET_STDEV_DATA_SET"
       },
       {
@@ -117,7 +107,158 @@
         "Name" : "Shell Inlet TMU",
         "Equation" : "sqrt([SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE] * [SHELLINLET_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "SHELLINLET_TMU"
+      },
+      {
+        "Name" : "Number Of Data Sets",
+        "Equation" : "sum([ShellOutlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Tag": "SHELLOUTLET_NUMBER_DATA_SETS"
+      },
+      {
+        "Name" : "ShellOutlet Degree of Freedom",
+        "Equation" : "[SHELLOUTLET_NUMBER_DATA_SETS] - 1",
+        "Tag": "SHELLOUTLET_DEGREE_OF_FREEDOM"
+      },
+      {
+        "Name" : "Two Tailed Student T Value",
+        "Equation" : "t_value(0.05,[SHELLOUTLET_DEGREE_OF_FREEDOM])",
+        "Tag": "SHELLOUTLET_STUDENT_T_VALUE"
+      },
+      {
+        "Name" : "Number of sensors",
+        "Equation" : "count([ShellOutlet/Temperature])",
+        "Tag": "SHELLOUTLET_SENSOR_COUNT"
+      },
+      {
+        "Name" : "ShellOutlet STDEV of all data",
+        "Equation" : "std([ShellOutlet/Temperature,RAW,SC,BASELINE,0])",
+        "Tag": "SHELLOUTLET_STD_ALL_DATA"
+      },
+      {
+        "Name" : "ShellOutlet Spatial Bias Uncertainty",
+        "Equation" : "[SHELLOUTLET_STUDENT_T_VALUE] * [SHELLOUTLET_STD_ALL_DATA] / sqrt([SHELLOUTLET_SENSOR_COUNT])",
+        "Tag": "SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "Total Measurement Bias Uncertainty",
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLOUTLET_STD_ALL_DATA]^2 + [SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
+        "Tag": "SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "STDEV Data set",
+        "Equation" : "std([AVG_SHELL_OUTLET,RAW,SC,BASELINE,0])",
+        "Tag": "SHELLOUTLET_STDEV_DATA_SET"
+      },
+      {
+        "Name" : "STDEV Sample Mean",
+        "Equation" : "[SHELLOUTLET_STDEV_DATA_SET] / sqrt([SHELLOUTLET_NUMBER_DATA_SETS])",
+        "Tag": "SHELLOUTLET_STDEV_SAMPLE_MEAN"
+      },
+      {
+        "Name" : "Shell Outlet TMU",
+        "Equation" : "sqrt([SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLOUTLET_STUDENT_T_VALUE] * [SHELLOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Tag": "SHELLOUTLET_TMU"
+      },
+      {
+        "Name" : "Number Of Data Sets",
+        "Equation" : "sum([TubeInlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Tag": "TUBEINLET_NUMBER_DATA_SETS"
+      },
+      {
+        "Name" : "TubeInlet Degree of Freedom",
+        "Equation" : "[TUBEINLET_NUMBER_DATA_SETS] - 1",
+        "Tag": "TUBEINLET_DEGREE_OF_FREEDOM"
+      },
+      {
+        "Name" : "Two Tailed Student T Value",
+        "Equation" : "t_value(0.05,[TUBEINLET_DEGREE_OF_FREEDOM])",
+        "Tag": "TUBEINLET_STUDENT_T_VALUE"
+      },
+      {
+        "Name" : "Number of sensors",
+        "Equation" : "count([TubeInlet/Temperature])",
+        "Tag": "TUBEINLET_SENSOR_COUNT"
+      },
+      {
+        "Name" : "TubeInlet STDEV of all data",
+        "Equation" : "std([TubeInlet/Temperature,RAW,SC,BASELINE,0])",
+        "Tag": "TUBEINLET_STD_ALL_DATA"
+      },
+      {
+        "Name" : "TubeInlet Spatial Bias Uncertainty",
+        "Equation" : "[TUBEINLET_STUDENT_T_VALUE] * [TUBEINLET_STD_ALL_DATA] / sqrt([TUBEINLET_SENSOR_COUNT])",
+        "Tag": "TUBEINLET_SPATIAL_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "Total Measurement Bias Uncertainty",
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEINLET_STD_ALL_DATA]^2 + [TUBEINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
+        "Tag": "TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "STDEV Data set",
+        "Equation" : "std([AVG_TUBE_INLET,RAW,SC,BASELINE,0])",
+        "Tag": "TUBEINLET_STDEV_DATA_SET"
+      },
+      {
+        "Name" : "STDEV Sample Mean",
+        "Equation" : "[TUBEINLET_STDEV_DATA_SET] / sqrt([TUBEINLET_NUMBER_DATA_SETS])",
+        "Tag": "TUBEINLET_STDEV_SAMPLE_MEAN"
+      },
+      {
+        "Name" : "Tube Inlet TMU",
+        "Equation" : "sqrt([TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEINLET_STUDENT_T_VALUE] * [TUBEINLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Tag": "TUBEINLET_TMU"
+      },
+      {
+        "Name" : "Number Of Data Sets",
+        "Equation" : "sum([TubeOutlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Tag": "TUBEOUTLET_NUMBER_DATA_SETS"
+      },
+      {
+        "Name" : "TubeOutlet Degree of Freedom",
+        "Equation" : "[TUBEOUTLET_NUMBER_DATA_SETS] - 1",
+        "Tag": "TUBEOUTLET_DEGREE_OF_FREEDOM"
+      },
+      {
+        "Name" : "Two Tailed Student T Value",
+        "Equation" : "t_value(0.05,[TUBEOUTLET_DEGREE_OF_FREEDOM])",
+        "Tag": "TUBEOUTLET_STUDENT_T_VALUE"
+      },
+      {
+        "Name" : "Number of sensors",
+        "Equation" : "count([TubeOutlet/Temperature])",
+        "Tag": "TUBEOUTLET_SENSOR_COUNT"
+      },
+      {
+        "Name" : "TubeOutlet STDEV of all data",
+        "Equation" : "std([TubeOutlet/Temperature,RAW,SC,BASELINE,0])",
+        "Tag": "TUBEOUTLET_STD_ALL_DATA"
+      },
+      {
+        "Name" : "TubeOutlet Spatial Bias Uncertainty",
+        "Equation" : "[TUBEOUTLET_STUDENT_T_VALUE] * [TUBEOUTLET_STD_ALL_DATA] / sqrt([TUBEOUTLET_SENSOR_COUNT])",
+        "Tag": "TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "Total Measurement Bias Uncertainty",
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEOUTLET_STD_ALL_DATA]^2 + [TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
+        "Tag": "TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+      },
+      {
+        "Name" : "STDEV Data set",
+        "Equation" : "std([AVG_TUBE_OUTLET,RAW,SC,BASELINE,0])",
+        "Tag": "TUBEOUTLET_STDEV_DATA_SET"
+      },
+      {
+        "Name" : "STDEV Sample Mean",
+        "Equation" : "[TUBEOUTLET_STDEV_DATA_SET] / sqrt([TUBEOUTLET_NUMBER_DATA_SETS])",
+        "Tag": "TUBEOUTLET_STDEV_SAMPLE_MEAN"
+      },
+      {
+        "Name" : "Tube Outlet TMU",
+        "Equation" : "sqrt([TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEOUTLET_STUDENT_T_VALUE] * [TUBEOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Tag": "TUBEOUTLET_TMU"
       }
+
     ],
     "Devices":
     [
@@ -292,16 +433,24 @@
         "TagName": "ProgressBars",
         "Data": [
           {
-            "Name": "HeatTransferRate",
-            "AssignedTag": "HEAT_TRANSFER_RATE"
+            "Name": "Cleanliness Factor ",
+            "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "PerformanceFactor",
-            "AssignedTag": "PERFORMANCE_FACTOR"
+            "Name": "SI TMU",
+            "AssignedTag": "SHELLINLET_TMU"
           },
           {
-            "Name": "TotalUncertainty",
-            "AssignedTag": "TOTAL_UNCERTAINTY"
+            "Name": "SO TMU",
+            "AssignedTag": "SHELLOUTLET_TMU"
+          },
+          {
+            "Name": "TI TMU",
+            "AssignedTag": "TUBEINLET_TMU"
+          },
+          {
+            "Name": "TO TMU",
+            "AssignedTag": "TUBEOUTLET_TMU"
           }
         ]
       }

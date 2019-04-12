@@ -8,6 +8,7 @@ const Asset = require('../db/asset.js');
 const math = require('mathjs');
 const path = require('path');
 var parameterManage = require('./parameterManage.js');
+var jStat = require('jStat').jStat;
 //const Promise = require('bluebird');
 
 var functions = {
@@ -89,9 +90,9 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
   // [ParaID, Operation, Time to look back, offset]
   return new Promise(
     (resolve, reject) => {
-      console.log(strpara);
-      console.log(latestTimeStamp);
-      console.log(dataobj);
+      // console.log(strpara);
+      // console.log(latestTimeStamp);
+      // console.log(dataobj);
       
       
       var plist = strpara.replace(/[\[\]]/g,'').split(',');
@@ -164,8 +165,8 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           }
 
 
-          console.log("startTS=" + startTS);
-          console.log("endTS=" + endTS);
+          // console.log("startTS=" + startTS);
+          // console.log("endTS=" + endTS);
           _getDataByParameterID({ParameterID: paraid}, startTS, endTS)
             .then(
               data => {
@@ -235,9 +236,9 @@ function _math_op_convert(streval) {
 function _perform_calculation(dataobj, equation, latestTimeStamp) {
   return new Promise(
     (resolve, reject) => {
-      console.log("_perform_calculation:");
-      console.log(dataobj);
-      console.log(equation);
+      // console.log("_perform_calculation:");
+      // console.log(dataobj);
+      // console.log(equation);
       var new_eval = equation;
 
       var reg = /\[[^\]]+\]/g;
@@ -253,10 +254,21 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            console.log("new_eval=" + new_eval);
+            // console.log("new_eval=" + new_eval);
+
+            const parser = math.parser();
+
+            parser.set('t_value', function (X, df) {
+              return -jStat.studentt.inv(X/2,df);
+            });
+            
+            parser.set('count', function (...args) {
+              return args.length;
+            });
+            
             try {
-              var result = math.eval(new_eval);
-              console.log("result=" + result);
+              var result = parser.eval(new_eval);
+              // console.log("result=" + result);
               resolve(result);
             }
             catch(err) {

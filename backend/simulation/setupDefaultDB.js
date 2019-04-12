@@ -128,7 +128,17 @@ function createDemoAccount() {
   createUser(userid)
   .then(
     ret => {
+      return createAsset(userid, asconfig0);
+    }
+  )
+  .then(
+    ret => {
       return createAsset(userid, asconfig1);
+    }
+  )
+  .then(
+    ret => {
+      return createAsset(userid, asconfig2);
     }
   )
   .catch(

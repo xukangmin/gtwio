@@ -68,6 +68,24 @@ function _getFullTagList(equation) {
   return taglist;
 }
 
+function _resolveSingleTag(paralist, tag) {
+
+      var filterlist = paralist.filter(item => item.Tag === tag);
+      
+      if (filterlist.length === 1) {
+        return filterlist[0].ParameterID;
+      } else if  (filterlist.length > 1) {
+        var paraout = [];
+
+        for (var i in filterlist) {
+          paraout.push(filterlist[i].ParameterID);
+        }
+        return paraout;
+      } else {
+        return "resolve_single_tag_error";
+      }
+}
+
 function _resolveSingleTagInAsset(assetid, paralist, tag) {
   return new Promise(
     (resolve, reject) => {
@@ -109,9 +127,9 @@ function _replaceEquation(originalEquation, taglist, newlist) {
   var new_equation = originalEquation;
   var fulllist = _getFullTagList(originalEquation);
   fulllist = _remove_duplicates(fulllist);
-  //console.log(taglist);
-  //console.log(newlist);
-  //console.log(fulllist);
+  // console.log(taglist);
+  // console.log(newlist);
+  // console.log(fulllist);
   if (taglist.length === newlist.length)
   {
     for(var i in fulllist) {
@@ -167,8 +185,8 @@ function _createEquation(assetid, paraobj) {
                     paraobj.OriginalEquation = paraobj.Equation;
                     paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
                     
-                    //console.log("OriginalEquation=" + paraobj.OriginalEquation);
-                    //console.log("resolved equation=" + paraobj.Equation);
+                    // console.log("OriginalEquation=" + paraobj.OriginalEquation);
+                    // console.log("resolved equation=" + paraobj.Equation);
                     var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
                     if (filter_para.length === 1) {
                       // para already exist, update equation and name
@@ -363,7 +381,7 @@ function compareStrings (string1, string2, ignoreCase) {
 
 
 
-function _updateBaselineforSingleParameter(paralist, paraobj, baseline_timestamp) {
+function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_timestamp) {
   return new Promise(
     (resolve, reject) => {
       var new_paraobj = {};
@@ -379,32 +397,36 @@ function _updateBaselineforSingleParameter(paralist, paraobj, baseline_timestamp
           var taglist = _getTagList(paraobj.OriginalEquation);
           taglist = _remove_duplicates(taglist);
 
-          console.log(paraobj.OriginalEquation);
-          new_paraobj.Equation = paraobj.OriginalEquation;
-          for(var i in taglist) {
-            var filter_tags = paralist.filter(item => item.Tag === taglist[i]);
+          Promise.all(taglist.map(item => _resolveSingleTagInAsset(assetid, paralist, item)))
+                .then(
+                  ret => {
+                    new_paraobj.Equation = _replaceEquation(paraobj.OriginalEquation, taglist, ret);
+                    new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timestamp.toString());
 
-            if (filter_tags.length === 1) {
-              var re = new RegExp(taglist[i], 'g');
-              new_paraobj.Equation = new_paraobj.Equation.replace(re, filter_tags[0].ParameterID);
-            }
-          }
-          new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timestamp.toString());
+                    console.log(new_paraobj);
+                    _updateParameter(new_paraobj)
+                      .then(
+                        ret => {
+                          resolve();
+                        }
+                      )
+                      .catch(
+                        err => {
+                          reject(err);
+                        }
+                      );
+                  }
+                )
+                .catch(
+                  err => {
+                    reject(err);
+                  }
+                );
+          
         }
       }
 
-      console.log(new_paraobj);
-      _updateParameter(new_paraobj)
-        .then(
-          ret => {
-            resolve();
-          }
-        )
-        .catch(
-          err => {
-            reject(err);
-          }
-        )
+
 
     });
 }
@@ -413,7 +435,7 @@ function _updateBaselineforAllParameters(assetid, baseline_timestamp) {
   dataManage._getAllParameterByAssetID(assetid)
     .then(
       paralist => {
-        Promise.all(paralist.map(item => _updateBaselineforSingleParameter(paralist, item, baseline_timestamp)))
+        Promise.all(paralist.map(item => _updateBaselineforSingleParameter(assetid, paralist, item, baseline_timestamp)))
           .then(
             ret => {
               console.log("update ok");
@@ -857,6 +879,8 @@ function _updateRequireListByEquation(paraid, equation, callback) {
       paralist = _remove_duplicates(paralist);
       
       _updateRequireList(paraid, paralist, callback);
+  } else {
+    callback(null, "no para to update equation");
   }
 }
 

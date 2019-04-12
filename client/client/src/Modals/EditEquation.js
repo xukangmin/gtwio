@@ -10,11 +10,10 @@ class EditEquation extends React.Component {
       
       this.parameter = props.parameter;
       this.asset = props.asset;
-      let devices = [...new Set(props.devices.map(x=> x.Parameters[0].Tag))];
 
       this.state = {
           equation: props.equation,
-          devices: devices,
+          devices: [...new Set(props.devices.map(x=> x.Parameters[0].Tag))],
           parameters: props.parameters,
           html: props.equation,
           ModalOpen: false

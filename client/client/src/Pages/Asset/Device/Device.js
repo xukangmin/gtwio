@@ -183,7 +183,7 @@ class Device extends React.Component {
               'Range': currentValue
           }
           updateData.Range[range] = num_in;
-          this.props.dispatch(parameterActions.updateParameter(updateData));
+          this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, updateData));
         }
 
       } else if (range == 'LowerLimit') {
@@ -197,7 +197,7 @@ class Device extends React.Component {
               'Range': currentValue
           }
           updateData.Range[range] = num_in;
-          this.props.dispatch(parameterActions.updateParameter(updateData));
+          this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, updateData));
         }
       }
     } else {
@@ -211,7 +211,7 @@ class Device extends React.Component {
         'StabilityCriteria': stabilityObj
     }
     updateData.StabilityCriteria[type] = Number(value.value);
-    this.props.dispatch(parameterActions.updateParameter(updateData));
+    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, updateData));
   }
 
   render() {

@@ -109,7 +109,7 @@ class Parameter extends React.Component {
     var paraData = {};
     paraData.ParameterID = parameterID;
     paraData.Equation = value;
-    this.props.dispatch(parameterActions.updateParameter(paraData));
+    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
   }
 
   sortTime(data){

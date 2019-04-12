@@ -75,7 +75,7 @@ class Configurations extends React.Component {
         ParameterID: row.ParameterID,
         [cellName]: cellValue
       }
-      this.props.dispatch(parameterActions.updateParameter(data));
+      this.props.dispatch(parameterActions.updateParameter(this.asset, data));
     }
     let rowStr = '';
     for (const prop in row) {
@@ -85,6 +85,7 @@ class Configurations extends React.Component {
 
   render() {
     const { device, parameter } = this.props;
+    const asset = this.asset;
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
@@ -97,7 +98,7 @@ class Configurations extends React.Component {
       } else if (row.ParameterID){
         type = 'parameter';
       }
-      return <EditEquation equation={cell} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
+      return <EditEquation equation={cell} asset={asset} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){

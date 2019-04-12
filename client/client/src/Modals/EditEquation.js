@@ -2,12 +2,16 @@ import React from 'react';
 import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
+import ContentEditable from "react-contenteditable";
+import sanitizeHtml from "sanitize-html";
 
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
       this.contentEditable = React.createRef();
       this.parameter = props.parameter;
+      this.asset = props.asset;
+      this.anchor;
 
       this.state = {
           equation: props.equation,
@@ -25,7 +29,6 @@ class EditEquation extends React.Component {
       this.updateEquation = this.updateEquation.bind(this);
       this.updateEdit = this.updateEdit.bind(this);
       this.getCursor = this.getCursor.bind(this);
-      this.setCursor = this.setCursor.bind(this);
   }
 
   ModalToggle(){
@@ -35,13 +38,12 @@ class EditEquation extends React.Component {
   }
 
   addButtonClicked(){
-    let equation = this.state.html.replace(/<button class='btn btn-info m-1' contenteditable='false'>/g,"[").replace(/<\/button>/g,"]");
+    let equation = this.state.html.replace(/<button class="btn btn-info m-1" contenteditable="false">/g,"[").replace(/<\/button>/g,"]");
     let data = {
       ParameterID: this.parameter,
       OriginalEquation: equation
     }
-    console.log(data)
-    this.props.dispatch(parameterActions.updateParameter(data));
+    this.props.dispatch(parameterActions.updateParameter(this.asset, data));
     this.setState(prevState => ({
       ModalOpen: !prevState.ModalOpen
     }));
@@ -55,15 +57,17 @@ class EditEquation extends React.Component {
   }
 
   addParameter(x){  
-    this.setState({
-      html: this.state.html + "<button class='btn btn-info m-1' contenteditable='false'>" + x.target.getAttribute('value') + "</button>"
-    });
+    let newParameter = document.createElement('button');
+    newParameter.classList.add("btn", "btn-info", "m-1");
+    newParameter.setAttribute("contenteditable", "false")
+    newParameter.appendChild(document.createTextNode(x.target.getAttribute('value')));
+
+    this.anchor.insertNode(newParameter);
+    this.anchor.setStart(document.getElementById('equationEdit'),this.anchor.startOffset+1);
   }
 
   addOperator(x){  
-    this.setState({
-      html: this.state.html + x.target.getAttribute('value')
-    });
+    this.anchor.insertNode(document.createTextNode(x.target.getAttribute('value')));
   }
 
   updateEquation(){
@@ -73,24 +77,21 @@ class EditEquation extends React.Component {
   }
 
   updateEdit(e){
-    console.log(e.target.innerText)
     this.setState({
       html: e.target.value
     });
-    // console.log(this.getCursor())
-    // this.setCursor(this.getCursor());
   }
 
-  getCursor(){  
-    // console.log(window.getSelection().getRangeAt(0))
-    // this.cursor = window.getSelection().getRangeAt(0);
-    // return window.getSelection().getRangeAt(0);
-  }
-
-  setCursor(chars) {
-    // console.log(chars);
-    // window.getSelection().removeAllRanges();
-    // window.getSelection().addRange(chars);
+  getCursor(e){  
+    var sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+        }
+    } 
+    this.anchor = range;
   }
 
   componentDidMount(){
@@ -110,12 +111,17 @@ class EditEquation extends React.Component {
           <ModalBody>
             <Row>
               <Col md="8">
-                <div id="editEquation" 
-                    style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
-                    onInput={this.updateEdit} 
-                    contentEditable 
-                    dangerouslySetInnerHTML={{__html: this.state.html}}>
-                </div>
+                <ContentEditable
+                  id="equationEdit"
+                  style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
+                  html={this.state.html} // innerHTML of the editable div
+                  disabled={false}       // use true to disable edition
+                  onChange={this.updateEdit} // handle innerHTML change
+                  onKeyDown={this.getCursor}
+                  onMouseDown={this.getCursor}
+                  onKeyUp={this.getCursor}
+                  onMouseUp={this.getCursor}
+                />
                 <div align="right" className="mt-3">
                   <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}
                   <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
@@ -125,7 +131,7 @@ class EditEquation extends React.Component {
               <Col md="4">
                 <div>
                   <h5>Group Data</h5>
-                  {devices.map((x,i)=><Tag className="mb-2" id={'x'+i} onClick={this.addParameter} value={x.Parameters[0].Tag} key={i}>{x.Parameters[0].Tag}</Tag>)}
+                  {devices.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x.Parameters[0].Tag} key={i}>{x.Parameters[0].Tag}</Tag>)}
                 </div>
                 <hr/>
                 <div>

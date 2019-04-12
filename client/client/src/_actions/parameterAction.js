@@ -61,12 +61,13 @@ const addParameter = (assetID, data) => {
     function failure(error) { return { type: gConstants.ADD_PARAMETER_FAILURE, error } }
 }
 
-const updateParameter = (data) => {
+const updateParameter = (assetID, data) => {
     return dispatch => {
         dispatch(request());
         parameterServices.updateParameter(data)
             .then(
                 info => {
+                    dispatch(getParameters(assetID));
                     dispatch(success(info));
                 },
                 error => {

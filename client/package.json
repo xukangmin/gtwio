@@ -75,6 +75,7 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "sanitize-html": "^1.20.0",
     "svg-react-loader": "^0.4.6",
     "toastr": "^2.1.4"
   },

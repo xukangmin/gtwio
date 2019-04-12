@@ -89,15 +89,15 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
   // [ParaID, Operation, Time to look back, offset]
   return new Promise(
     (resolve, reject) => {
-      // console.log(strpara);
-      // console.log(latestTimeStamp);
-      // console.log(dataobj);
+      console.log(strpara);
+      console.log(latestTimeStamp);
+      console.log(dataobj);
       
       
       var plist = strpara.replace(/[\[\]]/g,'').split(',');
-      var paraid, op, timerange, offset;
+      var paraid, op, timerange, offset, startTS, endTS, opts;
 
-      if (plist.length > 4 || plist.length === 0)
+      if (plist.length > 5 || plist.length === 0)
       {
         reject(new Error('wrong format'));
       } else {
@@ -109,15 +109,9 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
         } else if (plist.length === 2) {
           paraid = plist[0];
 
-          if (compareStrings(plist[1], "Baseline", true)) {  
-            op = "BASELINE";
-            timerange = 0;
-            offset = 0;
-          } else {
-            op = "AVG";
-            timerange = parseInt(plist[1]);
-            offset = 0;
-          }
+          op = "AVG";
+          timerange = parseInt(plist[1]);
+          offset = 0;
 
         } else if (plist.length === 3) {
           paraid = plist[0];
@@ -129,9 +123,22 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           op = plist[1];
           timerange = parseInt(plist[2]);
           offset = parseInt(plist[3]);
+        } else if (plist.length === 5) {
+          paraid = plist[0];
+          op = plist[1];
+          opts = plist[2]; 
+          if (compareStrings(opts, "SC", true))
+          {
+            startTS = parseInt(plist[3]);
+            endTS = latestTimeStamp;
+          } else {
+            startTS = parseInt(plist[3]);
+            endTS = parseInt(plist[4]);
+          }
+
         }
 
-        if (compareStrings(op,"BASELINE", true)) {
+        if (compareStrings(strpara,"BASELINE", true)) {
           reject("Baseline not defined in parameter");
         }
         else if (timerange == 0 || compareStrings(op,"Current", true) || compareStrings(op, "LAST", true)) {
@@ -139,23 +146,26 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
           resolve(result);
         }
         else {
-          var startTS;
-          var endTS;
 
-          if (compareStrings(op,"FIX", true)) {
-            // console.log("FIX DATA");
-            
-            if (offset === 0) {
-              offset = 300000;  // default offset 5 mins
+          if (plist.length < 5)
+          {
+            if (compareStrings(op,"FIX", true)) {
+              // console.log("FIX DATA");
+              
+              if (offset === 0) {
+                offset = 300000;  // default offset 5 mins
+              }
+              startTS = timerange - offset;
+              endTS = timerange + offset;
+            } else {
+              startTS = latestTimeStamp - offset - timerange;
+              endTS = latestTimeStamp - offset;
             }
-            startTS = timerange - offset;
-            endTS = timerange + offset;
-          } else {
-            startTS = latestTimeStamp - offset - timerange;
-            endTS = latestTimeStamp - offset;
           }
-          // console.log("startTS=" + startTS);
-          // console.log("endTS=" + endTS);
+
+
+          console.log("startTS=" + startTS);
+          console.log("endTS=" + endTS);
           _getDataByParameterID({ParameterID: paraid}, startTS, endTS)
             .then(
               data => {
@@ -188,9 +198,12 @@ function _resolve_parameter(strpara, latestTimeStamp, dataobj) {
                      var result = math.mean(dataarr);
                      resolve(result);
                    } else if (compareStrings(op,"STD", true)) {
-                    var result = math.std(dataarr);
-                    resolve(result);
-                  }
+                     var result = math.std(dataarr);
+                     resolve(result);
+                   } else if (compareStrings(op,"RAW", true)) {
+                     var result = dataarr.join(',');
+                     resolve(result);
+                   }
                    else {
                      reject(new Error('Operation not defined'))
                    }
@@ -222,9 +235,9 @@ function _math_op_convert(streval) {
 function _perform_calculation(dataobj, equation, latestTimeStamp) {
   return new Promise(
     (resolve, reject) => {
-      //console.log("_perform_calculation:");
-      //console.log(dataobj);
-      //console.log(equation);
+      console.log("_perform_calculation:");
+      console.log(dataobj);
+      console.log(equation);
       var new_eval = equation;
 
       var reg = /\[[^\]]+\]/g;
@@ -240,10 +253,10 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             }
             new_eval = _math_op_convert(new_eval);
             new_eval = new_eval.replace(/[\[\]]/g,'');
-            // console.log("new_eval=" + new_eval);
+            console.log("new_eval=" + new_eval);
             try {
               var result = math.eval(new_eval);
-              // console.log("result=" + result);
+              console.log("result=" + result);
               resolve(result);
             }
             catch(err) {

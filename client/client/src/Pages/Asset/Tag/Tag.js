@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { assetActions } from '../../../_actions/assetAction';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
+import { TabContent, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import { Radar } from '../../../Widgets/Radar';
 import { MultipleLinesPlot } from '../../../Widgets/MultipleLinesPlot';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import { Table } from '../../../Widgets/Table';
+import { Tabs } from 'antd';
+const TabPane = Tabs.TabPane;
 const queryString = require('query-string');
 
 import Loader from '../../../Widgets/Loader';
@@ -42,39 +44,27 @@ class Tag extends React.Component {
     const { AssetData } = this.props;
     const { DeviceData } = this.props;
 
+    function callback(key) {
+      console.log(key);
+    }
+
+    let defaultActive = "1";
+    if(queryString){
+      if (DeviceData && DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 && queryString.parse(location.search).tab.toString()=="2"){
+        defaultActive = "2"
+      }
+    }
+    
+    
     return(
       <div>
         {AssetData && DeviceData ?
           <div>
             <h3>{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
 
-            <Nav tabs className = "mt-2">
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: this.state.activeTab === '1' })}
-                  onClick={() => { this.toggle('1'); }}
-                >
-                  Temperature
-                </NavLink>
-              </NavItem>
-
-              {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
-              <NavItem style={{display: DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ? "list-item" : "none"}}>
-                <NavLink
-                  id="flowTab"
-                  className={classnames({ active: this.state.activeTab === '2' })}
-                  onClick={() => { this.toggle('2'); }}
-                >
-                  Flow Rate
-                </NavLink>
-              </NavItem>
-              :
-              <div></div>}              
-            </Nav>
-
-            <TabContent activeTab={this.state.activeTab}>
-                <TabPane tabId="1">
-                  <Row>
+            <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
+              <TabPane tab="Temperature" key="1">
+              <Row>
                     <div className = "col-8"><MultipleLinesPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
                     <div className = "col-4"><Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
                   </Row>
@@ -85,12 +75,10 @@ class Tag extends React.Component {
                     <Col>
                     </Col>
                   </Row>
-                </TabPane>
-            </TabContent>
-
-            {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
-              <TabContent activeTab={this.state.activeTab}>
-                <TabPane tabId="2">
+              </TabPane>
+              
+              {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
+              <TabPane tab="Flow Rate" key="2">
                 <Row>
                   <Col>
                     <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
@@ -103,15 +91,14 @@ class Tag extends React.Component {
                   <Col>
                   </Col>
                 </Row>
-                </TabPane>
-              </TabContent>
-              :
-              <div></div>
-            }
+              </TabPane>
+              :<span></span>}
+              </Tabs>
           </div>
           :
-          <Loader/>
-      }
+
+          <Loader/>}
+      
       </div>
     );
   }

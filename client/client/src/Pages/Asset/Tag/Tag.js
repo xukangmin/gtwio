@@ -16,28 +16,7 @@ import Loader from '../../../Widgets/Loader';
 class Tag extends React.Component {
   constructor(props){
     super(props);
-
     this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      activeTab: '1',
-    }
-  }
-
-  toggle(tab) {
-    // removeQuery('tab');
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab
-      });
-    }
-  }
-
-  componentDidMount(){
-    if(document.getElementById("flowTab") && queryString.parse(location.search).tab.toString()=="2"){
-      document.getElementById("flowTab").click();
-    }
   }
 
   render(){
@@ -45,7 +24,7 @@ class Tag extends React.Component {
     const { DeviceData } = this.props;
 
     function callback(key) {
-      console.log(key);
+      // console.log(key);
     }
 
     let defaultActive = "1";
@@ -53,8 +32,7 @@ class Tag extends React.Component {
       if (DeviceData && DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 && queryString.parse(location.search).tab.toString()=="2"){
         defaultActive = "2"
       }
-    }
-    
+    }   
     
     return(
       <div>
@@ -70,7 +48,7 @@ class Tag extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset={AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
                   </Col>
                   <Col>
                   </Col>
@@ -78,11 +56,13 @@ class Tag extends React.Component {
               </TabPane>
               
               
-              <TabPane tab="Flow Rate" key="2" style={{display: "none"}}>
+              <TabPane tab="Flow Rate" key="2">
               {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
                 <div>
+
                   <Row>
                     <Col>
+                    <h1>123</h1>
                       <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
                     </Col>
                   </Row>

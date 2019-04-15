@@ -7,7 +7,8 @@ import ContentEditable from "react-contenteditable";
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-      
+      console.log(props.devices)
+      console.log(props.parameters)
       this.parameter = props.parameter;
       this.asset = props.asset;
 

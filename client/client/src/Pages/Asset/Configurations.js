@@ -300,8 +300,24 @@ class Configurations extends React.Component {
                         Data
                     </TableHeaderColumn>
 
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
+                    <TableHeaderColumn 
+                      headerAlign='center' 
+                      dataAlign='center' 
+                      dataField='Tag' 
+                      editable={false} 
+                      dataSort={ true }>
+                        Tag
+                    </TableHeaderColumn>
+                    
+                    <TableHeaderColumn 
+                      headerAlign='center' 
+                      dataAlign='center' 
+                      width='15%' 
+                      dataField='DisplayName' 
+                      dataSort={ true }>
+                        Description
+                    </TableHeaderColumn>
+                    
                     <TableHeaderColumn 
                       headerAlign='center' 
                       dataAlign='center' 

@@ -2,6 +2,7 @@
 import React from 'react';
 import { assetActions } from '../../_actions/assetAction';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Button, Icon } from 'antd';
 
 class List extends React.Component {
   constructor(props) {
@@ -34,9 +35,10 @@ class List extends React.Component {
     const { assets } = this.props;
 
     function linkFormatter(cell){
-      return <div><button type="button" title="Go to Asset's Dashboard Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><i className ='fas fa-tachometer-alt'></i></button>
-      <button type="button" title="Go to Asset's Data Page" className="btn btn-info ml-1" onClick={()=>location.href='/asset/'+ cell + '/data'}><i className="fas fa-table"></i></button>
-      <button type="button" title="Go to Asset's Configuration Page" className="btn btn-secondary ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><i className="fas fa-cog"></i></button></div>
+      return <div>
+      <Button title="Go to Asset's Dashboard Page" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><Icon type="dashboard" /></Button>
+      <Button title="Go to Asset's Data Page" className="ml-1" onClick={()=>location.href='/asset/'+ cell + '/data'}><Icon type="table" /></Button>
+      <Button title="Go to Asset's Configuration Page" className="ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><Icon type="setting" /></Button></div>
     }
 
     function countFormatter(cell){

@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
                     width={100}
                     percent={(heatBalanceError.Value/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
                     format={()=>heatBalanceError.Value.toFixed(0)} />                    
-                    <span style={{position: "relative", top: "-80", right: "-40", color: "red", fontSize:"1.2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="info-circle" />}</span>
+                    <span style={{position: "relative", top: "-80", right: "-40", color: "red", fontSize: "1.2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="info-circle" />}</span>
                     <br/><br/>
                     <span><strong>{heatBalanceError.Name}</strong></span>
                   </a>

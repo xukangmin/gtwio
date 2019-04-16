@@ -11,7 +11,7 @@ import { Row, Col } from 'reactstrap';
 
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Tabs } from 'antd';
+import { Tabs, Button, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
 import EditEquation from '../../Modals/EditEquation';
@@ -106,7 +106,7 @@ class Configurations extends React.Component {
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
       const displayText = cell;
-      return <button type="button" title="Go to Data Page" className="btn btn-success" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><i className ='fas fa-table'></i></button>
+      return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><Icon type="table" /></Button>
     }
 
     function parameterFormatter(cell, row) {

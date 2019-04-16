@@ -11,9 +11,9 @@ class MultipleLinesPlot extends React.Component {
   render(){
     const { data } = this.props;
     const { unit } = this.props;
-    
+
     let isRangeBiggerThanADay = false;
-    if (JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).interval)>=86400){
+    if (JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).interval)>=1440){
       isRangeBiggerThanADay = true;
     } else if (!JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).end) - parseInt(JSON.parse(localStorage.getItem('range')).start)>=86400){
       isRangeBiggerThanADay = true;

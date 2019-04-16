@@ -117,11 +117,11 @@ class EditEquation extends React.Component {
     return(
       <div>
         <span onClick={this.ModalToggle}>{this.state.equation}</span>
-        <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: "1000px"}}>
+        <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: '1280px', overflowY: 'initial !important'}}>
           <ModalHeader toggle={this.ModalToggle}>Edit Equation</ModalHeader>
-          <ModalBody>
+          <ModalBody style={{height: 'calc(100vh - 200px)'}}>
             <Row>
-              <Col md="8">
+              <Col md="7">
                 <ContentEditable
                   id="equationEdit"
                   className="form-control form-control-static"
@@ -139,7 +139,7 @@ class EditEquation extends React.Component {
                   <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
                 </div>                
               </Col>
-              <Col md="4">
+              <Col md="5" style={{height: 'calc(100vh - 220px)', overflowY: 'scroll'}}>
                 <div>
                   <h5>Group Data</h5>
                   {devices.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x} key={i}>{x}</Tag>)}
@@ -149,8 +149,7 @@ class EditEquation extends React.Component {
                   <h5>Parameters</h5>
                   {parameters.map((x,i)=><Tag className="mb-2" onClick={this.addParameter} value={x.Tag} key={i}>{x.Tag}</Tag>)}
                 </div>
-                <hr/>
-                <div>
+                <div style={{display: "none"}}>
                   <h5>Operators</h5>
                   {operators.map((x,i)=><Tag className="mb-2" onClick={this.addOperator} value={x.Name} key={i}>{x.Name}</Tag>)}
                 </div>

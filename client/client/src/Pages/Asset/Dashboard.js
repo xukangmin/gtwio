@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Row, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Row } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import HxSvg from 'raw-loader!../../Images/Hx.svg';
 import Loader from '../../Widgets/Loader';
-import { ProgressBar } from '../../Widgets/ProgressBar';
+import { Progress, Icon } from 'antd';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -17,31 +17,80 @@ class Dashboard extends React.Component {
   }  
 
   render() {
-    const { assetData, AssetTags } = this.props;
+    const { assetData, assetTags } = this.props;
+
     const Hx_style = {
       maxWidth: "1200px",
       maxHeight: "560px"
+    };
+
+    let progressBars, cleanliness, heatFlow, heatBalanceError;
+    if (assetTags){
+      progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
+      cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR");
+      heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_FLOW");
+      heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR");
     }
+
     if (!this.user){
       return (<Redirect to='/login'/>);
     } else{
       return (
         <div>
-        {assetData ?
+        {assetData && assetTags ?
           <div style={Hx_style} className="mx-auto">
             <Samy svgXML={HxSvg}>
-              { AssetTags && AssetTags.map((item,i) =>
+              { assetTags && assetTags.map((item,i) =>
                   <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
                 )
               }
             </Samy>
             <Row>
-              <div style={{width: '50%', marginTop: "-150px"}}>
-              { AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.filter(bar => bar.AssignedTag == "CLEANLINESS_FACTOR" || bar.AssignedTag == "HEAT_BALANCE_ERROR" || bar.AssignedTag == "UNCERTAINTY_HBE").map((item, i) =>                    
-                <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}>
-                  <ProgressBar key={i} item={item}/> 
-                </a>                  
-              )}
+              <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
+              { cleanliness &&
+                <div style={{width: "180px"}}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.ParameterID}>
+                    <Progress 
+                    type="circle" 
+                    width={100}
+                    percent={(cleanliness.Value/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100} 
+                    format={()=>cleanliness.Value.toFixed(2)} /> 
+                    <br/>
+                    <span>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").Value.toFixed(2)}</span>
+                    <br/>
+                    <span><strong>{cleanliness.Name}</strong></span>
+                  </a>
+                </div>                
+              }
+              { heatFlow &&
+                <div style={{width: "180px"}}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.ParameterID}>
+                    <Progress 
+                    type="circle"
+                    width={100} 
+                    percent={(heatFlow.Value/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100} 
+                    format={()=>heatFlow.Value.toFixed(0)} /> 
+                    <br/>
+                    <span>±{progressBars.find(item=> item.AssignedTag == "HEAT_FLOW_UNCERTAINTY").Value.toFixed(0)}</span>
+                    <br/>
+                    <span><strong>{heatFlow.Name}</strong></span>
+                  </a>
+                </div>                
+              }
+              { heatBalanceError &&
+                <div style={{width: "180px"}}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.ParameterID}>
+                    <Progress 
+                    type="circle" 
+                    width={100}
+                    percent={(heatBalanceError.Value/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
+                    format={()=>heatBalanceError.Value.toFixed(0)} />                    
+                    <span style={{position: "relative", top: "-80", right: "-40", color: "red", fontSize:"1.2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="info-circle" />}</span>
+                    <br/><br/>
+                    <span><strong>{heatBalanceError.Name}</strong></span>
+                  </a>
+                </div>                
+              }
               </div>              
             </Row>
           </div>
@@ -84,7 +133,7 @@ function mapStateToProps(state) {
   const { data, tags } = state.asset;
   return {
       assetData : data,
-      AssetTags : tags
+      assetTags : tags
   };
 }
 

@@ -36,6 +36,11 @@ const _getSingleParameterCurrentValue = (dataObj) => {
           .then(ret => {
             dataObj.Value  = ret.CurrentValue;
             dataObj.Unit = ret.Unit;
+            if (ret.Range)
+            {
+                dataObj.Range = ret.Range;
+            }
+            
               resolve(dataObj);
           })
           .catch(

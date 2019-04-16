@@ -70,8 +70,17 @@
       },
       {
         "Name" : "Cleanliness Factor",
-        "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO] * [MASS_FLOW_RATIO]",
-        "Tag" : "CLEANLINESS_FACTOR"
+        "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO]",
+        "Tag" : "CLEANLINESS_FACTOR",
+        "Range" : {
+          "UpperLimit": 1.2,
+          "LowerLimit": 0
+        }
+      },
+      {
+        "Name" : "Cleanliness Factor Uncertainty",
+        "Equation" : "[CLEANLINESS_FACTOR] * 0.6",
+        "Tag" : "CLEANLINESS_FACTOR_UNCERTAINTY"
       },
       {
         "Name" : "Shell Delta T",
@@ -116,7 +125,11 @@
       {
         "Name" : "AVG Heat Flow",
         "Equation" : "avg([SHELL_HEAT_FLOW], [TUBE_HEAT_FLOW])",
-        "Tag" : "AVG_HEAT_FLOW"
+        "Tag" : "AVG_HEAT_FLOW",
+        "Range" : {
+          "UpperLimit": 3000000,
+          "LowerLimit": 2000000
+        }
       },
       {
         "Name" : "AVG Heat Flow Uncertainty",
@@ -126,7 +139,11 @@
       {
         "Name" : "Heat Balance Error",
         "Equation" : "100*abs(([TUBE_HEAT_FLOW]-[SHELL_HEAT_FLOW])/[SHELL_HEAT_FLOW])",
-        "Tag" : "HEAT_BALANCE_ERROR"
+        "Tag" : "HEAT_BALANCE_ERROR",
+        "Range" : {
+          "UpperLimit": 100,
+          "LowerLimit": 0
+        }
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
@@ -633,8 +650,8 @@
             "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "Cleanliness Factor ",
-            "AssignedTag": "CLEANLINESS_FACTOR"
+            "Name": "Cleanliness Factor Uncertainty",
+            "AssignedTag": "CLEANLINESS_FACTOR_UNCERTAINTY"
           },
           {
             "Name": "Avg Heat Flow",

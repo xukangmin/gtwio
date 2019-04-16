@@ -161,13 +161,13 @@
 <g>
 	<rect id="Rect_ShellInlet_flow" x="248.7" y="142.8" class="st26" width="87.4" height="26.7"/>
 	<a id="ShellInlet_flow">
-		<text transform="matrix(1 0 0 1 260 161)" class="st24 st8 st27"></text>
+		<text transform="matrix(1 0 0 1 258 161)" class="st24 st8 st27"></text>
 	</a>
 </g>
 <g>
 	<rect id="Rect_TubeOutlet_flow" x="129.4" y="207.4" class="st26" width="79.8" height="24.7"/>
 	<a id="TubeOutlet_flow">
-		<text transform="matrix(1 0 0 1 138 224)" class="st24 st8 st16"></text>
+		<text transform="matrix(1 0 0 1 135 225)" class="st24 st8 st16"></text>
 	</a>
 </g>
 </svg>

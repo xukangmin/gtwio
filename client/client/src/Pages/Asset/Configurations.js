@@ -175,8 +175,8 @@ class Configurations extends React.Component {
                       bordered={false}
                       hover
                       height='80%'
-                      scrollTop={'Top'}
-                      >
+                      scrollTop={'Top'}                      
+                    >
 
                     <TableHeaderColumn
                       headerAlign='center'
@@ -279,7 +279,9 @@ class Configurations extends React.Component {
                     search={ true }
                     cellEdit={ cellEditProp }
                     version='4'
-                    bordered={ false }>
+                    bordered={ false }
+                    style={{overflow:'wrap', whiteSpace: 'unset'}}
+                  >
                     <TableHeaderColumn 
                       headerAlign='center' 
                       dataAlign='center' 

@@ -36,7 +36,7 @@ class Table extends React.Component {
           </thead>
           <tbody>
             {data.map((single,i) =>
-              <SingleItem data = {single} unit={unit} asset={asset} key = {i}/>
+              <SingleItem data={single} unit={unit} asset={asset} key={i}/>
             )}
           </tbody>
         </table>

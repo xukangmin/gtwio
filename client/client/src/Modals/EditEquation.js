@@ -7,8 +7,6 @@ import ContentEditable from "react-contenteditable";
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-      console.log(props.devices)
-      console.log(props.parameters)
       this.parameter = props.parameter;
       this.asset = props.asset;
 
@@ -29,8 +27,6 @@ class EditEquation extends React.Component {
       this.updateEquation = this.updateEquation.bind(this);
       this.updateEdit = this.updateEdit.bind(this);
       this.getCursor = this.getCursor.bind(this);
-
-
   }
 
   ModalToggle(){
@@ -114,11 +110,11 @@ class EditEquation extends React.Component {
       { Name: '-'}, 
       { Name: '*'}, 
       { Name: '/'}
-    ]
+    ];
 
     return(
       <div>
-        <span onClick={this.ModalToggle}>{this.state.equation}</span>
+        <p onClick={this.ModalToggle}>{this.state.equation}</p>
         <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: "1000px"}}>
           <ModalHeader toggle={this.ModalToggle}>Edit Equation</ModalHeader>
           <ModalBody>
@@ -128,9 +124,9 @@ class EditEquation extends React.Component {
                   id="equationEdit"
                   className="form-control"
                   style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
-                  html={this.state.html} // innerHTML of the editable div
-                  disabled={false}       // use true to disable edition
-                  onChange={this.updateEdit} // handle innerHTML change
+                  html={this.state.html} 
+                  disabled={false}       
+                  onChange={this.updateEdit}
                   onKeyDown={this.getCursor}
                   onMouseDown={this.getCursor}
                   onKeyUp={this.getCursor}

@@ -16,7 +16,8 @@ import Loader from '../../../Widgets/Loader';
 class Tag extends React.Component {
   constructor(props){
     super(props);
-    this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));
+
+    this.props.dispatch(assetActions.getAsset(JSON.parse(localStorage.getItem('user')),props.match.params.assetID));    
   }
 
   render(){
@@ -24,15 +25,15 @@ class Tag extends React.Component {
     const { DeviceData } = this.props;
 
     function callback(key) {
-      // console.log(key);
+      console.log(key);
     }
 
     let defaultActive = "1";
-    if(queryString){
+    if (queryString.parse(location.search).tab){
       if (DeviceData && DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 && queryString.parse(location.search).tab.toString()=="2"){
         defaultActive = "2"
       }
-    }   
+    }    
     
     return(
       <div>
@@ -42,43 +43,35 @@ class Tag extends React.Component {
 
             <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
               <TabPane tab="Temperature" key="1">
-                <Row>
-                  <div className = "col-8"><MultipleLinesPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
-                  <div className = "col-4"><Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
-                </Row>
-                <Row>
-                  <Col>
-                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset={AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
-                  </Col>
-                  <Col>
-                  </Col>
-                </Row>
+              <Row>
+                    <div className = "col-8"><MultipleLinesPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
+                    <div className = "col-4"><Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                    </Col>
+                    <Col>
+                    </Col>
+                  </Row>
               </TabPane>
               
-              
+              {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 &&
               <TabPane tab="Flow Rate" key="2">
-              {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 ?
-                <div>
-
-                  <Row>
-                    <Col>
-                    <h1>123</h1>
-                      <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
-                    </Col>
-                    <Col>
-                    </Col>
-                  </Row>
-                </div>
-                :
-                <p>No flow meter at {this.props.match.params.tagID}</p>
-              }   
-              </TabPane>              
-            </Tabs>
+                <Row>
+                  <Col>
+                    <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                  </Col>
+                  <Col>
+                  </Col>
+                </Row>
+              </TabPane>}
+              </Tabs>
           </div>
           :
           <Loader/>}      

@@ -26,6 +26,7 @@ class MultipleLinesPlot extends React.Component {
     }
 
     let layout = {
+      title: 'Line Chart',
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
         ticklen: 8,

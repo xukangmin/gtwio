@@ -43,7 +43,7 @@ class SingleLinePlot extends React.Component {
       <Plot
         data={[data]}
         layout={layout}
-        style = {{width: flow ? "80vw" : "100%"}}
+        style = {{width: "100%"}}
       />
     );
   }

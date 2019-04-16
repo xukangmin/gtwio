@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Progress } from 'antd';
 
 class ProgressBar extends React.Component {
   constructor(props) {
@@ -8,12 +7,12 @@ class ProgressBar extends React.Component {
   }
 
   render() {
-    let { type, percentage, unit } = this.props;
+    let { item } = this.props;
     
     return(
-      <div className="mb-1">
-        <span>{type}</span>
-        <Progress percent={percentage} status="active" />
+      <div className="mb-1" style={{display: "flex", alignItems: "center"}}>
+        <h5>{item.Name}</h5>
+        <span>{item.Value.toFixed(2)}{item.Unit}</span>
       </div>
       
     )

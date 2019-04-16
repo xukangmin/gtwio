@@ -39,7 +39,7 @@ class Dashboard extends React.Component {
               <div style={{width: '50%', marginTop: "-150px"}}>
               { AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.filter(bar => bar.AssignedTag == "CLEANLINESS_FACTOR" || bar.AssignedTag == "HEAT_BALANCE_ERROR" || bar.AssignedTag == "UNCERTAINTY_HBE").map((item, i) =>                    
                 <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}>
-                  <ProgressBar key={i} type={item.AssignedTag} percentage={typeof(item.Value) == 'number' ? item.Value.toFixed(2) : item.Value} unit={item.Unit}/> 
+                  <ProgressBar key={i} item={item}/> 
                 </a>                  
               )}
               </div>              

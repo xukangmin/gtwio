@@ -125,7 +125,7 @@
       {
         "Name" : "AVG Heat Flow",
         "Equation" : "avg([SHELL_HEAT_FLOW], [TUBE_HEAT_FLOW])",
-        "Tag" : "AVG_HEAT_FLOW",
+        "Tag" : "HEAT_FLOW",
         "Range" : {
           "UpperLimit": 3000000,
           "LowerLimit": 2000000
@@ -133,8 +133,8 @@
       },
       {
         "Name" : "AVG Heat Flow Uncertainty",
-        "Equation" : "[AVG_HEAT_FLOW] * 0.6",
-        "Tag" : "AVG_HEAT_FLOW_UNCERTAINTY"
+        "Equation" : "[HEAT_FLOW] * 0.6",
+        "Tag" : "HEAT_FLOW_UNCERTAINTY"
       },
       {
         "Name" : "Heat Balance Error",
@@ -655,11 +655,11 @@
           },
           {
             "Name": "Avg Heat Flow",
-            "AssignedTag": "AVG_HEAT_FLOW"
+            "AssignedTag": "HEAT_FLOW"
           },
           {
             "Name": "AVG Heat Flow Uncertainty",
-            "AssignedTag": "AVG_HEAT_FLOW_UNCERTAINTY"
+            "AssignedTag": "HEAT_FLOW_UNCERTAINTY"
           },
           {
             "Name": "Heat Balance Error",

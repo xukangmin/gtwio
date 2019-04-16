@@ -93,9 +93,9 @@
         "Tag" : "SHELL_DENSITY"
       },
       {
-        "Name" : "Shell Heat Flow",
+        "Name" : "Heat Flow",
         "Equation" : "([SHELL_FLOW_RATE]*[SHELL_DELTA_T]*[SHELL_SPEC_HEAT]*[SHELL_DENSITY])*(0.133681/1)*(60/1)",
-        "Tag" : "SHELL_HEAT_FLOW",
+        "Tag" : "HEAT_FLOW",
         "Range" : {
           "UpperLimit": 3000000,
           "LowerLimit": 2000000
@@ -103,8 +103,8 @@
       },
       {
         "Name" : "Shell Heat Flow Uncertainty",
-        "Equation" : "[SHELL_HEAT_FLOW] * 0.6",
-        "Tag" : "SHELL_HEAT_FLOW_UNCERTAINTY"
+        "Equation" : "[HEAT_FLOW] * 0.6",
+        "Tag" : "HEAT_FLOW_UNCERTAINTY"
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
@@ -550,11 +550,11 @@
           },
           {
             "Name": "Heat Flow",
-            "AssignedTag": "SHELL_HEAT_FLOW"
+            "AssignedTag": "HEAT_FLOW"
           },
           {
             "Name": "Heat Flow Uncertainty",
-            "AssignedTag": "SHELL_HEAT_FLOW_UNCERTAINTY"
+            "AssignedTag": "HEAT_FLOW_UNCERTAINTY"
           }
         ]
       }

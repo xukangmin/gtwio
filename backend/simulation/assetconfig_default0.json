@@ -56,7 +56,16 @@
       {
         "Name" : "Cleanliness Factor",
         "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO]",
-        "Tag" : "CLEANLINESS_FACTOR"
+        "Tag" : "CLEANLINESS_FACTOR",
+        "Range" : {
+          "UpperLimit": 1.2,
+          "LowerLimit": 0
+        }
+      },
+      {
+        "Name" : "Cleanliness Factor Uncertainty",
+        "Equation" : "[CLEANLINESS_FACTOR] * 0.6",
+        "Tag" : "CLEANLINESS_FACTOR_UNCERTAINTY"
       },
       {
         "Name" : "Number Of Data Sets",
@@ -437,20 +446,8 @@
             "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "SI TMU",
-            "AssignedTag": "SHELLINLET_TMU"
-          },
-          {
-            "Name": "SO TMU",
-            "AssignedTag": "SHELLOUTLET_TMU"
-          },
-          {
-            "Name": "TI TMU",
-            "AssignedTag": "TUBEINLET_TMU"
-          },
-          {
-            "Name": "TO TMU",
-            "AssignedTag": "TUBEOUTLET_TMU"
+            "Name": "Cleanliness Factor Uncertainty",
+            "AssignedTag": "CLEANLINESS_FACTOR_UNCERTAINTY"
           }
         ]
       }

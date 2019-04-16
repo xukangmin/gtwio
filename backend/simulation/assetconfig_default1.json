@@ -66,7 +66,16 @@
       {
         "Name" : "Cleanliness Factor",
         "Equation" : "[DELTA_T_RATIO] * [LMTD_RATIO]",
-        "Tag" : "CLEANLINESS_FACTOR"
+        "Tag" : "CLEANLINESS_FACTOR",
+        "Range" : {
+          "UpperLimit": 1.2,
+          "LowerLimit": 0
+        }
+      },
+      {
+        "Name" : "Cleanliness Factor Uncertainty",
+        "Equation" : "[CLEANLINESS_FACTOR] * 0.6",
+        "Tag" : "CLEANLINESS_FACTOR_UNCERTAINTY"
       },
       {
         "Name" : "Shell Delta T",
@@ -86,7 +95,16 @@
       {
         "Name" : "Shell Heat Flow",
         "Equation" : "([SHELL_FLOW_RATE]*[SHELL_DELTA_T]*[SHELL_SPEC_HEAT]*[SHELL_DENSITY])*(0.133681/1)*(60/1)",
-        "Tag" : "SHELL_HEAT_FLOW"
+        "Tag" : "SHELL_HEAT_FLOW",
+        "Range" : {
+          "UpperLimit": 3000000,
+          "LowerLimit": 2000000
+        }
+      },
+      {
+        "Name" : "Shell Heat Flow Uncertainty",
+        "Equation" : "[SHELL_HEAT_FLOW] * 0.6",
+        "Tag" : "SHELL_HEAT_FLOW_UNCERTAINTY"
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
@@ -523,32 +541,20 @@
         "TagName": "ProgressBars",
         "Data": [
           {
-            "Name": "Cleanliness Factor ",
+            "Name": "Cleanliness Factor",
             "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "SI TMU",
-            "AssignedTag": "SHELLINLET_TMU"
+            "Name": "Cleanliness Factor Uncertainty",
+            "AssignedTag": "CLEANLINESS_FACTOR_UNCERTAINTY"
           },
           {
-            "Name": "SO TMU",
-            "AssignedTag": "SHELLOUTLET_TMU"
-          },
-          {
-            "Name": "TI TMU",
-            "AssignedTag": "TUBEINLET_TMU"
-          },
-          {
-            "Name": "TO TMU",
-            "AssignedTag": "TUBEOUTLET_TMU"
-          },
-          {
-            "Name": "Shell Heat Flow",
+            "Name": "Heat Flow",
             "AssignedTag": "SHELL_HEAT_FLOW"
           },
           {
-            "Name": "Shell FLOW TMU",
-            "AssignedTag": "SHELLINLET_FLOW_TMU"
+            "Name": "Heat Flow Uncertainty",
+            "AssignedTag": "SHELL_HEAT_FLOW_UNCERTAINTY"
           }
         ]
       }

@@ -114,6 +114,16 @@
         "Tag" : "TUBE_HEAT_FLOW"
       },
       {
+        "Name" : "AVG Heat Flow",
+        "Equation" : "avg([SHELL_HEAT_FLOW], [TUBE_HEAT_FLOW])",
+        "Tag" : "AVG_HEAT_FLOW"
+      },
+      {
+        "Name" : "AVG Heat Flow Uncertainty",
+        "Equation" : "[AVG_HEAT_FLOW] * 0.6",
+        "Tag" : "AVG_HEAT_FLOW_UNCERTAINTY"
+      },
+      {
         "Name" : "Heat Balance Error",
         "Equation" : "100*abs(([TUBE_HEAT_FLOW]-[SHELL_HEAT_FLOW])/[SHELL_HEAT_FLOW])",
         "Tag" : "HEAT_BALANCE_ERROR"
@@ -623,36 +633,16 @@
             "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "SI TMU",
-            "AssignedTag": "SHELLINLET_TMU"
+            "Name": "Cleanliness Factor ",
+            "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
-            "Name": "SO TMU",
-            "AssignedTag": "SHELLOUTLET_TMU"
+            "Name": "Avg Heat Flow",
+            "AssignedTag": "AVG_HEAT_FLOW"
           },
           {
-            "Name": "TI TMU",
-            "AssignedTag": "TUBEINLET_TMU"
-          },
-          {
-            "Name": "TO TMU",
-            "AssignedTag": "TUBEOUTLET_TMU"
-          },
-          {
-            "Name": "Shell Heat Flow",
-            "AssignedTag": "SHELL_HEAT_FLOW"
-          },
-          {
-            "Name": "Tube Heat Flow",
-            "AssignedTag": "TUBE_HEAT_FLOW"
-          },
-          {
-            "Name": "Shell FLOW TMU",
-            "AssignedTag": "SHELLINLET_FLOW_TMU"
-          },
-          {
-            "Name": "Tube FLOW TMU",
-            "AssignedTag": "TUBEOUTLET_FLOW_TMU"
+            "Name": "AVG Heat Flow Uncertainty",
+            "AssignedTag": "AVG_HEAT_FLOW_UNCERTAINTY"
           },
           {
             "Name": "Heat Balance Error",

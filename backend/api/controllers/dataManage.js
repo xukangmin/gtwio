@@ -280,7 +280,7 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
         )
         .catch(
           err => {
-            console.log(err);
+            //console.log(err);
             reject(err);
           }
         );

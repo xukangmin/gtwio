@@ -46,7 +46,7 @@ const ParameterInfo = (props) => {
             {parameter.CurrentValue &&
               <tr>
                 <th>Current Value</th>
-                <td>{parameter.CurrentValue.toFixed(2)+parameter.Unit}</td>
+                <td>{parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
               </tr>
             }
             {parameter.CurrentTimeStamp &&
@@ -56,6 +56,47 @@ const ParameterInfo = (props) => {
               </tr>
             }
           </tbody>
+        </Table>
+        </div>
+        <div className = "col-lg-6 col-sm-12">
+        <Table striped>
+          {parameter.Range &&
+            <tbody>            
+            {typeof(parameter.Range.LowerLimit)=="number" &&
+              <tr>
+                <th>LowerLimit</th>
+                <td>
+                  <InlineEdit
+                    value={parameter.Range.LowerLimit}
+                    tag="span"
+                    type="text"
+                    saveLabel="Update"
+                    saveColor="#17a2b8"
+                    cancelLabel="Cancel"
+                    cancelColor="#6c757d"
+                    onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
+                  />
+                </td>
+              </tr>
+            }
+            {typeof(parameter.Range.UpperLimit)=="number" &&
+              <tr>
+                <th>UpperLimit</th>
+                <td>
+                <InlineEdit
+                  value={parameter.Range.UpperLimit}
+                  tag="span"
+                  type="text"
+                  saveLabel="Update"
+                  saveColor="#17a2b8"
+                  cancelLabel="Cancel"
+                  cancelColor="#6c757d"
+                  onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
+                />
+                </td>
+              </tr>
+            }
+          </tbody>}
         </Table>
       </div>
     </div>
@@ -82,7 +123,7 @@ const ParameterTable = (props) => {
           {parameter.map((item,i) =>
               <tr key = {i}>
                 <td style={{padding: 0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{parseFloat(item.Value).toFixed(2)+"°F"}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{parseFloat(item.Value).toFixed(2)}{item.Unit && item.Unit}</td>
               </tr>
           )}
         </tbody>
@@ -101,6 +142,7 @@ class Parameter extends React.Component {
     }
 
     this.updateEquation = this.updateEquation.bind(this);
+    this.updateLimit = this.updateLimit.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
   }
@@ -109,6 +151,14 @@ class Parameter extends React.Component {
     var paraData = {};
     paraData.ParameterID = parameterID;
     paraData.Equation = value;
+    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
+  }
+
+  updateLimit(parameter, item, value){
+    console.log(parameter)
+    var paraData = parameter;
+    paraData.ParameterID = parameter.ParameterID;
+    paraData.Range[item] = parseInt(value);
     this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
   }
 
@@ -141,7 +191,7 @@ class Parameter extends React.Component {
         <div className = "mt-3">
         {parameter && parameterData ?
           <div>
-            <ParameterInfo data={parameter} update={this.updateEquation}/>
+            <ParameterInfo data={parameter} update={this.updateEquation} updateLimit={this.updateLimit}/>
             {parameterData &&
             <div className = "row mt-3">
               <div className = "col-auto">

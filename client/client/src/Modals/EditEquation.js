@@ -1,12 +1,13 @@
 import React from 'react';
 import { parameterActions } from '../_actions/parameterAction';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
-import ContentEditable from "react-contenteditable";
+import ContentEditable from 'react-contenteditable';
 
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
+
       this.parameter = props.parameter;
       this.asset = props.asset;
 
@@ -17,6 +18,7 @@ class EditEquation extends React.Component {
           html: props.equation,
           ModalOpen: false
       };
+      
       this.contentEditable = React.createRef();
 
       this.ModalToggle = this.ModalToggle.bind(this);
@@ -114,7 +116,7 @@ class EditEquation extends React.Component {
 
     return(
       <div>
-        <p onClick={this.ModalToggle}>{this.state.equation}</p>
+        <span onClick={this.ModalToggle}>{this.state.equation}</span>
         <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: "1000px"}}>
           <ModalHeader toggle={this.ModalToggle}>Edit Equation</ModalHeader>
           <ModalBody>
@@ -122,7 +124,7 @@ class EditEquation extends React.Component {
               <Col md="8">
                 <ContentEditable
                   id="equationEdit"
-                  className="form-control"
+                  className="form-control form-control-static"
                   style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
                   html={this.state.html} 
                   disabled={false}       

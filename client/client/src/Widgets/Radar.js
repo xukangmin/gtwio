@@ -87,7 +87,7 @@ class Radar extends React.Component {
       },
       showlegend: false,
       margin:{
-        l: 40,
+        l: 50,
         t: 50
       }
     }

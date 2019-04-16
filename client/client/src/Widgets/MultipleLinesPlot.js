@@ -12,12 +12,19 @@ class MultipleLinesPlot extends React.Component {
     const { data } = this.props;
     const { unit } = this.props;
 
+    let isRangeBiggerThanADay = false;
+    if (JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).interval)>=1440){
+      isRangeBiggerThanADay = true;
+    } else if (!JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).end) - parseInt(JSON.parse(localStorage.getItem('range')).start)>=86400){
+      isRangeBiggerThanADay = true;
+    }
+
     let formattedData = [];
     let allData = [];
 
     for (var i = 0; i < data.length; i++){
       formattedData.push({
-        x: data[i].Parameters[0].Data.map((item,i) => moment(new Date(item.TimeStamp)).format("H:mm")),
+        x: data[i].Parameters[0].Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
         y: data[i].Parameters[0].Data.map((item,i) => item.Value.toFixed(2)),
         type: 'scatter',
         name: data[i].SerialNumber
@@ -26,6 +33,7 @@ class MultipleLinesPlot extends React.Component {
     }
 
     let layout = {
+      title: 'Line Chart',
       yaxis: {
         range: [Math.min(...allData[0])-10,Math.max(...allData[0])+10],
         ticklen: 8,

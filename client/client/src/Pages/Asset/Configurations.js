@@ -7,14 +7,14 @@ import { parameterActions } from '../../_actions/parameterAction';
 import AddDevice from '../../Modals/AddDevice';
 import AddParameter from '../../Modals/AddParameter';
 import Loader from '../../Widgets/Loader';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col} from 'reactstrap';
-import classnames from 'classnames';
+import { Row, Col } from 'reactstrap';
 
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Tabs } from 'antd';
+const TabPane = Tabs.TabPane;
 
 import EditEquation from '../../Modals/EditEquation';
-
 
 class Configurations extends React.Component {
   constructor(props) {
@@ -26,12 +26,10 @@ class Configurations extends React.Component {
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
     this.props.dispatch(parameterActions.getParameters(this.asset));
 
-    this.toggle = this.toggle.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
     this.state = {
-      activeTab: '1',
       NewDevice: {
         DisplayName: '',
         SerialNumber: ''
@@ -43,15 +41,7 @@ class Configurations extends React.Component {
       addNewDeviceModalOpen: false,
       addNewParameterModalOpen: false
     };
-  }
-
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab
-      });
-    }
-  }
+  } 
 
   deleteItem(itemID, itemName, itemType){
     if (confirm("Are you sure to delete " + itemName +"?")){
@@ -137,197 +127,202 @@ class Configurations extends React.Component {
       afterSaveCell: this.onAfterSaveCell
     };    
 
+    function callback(key) {
+      console.log(key);
+    }
+
     return (
       <div>
-        {device && parameter?
-          <div>
-            <Nav tabs>
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: this.state.activeTab === '1' })}
-                  onClick={() => { this.toggle('1'); }}
+        {device && parameter? 
+        <Tabs onChange={callback} type="card" defaultActiveKey="1">
+          <TabPane tab="Devices" key="1">
+          <Row className="mt-3">
+              <Col>
+                <AddDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                <BootstrapTable
+                  data={device}
+                  insertRow={false}
+                  deleteRow={false}
+                  search={true}
+                  cellEdit={cellEditProp}
+                  version='4'
+                  bordered={false}
+                  hover
+                  height='80%'
+                  scrollTop={'Top'} 
+                  condensed                     
                 >
-                  Devices
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: this.state.activeTab === '2' })}
-                  onClick={() => { this.toggle('2'); }}
+
+                <TableHeaderColumn
+                  headerAlign='center'
+                  dataAlign='center'
+                  dataField='SerialNumber'
+                  editable={false}
+                  dataFormat={linkFormatter}
+                  formatExtraData={this.asset}>
+                    Data
+                </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    isKey
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='SerialNumber'
+                    editable={false}
+                    dataSort={true}>
+                      Serial Number
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Alias'
+                    dataSort={true}>
+                      SensorID
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='DisplayName'
+                    dataSort={true}>
+                      Description
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Parameters'
+                    dataFormat={parameterFormatter}
+                    editable={false}
+                    dataSort={true}
+                    hidden>
+                      Parameter
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Tag'
+                    dataSort={true}
+                    editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>
+                      Location
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Angle'
+                    dataFormat={angleFormatter}
+                    dataSort={true}
+                    editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>
+                      Angle
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='LastCalibrationDate'
+                    editable={false}
+                    dataFormat={dateFormatter}
+                    dataSort={true}>
+                      Last Calibration Date
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='DeviceID'
+                    editable={false}
+                    formatExtraData={this.deleteItem}
+                    dataFormat={deleteFormatter}>
+                      Delete
+                  </TableHeaderColumn>
+                </BootstrapTable>
+              </Col>
+            </Row>
+          </TabPane>
+
+          <TabPane tab="Parameters & Calculations" key="2">
+            <Row className="mt-3">
+              <Col>
+                <AddParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                <BootstrapTable
+                  data={parameter}
+                  hover
+                  height='80%' scrollTop={'Top'}
+                  search={true}
+                  cellEdit={cellEditProp}
+                  version='4'
+                  bordered={false}
+                  condensed
                 >
-                  Parameters & Calculations
-                </NavLink>
-              </NavItem>
-            </Nav>
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='center' 
+                    isKey={true} 
+                    dataField='ParameterID' 
+                    editable={false} 
+                    hidden>
+                      Parameter ID
+                  </TableHeaderColumn>
 
-          <TabContent activeTab={this.state.activeTab}>
-            <TabPane tabId="1">
-                <Row className="mt-3">
-                  <Col>
-                    <AddDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-                    <BootstrapTable
-                      data={device}
-                      insertRow={false}
-                      deleteRow={false}
-                      search={true}
-                      cellEdit={cellEditProp}
-                      version='4'
-                      bordered={false}
-                      hover
-                      height='80%'
-                      scrollTop={'Top'}
-                      >
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    width="55px"
+                    dataField='ParameterID'
+                    editable={false}
+                    dataFormat={linkFormatter}
+                    formatExtraData={this.asset}>
+                      Data
+                  </TableHeaderColumn>
 
-                    <TableHeaderColumn
-                      headerAlign='center'
-                      dataAlign='center'
-                      dataField='SerialNumber'
-                      editable={false}
-                      dataFormat={linkFormatter}
-                      formatExtraData={this.asset}>
-                        Data
-                    </TableHeaderColumn>
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='left' 
+                    dataField='Tag' 
+                    editable={false} 
+                    dataSort={true}>
+                      Tag
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='left' 
+                    width='15%' 
+                    dataField='DisplayName' 
+                    dataSort={true}>
+                      Description
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='left' 
+                    width='60%' 
+                    dataField='OriginalEquation' 
+                    editable={false}
+                    formatExtraData={this.props.dispatch}
+                    dataFormat={modalFormatter}
+                    dataSort={true}>
+                      Equation
+                  </TableHeaderColumn>
 
-                      <TableHeaderColumn
-                        isKey
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='SerialNumber'
-                        editable={false}
-                        dataSort={true}>
-                          Serial Number
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='Alias'
-                        dataSort={true}>
-                          SensorID
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='DisplayName'
-                        dataSort={true}>
-                          Description
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='Parameters'
-                        dataFormat={parameterFormatter}
-                        editable={false}
-                        dataSort={true}
-                        hidden>
-                          Parameter
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='Tag'
-                        dataSort={true}
-                        editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>
-                          Location
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='Angle'
-                        dataFormat={angleFormatter}
-                        dataSort={true}
-                        editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>
-                          Angle
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='LastCalibrationDate'
-                        editable={false}
-                        dataFormat={dateFormatter}
-                        dataSort={true}>
-                          Last Calibration Date
-                      </TableHeaderColumn>
-
-                      <TableHeaderColumn
-                        headerAlign='center'
-                        dataAlign='center'
-                        dataField='DeviceID'
-                        editable={false}
-                        formatExtraData={this.deleteItem}
-                        dataFormat={deleteFormatter}>
-                          Delete
-                      </TableHeaderColumn>
-                    </BootstrapTable>
-                  </Col>
-                </Row>
-            </TabPane>
-
-            <TabPane tabId="2">
-              <Row className="mt-3">
-                <Col>
-                  <AddParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-                  <BootstrapTable
-                    data={parameter}
-                    hover
-                    height='80%' scrollTop={ 'Top' }
-                    search={ true }
-                    cellEdit={ cellEditProp }
-                    version='4'
-                    bordered={ false }>
-                    <TableHeaderColumn 
-                      headerAlign='center' 
-                      dataAlign='center' 
-                      isKey={true} 
-                      dataField='ParameterID' 
-                      editable={false} 
-                      hidden>
-                        Parameter ID
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn
-                      headerAlign='center'
-                      dataAlign='center'
-                      dataField='ParameterID'
-                      editable={false}
-                      dataFormat={linkFormatter}
-                      formatExtraData={this.asset}>
-                        Data
-                    </TableHeaderColumn>
-
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' dataField='Alias' dataSort={ true }>Sensor ID</TableHeaderColumn>
-                    <TableHeaderColumn headerAlign='center' dataAlign='center' width='15%' dataField='DisplayName' dataSort={ true }>Description</TableHeaderColumn>
-                    <TableHeaderColumn 
-                      headerAlign='center' 
-                      dataAlign='center' 
-                      width='50%' 
-                      dataField='OriginalEquation' 
-                      editable={false}
-                      formatExtraData={this.props.dispatch}
-                      dataFormat={modalFormatter}
-                      dataSort={ true }>
-                        Equation
-                    </TableHeaderColumn>
-                    <TableHeaderColumn
-                      headerAlign='center'
-                      dataAlign='center'
-                      dataField='ParameterID'
-                      editable={false}
-                      formatExtraData={this.deleteItem}
-                      dataFormat={deleteFormatter}>
-                        Delete
-                    </TableHeaderColumn>
-                  </BootstrapTable>
-                </Col>
-              </Row>
-            </TabPane>
-          </TabContent>
-          </div>
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    width="55px"
+                    dataField='ParameterID'
+                    editable={false}
+                    formatExtraData={this.deleteItem}
+                    dataFormat={deleteFormatter}>
+                      Delete
+                  </TableHeaderColumn>
+                </BootstrapTable>
+              </Col>
+            </Row>
+          </TabPane>
+        </Tabs>
         :
         <Loader/>}
       </div>

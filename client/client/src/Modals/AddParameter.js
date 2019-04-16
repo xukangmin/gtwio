@@ -9,7 +9,7 @@ class AddParameter extends React.Component {
         this.state = {
             displayName: '',
             equation: '',
-            sensorID: '',
+            Tag: '',
             addModalOpen: false
         };
 
@@ -29,14 +29,14 @@ class AddParameter extends React.Component {
       const newParameter = {
         DisplayName: this.state.displayName,
         Equation: this.state.equation,
-        Alias: this.state.sensorID
+        Tag: this.state.Tag
       };
 
       this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter));
       this.setState(prevState => ({
         displayName: '',
         equation: '',
-        sensorID: '',
+        Tag: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -45,7 +45,7 @@ class AddParameter extends React.Component {
       this.setState(prevState => ({
         displayName: '',
         equation: '',
-        sensorID: '',
+        Tag: '',
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -56,7 +56,7 @@ class AddParameter extends React.Component {
     }
 
     render() {
-        const { displayName, equation, sensorID } = this.state;
+        const { displayName, equation, Tag } = this.state;
 
         return(
           <div>
@@ -66,8 +66,8 @@ class AddParameter extends React.Component {
               <ModalBody>
                 <Form>
                   <FormGroup>
-                    <Label for="sensorID">Sensor ID</Label>
-                    <Input type="text" id="sensorID" name="sensorID" value={sensorID} onChange={this.handleChange}/>
+                    <Label for="Tag">Tag</Label>
+                    <Input type="text" id="Tag" name="Tag" value={Tag} onChange={this.handleChange}/>
                     <br/>
                     <Label for="displayName">Description</Label>
                     <Input type="text" id="displayName" name="displayName" value={displayName} onChange={this.handleChange}/>

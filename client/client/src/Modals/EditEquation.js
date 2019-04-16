@@ -1,13 +1,13 @@
 import React from 'react';
 import { parameterActions } from '../_actions/parameterAction';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
-import ContentEditable from "react-contenteditable";
+import ContentEditable from 'react-contenteditable';
 
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-      
+
       this.parameter = props.parameter;
       this.asset = props.asset;
 
@@ -18,6 +18,7 @@ class EditEquation extends React.Component {
           html: props.equation,
           ModalOpen: false
       };
+      
       this.contentEditable = React.createRef();
 
       this.ModalToggle = this.ModalToggle.bind(this);
@@ -28,8 +29,6 @@ class EditEquation extends React.Component {
       this.updateEquation = this.updateEquation.bind(this);
       this.updateEdit = this.updateEdit.bind(this);
       this.getCursor = this.getCursor.bind(this);
-
-
   }
 
   ModalToggle(){
@@ -113,7 +112,7 @@ class EditEquation extends React.Component {
       { Name: '-'}, 
       { Name: '*'}, 
       { Name: '/'}
-    ]
+    ];
 
     return(
       <div>
@@ -125,11 +124,11 @@ class EditEquation extends React.Component {
               <Col md="8">
                 <ContentEditable
                   id="equationEdit"
-                  className="form-control"
+                  className="form-control form-control-static"
                   style={{fontSize: '1.2rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', minHeight: '200px'}} 
-                  html={this.state.html} // innerHTML of the editable div
-                  disabled={false}       // use true to disable edition
-                  onChange={this.updateEdit} // handle innerHTML change
+                  html={this.state.html} 
+                  disabled={false}       
+                  onChange={this.updateEdit}
                   onKeyDown={this.getCursor}
                   onMouseDown={this.getCursor}
                   onKeyUp={this.getCursor}

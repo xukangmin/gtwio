@@ -11,12 +11,46 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.user = JSON.parse(localStorage.getItem('user'));
-
-    this.state = {
-       AssetID: props.match.params.assetID,
-    }
+    this.asset = props.match.params.assetID;
 
     this.HandleText = this.HandleText.bind(this);    
+  }  
+
+  render() {
+    const { assetData, AssetTags } = this.props;
+    const Hx_style = {
+      maxWidth: "1200px",
+      maxHeight: "560px"
+    }
+    if (!this.user){
+      return (<Redirect to='/login'/>);
+    } else{
+      return (
+        <div>
+        {assetData ?
+          <div style={Hx_style} className="mx-auto">
+            <Samy svgXML={HxSvg}>
+              { AssetTags && AssetTags.map((item,i) =>
+                  <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
+                )
+              }
+            </Samy>
+            <Row>
+              <div style={{width: '50%', marginTop: "-150px"}}>
+              { AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.filter(bar => bar.AssignedTag == "CLEANLINESS_FACTOR" || bar.AssignedTag == "HEAT_BALANCE_ERROR" || bar.AssignedTag == "UNCERTAINTY_HBE").map((item, i) =>                    
+                <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}>
+                  <ProgressBar key={i} item={item}/> 
+                </a>                  
+              )}
+              </div>              
+            </Row>
+          </div>
+          :
+          <Loader/>
+        }
+        </div>
+      );
+    }
   }
 
   HandleText(elem, tag, assetData){
@@ -28,81 +62,20 @@ class Dashboard extends React.Component {
     }
 
     if (tag) {
-      elem.setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=1");
+      elem.setAttribute('href', "/asset/" + this.asset + "/tag/" + tag.TagName + "?tab=1");
     }
 
     if (flow_obj) {      
       if (typeof flow_obj.Value == 'number')
       {
         document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
-        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.state.AssetID + "/tag/" + tag.TagName + "?tab=2");
+        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.asset + "/tag/" + tag.TagName + "?tab=2");
         document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
       }
     }
 
     if (assetData) {
       document.getElementById("asset_name").innerHTML = assetData.DisplayName;
-    }
-  }
-
-  render() {
-    const { assetData, AssetTags } = this.props;
-    // const progressBars = this.props.AssetTags.filter(item => item.TagName == "ProgressBars");
-    const Hx_style = {
-      maxWidth: "1200px",
-      maxHeight: "560px"
-    }
-    const ProgressBars_style={
-      marginTop: "-150px",
-      marginLeft: "-200px",
-      textAlign: "center",
-      width: "70%"
-    }
-    const LastUpdate_style={
-      float: "right",
-      marginTop: "40px",
-      fontSize: "0.9em",
-      display: "none"
-    }
-
-    if (!this.user)
-    {
-      return (<Redirect to='/login' />);
-    }
-    else{
-      return (
-        <div>
-          {assetData ?
-            <div className="container-fluid">
-              <div style={{display: "none"}}>
-                <Breadcrumb>
-                  <BreadcrumbItem><a href="/">Home</a></BreadcrumbItem>
-                  <BreadcrumbItem><a href="#">{assetData.DisplayName}</a></BreadcrumbItem>
-                </Breadcrumb>
-              </div>
-              <div style={Hx_style} className="mx-auto">
-                <Samy svgXML={HxSvg} >
-                    {
-                      AssetTags &&
-                      AssetTags.map((item,i) =>
-                        <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
-                      )
-                    }
-                </Samy>
-                <Row style={ProgressBars_style}>
-                  {AssetTags && AssetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.map((item, i) =>                    
-                    <a key={i} href={"/asset/" + assetData.AssetID + "/parameter/" + item.ParameterID}><ProgressBar key={item} type={item.AssignedTag} percentage={typeof(item.Value) == 'number' ? item.Value.toFixed(2) : item.Value} unit={item.Unit}/></a>                    
-                  )}
-                </Row>
-                <div style={LastUpdate_style}>
-                  <span>Last updated: {new Date().toLocaleTimeString("en-US")}</span>
-                </div>
-              </div>
-            </div>
-            :
-            <Loader />}
-        </div>
-      );
     }
   }
 }

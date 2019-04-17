@@ -188,7 +188,7 @@ class AddAsset extends React.Component {
             <ModalBody>
               <Form>
                   <div className="mb-2" style={{textAlign: "center"}}>
-                    <Radio.Group defaultValue={this.state.addType} onChange={(e)=>this.handleAddType(e)} buttonStyle="solid">
+                    <Radio.Group defaultValue={this.state.addType} onChange={(e)=>this.handleAddType(e)} buttonStyle="solid" size="large">
                       <Radio.Button value="import">Import Configuration File</Radio.Button>
                       <Radio.Button value="manual">Add Manually</Radio.Button>
                     </Radio.Group>                    

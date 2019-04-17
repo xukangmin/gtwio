@@ -15576,6 +15576,7 @@ textarea.ant-input-number {
   cursor: pointer;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
+  border-right: 1px solid #e8e8e8;
 }
 .ant-layout-sider-zero-width > * {
   overflow: hidden;

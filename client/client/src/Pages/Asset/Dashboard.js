@@ -76,7 +76,7 @@ class Dashboard extends React.Component {
                 </div>                
               }
               { heatBalanceError &&
-                <div style={{width: "180px"}}>
+                <div style={{width: "180px", position: "relative"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.ParameterID}>
                     <Progress 
                     type="dashboard" 
@@ -85,8 +85,8 @@ class Dashboard extends React.Component {
                     percent={((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
                     format={()=>heatBalanceError.Value.toFixed(0)} 
                     status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
-                    <p style={{position: "relative", top: "-80", right: "-40", color: "red", fontSize: "1.2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="info-circle" />}</p>
-                    <p style={{position: "relative", top: "-24"}}><strong>{heatBalanceError.Name}</strong></p>
+                    <p style={{position: "absolute", top: "0", right: "20", color: "red", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="exclamation-circle" />}</p>
+                    <p style={{position: "absolute", bottom: "30", left: "0", right: "0"}}><strong>{heatBalanceError.Name}</strong></p>
                   </a>
                 </div>                
               }

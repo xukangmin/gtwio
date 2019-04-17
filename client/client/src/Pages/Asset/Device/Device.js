@@ -62,7 +62,7 @@ const DeviceInfo = (props) => {
                     saveColor="#17a2b8"
                     cancelLabel="Cancel"
                     cancelColor="#6c757d"
-                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", value)}
+                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", Number(value))}
                   />
                   <span>{device.Parameters[0].Unit}</span>
                 </div>                
@@ -80,7 +80,7 @@ const DeviceInfo = (props) => {
                     saveColor="#17a2b8"
                     cancelLabel="Cancel"
                     cancelColor="#6c757d"
-                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", value)}
+                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", Number(value))}
                   />
                   {device.Parameters[0].Unit}
                 </div>
@@ -200,7 +200,7 @@ class Device extends React.Component {
   }
 
   updateLimit(parameter, currentValue, range, value){
-    var num_in = Number(value.value);
+    var num_in = Number(value);
 
     if (!isNaN(num_in))
     {
@@ -242,7 +242,7 @@ class Device extends React.Component {
         'ParameterID': parameter,
         'StabilityCriteria': stabilityObj
     }
-    updateData.StabilityCriteria[type] = Number(value.value);
+    updateData.StabilityCriteria[type] = Number(value);
     this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, updateData));
   }
 

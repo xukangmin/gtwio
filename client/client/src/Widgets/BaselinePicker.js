@@ -55,6 +55,12 @@ class BaselinePicker extends React.Component {
     }
 
     deleteBaseline(t){
+      console.log(this.state.baselines[this.state.activeBaseline].TimeStamp)
+      if (t == this.state.baselines[this.state.activeBaseline].TimeStamp){
+        this.setState({
+          activeBaseline: -1
+        });
+      }
       let newBaselines = this.state.baselines.filter(x=>x.TimeStamp != t) || [];
       this.setState({
         baselines: newBaselines
@@ -97,7 +103,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Baseline: {this.state.activeBaseline+1>0 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+            Baseline: {this.state.activeBaseline>=0 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>    
 

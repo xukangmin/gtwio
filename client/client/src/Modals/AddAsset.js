@@ -50,7 +50,7 @@ class AddAsset extends React.Component {
         this.onClickPrev = this.onClickPrev.bind(this);
     }
 
-    addModalToggle(t){
+    addModalToggle(){
       this.setState(prevState => ({
         addModalOpen: !prevState.addModalOpen
       }));
@@ -173,7 +173,6 @@ class AddAsset extends React.Component {
     }
 
     render() {
-
       let devices = this.state.Devices;
       let equations = this.state.Equations;
 

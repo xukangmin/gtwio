@@ -15,7 +15,7 @@ const ParameterInfo = (props) => {
   return(
     <div className = "row">
       <div className="col-12">
-        <h3>{parameter.DisplayName}</h3>
+        <h4>{parameter.DisplayName}</h4>
       </div>
       <div className = "col-lg-6 col-sm-12">
         <Table striped>
@@ -197,7 +197,7 @@ class Parameter extends React.Component {
             {parameterData &&
             <div className = "row mt-3">
               <div className = "col-auto">
-                <h3>History</h3>
+                <h6>History</h6>
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className = "col-sm-auto col-lg-8">

@@ -3,21 +3,19 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
-import Loader from '../../../Widgets/Loader';
 import { Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
+
+import Loader from '../../../Widgets/Loader';
 import toastr from 'toastr';
-import * as moment from 'moment';
-window['moment'] = moment;
-import { RIEToggle, RIEInput, RIETextArea, RIENumber, RIETags, RIESelect } from 'riek';
-import _ from 'lodash';
+import InlineEdit from 'react-inline-edit-input';
 
 const DeviceInfo = (props) => {
   const device = props.data;
   return(
     <div className = "row">
       <div className="col-12">
-        <h3>{device.DisplayName}</h3>
+        <h4>{device.DisplayName}</h4>
       </div>
       <div className = "col-lg-6 col-sm-12">
         <Table striped>
@@ -55,40 +53,74 @@ const DeviceInfo = (props) => {
             <tr>
               <th>Lower Alarm Limit</th>
               <td>
-                  <RIEInput
-                  value={device.Parameters[0].Range.LowerLimit}
-                  change={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", value)}
-                  propName='value'/>
-                  {device.Parameters[0].Unit}
+                <div style={{display: "flex"}}>
+                  <InlineEdit
+                    value={device.Parameters[0].Range.LowerLimit}
+                    tag="span"
+                    type="text"
+                    saveLabel="Update"
+                    saveColor="#17a2b8"
+                    cancelLabel="Cancel"
+                    cancelColor="#6c757d"
+                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", value)}
+                  />
+                  <span>{device.Parameters[0].Unit}</span>
+                </div>                
               </td>
             </tr>
             <tr>
               <th>Upper Alarm Limit</th>
               <td>
-                  <RIEInput
-                  value={device.Parameters[0].Range.UpperLimit}
-                  change={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", value)}
-                  propName='value'/>
+                <div style={{display: "flex"}}>
+                  <InlineEdit
+                    value={device.Parameters[0].Range.UpperLimit}
+                    tag="span"
+                    type="text"
+                    saveLabel="Update"
+                    saveColor="#17a2b8"
+                    cancelLabel="Cancel"
+                    cancelColor="#6c757d"
+                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", value)}
+                  />
                   {device.Parameters[0].Unit}
+                </div>
               </td>
             </tr>
             <tr>
               <th>Stability Criteria - Window Size</th>
               <td>
-              <RIEInput
-              value={device.Parameters[0].StabilityCriteria.WindowSize}
-              change={value => props.updateStability(device.Parameters[0].ParameterID, "WindowSize", value, device.Parameters[0].StabilityCriteria)}
-              propName='value'/>
-              {' minutes'}</td>
+                <div style={{display: "flex"}}>
+                  <InlineEdit
+                    value={device.Parameters[0].StabilityCriteria.WindowSize}
+                    tag="span"
+                    type="text"
+                    saveLabel="Update"
+                    saveColor="#17a2b8"
+                    cancelLabel="Cancel"
+                    cancelColor="#6c757d"
+                    onSave={value => props.updateStability(device.Parameters[0].ParameterID, "WindowSize", value, device.Parameters[0].StabilityCriteria)}
+                  />
+                  {" minutes"}
+                </div>
+              </td>
             </tr>
             <tr>
               <th>Stability Criteria - Upper Threshold</th>
               <td>
-              <RIEInput
-              value={device.Parameters[0].StabilityCriteria.UpperLimit}
-              change={value => props.updateStability(device.Parameters[0].ParameterID, "UpperLimit", value, device.Parameters[0].StabilityCriteria)}
-              propName='value'/>
-              {' ' + device.Parameters[0].Unit}</td>
+                <div style={{display: "flex"}}>
+                  <InlineEdit
+                    value={device.Parameters[0].StabilityCriteria.UpperLimit}
+                    tag="span"
+                    type="text"
+                    saveLabel="Update"
+                    saveColor="#17a2b8"
+                    cancelLabel="Cancel"
+                    cancelColor="#6c757d"
+                    onSave={value => props.updateStability(device.Parameters[0].ParameterID, "UpperLimit", value, device.Parameters[0].StabilityCriteria)}
+                  />
+                  {device.Parameters[0].Unit}
+                </div>
+              </td>
             </tr>
             <tr>
               <th>Stability</th>
@@ -96,7 +128,7 @@ const DeviceInfo = (props) => {
             </tr>
             <tr>
               <th>Status</th>
-              <td>{device.Parameters[0].Status}</td>
+              <td style={{color: device.Parameters[0].Status == "Valid" ? "green" : "red", fontWeight: "bold"}}>{device.Parameters[0].Status}</td>
             </tr>
           </tbody>
         </Table>
@@ -216,10 +248,9 @@ class Device extends React.Component {
 
   render() {
     const { AssetID } = this.state;
-    const { deviceData, pollEnable } = this.props;
+    const { deviceData } = this.props;
     const { parameterData } = this.props;
-    if (!this.user)
-    {
+    if (!this.user) {
       return (<Redirect to = '/login' />);
     } else {
       return (
@@ -230,7 +261,7 @@ class Device extends React.Component {
             {parameterData &&
               <div className = "row mt-3">
                 <div className = "col-auto">
-                  <h4>Table View</h4>
+                  <h6>History</h6>
                   <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">

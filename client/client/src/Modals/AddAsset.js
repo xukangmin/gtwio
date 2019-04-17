@@ -1,6 +1,9 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
 import { Badge, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { Radio } from 'antd';
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 class AddAsset extends React.Component {
     constructor(props) {
@@ -102,7 +105,7 @@ class AddAsset extends React.Component {
   
     handleAddType(e){
       this.setState({
-        addType: e.target.name
+        addType: e.target.value
       });
     }
 
@@ -185,15 +188,10 @@ class AddAsset extends React.Component {
             <ModalBody>
               <Form>
                   <div className="mb-2" style={{textAlign: "center"}}>
-                    <Button color={this.state.addType == "import" ? "primary" : "light"} name="import" className="mr-3" 
-                            onClick={(e)=>this.handleAddType(e)}>
-                      Import Configuration File
-                    </Button>
-                    
-                    <Button color={this.state.addType == "manual" ? "primary" : "light"} name="manual" 
-                            onClick={(e)=>this.handleAddType(e)}>
-                      Add Manually
-                    </Button>
+                    <Radio.Group defaultValue={this.state.addType} onChange={(e)=>this.handleAddType(e)} buttonStyle="solid">
+                      <Radio.Button value="import">Import Configuration File</Radio.Button>
+                      <Radio.Button value="manual">Add Manually</Radio.Button>
+                    </Radio.Group>                    
                   </div>     
               </Form>
 

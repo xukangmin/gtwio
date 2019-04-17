@@ -114,7 +114,10 @@ class Configurations extends React.Component {
     }
 
     function angleFormatter(cell, row){
-      return cell + "°";
+      if(typeof(cell)=="number"){
+        cell = cell + "°"
+      }
+      return cell;
     }
 
     function dateFormatter(cell, row){
@@ -215,7 +218,7 @@ class Configurations extends React.Component {
                     dataField='Angle'
                     dataFormat={angleFormatter}
                     dataSort={true}
-                    editable={{type: 'select', options: {values: ["0", "90", "180", "270"]}}}>
+                    editable={{type: 'select', options: {values: ["", "0", "90", "180", "270"]}}}>
                       Angle
                   </TableHeaderColumn>
 

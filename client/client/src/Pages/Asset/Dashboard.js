@@ -53,7 +53,7 @@ class Dashboard extends React.Component {
                     <Progress 
                     type="circle" 
                     width={100}
-                    percent={(cleanliness.Value/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100} 
+                    percent={((cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100} 
                     format={()=>cleanliness.Value.toFixed(2)} /> 
                     <br/>
                     <span>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").Value.toFixed(2)}</span>
@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
                     <Progress 
                     type="circle"
                     width={100} 
-                    percent={(heatFlow.Value/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100} 
+                    percent={((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100} 
                     format={()=>heatFlow.Value.toFixed(0)} /> 
                     <br/>
                     <span>±{progressBars.find(item=> item.AssignedTag == "HEAT_FLOW_UNCERTAINTY").Value.toFixed(0)}</span>
@@ -83,7 +83,7 @@ class Dashboard extends React.Component {
                     <Progress 
                     type="circle" 
                     width={100}
-                    percent={(heatBalanceError.Value/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
+                    percent={((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
                     format={()=>heatBalanceError.Value.toFixed(0)} />                    
                     <span style={{position: "relative", top: "-80", right: "-40", color: "red", fontSize: "1.2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="info-circle" />}</span>
                     <br/><br/>

@@ -14,6 +14,7 @@ class Settings extends React.Component {
       return(
         <div>
         <h3>Settings</h3>
+        <p>alert</p>
     </div>
       )
    

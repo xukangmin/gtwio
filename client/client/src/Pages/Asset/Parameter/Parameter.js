@@ -116,7 +116,7 @@ const ParameterTable = (props) => {
         <thead>
           <tr>
             <th>Time</th>
-            <th>Temperature</th>
+            <th>Value</th>
           </tr>
         </thead>
         <tbody>
@@ -156,8 +156,10 @@ class Parameter extends React.Component {
 
   updateLimit(parameter, item, value){
     console.log(parameter)
-    var paraData = parameter;
+    let paraData = {};
     paraData.ParameterID = parameter.ParameterID;
+
+    paraData.Range = parameter.Range;
     paraData.Range[item] = parseInt(value);
     this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
   }

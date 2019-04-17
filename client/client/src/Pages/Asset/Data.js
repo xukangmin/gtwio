@@ -21,6 +21,7 @@ class Data extends React.Component {
     let row = [];
 
     if (data){
+      console.log(data)
       let items = data[0].Data.map(x=>x.DisplayName);
 
       for (let itemNo in items){

@@ -201,7 +201,7 @@ class Parameter extends React.Component {
                 <ParameterTable data={this.sortTime(parameterData)}/>
               </div>
               <div className = "col-sm-auto col-lg-8">
-                <SingleLinePlot parameterData={this.sortTime(parameterData)} unit="(°F)"/>
+                <SingleLinePlot parameterData={this.sortTime(parameterData)} unit={parameter.Unit}/>
               </div>
             </div>
            }

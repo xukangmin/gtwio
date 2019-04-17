@@ -8,7 +8,7 @@ class SingleLinePlot extends React.Component {
   }
 
   render(){
-    let { parameterData, flow, unit } = this.props;
+    let { parameterData, unit } = this.props;
     parameterData.sort((a,b) => a.TimeStamp - b.TimeStamp);
 
     let isRangeBiggerThanADay = false;

@@ -44,7 +44,7 @@ class Configurations extends React.Component {
   } 
 
   deleteItem(itemID, itemName, itemType){
-    if (confirm("Are you sure to delete " + itemName +"?")){
+    if (confirm("Are you sure to delete " + itemName + "?")){
       if (itemType == "device"){
         this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, itemID));
       } else if (itemType == "parameter"){
@@ -82,12 +82,6 @@ class Configurations extends React.Component {
     }
 
     function modalFormatter(cell, row, enumObject){
-      let type;
-      if (row.DeviceID){
-        type = 'device';
-      } else if (row.ParameterID){
-        type = 'parameter';
-      }
       return <EditEquation equation={cell} asset={asset} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
     }
 
@@ -104,9 +98,8 @@ class Configurations extends React.Component {
     function linkFormatter(cell, row, enumObject){
       const assetID = enumObject;
       const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
-      const isDeviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
-      const displayText = cell;
-      return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ enumObject + isDeviceOrParameter + itemID}><Icon type="table" /></Button>
+      const deviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
+      return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ assetID + deviceOrParameter + itemID}><Icon type="table" /></Button>
     }
 
     function parameterFormatter(cell, row) {
@@ -114,7 +107,7 @@ class Configurations extends React.Component {
     }
 
     function angleFormatter(cell, row){
-      if(typeof(cell)=="number"){
+      if (typeof(cell)=="number"){
         cell = cell + "°"
       }
       return cell;
@@ -131,7 +124,7 @@ class Configurations extends React.Component {
     };    
 
     function callback(key) {
-      console.log(key);
+      // console.log(key);
     }
 
     return (
@@ -307,7 +300,8 @@ class Configurations extends React.Component {
                     editable={false}
                     formatExtraData={this.props.dispatch}
                     dataFormat={modalFormatter}
-                    dataSort={true}>
+                    dataSort={true}
+                    tdStyle={{whiteSpace: 'normal'}}>
                       Equation
                   </TableHeaderColumn>
 

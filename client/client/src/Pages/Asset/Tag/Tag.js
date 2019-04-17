@@ -31,7 +31,7 @@ class Tag extends React.Component {
     let defaultActive = "1";
     if (queryString.parse(location.search).tab){
       if (DeviceData && DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 && queryString.parse(location.search).tab.toString()=="2"){
-        defaultActive = "2"
+        defaultActive = "2";
       }
     }    
     
@@ -44,28 +44,45 @@ class Tag extends React.Component {
             <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
               <TabPane tab="Temperature" key="1">
               <Row>
-                    <div className = "col-8"><MultipleLinesPlot data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/></div>
-                    <div className = "col-4"><Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/></div>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
-                    </Col>
-                    <Col>
-                    </Col>
-                  </Row>
+                <div className = "col-8">
+                  <MultipleLinesPlot 
+                    data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
+                    unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                </div>
+                <div className = "col-4">
+                  <Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/>
+                </div>
+              </Row>
+              <Row>
+                <Col>
+                  <Table 
+                    data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
+                    asset={AssetData.AssetID} 
+                    unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}
+                  />
+                </Col>
+                <Col>
+                </Col>
+              </Row>
               </TabPane>
               
               {DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").length>0 &&
               <TabPane tab="Flow Rate" key="2">
                 <Row>
                   <Col>
-                    <SingleLinePlot parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} flow={true} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                    <SingleLinePlot 
+                      parameterData={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")[0].Parameters[0].Data} 
+                      unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}
+                    />
                   </Col>
                 </Row>
                 <Row>
                   <Col>
-                    <Table data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} asset = {AssetData.AssetID} unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}/>
+                    <Table 
+                      data={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate")} 
+                      asset={AssetData.AssetID} 
+                      unit={DeviceData.filter(item=>item.Parameters[0].Type=="FlowRate").map(item=>item.Parameters[0].Unit)[0]}
+                    />
                   </Col>
                   <Col>
                   </Col>

@@ -276,7 +276,7 @@ class Configurations extends React.Component {
 
                   <TableHeaderColumn 
                     headerAlign='center' 
-                    dataAlign='left' 
+                    dataAlign='center' 
                     dataField='Tag' 
                     editable={false} 
                     dataSort={true}>
@@ -285,17 +285,18 @@ class Configurations extends React.Component {
                   
                   <TableHeaderColumn 
                     headerAlign='center' 
-                    dataAlign='left' 
+                    dataAlign='center' 
                     width='15%' 
                     dataField='DisplayName' 
-                    dataSort={true}>
+                    dataSort={true}
+                    tdStyle={{whiteSpace: 'normal'}}>
                       Description
                   </TableHeaderColumn>
                   
                   <TableHeaderColumn 
                     headerAlign='center' 
-                    dataAlign='left' 
-                    width='60%' 
+                    dataAlign='center' 
+                    width='50%' 
                     dataField='OriginalEquation' 
                     editable={false}
                     formatExtraData={this.props.dispatch}

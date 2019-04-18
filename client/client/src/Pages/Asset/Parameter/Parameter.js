@@ -43,29 +43,24 @@ const ParameterInfo = (props) => {
                 />
               </td>
             </tr>
-            {parameter.CurrentValue &&
-              <tr>
-                <th>Current Value</th>
-                <td>{parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
-              </tr>
-            }
-            {parameter.CurrentTimeStamp &&
-              <tr>
-                <th>Current Time Stamp</th>
-                <td>{moment(new Date(parameter.CurrentTimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-              </tr>
-            }
+            <tr style={{display: parameter.CurrentValue ? "block" : "none"}}>
+              <th>Current Value</th>
+              <td>{parameter.CurrentValue && parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
+            </tr>
+            <tr>
+              <th>Current Time Stamp</th>
+              <td>{parameter.CurrentTimeStamp && moment(new Date(parameter.CurrentTimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+            </tr>
           </tbody>
         </Table>
         </div>
         <div className = "col-lg-6 col-sm-12">
         <Table striped>
-          {parameter.Range &&
-            <tbody>            
-            {typeof(parameter.Range.LowerLimit)=="number" &&
+            <tbody>   
               <tr>
                 <th>LowerLimit</th>
                 <td>
+                  {parameter.Range && typeof(parameter.Range.LowerLimit)=="number" ?
                   <InlineEdit
                     value={parameter.Range.LowerLimit}
                     tag="span"
@@ -75,14 +70,13 @@ const ParameterInfo = (props) => {
                     cancelLabel="Cancel"
                     cancelColor="#6c757d"
                     onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
-                  />
+                  />: "N/A"}
                 </td>
               </tr>
-            }
-            {typeof(parameter.Range.UpperLimit)=="number" &&
               <tr>
                 <th>UpperLimit</th>
                 <td>
+                {parameter.Range && typeof(parameter.Range.UpperLimit)=="number" ?
                 <InlineEdit
                   value={parameter.Range.UpperLimit}
                   tag="span"
@@ -92,11 +86,10 @@ const ParameterInfo = (props) => {
                   cancelLabel="Cancel"
                   cancelColor="#6c757d"
                   onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
-                />
+                />:"N/A"}
                 </td>
               </tr>
-            }
-          </tbody>}
+          </tbody>
         </Table>
       </div>
     </div>

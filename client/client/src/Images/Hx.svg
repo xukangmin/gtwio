@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1"
-	 id="svg2" inkscape:version="0.92.3 (2405546, 2018-03-11)" sodipodi:docname="HeatExchanger.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 819.2 454"
-	 style="enable-background:new 0 0 819.2 1024;" xml:space="preserve">
+	 id="svg2" 
+	 inkscape:version="0.92.3 (2405546, 2018-03-11)" 
+	 sodipodi:docname="HeatExchanger.svg" 
+	 xmlns:cc="http://creativecommons.org/ns#" 
+	 xmlns:dc="http://purl.org/dc/elements/1.1/" 
+	 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" 
+	 xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" 
+	 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	 xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" 
+	 xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" 
+	 xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 x="0px" y="0px" viewBox="0 0 819.2 454"
+	 style="enable-background:new 0 0 819.2 1024;" 
+	 xml:space="preserve">
+
 <style type="text/css">
 	a:hover{text-decoration: none;}
 	.st0{fill:#FF8080;stroke:#fff;stroke-width:0;}
@@ -34,8 +46,8 @@
 	.st27{font-size:13.8881px;}
 	.hide{display:none;}
 </style>
-<defs>
 
+<defs>
 	<inkscape:path-effect  effect="spiro" id="path-effect6203" is_visible="true"></inkscape:path-effect>
 	<inkscape:path-effect  effect="spiro" id="path-effect4288" is_visible="true"></inkscape:path-effect>
 	<inkscape:path-effect  effect="spiro" id="path-effect4472" is_visible="true"></inkscape:path-effect>
@@ -48,8 +60,10 @@
 	<inkscape:path-effect  effect="spiro" id="path-effect4288-3" is_visible="true"></inkscape:path-effect>
 	<inkscape:path-effect  effect="spiro" id="path-effect4288-8-7" is_visible="true"></inkscape:path-effect>
 </defs>
+
 <sodipodi:namedview  bordercolor="#666666" borderopacity="1" fit-margin-bottom="0" fit-margin-left="0" fit-margin-right="0" fit-margin-top="0" gridtolerance="10" guidetolerance="10" id="namedview6" inkscape:current-layer="svg2" inkscape:cx="466.32926" inkscape:cy="289.37694" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="517" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="1912" inkscape:window-y="-8" inkscape:zoom="0.61431476" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
-	</sodipodi:namedview>
+</sodipodi:namedview>
+
 <path id="path6736" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st0" d="
 	M586.3,136c-47.3,0-85.7,37.4-85.7,83.6c0,46.2,38.4,83.6,85.7,83.6c0,0,0,0,0,0c47.3,0,85.7-37.4,85.7-83.6c0,0,0,0,0,0
 	C672,173.5,633.7,136,586.3,136z"/>
@@ -125,8 +139,7 @@
 </g>
 <g>
 	<g>
-
-			<ellipse id="path4295-9-1-4-7" transform="matrix(0.1602 -0.9871 0.9871 0.1602 436.5919 945.0707)" class="st18" cx="773.7" cy="216" rx="34.3" ry="34.3"/>
+		<ellipse id="path4295-9-1-4-7" transform="matrix(0.1602 -0.9871 0.9871 0.1602 436.5919 945.0707)" class="st18" cx="773.7" cy="216" rx="34.3" ry="34.3"/>
 		<g>
 			<a id="TubeInlet">
 				<text transform="matrix(1 0 0 1 751.0845 218.526)" class="st19 st8 st20">N/A</text>

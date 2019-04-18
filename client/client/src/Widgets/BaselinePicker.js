@@ -55,7 +55,7 @@ class BaselinePicker extends React.Component {
     }
 
     deleteBaseline(t){
-      console.log(this.state.baselines[this.state.activeBaseline].TimeStamp)
+      // console.log(this.state.baselines[this.state.activeBaseline].TimeStamp)
       if (t == this.state.baselines[this.state.activeBaseline].TimeStamp){
         this.setState({
           activeBaseline: -1

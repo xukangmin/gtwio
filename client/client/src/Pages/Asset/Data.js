@@ -21,29 +21,29 @@ class Data extends React.Component {
     let row = [];
 
     if (data){
-      console.log(data)
-      let items = data[0].Data.map(x=>x.DisplayName);
-
-      for (let itemNo in items){
-        let new_col = {key: itemNo, name: items[itemNo], resizable: true, dragable: true};
+      let cols = data.AssetColumnInfo;
+      for (let itemNo in cols){
+        let new_col = {key: itemNo, name: cols[itemNo].Header, resizable: true, dragable: true};
         new_col['formatter'] = ValueFormatter;
         col.push(new_col);
       }
     }
 
-    for (let time in data){
-      let new_row = {id: moment(data[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
-      for (let device in data[time].Data){
-          let device_id = device;
-          let value = data[time].Data[device].Value ? data[time].Data[device].Value.toFixed(2) : "N/A";
-          let unit = data[time].Data[device].Unit ? data[time].Data[device].Unit : "";
-          let valid = data[time].Data[device].Valid ? data[time].Data[device].Valid : true;
-          new_row[device_id] = {
-            value: value+ unit,
+    if(data){
+      let rows = data.AssetData;
+      for (let time in rows){
+        let new_row = {id: moment(rows[time].TimeStamp).format('MMMM Do YYYY, H:mm')};
+        for (let device in rows[time].Data){
+          let value = rows[time].Data[device].Value ? rows[time].Data[device].Value.toFixed(2) : 'N/A';
+          let valid = rows[time].Data[device].Valid;
+          let unit = data.AssetColumnInfo[device].Unit ? data.AssetColumnInfo[device].Unit : " ";
+          new_row[device] = {
+            value: value+unit,
             valid: valid
           };
-      }
+        } 
       row.unshift(new_row);
+      }      
     }
 
     return (

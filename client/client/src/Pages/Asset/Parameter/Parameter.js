@@ -170,14 +170,9 @@ class Parameter extends React.Component {
     const { parameter } = this.props;
     let { parameterData } = this.props;
 
-    console.log(parameter)
-    console.log(parameterData)
-
-    if (!this.user)
-    {
+    if (!this.user) {
       return (<Redirect to = '/login' />);
-    }
-    else{
+    } else{
       return (
         <div className = "mt-3">
         {parameter && parameterData ?

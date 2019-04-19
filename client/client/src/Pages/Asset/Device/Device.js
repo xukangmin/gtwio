@@ -280,12 +280,9 @@ class Device extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data, pollEnable } = state.device;
-  const parameterData = state.data.data;
   return {
-      deviceData : data,
-      parameterData: parameterData,
-      pollEnable: pollEnable
+      deviceData : state.device.single,
+      parameterData: state.data.data
   };
 }
 

@@ -14,17 +14,23 @@ class Data extends React.Component {
     let { data } = this.props;
 
     const ValueFormatter = ({value}) => {
-      return <span style={{ color: value['valid'] ? "green" : "red"}}>{value.value}</span>
+      return <span title={value.value} style={{ textAlign: "center", color: value['valid'] ? "green" : "red"}}>{value.value}</span>
     };
 
-    let col = [{ key: "id", name: "Time", frozen: true, width: 185 }];
+    const HeaderFormatter = (value) => {
+      console.log(value)
+      return <span title={value.column.name}>{value.column.name}</span>
+    };
+
+    let col = [{ key: "id", name: "Time", frozen: true, width: 155 }];    
     let row = [];
 
     if (data){
       let cols = data.AssetColumnInfo;
       for (let itemNo in cols){
-        let new_col = {key: itemNo, name: cols[itemNo].Header, resizable: true, dragable: true};
+        let new_col = {key: itemNo, name: cols[itemNo].Header, resizable: true, dragable: true, width: 65};
         new_col['formatter'] = ValueFormatter;
+        new_col['headerRenderer'] = HeaderFormatter;
         col.push(new_col);
       }
     }
@@ -38,7 +44,7 @@ class Data extends React.Component {
           let valid = rows[time].Data[device].Valid;
           let unit = data.AssetColumnInfo[device].Unit ? data.AssetColumnInfo[device].Unit : " ";
           new_row[device] = {
-            value: value+unit,
+            value: value + unit,
             valid: valid
           };
         } 

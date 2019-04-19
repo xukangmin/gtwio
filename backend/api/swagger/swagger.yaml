@@ -124,6 +124,39 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/getAssetTimeRange:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    get:
+      tags:
+      - asset
+      description: Return list of timerange
+      # used as the method name of the controller
+      operationId: getAssetTimeRange
+      parameters:
+        - name: AssetID
+          in: query
+          description: AssetID
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/getBaselineByAssetID:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

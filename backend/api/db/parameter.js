@@ -25,7 +25,8 @@ const ParameterSchema = new Schema(
     StandardDeviation: Number,
     StreamingStatus: String,
     Timeout: Number, // in seconds
-    Baseline: Number // epoch timestamp miliseconds
+    Baseline: Number, // epoch timestamp miliseconds
+    DataAvailableTimeRange: [Number] // only store hourly data
   },
   { timestamps: true }
 );

@@ -13,13 +13,12 @@ require('../Style/equation.css');
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-
-      this.parameter = props.parameter;
       this.asset = props.asset;
       this.user = props.user;
       this.instance = null;
  
       this.state = {
+          parameter: props.item,
           equation: props.equation,
           value: props.equation,
           valid: true,
@@ -27,7 +26,8 @@ class EditEquation extends React.Component {
           options: {
             theme: 'gtw',
             lineNumbers: false,
-            lineWrapping: true
+            lineWrapping: true,
+            noNewlines: true
           },
           token: null,
           cursor: null
@@ -82,10 +82,10 @@ class EditEquation extends React.Component {
 
   addButtonClicked(){
     let data = {
-      ParameterID: this.parameter,
-      OriginalEquation: this.state.value
-    };
-    this.props.dispatch(parameterActions.updateParameter(parameterID, data));
+      'ParameterID': this.state.parameter,
+      'OriginalEquation': this.state.value
+    };    
+    this.props.dispatch(parameterActions.updateParameter(this.asset, data));
     this.setState(prevState => ({
       equation: this.state.value,
       modalOpen: !prevState.modalOpen

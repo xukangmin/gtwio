@@ -38,7 +38,7 @@ const ParameterInfo = (props) => {
                   equation={parameter.Equation} 
                   asset={asset} 
                   user={user}
-                  parameter={parameter.ParameterID} 
+                  item={parameter.ParameterID} 
                 />
               </td>
             </tr>
@@ -131,7 +131,6 @@ class Parameter extends React.Component {
         ParameterID: props.match.params.parameterID
     }
 
-    this.updateEquation = this.updateEquation.bind(this);
     this.updateLimit = this.updateLimit.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
@@ -140,20 +139,13 @@ class Parameter extends React.Component {
     this.props.dispatch(deviceActions.getDevices(this.user, this.state.AssetID));
   }
 
-  updateEquation(parameterID, value){
-    var paraData = {};
-    paraData.ParameterID = parameterID;
-    paraData.Equation = value;
-    this.props.dispatch(parameterActions.updateParameter(parameterID, paraData));
-  }
-
   updateLimit(parameter, item, value){
     let paraData = {
       'ParameterID': parameter.ParameterID,
       'Range': parameter.Range
     };        
     paraData.Range[item] = parseInt(value);
-    this.props.dispatch(parameterActions.updateParameter(parameterID, paraData));    
+    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));    
   }
 
   sortTime(data){

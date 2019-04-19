@@ -7,6 +7,7 @@ import { Tag } from 'antd';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 const math = require('mathjs');
 
+require('../Functions/noNewline.js');
 require('codemirror/lib/codemirror.css');
 require('../Style/equation.css');
 

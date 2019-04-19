@@ -12,6 +12,7 @@ import InlineEdit from 'react-inline-edit-input';
 
 const DeviceInfo = (props) => {
   const device = props.data;
+  
   return(
     <div className = "row">
       <div className="col-12">

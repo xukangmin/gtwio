@@ -109,14 +109,20 @@ class EditEquation extends React.Component {
     
     const operators = [
       { Name: 'Avg'},
+      { Name: 'sum'},
+      { Name: 'count'},
       { Name: 'sqrt'},
       { Name: 'log'},
+      { Name: 'abs'},
+      { Name: 'std'},
+      { Name: 't_value'},
       { Name: '('},
       { Name: ')'},
       { Name: '+'}, 
       { Name: '-'}, 
       { Name: '*'}, 
-      { Name: '/'}
+      { Name: '/'},
+      { Name: '^'}
     ];
 
     return(
@@ -184,7 +190,8 @@ class EditEquation extends React.Component {
                   <h5>Parameters</h5>
                   {parameters.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag} key={i}>{x.Tag}</Tag>)}
                 </div>
-                <div style={{display: "none"}}>
+                <hr/>
+                <div>
                   <h5>Operators</h5>
                   {operators.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText(x.Name)} value={x.Name} key={i}>{x.Name}</Tag>)}
                 </div>

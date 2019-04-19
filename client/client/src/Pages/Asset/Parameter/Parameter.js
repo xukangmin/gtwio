@@ -53,42 +53,44 @@ const ParameterInfo = (props) => {
           </tbody>
         </Table>
         </div>
-        <div className = "col-lg-6 col-sm-12">
-        <Table striped>
-            <tbody>   
-              <tr>
-                <th>LowerLimit</th>
-                <td>
+        {parameter.Range &&
+          <div className = "col-lg-6 col-sm-12">
+          <Table striped>
+              <tbody>   
+                <tr>
+                  <th>LowerLimit</th>
+                  <td>
+                    <InlineEdit
+                      value={parameter.Range ? parameter.Range.LowerLimit : "N/A"}
+                      tag="span"
+                      type="text"
+                      saveLabel="Update"
+                      saveColor="#17a2b8"
+                      cancelLabel="Cancel"
+                      cancelColor="#6c757d"
+                      onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th>UpperLimit</th>
+                  <td>
                   <InlineEdit
-                    value={parameter.Range ? parameter.Range.LowerLimit : "N/A"}
+                    value={parameter.Range ? parameter.Range.UpperLimit : "N/A"}
                     tag="span"
                     type="text"
                     saveLabel="Update"
                     saveColor="#17a2b8"
                     cancelLabel="Cancel"
                     cancelColor="#6c757d"
-                    onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
+                    onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
                   />
-                </td>
-              </tr>
-              <tr>
-                <th>UpperLimit</th>
-                <td>
-                <InlineEdit
-                  value={parameter.Range ? parameter.Range.UpperLimit : "N/A"}
-                  tag="span"
-                  type="text"
-                  saveLabel="Update"
-                  saveColor="#17a2b8"
-                  cancelLabel="Cancel"
-                  cancelColor="#6c757d"
-                  onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
-                />
-                </td>
-              </tr>
-          </tbody>
-        </Table>
-      </div>
+                  </td>
+                </tr>
+            </tbody>
+          </Table>
+        </div>
+        }        
     </div>
   );
 };

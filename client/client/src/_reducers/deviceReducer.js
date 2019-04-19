@@ -9,6 +9,7 @@ export const device = (state = {}, action) => {
         };
     case gConstants.GET_DEVICES_SUCCESS:
         return {
+            ...state,
             gotData: true,
             all: action.data
         };
@@ -24,15 +25,16 @@ export const device = (state = {}, action) => {
         };
     case gConstants.GET_DEVICE_SUCCESS:
         return {
+            ...state,
             gotData: true,
-            single: action.single
+            single: action.data
         };
     case gConstants.GET_DEVICE_FAILURE:
         return {
             error: action.error,
             single: {Items: [], Count: 0}
         };
-    case gConstants.ADD_DEVICE_REQEUST:
+    case gConstants.ADD_DEVICE_REQUEST:
         return state;
     case gConstants.ADD_DEVICE_SUCCESS:
         return {

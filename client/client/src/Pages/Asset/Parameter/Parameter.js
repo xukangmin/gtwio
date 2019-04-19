@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
+import { deviceActions } from '../../../_actions/deviceAction';
 import { dataActions } from '../../../_actions/dataAction';
 import Loader from '../../../Widgets/Loader';
 import { EditEquation } from '../../../Modals/EditEquation';
@@ -37,7 +38,7 @@ const ParameterInfo = (props) => {
                   equation={parameter.Equation} 
                   asset={asset} 
                   user={user}
-                  parameter={parameter.ParameterID} 
+                  item={parameter.ParameterID} 
                 />
               </td>
             </tr>
@@ -130,20 +131,12 @@ class Parameter extends React.Component {
         ParameterID: props.match.params.parameterID
     }
 
-    this.updateEquation = this.updateEquation.bind(this);
     this.updateLimit = this.updateLimit.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
-    this.props.dispatch(parameterActions.getParameters(this.asset));
-    this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
-  }
-
-  updateEquation(parameterID, value){
-    var paraData = {};
-    paraData.ParameterID = parameterID;
-    paraData.Equation = value;
-    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
+    this.props.dispatch(parameterActions.getParameters(this.state.AssetID));
+    this.props.dispatch(deviceActions.getDevices(this.user, this.state.AssetID));
   }
 
   updateLimit(parameter, item, value){

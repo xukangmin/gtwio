@@ -86,7 +86,7 @@ class Configurations extends React.Component {
     }
 
     function modalFormatter(cell, row, enumObject){
-      return <EditEquation equation={cell} asset={asset} user={user} parameter={row.ParameterID} dispatch={enumObject}/>
+      return <EditEquation equation={cell} asset={asset} user={user} item={row.ParameterID} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){

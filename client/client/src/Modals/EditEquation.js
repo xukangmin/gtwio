@@ -5,27 +5,30 @@ import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
 import { Controlled as CodeMirror } from 'react-codemirror2';
+const math = require('mathjs');
 
+require('../Functions/noNewline.js');
 require('codemirror/lib/codemirror.css');
 require('../Style/equation.css');
 
 class EditEquation extends React.Component {
   constructor(props) {
       super(props);
-
-      this.parameter = props.parameter;
       this.asset = props.asset;
       this.user = props.user;
       this.instance = null;
  
       this.state = {
+          parameter: props.item,
           equation: props.equation,
           value: props.equation,
-          ModalOpen: false,
+          valid: true,
+          modalOpen: false,
           options: {
             theme: 'gtw',
             lineNumbers: false,
-            lineWrapping: true
+            lineWrapping: true,
+            noNewlines: true
           },
           token: null,
           cursor: null
@@ -33,6 +36,7 @@ class EditEquation extends React.Component {
 
       this.modalToggle = this.modalToggle.bind(this);
       this.addText = this.addText.bind(this);
+      this.validate = this.validate.bind(this);
       this.addButtonClicked = this.addButtonClicked.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);      
   }
@@ -46,28 +50,53 @@ class EditEquation extends React.Component {
     });
   }
 
+  validate(text){
+    let toValidate = text.replace(/\[(.*?)\]/gm, "1");
+    this.setState({valid: true});
+    try{
+      let parser = math.parser();
+
+      parser.set('Avg', function (...args) {
+        return math.mean(...args);
+      });
+
+      parser.set('t_value', function (X, df) {
+        return X/2+df;
+      });
+      
+      parser.set('count', function (...args) {
+        return args.length;
+      });
+
+      parser.eval(toValidate);
+    }
+    catch {
+      this.setState({valid: false})
+    }
+  }
+
   modalToggle(){
     this.setState(prevState => ({
-      ModalOpen: !prevState.ModalOpen
+      modalOpen: !prevState.modalOpen
     }));
   }
 
   addButtonClicked(){
     let data = {
-      ParameterID: this.parameter,
-      OriginalEquation: this.state.value
-    };
+      'ParameterID': this.state.parameter,
+      'OriginalEquation': this.state.value
+    };    
     this.props.dispatch(parameterActions.updateParameter(this.asset, data));
     this.setState(prevState => ({
       equation: this.state.value,
-      ModalOpen: !prevState.ModalOpen
+      modalOpen: !prevState.modalOpen
     }));
   }
 
   cancelButtonClicked(){
     this.setState(prevState => ({
       value: this.state.equation,
-      ModalOpen: !prevState.ModalOpen
+      modalOpen: !prevState.modalOpen
     }));
   }
   
@@ -94,12 +123,12 @@ class EditEquation extends React.Component {
       <div>         
         <span onClick={this.modalToggle}>{this.state.equation}</span>
         { (devices && parameters) &&
-        <Modal isOpen={this.state.ModalOpen} toggle={this.modalToggle} style={{maxWidth: '1280px', overflowY: 'initial !important'}}>
+        <Modal isOpen={this.state.modalOpen} toggle={this.modalToggle} style={{maxWidth: '1280px', overflowY: 'initial !important'}}>
           <ModalHeader toggle={this.modalToggle}>Edit Equation</ModalHeader>
           <ModalBody style={{height: 'calc(100vh - 200px)'}}>
             <Row>
               <Col md="7">
-                <div style={{fontSize: '1.1rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10'}} >
+                <div style={{fontSize: '1.1rem', border: this.state.valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5 10', position: "relative"}} >
                   <CodeMirror                    
                     value={this.state.value}
                     editorDidMount={(editor) => {
@@ -111,6 +140,9 @@ class EditEquation extends React.Component {
                     onBeforeChange={(editor, data, value) => {
                       this.setState({value});
                       
+                    }}
+                    onChange={(editor, data, value) => {                      
+                      this.validate(value);
                     }}
                     onKeyDown={(cm, e)=>{
                       this.state.cursor = this.instance.getCursor();         
@@ -132,9 +164,11 @@ class EditEquation extends React.Component {
                       this.state.token = this.instance.getTokenAt({line: 0, ch: this.state.cursor.ch});
                     }}          
                   />
-                </div>   
+                <span align="right" style={{color: this.state.valid ? "green" : "red", position: "absolute", right: 15, bottom: 10, fontWeight: "bold"}}>{this.state.valid ? "Valid" : "Invalid"}{" Equation"}</span> 
+                </div>  
+                
                 <div align="right" className="mt-3">
-                  <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}
+                  <Button color="success" id="submit" disabled={!this.state.valid} onClick={this.addButtonClicked}>Submit</Button>{' '}
                   <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
                 </div>                
               </Col>

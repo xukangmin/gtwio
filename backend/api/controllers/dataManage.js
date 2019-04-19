@@ -519,6 +519,40 @@ function _update_status(paraID, timestamp, currentValue) {
               );
           }
         }
+        
+        // var timerange;
+        // if (data.DataAvailableTimeRange)
+        // {
+        //   timerange = data.DataAvailableTimeRange; 
+        // }
+        // else {
+        //   timerange = [];
+        // }
+
+
+        var rem = parseInt(timestamp / 1000) % 3600;
+
+        var hour_data = parseInt(timestamp / 1000) - rem;
+        
+        if (data.DataAvailableTimeRange.includes(hour_data * 1000) === false)
+        {
+          data.DataAvailableTimeRange.push(hour_data * 1000);
+        }
+        
+        
+        data.save();
+        // console.log(hour_data);
+       
+        // console.log(timerange);
+        
+
+        // console.log(data);
+        
+        
+
+        // data.DataAvailableTimeRange = timerange;
+
+        // data.save();
       }
     }
   });

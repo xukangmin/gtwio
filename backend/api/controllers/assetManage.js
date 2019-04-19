@@ -20,7 +20,8 @@ var functions = {
   addBaselineByAssetID: addBaselineByAssetID,
   deleteBaselineByAssetID: deleteBaselineByAssetID,
   setBaselineActive: setBaselineActive,
-  updateBaseline: updateBaseline
+  updateBaseline: updateBaseline,
+  getAssetTimeRange: getAssetTimeRange
 };
 
 for (var key in functions) {
@@ -130,6 +131,45 @@ function _getBaselineByAssetID(assetid) {
         }
       });
     });
+}
+
+function getAssetTimeRange(req, res) {
+  var assetID = req.swagger.params.AssetID.value;
+  if (assetID) {
+    var timerange = [];
+    dataManage._getAllParameterByAssetID(assetID)
+      .then(
+        ret => {
+          if (ret.length > 0) 
+          {
+            
+            for(var i in ret) {
+              if (ret[i].DataAvailableTimeRange)
+              {
+                var daobj = ret[i].DataAvailableTimeRange.toObject();
+                if (daobj.length > 0)
+                {
+                  for (var j in daobj) {
+                    if (timerange.includes(daobj[j]) === false)
+                    {
+                      timerange.push(daobj[j]);
+                    }
+                  }
+                }
+
+              }
+            }
+
+            shareUtil.SendSuccessWithData(res, timerange);
+
+          } else {
+            shareUtil.SendSuccessWithData(res, []);
+          }
+        }
+      )
+  } else {
+    shareUtil.SendInvalidInput(res, 'assetid not found');
+  }
 }
 
 function getBaselineByAssetID(req, res) {

@@ -1338,7 +1338,9 @@ function getDataByAssetID(req, res) {
   if (assetid && sTS && eTS) {
     // get device
     var data_out = [];
+    var out_put = {};
     var paraDataList = [];
+    var assetHeader = [];
     if (start_truncate == 1) {
         var tr = parseInt(sTS / 1000);
         var res = tr % 60;
@@ -1375,10 +1377,22 @@ function getDataByAssetID(req, res) {
                   para_name = ret[i].Parameters[j].DisplayName;
                   full_name = device_name;
                   var single_para_data = {};
+                  var col_info = {};
                   single_para_data.DisplayName = full_name;
                   single_para_data.Data = ret[i].Parameters[j].Data;
                   single_para_data.Unit = ret[i].Parameters[j].Unit;
                   paraDataList.push(single_para_data);
+                  col_info.Unit = ret[i].Parameters[j].Unit;
+                  if (ret[i].Alias) {
+                    col_info.Header = ret[i].Alias;
+                  } else if (ret[i].Tag) {
+                    col_info.Header = ret[i].Tag;
+                  } else if (ret[i].DisplayName) {
+                    col_info.Header = ret[i].DisplayName;
+                  } else {
+                    col_info.Header = "N/A";
+                  }
+                  assetHeader.push(col_info);
                 }
               }
             }
@@ -1394,10 +1408,22 @@ function getDataByAssetID(req, res) {
                 for(var i in ret) {
                   if (ret[i].Data) {
                     var single_para_data = {};
+                    var col_info = {};
                     single_para_data.DisplayName = ret[i].Alias;
                     single_para_data.Data = ret[i].Data;
                     single_para_data.Unit = ret[i].Unit;
                     paraDataList.push(single_para_data);
+                    col_info.Unit = ret[i].Unit;
+                    if (ret[i].Alias) {
+                      col_info.Header = ret[i].Alias;
+                    } else if (ret[i].Tag) {
+                      col_info.Header = ret[i].Tag;
+                    } else if (ret[i].DisplayName) {
+                      col_info.Header = ret[i].DisplayName;
+                    } else {
+                      col_info.Header = "N/A";
+                    }
+                    assetHeader.push(col_info);
                   }
                 }
                 // process data based on time stamp
@@ -1434,8 +1460,6 @@ function getDataByAssetID(req, res) {
                           }
                           if (count != 0) {
                             var single_para_data1 = {};
-                            single_para_data1.DisplayName = paraDataList[j].DisplayName;
-                            single_para_data1.Unit = paraDataList[j].Unit;
                             switch (grouping_method) {
                               case 0:
                                 single_para_data1.Value = sum / count;
@@ -1470,8 +1494,9 @@ function getDataByAssetID(req, res) {
                     single_ts_data.Data = single_ts_data_part;
                     data_out.push(single_ts_data);
                 }
-
-                shareUtil.SendSuccessWithData(res, data_out);
+                out_put.AssetData = data_out;
+                out_put.AssetColumnInfo = assetHeader;
+                shareUtil.SendSuccessWithData(res, out_put);
               }
             )
             .catch(

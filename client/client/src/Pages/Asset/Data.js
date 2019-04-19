@@ -18,7 +18,6 @@ class Data extends React.Component {
     };
 
     const HeaderFormatter = (value) => {
-      console.log(value)
       return <span title={value.column.name}>{value.column.name}</span>
     };
 

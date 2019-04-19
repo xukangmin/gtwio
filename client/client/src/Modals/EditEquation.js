@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
-import { Tag } from 'antd';
+import { Tag, Icon } from 'antd';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 const math = require('mathjs');
 
@@ -128,18 +128,16 @@ class EditEquation extends React.Component {
           <ModalBody style={{height: 'calc(100vh - 200px)'}}>
             <Row>
               <Col md="7">
-                <div style={{fontSize: '1.1rem', border: this.state.valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5 10', position: "relative"}} >
+                <div style={{fontSize: '0.9rem', border: this.state.valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5 10', position: "relative"}} >
                   <CodeMirror                    
                     value={this.state.value}
                     editorDidMount={(editor) => {
-                      this.instance = editor; 
-                      
+                      this.instance = editor;                       
                     }}
                     defineMode={{name: 'parameters', fn: sampleMode}}
                     options={this.state.options}
                     onBeforeChange={(editor, data, value) => {
-                      this.setState({value});
-                      
+                      this.setState({value});                      
                     }}
                     onChange={(editor, data, value) => {                      
                       this.validate(value);
@@ -164,7 +162,11 @@ class EditEquation extends React.Component {
                       this.state.token = this.instance.getTokenAt({line: 0, ch: this.state.cursor.ch});
                     }}          
                   />
-                <span align="right" style={{color: this.state.valid ? "green" : "red", position: "absolute", right: 15, bottom: 10, fontWeight: "bold"}}>{this.state.valid ? "Valid" : "Invalid"}{" Equation"}</span> 
+                {this.state.valid ? 
+                <Tag align="right" color="green" style={{color: "green", position: "absolute", right: 0, bottom: 10, fontWeight: "bold"}}><Icon type="check-circle" /> Valid Equation</Tag> 
+                :
+                <Tag align="right" color="red" style={{color: "red", position: "absolute", right: 0, bottom: 10, fontWeight: "bold"}}><Icon type="exclamation-circle" /> Invalid Equation</Tag>
+                }
                 </div>  
                 
                 <div align="right" className="mt-3">

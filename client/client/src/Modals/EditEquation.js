@@ -51,9 +51,23 @@ class EditEquation extends React.Component {
 
   validate(text){
     let toValidate = text.replace(/\[(.*?)\]/gm, "1");
-    this.setState({valid: true})
+    this.setState({valid: true});
     try{
-      math.eval(toValidate)
+      let parser = math.parser();
+
+      parser.set('Avg', function (...args) {
+        return math.mean(...args);
+      });
+
+      parser.set('t_value', function (X, df) {
+        return X/2+df;
+      });
+      
+      parser.set('count', function (...args) {
+        return args.length;
+      });
+
+      parser.eval(toValidate);
     }
     catch {
       this.setState({valid: false})
@@ -113,7 +127,7 @@ class EditEquation extends React.Component {
           <ModalBody style={{height: 'calc(100vh - 200px)'}}>
             <Row>
               <Col md="7">
-                <div style={{fontSize: '1.1rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10', position: "relative"}} >
+                <div style={{fontSize: '1.1rem', border: this.state.valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5 10', position: "relative"}} >
                   <CodeMirror                    
                     value={this.state.value}
                     editorDidMount={(editor) => {

@@ -9,8 +9,9 @@ export const parameter = (state = {}, action) => {
         };
     case gConstants.GET_PARAMETERS_SUCCESS:
         return {
+            ...state,
             gotData: true,
-            data: action.data
+            all: action.data
         };
     case gConstants.GET_PARAMETERS_FAILURE:
         return {
@@ -23,8 +24,9 @@ export const parameter = (state = {}, action) => {
         };
     case gConstants.GET_PARAMETER_SUCCESS:
         return {
+            ...state,
             gotData: true,
-            data: action.data
+            single: action.data
         };
     case gConstants.GET_PARAMETER_FAILURE:
         return {

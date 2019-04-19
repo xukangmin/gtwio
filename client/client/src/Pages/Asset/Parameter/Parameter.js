@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
+import { dataActions } from '../../../_actions/dataAction';
 import Loader from '../../../Widgets/Loader';
+import { EditEquation } from '../../../Modals/EditEquation';
 
 import { Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
@@ -11,7 +13,7 @@ import InlineEdit from 'react-inline-edit-input';
 
 const ParameterInfo = (props) => {
   const parameter = props.data;
-
+  const { asset, user } = props;
   return(
     <div className = "row">
       <div className="col-12">
@@ -31,21 +33,17 @@ const ParameterInfo = (props) => {
             <tr>
               <th>Equation</th>
               <td>
-                <InlineEdit
-                  value={parameter.Equation}
-                  tag="span"
-                  type="text"
-                  saveLabel="Update"
-                  saveColor="#17a2b8"
-                  cancelLabel="Cancel"
-                  cancelColor="#6c757d"
-                  onSave={value => props.update(parameter.ParameterID, value)}
+                <EditEquation 
+                  equation={parameter.Equation} 
+                  asset={asset} 
+                  user={user}
+                  parameter={parameter.ParameterID} 
                 />
               </td>
             </tr>
-            <tr style={{display: parameter.CurrentValue ? "block" : "none"}}>
+            <tr>
               <th>Current Value</th>
-              <td>{parameter.CurrentValue && parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
+              <td>{parameter.CurrentValue ? parameter.CurrentValue.toFixed(2) : "N/A"}{parameter.Unit && parameter.Unit}</td>
             </tr>
             <tr>
               <th>Current Time Stamp</th>
@@ -60,9 +58,8 @@ const ParameterInfo = (props) => {
               <tr>
                 <th>LowerLimit</th>
                 <td>
-                  {parameter.Range && typeof(parameter.Range.LowerLimit)=="number" ?
                   <InlineEdit
-                    value={parameter.Range.LowerLimit}
+                    value={parameter.Range ? parameter.Range.LowerLimit : "N/A"}
                     tag="span"
                     type="text"
                     saveLabel="Update"
@@ -70,15 +67,14 @@ const ParameterInfo = (props) => {
                     cancelLabel="Cancel"
                     cancelColor="#6c757d"
                     onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
-                  />: "N/A"}
+                  />
                 </td>
               </tr>
               <tr>
                 <th>UpperLimit</th>
                 <td>
-                {parameter.Range && typeof(parameter.Range.UpperLimit)=="number" ?
                 <InlineEdit
-                  value={parameter.Range.UpperLimit}
+                  value={parameter.Range ? parameter.Range.UpperLimit : "N/A"}
                   tag="span"
                   type="text"
                   saveLabel="Update"
@@ -86,7 +82,7 @@ const ParameterInfo = (props) => {
                   cancelLabel="Cancel"
                   cancelColor="#6c757d"
                   onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
-                />:"N/A"}
+                />
                 </td>
               </tr>
           </tbody>
@@ -138,6 +134,9 @@ class Parameter extends React.Component {
     this.updateLimit = this.updateLimit.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
+
+    this.props.dispatch(parameterActions.getParameters(this.asset));
+    this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   }
 
   updateEquation(parameterID, value){
@@ -148,13 +147,12 @@ class Parameter extends React.Component {
   }
 
   updateLimit(parameter, item, value){
-    console.log(parameter)
-    let paraData = {};
-    paraData.ParameterID = parameter.ParameterID;
-
-    paraData.Range = parameter.Range;
+    let paraData = {
+      'ParameterID': parameter.ParameterID,
+      'Range': parameter.Range
+    };        
     paraData.Range[item] = parseInt(value);
-    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));
+    this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, paraData));    
   }
 
   sortTime(data){
@@ -177,6 +175,9 @@ class Parameter extends React.Component {
     const { parameter } = this.props;
     let { parameterData } = this.props;
 
+    console.log(parameter)
+    console.log(parameterData)
+
     if (!this.user)
     {
       return (<Redirect to = '/login' />);
@@ -186,7 +187,13 @@ class Parameter extends React.Component {
         <div className = "mt-3">
         {parameter && parameterData ?
           <div>
-            <ParameterInfo data={parameter} update={this.updateEquation} updateLimit={this.updateLimit}/>
+            <ParameterInfo 
+              data={parameter} 
+              user={this.user} 
+              asset={this.state.AssetID} 
+              update={this.updateEquation} 
+              updateLimit={this.updateLimit}/>
+            
             {parameterData &&
             <div className = "row mt-3">
               <div className = "col-auto">
@@ -210,10 +217,13 @@ class Parameter extends React.Component {
 
 function mapStateToProps(state) {
   const { data } = state.data;
-  const parameter = state.parameter.data
+  const parameter = state.parameter.single;
+  
   return {
       parameterData: data,
-      parameter: parameter
+      parameter: parameter,
+      devices: state.device.all,
+      parameters: state.parameter.all
   };
 }
 

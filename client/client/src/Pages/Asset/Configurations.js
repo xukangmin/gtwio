@@ -14,7 +14,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Tabs, Button, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
-import EditEquation from '../../Modals/EditEquation';
+import { EditEquation } from '../../Modals/EditEquation';
 
 class Configurations extends React.Component {
   constructor(props) {
@@ -41,6 +41,9 @@ class Configurations extends React.Component {
       addNewDeviceModalOpen: false,
       addNewParameterModalOpen: false
     };
+
+    this.props.dispatch(parameterActions.getParameters(this.asset));
+    this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   } 
 
   deleteItem(itemID, itemName, itemType){
@@ -76,13 +79,14 @@ class Configurations extends React.Component {
   render() {
     const { device, parameter } = this.props;
     const asset = this.asset;
+    const user = this.user;
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
     }
 
     function modalFormatter(cell, row, enumObject){
-      return <EditEquation equation={cell} asset={asset} parameter={row.ParameterID} parameters={parameter} devices={device} dispatch={enumObject}/>
+      return <EditEquation equation={cell} asset={asset} user={user} parameter={row.ParameterID} dispatch={enumObject}/>
     }
 
     function deleteFormatter(cell, row, enumObject){
@@ -329,10 +333,10 @@ class Configurations extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { data } = state.device;
-  const parameterData = state.parameter.data;
+  const device = state.device.all;
+  const parameterData = state.parameter.all;
   return {
-      device : data,
+      device : device,
       parameter: parameterData
   };
 }

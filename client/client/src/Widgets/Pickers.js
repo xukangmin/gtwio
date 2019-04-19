@@ -161,7 +161,7 @@ class Pickers extends React.Component {
           }, liveDispatchInterval);
         } else {
           this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
-        }
+        }        
       }
 
       else if (asset && flow)

@@ -1,11 +1,165 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag } from 'antd';
-import {Controlled as CodeMirror} from 'react-codemirror2';
+import { Controlled as CodeMirror } from 'react-codemirror2';
 
 require('codemirror/lib/codemirror.css');
 require('../Style/equation.css');
+
+class EditEquation extends React.Component {
+  constructor(props) {
+      super(props);
+
+      this.parameter = props.parameter;
+      this.asset = props.asset;
+      this.user = props.user;
+      this.instance = null;
+ 
+      this.state = {
+          equation: props.equation,
+          value: props.equation,
+          ModalOpen: false,
+          options: {
+            theme: 'gtw',
+            lineNumbers: false,
+            lineWrapping: true
+          },
+          token: null,
+          cursor: null
+      };
+
+      this.modalToggle = this.modalToggle.bind(this);
+      this.addText = this.addText.bind(this);
+      this.addButtonClicked = this.addButtonClicked.bind(this);
+      this.cancelButtonClicked = this.cancelButtonClicked.bind(this);      
+  }
+
+  addText(text) {
+    if (!this.state.cursor || !this.state.token){
+      this.instance.setCursor({line: 0 , ch: 0});
+    }
+    this.setState({        
+      value: this.state.value.substring(0,this.state.cursor.ch) + text + this.state.value.substring(this.state.cursor.ch)
+    });
+  }
+
+  modalToggle(){
+    this.setState(prevState => ({
+      ModalOpen: !prevState.ModalOpen
+    }));
+  }
+
+  addButtonClicked(){
+    let data = {
+      ParameterID: this.parameter,
+      OriginalEquation: this.state.value
+    };
+    this.props.dispatch(parameterActions.updateParameter(this.asset, data));
+    this.setState(prevState => ({
+      equation: this.state.value,
+      ModalOpen: !prevState.ModalOpen
+    }));
+  }
+
+  cancelButtonClicked(){
+    this.setState(prevState => ({
+      value: this.state.equation,
+      ModalOpen: !prevState.ModalOpen
+    }));
+  }
+  
+  render() {
+    let devices, parameters;
+    if (this.props.devices && this.props.parameters){
+      devices = [...new Set(this.props.devices.map(x=> x.Parameters[0].Tag))];
+      parameters = this.props.parameters;
+    }
+    
+    const operators = [
+      { Name: 'Avg'},
+      { Name: 'sqrt'},
+      { Name: 'log'},
+      { Name: '('},
+      { Name: ')'},
+      { Name: '+'}, 
+      { Name: '-'}, 
+      { Name: '*'}, 
+      { Name: '/'}
+    ];
+
+    return(
+      <div>         
+        <span onClick={this.modalToggle}>{this.state.equation}</span>
+        { (devices && parameters) &&
+        <Modal isOpen={this.state.ModalOpen} toggle={this.modalToggle} style={{maxWidth: '1280px', overflowY: 'initial !important'}}>
+          <ModalHeader toggle={this.modalToggle}>Edit Equation</ModalHeader>
+          <ModalBody style={{height: 'calc(100vh - 200px)'}}>
+            <Row>
+              <Col md="7">
+                <div style={{fontSize: '1.1rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10'}} >
+                  <CodeMirror                    
+                    value={this.state.value}
+                    editorDidMount={(editor) => {
+                      this.instance = editor; 
+                      
+                    }}
+                    defineMode={{name: 'parameters', fn: sampleMode}}
+                    options={this.state.options}
+                    onBeforeChange={(editor, data, value) => {
+                      this.setState({value});
+                      
+                    }}
+                    onKeyDown={(cm, e)=>{
+                      this.state.cursor = this.instance.getCursor();         
+                      this.state.token = this.instance.getTokenAt({line: 0, ch: e.keyCode == 46 ? this.state.cursor.ch + 1 : this.state.cursor.ch});
+
+                      if( e.keyCode == 8 || e.keyCode == 46 ) {
+                        if (this.state.token && (this.state.token.string.includes("[") || this.state.token.string.includes("]"))){
+                          this.setState(prevState => {
+                            return {
+                              value: prevState.value.substring(0, prevState.token.start) + prevState.value.substring(prevState.token.end)
+                            };
+                          });
+                          this.instance.setCursor({line: this.state.cursor.line , ch:this.state.token.start});
+                        }            
+                      }
+                    }}
+                    onCursor={(editor, data) => {  
+                      this.state.cursor = this.instance.getCursor();         
+                      this.state.token = this.instance.getTokenAt({line: 0, ch: this.state.cursor.ch});
+                    }}          
+                  />
+                </div>   
+                <div align="right" className="mt-3">
+                  <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}
+                  <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
+                </div>                
+              </Col>
+              <Col md="5" style={{height: 'calc(100vh - 220px)', overflowY: 'scroll'}}>              
+                <div>
+                  <h5>Group Data</h5>
+                  {devices.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText('['+x+']')} value={x} key={i}>{x}</Tag>)}
+                </div>
+                <hr/>
+                <div>
+                  <h5>Parameters</h5>
+                  {parameters.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag} key={i}>{x.Tag}</Tag>)}
+                </div>
+                <div style={{display: "none"}}>
+                  <h5>Operators</h5>
+                  {operators.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText(x.Name)} value={x.Name} key={i}>{x.Name}</Tag>)}
+                </div>
+              </Col>
+            </Row>                
+          </ModalBody>
+        </Modal>}        
+      </div>
+    );
+  }
+}
 
 let sampleMode = () => {
   return {
@@ -36,152 +190,17 @@ let sampleMode = () => {
   };
 };
 
-class EditEquation extends React.Component {
-  constructor(props) {
-      super(props);
+function mapStateToProps(state) {
+  const { data } = state.data;
+  const parameter = state.parameter.single;
 
-      this.parameter = props.parameter;
-      this.asset = props.asset;
-      this.instance = null;
-
-      this.state = {
-          equation: props.equation,
-          devices: [...new Set(props.devices.map(x=> x.Parameters[0].Tag))],
-          parameters: props.parameters,
-          value: props.equation,
-          ModalOpen: false,
-          options: {
-            theme: 'gtw',
-            lineNumbers: false,
-            lineWrapping: true
-          },
-          token: null,
-          cursor: null,
-          Pos : {}
-      };
-      
-      this.contentEditable = React.createRef();
-
-      this.ModalToggle = this.ModalToggle.bind(this);
-      this.addButtonClicked = this.addButtonClicked.bind(this);
-      this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
-      this.addText = this.addText.bind(this);
-  }
-
-  addText(text) {
-    this.setState(prevState => 
-      {
-        return {
-          value: prevState.value.substring(0,prevState.Pos.ch) + text + prevState.value.substring(prevState.Pos.ch)
-        };
-      });
-  }
-
-  ModalToggle(){
-    this.setState(prevState => ({
-      ModalOpen: !prevState.ModalOpen
-    }));
-  }
-
-  addButtonClicked(){
-    let data = {
-      ParameterID: this.parameter,
-      OriginalEquation: this.state.value
-    }
-    this.props.dispatch(parameterActions.updateParameter(this.asset, data));
-    this.setState(prevState => ({
-      equation: this.state.value,
-      ModalOpen: !prevState.ModalOpen
-    }));
-  }
-
-  cancelButtonClicked(){
-    this.setState(prevState => ({
-      value: this.state.equation,
-      ModalOpen: !prevState.ModalOpen
-    }));
-  }
-  
-  render() {
-    const devices = this.state.devices;
-    const parameters = this.state.parameters;
-    const operators = [
-      { Name: 'Avg'},
-      { Name: 'sqrt'},
-      { Name: 'log'},
-      { Name: '('},
-      { Name: ')'},
-      { Name: '+'}, 
-      { Name: '-'}, 
-      { Name: '*'}, 
-      { Name: '/'}
-    ];
-
-    return(
-      <div>
-        <span onClick={this.ModalToggle}>{this.state.equation}</span>
-        <Modal isOpen={this.state.ModalOpen} toggle={this.ModalToggle} style={{maxWidth: '1280px', overflowY: 'initial !important'}}>
-          <ModalHeader toggle={this.ModalToggle}>Edit Equation</ModalHeader>
-          <ModalBody style={{height: 'calc(100vh - 200px)'}}>
-            <Row>
-              <Col md="7">
-                <div style={{fontSize: '1.1rem', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '5 10'}} >
-                  <CodeMirror                    
-                    value={this.state.value}
-                    editorDidMount={(editor) => {
-                      this.instance = editor; 
-                    }}
-                    defineMode={{name: 'parameters', fn: sampleMode}}
-                    options={this.state.options}
-                    onBeforeChange={(editor, data, value) => {
-                      this.setState({value});
-                    }}
-                    onKeyDown={(cm, e)=>{
-                      this.state.cursor = this.instance.getCursor();         
-                      this.state.token = this.instance.getTokenAt({line: 0, ch: e.keyCode == 46 ? this.state.cursor.ch + 1 : this.state.cursor.ch});
-
-                      if( e.keyCode == 8 || e.keyCode == 46 ) {
-                        if (this.state.token && (this.state.token.string.includes("[") || this.state.token.string.includes("]"))){
-                          this.setState(prevState => {
-                            return {
-                              value: prevState.value.substring(0, prevState.token.start) + prevState.value.substring(prevState.token.end)
-                            };
-                          });
-                          this.instance.setCursor({line: this.state.cursor.line , ch:this.state.token.start});
-                        }            
-                      }
-                    }}
-                    onCursor={(editor, data) => {            
-                      this.setState({Pos: data});
-                    }}          
-                  />
-                </div>   
-                <div align="right" className="mt-3">
-                  <Button color="success" id="submit" onClick={this.addButtonClicked}>Submit</Button>{' '}
-                  <Button color="secondary" id="cancel" onClick={this.cancelButtonClicked}>Cancel</Button>
-                </div>                
-              </Col>
-              <Col md="5" style={{height: 'calc(100vh - 220px)', overflowY: 'scroll'}}>
-                <div>
-                  <h5>Group Data</h5>
-                  {devices.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText('['+x+']')} value={x} key={i}>{x}</Tag>)}
-                </div>
-                <hr/>
-                <div>
-                  <h5>Parameters</h5>
-                  {parameters.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag} key={i}>{x.Tag}</Tag>)}
-                </div>
-                <div style={{display: "none"}}>
-                  <h5>Operators</h5>
-                  {operators.map((x,i)=><Tag className="mb-2" onClick={()=>this.addText(x.Name)} value={x.Name} key={i}>{x.Name}</Tag>)}
-                </div>
-              </Col>
-            </Row>                
-          </ModalBody>
-        </Modal>
-      </div>
-    );
-  }
+  return {
+      parameterData: data,
+      parameter: parameter,
+      devices: state.device.all,
+      parameters: state.parameter.all
+  };
 }
 
-export default EditEquation;
+const connectedPage = connect(mapStateToProps)(EditEquation);
+export { connectedPage as EditEquation };

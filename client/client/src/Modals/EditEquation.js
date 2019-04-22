@@ -51,7 +51,7 @@ class EditEquation extends React.Component {
   }
 
   validate(text){
-    let toValidate = text.replace(/\[(.*?)\]/gm, "1");
+    let toValidate = text.replace(/\[(.*?)\]/gm, "0.1");
     this.setState({valid: true});
     try{
       let parser = math.parser();

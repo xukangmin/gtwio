@@ -60,6 +60,10 @@ class EditEquation extends React.Component {
         return math.mean(...args);
       });
 
+      parser.set('avg', function (...args) {
+        return math.mean(...args);
+      });
+
       parser.set('t_value', function (X, df) {
         return X/2+df;
       });
@@ -108,6 +112,13 @@ class EditEquation extends React.Component {
     }
     
     const operators = [
+      { Name: '('},
+      { Name: ')'},
+      { Name: '+'}, 
+      { Name: '-'}, 
+      { Name: '*'}, 
+      { Name: '/'},
+      { Name: '^'},
       { Name: 'Avg'},
       { Name: 'sum'},
       { Name: 'count'},
@@ -115,14 +126,7 @@ class EditEquation extends React.Component {
       { Name: 'log'},
       { Name: 'abs'},
       { Name: 'std'},
-      { Name: 't_value'},
-      { Name: '('},
-      { Name: ')'},
-      { Name: '+'}, 
-      { Name: '-'}, 
-      { Name: '*'}, 
-      { Name: '/'},
-      { Name: '^'}
+      { Name: 't_value'}
     ];
 
     return(

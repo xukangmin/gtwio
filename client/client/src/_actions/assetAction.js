@@ -92,6 +92,25 @@ const getDevicesByAsset = (user, assetID) => {
     function failure(error) { return { type: gConstants.GET_DEVICES_BY_ASSET_FAILURE, error } }
 }
 
+const getTimeRangeByAsset = (assetID) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.getTimeRangeByAsset(assetID)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_TIME_RANGE_BY_ASSET_REQUEST } }
+    function success(data) { return { type: gConstants.GET_TIME_RANGE_BY_ASSET_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_TIME_RANGE_BY_ASSET_FAILURE, error } }
+}
+
 const addAsset = (user, displayName, location) => {
     return dispatch => {
         dispatch(request());
@@ -276,6 +295,7 @@ export const assetActions = {
     getAsset,
     getConfigByAssetID,
     getDevicesByAsset,
+    getTimeRangeByAsset,
     addAsset,
     addAssetByConfig,
     addAssetByConfigFile,

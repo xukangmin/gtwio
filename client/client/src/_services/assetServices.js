@@ -123,6 +123,21 @@ const getConfigByAssetID = (user, assetID) => {
         });
 }
 
+const getTimeRangeByAsset = (assetID) => {
+    
+    return fetch(process.env.API_HOST + '/asset/getAssetTimeRange?AssetID=' + assetID)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        });
+}
+
 const addAsset = (user, displayName, location) => {
     const requestOptions = {
         method: 'POST',
@@ -361,6 +376,7 @@ export const assetServices = {
     addAsset,
     addAssetByConfig,
     addAssetByConfigFile,
+    getTimeRangeByAsset,
     deleteAsset,
     updateAsset,
     getBaselines,

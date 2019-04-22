@@ -10,6 +10,9 @@ class Settings extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
   }
 
+  //alert
+  //columns to show on Data
+  //refresh interval
   render() {
       return(
         <div>

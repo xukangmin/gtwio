@@ -99,6 +99,21 @@ export const asset = (state = {}, action) => {
             error: action.error
         };
 
+    case gConstants.GET_TIME_RANGE_BY_ASSET_REQUEST:
+        return {
+            ...state,
+            gettingAsset: true
+        };
+    case gConstants.GET_TIME_RANGE_BY_ASSET_SUCCESS:
+        return {
+            ...state,
+            timeRange: action.data
+        };
+    case gConstants.GET_TIME_RANGE_BY_ASSET_FAILURE:
+        return {
+            error: action.error
+        };
+
     case gConstants.ADD_BASELINE_REQUEST:
         return state;
     case gConstants.ADD_BASELINE_SUCCESS:

@@ -26,7 +26,8 @@ const ParameterSchema = new Schema(
     StreamingStatus: String,
     Timeout: Number, // in seconds
     Baseline: Number, // epoch timestamp miliseconds
-    DataAvailableTimeRange: [Number] // only store hourly data
+    DataAvailableTimeRange: [Number], // only store hourly data
+    CalculationHistory: [{RawEquation: String, TimeStamp: Number, Result: Number}] // only store recent 20 calculation
   },
   { timestamps: true }
 );

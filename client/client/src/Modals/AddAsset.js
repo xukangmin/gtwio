@@ -512,7 +512,7 @@ class AddAsset extends React.Component {
                                       }}     
                                     />
                                     {this.state.Equations[x.key].Valid ? 
-                                    <Icon title="valid equation" color="green" style={{color: "green", position: "absolute", right: 10, bottom: 10, fontWeight: "bold"}} type="check-circle" />
+                                    <Icon title="valid equation" color="green" style={{color: "green", position: "absolute", right: 10, bottom: 10, fontWeight: "bold", display: this.state.Equations[x.key].Equation ? "inline-block" : "none"}} type="check-circle" />
                                     :
                                     <Icon title="invalid equation" color="red" style={{color: "red", position: "absolute", right: 10, bottom: 10, fontWeight: "bold"}} type="exclamation-circle" />
                                     }
@@ -534,7 +534,7 @@ class AddAsset extends React.Component {
                           <hr/>
                           <div>
                             <h6>Parameters</h6>
-                            {equations.map((x,i) => <Tag key={i} style={{display: x.Tag ? "inline-block" : "none"}} className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag}>{x.Tag}</Tag>)}
+                            {equations.filter(x=>x.Valid).map((x,i) => <Tag key={i} style={{display: x.Tag ? "inline-block" : "none"}} className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag}>{x.Tag}</Tag>)}
                           </div>
                           <hr/>
                           <div>

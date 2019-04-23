@@ -43,13 +43,11 @@ class Dashboard extends React.Component {
         {assetData && assetTags ?
           <div style={Hx_style} className="mx-auto">
             <Samy svgXML={HxSvg}>
-              { assetTags && assetTags.map((item,i) =>
-                  <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
+              { assetTags.map((item,i) =>
+                  <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item))} />
                 )
               }
-              { assetData && 
-                <SvgProxy selector={"#asset_name"} onElementSelected={(elem => this.HandleTitle(elem, assetData))} />
-              }
+              <SvgProxy selector={"#asset_name"} onElementSelected={elem => this.HandleTitle(assetData)} />
             </Samy>
             <Row>
               <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
@@ -107,7 +105,7 @@ class Dashboard extends React.Component {
     }
   }
 
-  HandleText(elem, tag, assetData){
+  HandleText(elem, tag){
     var temp_obj = tag.Data.find(item => item.Name === "Temperature");
     var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
 
@@ -129,7 +127,7 @@ class Dashboard extends React.Component {
     }
   }
 
-  HandleTitle(elem, assetData){
+  HandleTitle(assetData){
     document.getElementById("asset_name").innerHTML = assetData.DisplayName;
   }
 }

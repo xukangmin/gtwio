@@ -13,7 +13,8 @@ class Dashboard extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset = props.match.params.assetID;
 
-    this.HandleText = this.HandleText.bind(this);    
+    this.HandleText = this.HandleText.bind(this);  
+    this.HandleTitle = this.HandleTitle.bind(this);  
   }  
 
   render() {
@@ -45,6 +46,9 @@ class Dashboard extends React.Component {
               { assetTags && assetTags.map((item,i) =>
                   <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item, assetData))} />
                 )
+              }
+              { assetData && 
+                <SvgProxy selector={"#asset_name"} onElementSelected={(elem => this.HandleTitle(elem, assetData))} />
               }
             </Samy>
             <Row>
@@ -123,10 +127,10 @@ class Dashboard extends React.Component {
         document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
       }
     }
+  }
 
-    if (assetData) {
-      document.getElementById("asset_name").innerHTML = assetData.DisplayName;
-    }
+  HandleTitle(elem, assetData){
+    document.getElementById("asset_name").innerHTML = assetData.DisplayName;
   }
 }
 

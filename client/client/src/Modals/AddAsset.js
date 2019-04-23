@@ -121,7 +121,6 @@ class AddAsset extends React.Component {
           Devices: this.state.Devices,
           Equations: equations
         };
-        console.log(data)
         this.props.dispatch(assetActions.addAssetByConfig(this.user, data));
       }
       this.resetForm();

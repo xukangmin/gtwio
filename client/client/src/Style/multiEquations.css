@@ -12,11 +12,14 @@
 .cm-s-gtw .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
 
 .CodeMirror-scroll {
-    height: 26 !important;
+    min-height: 52 !important;
+    height: auto !important;
 }
 
 .CodeMirror {
-    height: 26 !important;
+    min-height: 52 !important;
+    height: auto !important;
+    word-wrap: break-word;
 }
 
 .CodeMirror-code {

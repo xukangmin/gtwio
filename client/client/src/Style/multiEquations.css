@@ -1,5 +1,5 @@
 .cm-s-gtw span.cm-comment { color: #a86; }
-.cm-s-gtw span.cm-parameter { line-height: 2.5em; font-weight: bold; color: white; background:rgb(0, 123, 255); border-radius: 4px; padding: 6px; margin: 4px;}
+.cm-s-gtw span.cm-parameter { line-height: 1em !important; font-weight: bold; color: white; background:rgb(0, 123, 255); border-radius: 4px; padding: 2px !important; margin: 6px;}
 .cm-s-gtw span.cm-string { color: #a22; }
 .cm-s-gtw span.cm-builtin { line-height: 2em; font-weight: bold; color: #077; }
 .cm-s-gtw span.cm-special { line-height: 2em; font-weight: bold; color: #0aa; }
@@ -12,9 +12,13 @@
 .cm-s-gtw .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
 
 .CodeMirror-scroll {
-    height: 300;
+    height: 26 !important;
 }
 
 .CodeMirror {
-    height: 300;
+    height: 26 !important;
+}
+
+.CodeMirror-code {
+    margin-top: 1 !important;
 }

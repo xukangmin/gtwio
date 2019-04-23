@@ -26,10 +26,12 @@ class Dashboard extends React.Component {
 
     let progressBars, cleanliness, heatFlow, heatBalanceError;
     if (assetTags){
-      progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
-      cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR");
-      heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_FLOW");
-      heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR");
+      if (assetTags.find(tag => tag.TagName == "ProgressBars")){
+        progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
+        cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR");
+        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_FLOW");
+        heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR");
+      }      
     }
 
     if (!this.user){

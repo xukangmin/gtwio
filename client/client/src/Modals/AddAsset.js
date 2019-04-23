@@ -9,7 +9,7 @@ const math = require('mathjs');
 
 require('../Functions/noNewline.js');
 require('codemirror/lib/codemirror.css');
-require('../Style/equation.css');
+require('../Style/multiEquations.css');
 
 class AddAsset extends React.Component {
     constructor(props) {
@@ -152,13 +152,33 @@ class AddAsset extends React.Component {
 
     onClickNext(){
       let currentPage = this.state.manualPage;
+      let deviceValidation = true;
+
+      if(this.state.Devices.length<4){
+        deviceValidation = false;
+      }
+      if((!this.state.Devices.find(x=>x.Parameters == "Temperature" && x.Tag == "TubeInlet"))){
+        deviceValidation = false;
+      }
+      if((!this.state.Devices.find(x=>x.Parameters == "Temperature" && x.Tag == "TubeOutlet"))){
+        deviceValidation = false;
+      }
+      if((!this.state.Devices.find(x=>x.Parameters == "Temperature" && x.Tag == "ShellInlet"))){
+        deviceValidation = false;
+      }
+      if((!this.state.Devices.find(x=>x.Parameters == "Temperature" && x.Tag == "ShellOutlet"))){
+        deviceValidation = false;
+      }
+
       if (currentPage == 1 && this.state.DisplayName == ""){
         alert("Asset Name is required.");
+      } else if (currentPage == 2 && !deviceValidation){
+        alert("Each location requires at least one temperature device.");
       } else {
         this.setState({
           manualPage: currentPage + 1
         });
-      }      
+      }  
     }
 
     onClickPrev(){
@@ -284,7 +304,7 @@ class AddAsset extends React.Component {
         <div>
           <Button color="primary" name="addButton" onClick={e=>this.addModalToggle(e)}>Add New Asset</Button>
                   
-          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: "950px"}}>
+          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: this.state.manualPage == 3 ? "1250px" : "850px"}}>
             <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
             <ModalBody>
               <Form>
@@ -385,16 +405,16 @@ class AddAsset extends React.Component {
                                        value={devices[x.key].Name} onChange={e=>this.handleDevicesChange(e)}/>
                               </td>
                               <td className="p-1">
-                                <Input type="select" id={x.key} name="Parameters" 
-                                       value={devices[x.key].Parameters} onChange={e=>this.handleDevicesChange(e)}>
+                                <Input type="select" id={x.key} name="Parameters" disabled={!devices[x.key].SerialNumber || !devices[x.key].Name ? true : false}
+                                       value={!devices[x.key].SerialNumber || !devices[x.key].Name ? "" : devices[x.key].Parameters} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
                                   <option value="Temperature">Temperature</option>
                                   <option value="FlowRate">FlowRate</option>
                                 </Input>  
                               </td>
                               <td className="p-1">
-                                <Input type="select" id={x.key} name="Tag" 
-                                       value={devices[x.key].Tag} onChange={e=>this.handleDevicesChange(e)}>
+                                <Input type="select" id={x.key} name="Tag" disabled={!devices[x.key].SerialNumber || !devices[x.key].Name ? true : false}
+                                       value={!devices[x.key].SerialNumber || !devices[x.key].Name ? "" : devices[x.key].Tag} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
                                   <option value="TubeInlet">TubeInlet</option>
                                   <option value="TubeOutlet">TubeOutlet</option>
@@ -403,8 +423,8 @@ class AddAsset extends React.Component {
                                 </Input>
                               </td>
                               <td className="p-1">
-                                <Input type="select" id={x.key} name="Angle" 
-                                       value={devices[x.key].Angle} onChange={e=>this.handleDevicesChange(e)}>
+                                <Input type="select" id={x.key} name="Angle" disabled={!devices[x.key].SerialNumber || !devices[x.key].Name ? true : false}
+                                       value={!devices[x.key].SerialNumber || !devices[x.key].Name ? "" : devices[x.key].Angle} onChange={e=>this.handleDevicesChange(e)}>
                                   <option value=""></option>
                                   <option value="0">0°</option>
                                   <option value="90">90°</option>
@@ -439,14 +459,14 @@ class AddAsset extends React.Component {
                           <tbody>
                             {equations.map((x,i) =>
                               <tr key={x.key}>
-                                <th scope = "row" width="150px">
+                                <th scope = "row" width="200px">
                                   <Input type="text" id={x.key} name="Name" value={equations[x.key].Name} onChange={e=>this.handleEquationsChange(e)}/>
                                 </th>
-                                <th scope = "row" width="150px">
+                                <th scope = "row" width="200px">
                                   <Input type="text" id={x.key} name="Tag" value={equations[x.key].Tag} onChange={e=>this.handleEquationsChange(e)}/>
                                 </th>
                                 <td>
-                                  <div style={{border: this.state.Equations[x.key].Valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5', position: "relative", textAlign: "left"}} >
+                                  <div style={{border: this.state.Equations[x.key].Valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5 25 5 5', position: "relative", textAlign: "left"}} >
                                     <CodeMirror   
                                       id={x.key} 
                                       name="Equation"

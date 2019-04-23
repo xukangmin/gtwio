@@ -34,6 +34,7 @@ class AddAsset extends React.Component {
             }],
             Equations: [{
               key: 0, 
+              Tag: "",
               DisplayName: "",
               Equation: "",
               Valid: true
@@ -100,6 +101,7 @@ class AddAsset extends React.Component {
         }],
         Equations: [{
           key: 0, 
+          Tag: "",
           DisplayName: "",
           Equation: "",
           Valid: true
@@ -187,6 +189,7 @@ class AddAsset extends React.Component {
       this.setState((prevState) => ({
         Equations: [...prevState.Equations, {
           key: this.state.Equations.length, 
+          Tag: "",
           DisplayName: "",
           Equation: "",
           Valid: true
@@ -426,6 +429,7 @@ class AddAsset extends React.Component {
                           <thead>
                             <tr>
                               <th>Description*</th>
+                              <th>Tag*</th>
                               <th>Equation*</th>
                             </tr>
                           </thead>
@@ -434,6 +438,9 @@ class AddAsset extends React.Component {
                               <tr key={x.key}>
                                 <th scope = "row" width="150px">
                                   <Input type="text" id={x.key} name="DisplayName" value={equations[x.key].DisplayName} onChange={e=>this.handleEquationsChange(e)}/>
+                                </th>
+                                <th scope = "row" width="150px">
+                                  <Input type="text" id={x.key} name="Tag" value={equations[x.key].Tag} onChange={e=>this.handleEquationsChange(e)}/>
                                 </th>
                                 <td>
                                   <div style={{border: this.state.Equations[x.key].Valid ? '1px solid #d9d9d9' : '1px solid red', borderRadius: '4px', padding: '5', position: "relative", textAlign: "left"}} >
@@ -505,12 +512,12 @@ class AddAsset extends React.Component {
                           <hr/>
                           <div>
                             <h6>Parameters</h6>
-                            {equations.map((x,i) => <Tag key={i} style={{visibility: x.DisplayName ? "visible" : "hidden"}} className="mb-2" onClick={()=>this.addText('['+x.DisplayName+']')} value={x.DisplayName}>{x.DisplayName}</Tag>)}
+                            {equations.map((x,i) => <Tag key={i} style={{display: x.Tag ? "inline-block" : "none"}} className="mb-2" onClick={()=>this.addText('['+x.Tag+']')} value={x.Tag}>{x.Tag}</Tag>)}
                           </div>
                           <hr/>
                           <div>
                             <h6>Operators</h6>
-                            {operators.map((x,i) => <Tag key={i} style={{visibility: x.Name ? "visible" : "hidden"}} className="mb-2" onClick={()=>this.addText(x.Name)} value={x.Name}>{x.Name}</Tag>)}
+                            {operators.map((x,i) => <Tag key={i} style={{display: x.Name ? "inline-block" : "none"}} className="mb-2" onClick={()=>this.addText(x.Name)} value={x.Name}>{x.Name}</Tag>)}
                           </div>
                         </div>                        
                       </Col>

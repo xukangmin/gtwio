@@ -196,6 +196,7 @@ class AddAsset extends React.Component {
           Equation: "",
           Valid: true
         }],
+        equationFocus: this.state.Equations.length
       }));
     }
 
@@ -471,10 +472,10 @@ class AddAsset extends React.Component {
 
                                         if( e.keyCode == 8 || e.keyCode == 46 ) {
                                           if (this.state.token && (this.state.token.string.includes("[") || this.state.token.string.includes("]"))){
-                                            this.setState(prevState => {
-                                              return {
-                                                value: prevState.value.substring(0, prevState.token.start) + prevState.value.substring(prevState.token.end)
-                                              };
+                                            let equations = this.state.Equations;
+                                            equations[this.state.equationFocus].Equation = equations[this.state.equationFocus].Equation.substring(0, this.state.token.start) + equations[this.state.equationFocus].Equation.substring(this.state.token.end)
+                                            this.setState({                                             
+                                              Equations: equations
                                             });
                                             this.instance.setCursor({line: this.state.cursor.line , ch:this.state.token.start});
                                           }            

@@ -313,7 +313,6 @@ class Configurations extends React.Component {
                   <TableHeaderColumn
                     headerAlign='center'
                     dataAlign='center'
-                    width="55px"
                     dataField='ParameterID'
                     editable={false}
                     formatExtraData={this.deleteItem}

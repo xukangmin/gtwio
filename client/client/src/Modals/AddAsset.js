@@ -27,7 +27,7 @@ class AddAsset extends React.Component {
             Devices: [{
               key: 0, 
               SerialNumber: "",
-              DisplayName: "",
+              Name: "",
               Parameters: "",
               Tag: "",
               Angle: ""
@@ -35,11 +35,11 @@ class AddAsset extends React.Component {
             Equations: [{
               key: 0, 
               Tag: "",
-              DisplayName: "",
+              Name: "",
               Equation: "",
               Valid: true
             }],
-            equationFocus: "",
+            equationFocus: 0,
             options: {
               theme: 'gtw',
               lineNumbers: false,
@@ -94,7 +94,7 @@ class AddAsset extends React.Component {
         Devices: [{
           key: 0, 
           SerialNumber: "",
-          DisplayName: "",
+          Name: "",
           Parameters: "",
           Tag: "",
           Angle: ""
@@ -102,11 +102,11 @@ class AddAsset extends React.Component {
         Equations: [{
           key: 0, 
           Tag: "",
-          DisplayName: "",
+          Name: "",
           Equation: "",
           Valid: true
         }],
-        equationFocus: "",
+        equationFocus: 0,
         token: null,
         cursor: null        
       });
@@ -114,12 +114,14 @@ class AddAsset extends React.Component {
 
     addButtonClicked(){
       if (this.state.addType == "manual"){
+        let equations = this.state.Equations.filter(x=>x.Valid==true).map(x=>({Tag: x.Tag, Name: x.Name, Equation: x.Equation}));        
         let data = {
           AssetName: this.state.DisplayName,
           Location: this.state.Location,
           Devices: this.state.Devices,
-          Equations: this.state.Equations
+          Equations: equations
         };
+        console.log(data)
         this.props.dispatch(assetActions.addAssetByConfig(this.user, data));
       }
       this.resetForm();
@@ -171,7 +173,7 @@ class AddAsset extends React.Component {
         Devices: [...prevState.Devices, {
           key: this.state.Devices.length, 
           SerialNumber: "",
-          DisplayName: "",
+          Name: "",
           Parameters: "",
           Tag: "",
           Angle: ""
@@ -190,7 +192,7 @@ class AddAsset extends React.Component {
         Equations: [...prevState.Equations, {
           key: this.state.Equations.length, 
           Tag: "",
-          DisplayName: "",
+          Name: "",
           Equation: "",
           Valid: true
         }],
@@ -378,8 +380,8 @@ class AddAsset extends React.Component {
                                        value={devices[x.key].SerialNumber} onChange={e=>this.handleDevicesChange(e)}/>
                               </th>
                               <td className="p-1">
-                                <Input type="text" id={x.key} name="DisplayName" 
-                                       value={devices[x.key].DisplayName} onChange={e=>this.handleDevicesChange(e)}/>
+                                <Input type="text" id={x.key} name="Name" 
+                                       value={devices[x.key].Name} onChange={e=>this.handleDevicesChange(e)}/>
                               </td>
                               <td className="p-1">
                                 <Input type="select" id={x.key} name="Parameters" 
@@ -437,7 +439,7 @@ class AddAsset extends React.Component {
                             {equations.map((x,i) =>
                               <tr key={x.key}>
                                 <th scope = "row" width="150px">
-                                  <Input type="text" id={x.key} name="DisplayName" value={equations[x.key].DisplayName} onChange={e=>this.handleEquationsChange(e)}/>
+                                  <Input type="text" id={x.key} name="Name" value={equations[x.key].Name} onChange={e=>this.handleEquationsChange(e)}/>
                                 </th>
                                 <th scope = "row" width="150px">
                                   <Input type="text" id={x.key} name="Tag" value={equations[x.key].Tag} onChange={e=>this.handleEquationsChange(e)}/>

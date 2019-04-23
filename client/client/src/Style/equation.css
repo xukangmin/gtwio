@@ -10,3 +10,11 @@
 
 .cm-s-gtw .CodeMirror-activeline-background { background: #e8f2ff; }
 .cm-s-gtw .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
+
+.CodeMirror-scroll {
+    height: 26;
+}
+
+.CodeMirror {
+    height: 26;
+}

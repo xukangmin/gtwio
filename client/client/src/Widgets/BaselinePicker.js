@@ -137,54 +137,57 @@ class BaselinePicker extends React.Component {
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 
-          <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false}>
-              <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
-              <ModalBody>
-              <Form>
-                <FormGroup>
-                  <div className = "table-responsive">
-                    <table className = "table mt-3" style={{textAlign: "center"}}>
-                      <thead>
-                        <tr>
-                          <th>Active</th>
-                          <th>TimeStamp</th>
-                          <th>Delete</th>
-                        </tr>
-                      </thead>
-                        <tbody>                      
-                        {this.state.baselines.map((x,i) =>
-                        <tr key={i}>
-                          <th>
-                            <input type="radio" name={i} value={this.state.activeBaseline == i} onChange={(e)=>this.updateBaselineActive(e)} checked={this.state.activeBaseline == i}/></th>
-                          <th scope = "row" className="p-1">
-                            {x.TimeStamp ? 
-                              moment(x.TimeStamp).format('YYYY-MM-DD H:mm') : 
-                              <DatePicker
-                              showTime={{ format: 'HH:mm' }}
-                              format="YYYY-MM-DD HH:mm"
-                              placeholder={'Time'}
-                              disabledDate={disabledDate}
-                              onOK={(t)=>this.updateBaselineTime(t, i)}
-                            />
-                            }
-                          </th>
-                          <th className="p-1">
-                            <Button color="danger" onClick={()=>this.deleteBaseline(x.TimeStamp)}><i className ="fas fa-trash"></i></Button>
-                          </th>                              
-                      </tr>)}
-                      </tbody>
-                    </table>
-                    <Button color="secondary" id="add" onClick={this.addBaseline}><i className="fas fa-plus"></i> Add Another Baseline</Button>
-                  </div>        
-                </FormGroup>
-                    
-              </Form>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" name="apply" onClick={e=>this.handleBaselineApply(e)}>Confirm</Button>
-                <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Cancel</Button>
-              </ModalFooter>
-            </Modal>        
+          {timeRange &&
+            <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false}>
+            <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
+            <ModalBody>
+            <Form>
+              <FormGroup>
+                <div className = "table-responsive">
+                  <table className = "table mt-3" style={{textAlign: "center"}}>
+                    <thead>
+                      <tr>
+                        <th>Active</th>
+                        <th>TimeStamp</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
+                      <tbody>                      
+                      {this.state.baselines.map((x,i) =>
+                      <tr key={i}>
+                        <th>
+                          <input type="radio" name={i} value={this.state.activeBaseline == i} onChange={(e)=>this.updateBaselineActive(e)} checked={this.state.activeBaseline == i}/></th>
+                        <th scope = "row" className="p-1">
+                          {x.TimeStamp ? 
+                            moment(x.TimeStamp).format('YYYY-MM-DD H:mm') : 
+                            <DatePicker
+                            showTime={{ format: 'HH:mm' }}
+                            format="YYYY-MM-DD HH:mm"
+                            placeholder={'Time'}
+                            disabledDate={disabledDate}
+                            onOk={(t)=>this.updateBaselineTime(t, i)}
+                          />
+                          }
+                        </th>
+                        <th className="p-1">
+                          <Button color="danger" onClick={()=>this.deleteBaseline(x.TimeStamp)}><i className ="fas fa-trash"></i></Button>
+                        </th>                              
+                    </tr>)}
+                    </tbody>
+                  </table>
+                  <Button color="secondary" id="add" onClick={this.addBaseline}><i className="fas fa-plus"></i> Add Another Baseline</Button>
+                </div>        
+              </FormGroup>
+                  
+            </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" name="apply" onClick={e=>this.handleBaselineApply(e)}>Confirm</Button>
+              <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Cancel</Button>
+            </ModalFooter>
+          </Modal>        
+          }
+          
         </div>
       );
     }

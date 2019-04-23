@@ -41,7 +41,7 @@ class AddAsset extends React.Component {
             }],
             equationFocus: 0,
             options: {
-              theme: 'gtw',
+              theme: 'multi',
               lineNumbers: false,
               lineWrapping: true,
               noNewlines: true,
@@ -121,6 +121,7 @@ class AddAsset extends React.Component {
           Devices: this.state.Devices,
           Equations: equations
         };
+        console.log(data)
         this.props.dispatch(assetActions.addAssetByConfig(this.user, data));
       }
       this.resetForm();
@@ -220,12 +221,18 @@ class AddAsset extends React.Component {
     }
 
     handleEquationsChange(e){
-      let equations = [...this.state.Equations]
-      equations[e.target.id][e.target.name] = e.target.value
-      this.setState({ equations }, () => console.log(this.state.equations));
+      console.log(e.target.id)
+      console.log(e.target.name)
+      console.log(e.target.value)
+      let Equations = [...this.state.Equations]
+      Equations[e.target.id][e.target.name] = e.target.value
+      this.setState({ Equations }, () => console.log(this.state.Equations));
     }
 
     handleCMChange(id, name, value){
+      console.log(id)
+      console.log(name)
+      console.log(value)
       let Equations = [...this.state.Equations];
       Equations[id][name] = value;
       this.setState({ Equations }, () => console.log(this.state.Equations));

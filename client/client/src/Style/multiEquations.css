@@ -1,5 +1,5 @@
 .cm-s-gtw span.cm-comment { color: #a86; }
-.cm-s-gtw span.cm-parameter { line-height: 1em !important; font-weight: bold; color: white; background:rgb(0, 123, 255); border-radius: 4px; padding: 2px !important; margin: 6px;}
+.cm-s-gtw span.cm-parameter { line-height: 1.7em !important; font-weight: bold; color: white; background:rgb(0, 123, 255); border-radius: 4px; padding: 2px !important; margin: 6px;}
 .cm-s-gtw span.cm-string { color: #a22; }
 .cm-s-gtw span.cm-builtin { line-height: 2em; font-weight: bold; color: #077; }
 .cm-s-gtw span.cm-special { line-height: 2em; font-weight: bold; color: #0aa; }

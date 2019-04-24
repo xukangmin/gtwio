@@ -21,7 +21,7 @@ class AddAsset extends React.Component {
             addModalOpen: false,
             addType: 'import',
             manualPage: 1,
-            
+            buttonDisabled : true,
             DisplayName: "",
             Location: "",
             Devices: [{
@@ -88,7 +88,7 @@ class AddAsset extends React.Component {
       this.setState({
         addType: 'import',
         manualPage: 1,
-        
+        buttonDisabled : true,
         DisplayName: "",
         Location: "",
         Devices: [{
@@ -121,7 +121,6 @@ class AddAsset extends React.Component {
           Devices: this.state.Devices,
           Equations: equations
         };
-        console.log(data)
         this.props.dispatch(assetActions.addAssetByConfig(this.user, data));
       }
       this.resetForm();
@@ -221,18 +220,12 @@ class AddAsset extends React.Component {
     }
 
     handleEquationsChange(e){
-      console.log(e.target.id)
-      console.log(e.target.name)
-      console.log(e.target.value)
       let Equations = [...this.state.Equations]
       Equations[e.target.id][e.target.name] = e.target.value
       this.setState({ Equations }, () => console.log(this.state.Equations));
     }
 
     handleCMChange(id, name, value){
-      console.log(id)
-      console.log(name)
-      console.log(value)
       let Equations = [...this.state.Equations];
       Equations[id][name] = value;
       this.setState({ Equations }, () => console.log(this.state.Equations));
@@ -310,7 +303,7 @@ class AddAsset extends React.Component {
         <div>
           <Button color="primary" name="addButton" onClick={e=>this.addModalToggle(e)}>Add New Asset</Button>
                   
-          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: this.state.manualPage == 3 ? "1250px" : "850px"}}>
+          <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{maxWidth: this.state.manualPage == 3 ? "1250px" : "850px", width: this.state.addType == "import" ? "450px" : ""}}>
             <ModalHeader toggle={this.addModalToggle}>Add New Asset</ModalHeader>
             <ModalBody>
               <Form>
@@ -326,11 +319,11 @@ class AddAsset extends React.Component {
                 
                 <Form className="mt-3" onSubmit={this.handleUploadFile} style={{display: this.state.addType == "import" ? "block" : "none"}}>
                   <div style={{textAlign: "center"}}>
-                    <input ref={(ref) => { this.uploadInput = ref; }} type="file" accept='.json' />
+                    <input onChange={ (e) => e.target.files[0] ? this.setState({buttonDisabled: false}) : this.setState({buttonDisabled: true}) } ref={(ref) => { this.uploadInput = ref}} type="file" accept='.json' />
                   </div>
                   <br/><br/>
                   <div>
-                    <Button color="success pull-right mt-2">Add Asset</Button>
+                    <Button color="success pull-right mt-2" disabled={this.state.buttonDisabled}>Add Asset</Button>
                   </div>
                 </Form>
 
@@ -571,7 +564,6 @@ let sampleMode = () => {
     },
     token: function (stream, state) {
       // If a string starts here
-      //console.log(stream);
       if (!state.inString && stream.peek() === '[') {
         stream.next();            // Skip quote
         state.inString = true;    // Update state

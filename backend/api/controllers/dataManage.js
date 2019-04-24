@@ -574,7 +574,7 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
 //  console.log(value);
   data.save(err => {
     // trigger calculation
-    //trigger_all_parameters(dataobj);
+    trigger_all_parameters(dataobj);
     _update_status(paraID, timestamp, value);
     if (err)
     {

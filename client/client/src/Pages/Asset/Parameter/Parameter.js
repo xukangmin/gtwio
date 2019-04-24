@@ -9,6 +9,7 @@ import Loader from '../../../Widgets/Loader';
 import { EditEquation } from '../../../Modals/EditEquation';
 
 import { Table } from 'reactstrap';
+import { Empty, Button } from 'antd';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import InlineEdit from 'react-inline-edit-input';
 
@@ -175,7 +176,7 @@ class Parameter extends React.Component {
     } else{
       return (
         <div className = "mt-3">
-        {parameter && parameterData ?
+        {parameter?
           <div>
             <ParameterInfo 
               data={parameter} 
@@ -184,7 +185,7 @@ class Parameter extends React.Component {
               update={this.updateEquation} 
               updateLimit={this.updateLimit}/>
             
-            {parameterData &&
+            {parameterData ?
             <div className = "row mt-3">
               <div className = "col-auto">
                 <h6>History</h6>
@@ -194,6 +195,24 @@ class Parameter extends React.Component {
                 <SingleLinePlot parameterData={this.sortTime(parameterData)} unit={parameter.Unit}/>
               </div>
             </div>
+           :
+           <div>
+            <hr/>
+            <Empty
+              image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+              imageStyle={{
+                height: 60,
+              }}
+              style={{paddingTop: "10%"}}
+              description={
+                <span>
+                  No data during the selected time range
+                </span>
+              }
+            >
+            <Button onClick={e=>document.getElementById('timePicker').click()} type="primary">Select a new time range</Button>
+            </Empty>
+          </div>
            }
           </div>
         :

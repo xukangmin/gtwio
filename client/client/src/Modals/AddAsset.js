@@ -1,9 +1,7 @@
 import React from 'react';
 import { assetActions } from '../_actions/assetAction';
-import { Badge, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { Badge, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { Radio, Tag, Icon } from 'antd';
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 import { Controlled as CodeMirror } from 'react-codemirror2';
 const math = require('mathjs');
 
@@ -16,46 +14,46 @@ class AddAsset extends React.Component {
         super(props);
 
         this.user = JSON.parse(localStorage.getItem('user'));
+        this.defaultSettings = {
+          addType: 'import',
+          manualPage: 1,
+          buttonDisabled : true,
+          DisplayName: "",
+          Location: "",
+          Devices: [{
+            key: 0, 
+            SerialNumber: "",
+            Name: "",
+            Parameters: "",
+            Tag: "",
+            Angle: ""
+          }],
+          Equations: [{
+            key: 0, 
+            Tag: "",
+            Name: "",
+            Equation: "",
+            Valid: true
+          }],
+          equationFocus: 0,
+          token: null,
+          cursor: null        
+        }
 
-        this.state = {
-            addModalOpen: false,
-            addType: 'import',
-            manualPage: 1,
-            buttonDisabled : true,
-            DisplayName: "",
-            Location: "",
-            Devices: [{
-              key: 0, 
-              SerialNumber: "",
-              Name: "",
-              Parameters: "",
-              Tag: "",
-              Angle: ""
-            }],
-            Equations: [{
-              key: 0, 
-              Tag: "",
-              Name: "",
-              Equation: "",
-              Valid: true
-            }],
-            equationFocus: 0,
-            options: {
-              theme: 'multi',
-              lineNumbers: false,
-              lineWrapping: true,
-              noNewlines: true,
-              scrollbarStyle: null
-            },
-            token: null,
-            cursor: null
+        this.state = this.defaultSettings;
+        this.state.addModalOpen= false,
+        this.state.options =  {
+          theme: 'multi',
+          lineNumbers: false,
+          lineWrapping: true,
+          noNewlines: true,
+          scrollbarStyle: null
         };
 
         this.addModalToggle = this.addModalToggle.bind(this);
         this.handleAddType = this.handleAddType.bind(this);
 
         this.addButtonClicked = this.addButtonClicked.bind(this);
-        this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.resetForm = this.resetForm.bind(this);
         
         this.handleUploadFile = this.handleUploadFile.bind(this);
@@ -81,35 +79,8 @@ class AddAsset extends React.Component {
     }
 
     resetForm(){
-      this.setState(prevState => ({
-        addModalOpen: !prevState.addModalOpen
-      }));
-
-      this.setState({
-        addType: 'import',
-        manualPage: 1,
-        buttonDisabled : true,
-        DisplayName: "",
-        Location: "",
-        Devices: [{
-          key: 0, 
-          SerialNumber: "",
-          Name: "",
-          Parameters: "",
-          Tag: "",
-          Angle: ""
-        }],
-        Equations: [{
-          key: 0, 
-          Tag: "",
-          Name: "",
-          Equation: "",
-          Valid: true
-        }],
-        equationFocus: 0,
-        token: null,
-        cursor: null        
-      });
+      this.addModalToggle();
+      this.setState(this.defaultSettings);
     }
 
     addButtonClicked(){
@@ -123,10 +94,6 @@ class AddAsset extends React.Component {
         };
         this.props.dispatch(assetActions.addAssetByConfig(this.user, data));
       }
-      this.resetForm();
-    }
-
-    cancelButtonClicked(){
       this.resetForm();
     }
   
@@ -146,16 +113,13 @@ class AddAsset extends React.Component {
 
     handleInfoChange(e){
       const { name, value } = event.target;
-      this.setState({[name]: value}, () => console.log(this.state));
+      this.setState({[name]: value});
     }
 
     onClickNext(){
       let currentPage = this.state.manualPage;
       let deviceValidation = true;
-
-      if(this.state.Devices.length<4){
-        deviceValidation = false;
-      }
+      
       if((!this.state.Devices.find(x=>x.Parameters == "Temperature" && x.Tag == "TubeInlet"))){
         deviceValidation = false;
       }
@@ -174,9 +138,7 @@ class AddAsset extends React.Component {
       } else if (currentPage == 2 && !deviceValidation){
         alert("Each location requires at least one temperature device.");
       } else {
-        this.setState({
-          manualPage: currentPage + 1
-        });
+        this.setState({ manualPage: currentPage + 1 });
       }  
     }
 
@@ -201,9 +163,9 @@ class AddAsset extends React.Component {
     }
 
     handleDevicesChange(e){
-      let devices = [...this.state.Devices]
-      devices[e.target.id][e.target.name] = e.target.value
-      this.setState({ devices }, () => console.log(this.state.devices));
+      let Devices = [...this.state.Devices];
+      Devices[e.target.id][e.target.name] = e.target.value;
+      this.setState({ Devices });
     }
 
     addEquation(){
@@ -220,15 +182,15 @@ class AddAsset extends React.Component {
     }
 
     handleEquationsChange(e){
-      let Equations = [...this.state.Equations]
-      Equations[e.target.id][e.target.name] = e.target.value
-      this.setState({ Equations }, () => console.log(this.state.Equations));
+      let Equations = [...this.state.Equations];
+      Equations[e.target.id][e.target.name] = e.target.value;
+      this.setState({ Equations });
     }
 
     handleCMChange(id, name, value){
       let Equations = [...this.state.Equations];
       Equations[id][name] = value;
-      this.setState({ Equations }, () => console.log(this.state.Equations));
+      this.setState({ Equations });
     }
 
     addText(text) {
@@ -241,7 +203,7 @@ class AddAsset extends React.Component {
       } else {
         Equations[this.state.equationFocus].Equation = text;
       }
-      this.setState({ Equations }, () => console.log(this.state.Equations));
+      this.setState({ Equations });
     }
   
     validate(text){
@@ -250,6 +212,7 @@ class AddAsset extends React.Component {
       let Equations = [...this.state.Equations];
       Equations[this.state.equationFocus].Valid = true;
       this.setState({ Equations });
+
       try{
         let parser = math.parser();
   
@@ -262,7 +225,7 @@ class AddAsset extends React.Component {
         });
   
         parser.set('t_value', function (X, df) {
-          return X/2+df;
+          return X/2 + df;
         });
         
         parser.set('count', function (...args) {
@@ -477,9 +440,9 @@ class AddAsset extends React.Component {
                                       defineMode={{name: 'parameters', fn: sampleMode}}
                                       options={this.state.options}
                                       onBeforeChange={(editor, data, value) => {
-                                        let equations = [...this.state.Equations];
-                                        equations[x.key].Equation = value;
-                                        this.setState({ equations }, () => console.log(this.state.equations));                                                     
+                                        let Equations = [...this.state.Equations];
+                                        Equations[x.key].Equation = value;
+                                        this.setState({ Equations });                                                     
                                       }}
                                       onChange={(editor, data, value) => {                      
                                         this.validate(value);

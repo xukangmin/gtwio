@@ -215,7 +215,7 @@ class Pickers extends React.Component {
 
       return (
         <div style={{display: 'inline-block'}}>
-          <Button onClick={this.rangeModalToggle} className="btn-light mr-3" style={{border: "1px solid #d3d3d3"}}>
+          <Button id="timePicker" onClick={this.rangeModalToggle} className="btn-light mr-3" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-calendar mr-2"></i>
             {this.range.live ?
               "Live Data:  " + intervalText + " from Now" :

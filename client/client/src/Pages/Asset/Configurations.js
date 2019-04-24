@@ -283,7 +283,8 @@ class Configurations extends React.Component {
                     dataAlign='center' 
                     dataField='Tag' 
                     editable={false} 
-                    dataSort={true}>
+                    dataSort={true}
+                    tdStyle={{whiteSpace: 'normal'}}>
                       Tag
                   </TableHeaderColumn>
                   

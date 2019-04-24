@@ -8,6 +8,7 @@ import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 
 import Loader from '../../../Widgets/Loader';
 import toastr from 'toastr';
+import { Empty, Button } from 'antd';
 import InlineEdit from 'react-inline-edit-input';
 
 const DeviceInfo = (props) => {
@@ -259,7 +260,7 @@ class Device extends React.Component {
         {deviceData ?
           <div>
             <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability}/>
-            {parameterData &&
+            {parameterData ?
               <div className = "row mt-3">
                 <div className = "col-auto">
                   <h6>History</h6>
@@ -268,6 +269,24 @@ class Device extends React.Component {
                 <div className = "col-sm-auto col-lg-8">
                   <SingleLinePlot parameterData={this.sortTime(parameterData)}/>
                 </div>
+              </div>
+              :
+              <div>
+                <hr/>
+                <Empty
+                  image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                  imageStyle={{
+                    height: 60,
+                  }}
+                  style={{paddingTop: "10%"}}
+                  description={
+                    <span>
+                      No data during the selected time range
+                    </span>
+                  }
+                >
+                <Button onClick={e=>document.getElementById('timePicker').click()} type="primary">Select a new time range</Button>
+                </Empty>
               </div>
             }
           </div> :

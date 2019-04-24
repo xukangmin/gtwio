@@ -10,7 +10,7 @@ import { Table } from '../../../Widgets/Table';
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 const queryString = require('query-string');
-
+import EmptyData from '../../../Widgets/EmptyData';
 import Loader from '../../../Widgets/Loader';
 
 class Tag extends React.Component {
@@ -40,8 +40,8 @@ class Tag extends React.Component {
         {AssetData && DeviceData ?
           <div>
             <h3>{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
-
-            <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
+            {DeviceData[0].Parameters[0].Data.length?
+              <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
               <TabPane tab="Temperature" key="1">
               <Row>
                 <div className = "col-8">
@@ -50,16 +50,22 @@ class Tag extends React.Component {
                     unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
                 </div>
                 <div className = "col-4">
-                  <Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/>
+                  {DeviceData[0].Parameters[0].DataStatistics?
+                    <Radar data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")}/>
+                  :<div></div>}
+                  
                 </div>
               </Row>
               <Row>
                 <Col>
-                  <Table 
+                {DeviceData[0].Parameters[0].DataStatistics?
+                    <Table 
                     data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
                     asset={AssetData.AssetID} 
                     unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}
                   />
+                  :<div></div>}
+                  
                 </Col>
                 <Col>
                 </Col>
@@ -89,6 +95,10 @@ class Tag extends React.Component {
                 </Row>
               </TabPane>}
               </Tabs>
+            :
+            <EmptyData/>
+            }
+            
           </div>
           :
           <Loader/>}      

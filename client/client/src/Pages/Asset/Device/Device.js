@@ -8,7 +8,6 @@ import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 
 import Loader from '../../../Widgets/Loader';
 import toastr from 'toastr';
-import EmptyData from '../../../Widgets/EmptyData';
 import InlineEdit from 'react-inline-edit-input';
 import EmptyData from '../../../Widgets/EmptyData';
 

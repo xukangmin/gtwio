@@ -14,7 +14,7 @@ class Data extends React.Component {
     let { data } = this.props;
 
     const ValueFormatter = ({value}) => {
-      return <span title={value.value} style={{ textAlign: "center", color: value['valid'] ? "green" : "red"}}>{value.value}</span>
+      return <span title={value.value} style={{ textAlign: "center", color: value['valid'] ? "green" : "red"}}>{value.value ? value.value : "N/A"}</span>
     };
 
     const HeaderFormatter = (value) => {

@@ -29,7 +29,10 @@ function generate_simulation_data(sn, type, lowRange, highRange) {
       })
   };
   
-  fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataBySerialNumber', requestOptions)
+  
+
+//    fetch(process.env.CLOUD_HOST + '/data/addDataBySerialNumber', requestOptions)
+    fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataBySerialNumber', requestOptions)
       .then(response => {
           return Promise.all([response, response.json()])
       })

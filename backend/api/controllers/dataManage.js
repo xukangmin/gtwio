@@ -1161,8 +1161,9 @@ function getDataByParameterID(req, res) {
         if (data.length > 0) {
           shareUtil.SendSuccessWithData(res, data);
         } else {
-          var msg = "SerialNumber or Value or DataType missing";
-          shareUtil.SendInvalidInput(res, msg);
+          //var msg = "SerialNumber or Value or DataType missing";
+          //shareUtil.SendInvalidInput(res, msg);
+          shareUtil.SendSuccessWithData(res, []);
         }
       }
     });

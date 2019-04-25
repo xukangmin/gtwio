@@ -18565,7 +18565,7 @@ a.ant-notification-notice-close:focus {
   color: red;
 }
 .ant-progress-status-exception .ant-progress-circle-path {
-  stroke: red;
+  stroke: red !important;
 }
 .ant-progress-status-success .ant-progress-bg {
   background-color: #52c41a;

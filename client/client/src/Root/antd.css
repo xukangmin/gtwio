@@ -18559,13 +18559,13 @@ a.ant-notification-notice-close:focus {
   content: '';
 }
 .ant-progress-status-exception .ant-progress-bg {
-  background-color: #f5222d;
+  background-color: red;
 }
 .ant-progress-status-exception .ant-progress-text {
-  color: #f5222d;
+  color: red;
 }
 .ant-progress-status-exception .ant-progress-circle-path {
-  stroke: #f5222d;
+  stroke: red;
 }
 .ant-progress-status-success .ant-progress-bg {
   background-color: #52c41a;
@@ -18600,7 +18600,7 @@ a.ant-notification-notice-close:focus {
   font-size: 1.16666667em;
 }
 .ant-progress-circle.ant-progress-status-exception .ant-progress-text {
-  color: #f5222d;
+  color: red;
 }
 .ant-progress-circle.ant-progress-status-success .ant-progress-text {
   color: #52c41a;

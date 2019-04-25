@@ -6,6 +6,7 @@ import { Samy, SvgProxy } from 'react-samy-svg';
 import HxSvg from 'raw-loader!../../Images/Hx.svg';
 import Loader from '../../Widgets/Loader';
 import { Progress, Icon } from 'antd';
+import '../../Root/antd.css';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -90,7 +91,7 @@ class Dashboard extends React.Component {
                     percent={((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
                     format={()=>heatBalanceError.Value.toFixed(2) + "%"} 
                     status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
-                    <p style={{position: "absolute", top: "0", right: "20", color: "red", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
+                    <p style={{position: "absolute", top: "0", right: "20", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
                     <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value.toFixed(2)}%</p>
                     <p style={{position: "absolute", top: "135", left: "0", right: "0"}}><strong>{heatBalanceError.Name}</strong></p>
                   </a>

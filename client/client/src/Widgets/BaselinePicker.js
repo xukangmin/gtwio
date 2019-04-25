@@ -57,7 +57,6 @@ class BaselinePicker extends React.Component {
     }
 
     deleteBaseline(t){
-      // console.log(this.state.baselines[this.state.activeBaseline].TimeStamp)
       if (t == this.state.baselines[this.state.activeBaseline].TimeStamp){
         this.setState({
           activeBaseline: -1
@@ -69,13 +68,17 @@ class BaselinePicker extends React.Component {
       });
     }
 
-    addBaseline(){
-      this.setState((prevState) => ({
-        baselines: [...prevState.baselines, {
-          TimeStamp: "",
-          Active: ""
-        }],
-      }));
+    addBaseline(){     
+      let baselines = this.state.baselines;
+      baselines.push({
+        TimeStamp: moment(),
+        Active: 1
+      });
+
+      this.setState({
+        baselines: baselines,
+        activeBaseline: baselines.length - 1
+      });
     }
 
     handleBaselineApply(e){
@@ -86,7 +89,7 @@ class BaselinePicker extends React.Component {
         for (var i in this.state.baselines){
           if(this.state.baselines[i].TimeStamp){
             tempBaselines.push({
-              TimeStamp: this.state.baselines[i].TimeStamp,
+              TimeStamp: typeof(this.state.baselines[i].TimeStamp) == "object" ? moment(this.state.baselines[i].TimeStamp).format('x') : this.state.baselines[i].TimeStamp,
               Active: this.state.activeBaseline == i ? 1 : 0
             });
           }          
@@ -133,7 +136,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Baseline: {this.state.activeBaseline>=0 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+            Baseline: {this.state.activeBaseline!= -1 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 
@@ -158,16 +161,15 @@ class BaselinePicker extends React.Component {
                         <th>
                           <input type="radio" name={i} value={this.state.activeBaseline == i} onChange={(e)=>this.updateBaselineActive(e)} checked={this.state.activeBaseline == i}/></th>
                         <th scope = "row" className="p-1">
-                          {x.TimeStamp ? 
-                            moment(x.TimeStamp).format('YYYY-MM-DD H:mm') : 
-                            <DatePicker
+                          <DatePicker
                             showTime={{ format: 'HH:mm' }}
                             format="YYYY-MM-DD HH:mm"
                             placeholder={'Time'}
+                            defaultValue={ moment(this.state.baselines[i].TimeStamp) }
                             disabledDate={disabledDate}
+                            onChange={(t)=>this.updateBaselineTime(t, i)}
                             onOk={(t)=>this.updateBaselineTime(t, i)}
                           />
-                          }
                         </th>
                         <th className="p-1">
                           <Button color="danger" onClick={()=>this.deleteBaseline(x.TimeStamp)}><i className ="fas fa-trash"></i></Button>

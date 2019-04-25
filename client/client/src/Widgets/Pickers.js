@@ -134,7 +134,10 @@ class Pickers extends React.Component {
       }
 
       let liveDispatchInterval = 60*1000;
-            
+      if (asset) {
+        this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
+      }
+
       if (asset && device)
       {
         if (this.range.live){
@@ -223,9 +226,8 @@ class Pickers extends React.Component {
             }
             <i className="fas fa-angle-down ml-3"></i>
           </Button>          
-          {this.props.assetData?
-           <BaselinePicker data={this.props.assetData}/>:
-           <span></span>
+          {this.props.assetData && this.props.assetTimeRange &&
+           <BaselinePicker data={this.props.assetData} range={this.props.assetTimeRange}/>
           }               
           <Modal isOpen={this.state.rangeModalOpen} toggle={this.rangeModalToggle} backdrop={false} style={{maxWidth: "450px"}}>
             <ModalHeader toggle={this.rangeModalToggle}>Data Time Range Setting</ModalHeader>
@@ -309,7 +311,8 @@ class Pickers extends React.Component {
 function mapStateToProps(state) {
   const { data } = state.asset;
   return {
-    assetData: data
+    assetData: data,
+    assetTimeRange: state.asset.timeRange
   };
 }
 

@@ -260,7 +260,7 @@ class Device extends React.Component {
         {deviceData ?
           <div>
             <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability}/>
-            {parameterData ?
+            {parameterData && parameterData.length?
               <div className = "row mt-3">
                 <div className = "col-auto">
                   <h6>History</h6>

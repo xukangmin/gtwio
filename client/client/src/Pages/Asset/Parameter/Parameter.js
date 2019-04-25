@@ -185,7 +185,7 @@ class Parameter extends React.Component {
               update={this.updateEquation} 
               updateLimit={this.updateLimit}/>
             
-            {parameterData ?
+            {parameterData && parameterData.length ?
             <div className = "row mt-3">
               <div className = "col-auto">
                 <h6>History</h6>

@@ -30,7 +30,7 @@ class Dashboard extends React.Component {
       if (assetTags.find(tag => tag.TagName == "ProgressBars")){
         progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
         cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR");
-        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_FLOW");
+        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE");
         heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR");
       }      
     }
@@ -52,12 +52,12 @@ class Dashboard extends React.Component {
             <Row>
               <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
               { cleanliness &&
-                <div style={{width: "180px"}}>
+                <div style={{width: "200px"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.ParameterID}>
                     <Progress 
                     type="dashboard" 
                     strokeLinecap="square"
-                    width={120}
+                    width={140}
                     percent={((cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100} 
                     format={()=>cleanliness.Value.toFixed(2)} /> 
                     <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").Value.toFixed(2)}</p>
@@ -66,31 +66,33 @@ class Dashboard extends React.Component {
                 </div>                
               }
               { heatFlow &&
-                <div style={{width: "180px"}}>
+                <div style={{width: "200px"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.ParameterID}>
                     <Progress 
                     type="dashboard"
                     strokeLinecap="square"
-                    width={120} 
+                    width={140} 
                     percent={((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100} 
-                    format={()=>heatFlow.Value.toFixed(0)} /> 
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "HEAT_FLOW_UNCERTAINTY").Value.toFixed(0)}</p>
-                    <p style={{position: "relative", top: "-30"}}><strong>{heatFlow.Name}</strong></p>
+                    format={()=>parseInt(heatFlow.Value).toLocaleString('en')} /> 
+                    
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").Value).toLocaleString('en')}</p>
+                    <p style={{position: "relative", top: "-30"}}><strong>{heatFlow.Name}<br/>(btu/hr)</strong></p>
                   </a>
                 </div>                
               }
               { heatBalanceError &&
-                <div style={{width: "180px", position: "relative"}}>
+                <div style={{width: "200px", position: "relative"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.ParameterID}>
                     <Progress 
                     type="dashboard" 
                     strokeLinecap="square"
-                    width={120}
+                    width={140}
                     percent={((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100} 
-                    format={()=>heatBalanceError.Value.toFixed(0)} 
-                    status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
-                    <p style={{position: "absolute", top: "0", right: "20", color: "red", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value > heatBalanceError.Value.toFixed(0) && <Icon type="exclamation-circle" />}</p>
-                    <p style={{position: "absolute", bottom: "30", left: "0", right: "0"}}><strong>{heatBalanceError.Name}</strong></p>
+                    format={()=>heatBalanceError.Value.toFixed(2) + " %"} 
+                    status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
+                    <p style={{position: "absolute", top: "0", right: "20", color: "red", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) && <Icon type="exclamation-circle" />}</p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value.toFixed(0)}</p>
+                    <p style={{position: "absolute", top: "135", left: "0", right: "0"}}><strong>{heatBalanceError.Name}</strong></p>
                   </a>
                 </div>                
               }

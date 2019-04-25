@@ -123,18 +123,18 @@
         "Tag" : "TUBE_HEAT_FLOW"
       },
       {
-        "Name" : "AVG Heat Flow",
+        "Name" : "Heat Transfer Rate",
         "Equation" : "avg([SHELL_HEAT_FLOW], [TUBE_HEAT_FLOW])",
-        "Tag" : "HEAT_FLOW",
+        "Tag" : "HEAT_TRANSFER_RATE",
         "Range" : {
           "UpperLimit": 3000000,
           "LowerLimit": 2000000
         }
       },
       {
-        "Name" : "AVG Heat Flow Uncertainty",
-        "Equation" : "[HEAT_FLOW] * 0.6",
-        "Tag" : "HEAT_FLOW_UNCERTAINTY"
+        "Name" : "Heat Transfer Rate Uncertainty",
+        "Equation" : "[HEAT_TRANSFER_RATE] * 0.6",
+        "Tag" : "HEAT_TRANSFER_RATE_UNCERTAINTY"
       },
       {
         "Name" : "Heat Balance Error",
@@ -654,12 +654,12 @@
             "AssignedTag": "CLEANLINESS_FACTOR_UNCERTAINTY"
           },
           {
-            "Name": "Avg Heat Flow",
-            "AssignedTag": "HEAT_FLOW"
+            "Name": "Heat Transfer Rate",
+            "AssignedTag": "HEAT_TRANSFER_RATE"
           },
           {
-            "Name": "AVG Heat Flow Uncertainty",
-            "AssignedTag": "HEAT_FLOW_UNCERTAINTY"
+            "Name": "Heat Transfer Rate Uncertainty",
+            "AssignedTag": "HEAT_TRANSFER_RATE_UNCERTAINTY"
           },
           {
             "Name": "Heat Balance Error",

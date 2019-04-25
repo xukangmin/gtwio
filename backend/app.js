@@ -42,7 +42,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 
 //SetupDB.createDemoAccount();
-//Simulation.simualte(60000);
+Simulation.simualte(60000);
 //SelfCheck.selfcheck(60000);
 
 var config = {

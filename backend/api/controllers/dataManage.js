@@ -361,8 +361,13 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                       ret => {
                         rawdataobj[paraid] = [];
                         //console.log(ret);
-                        
-                        _addDataByParameterID(paraid, ret, max_timestamp, err => {if(err) console.error(err)});
+                        if (typeof ret === 'number')
+                        {
+                          if (isNaN(ret) === false){
+                            _addDataByParameterID(paraid, ret, max_timestamp, err => {if(err) console.error(err)});
+                          }
+                        }
+                       
                       }
                     )
                     .catch(

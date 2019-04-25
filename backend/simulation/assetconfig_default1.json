@@ -93,9 +93,9 @@
         "Tag" : "SHELL_DENSITY"
       },
       {
-        "Name" : "Heat Flow",
+        "Name" : "Heat Transfer Rate",
         "Equation" : "([SHELL_FLOW_RATE]*[SHELL_DELTA_T]*[SHELL_SPEC_HEAT]*[SHELL_DENSITY])*(0.133681/1)*(60/1)",
-        "Tag" : "HEAT_FLOW",
+        "Tag" : "HEAT_TRANSFER_RATE",
         "Range" : {
           "UpperLimit": 3000000,
           "LowerLimit": 2000000
@@ -103,8 +103,8 @@
       },
       {
         "Name" : "Shell Heat Flow Uncertainty",
-        "Equation" : "[HEAT_FLOW] * 0.6",
-        "Tag" : "HEAT_FLOW_UNCERTAINTY"
+        "Equation" : "[HEAT_TRANSFER_RATE] * 0.6",
+        "Tag" : "HEAT_TRANSFER_RATE_UNCERTAINTY"
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
@@ -139,7 +139,7 @@
       {
         "Name" : "Total Measurement Bias Uncertainty",
         "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLINLET_STD_ALL_DATA]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
-        "Tag": "SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+        "Tag": "SHELLINLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "STDEV Data set",
@@ -153,7 +153,7 @@
       },
       {
         "Name" : "Shell Inlet TMU",
-        "Equation" : "sqrt([SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE] * [SHELLINLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Equation" : "sqrt([SHELLINLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE] * [SHELLINLET_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "SHELLINLET_TMU"
       },
       {
@@ -189,7 +189,7 @@
       {
         "Name" : "Total Measurement Bias Uncertainty",
         "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLOUTLET_STD_ALL_DATA]^2 + [SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
-        "Tag": "SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+        "Tag": "SHELLOUTLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "STDEV Data set",
@@ -203,7 +203,7 @@
       },
       {
         "Name" : "Shell Outlet TMU",
-        "Equation" : "sqrt([SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLOUTLET_STUDENT_T_VALUE] * [SHELLOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Equation" : "sqrt([SHELLOUTLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLOUTLET_STUDENT_T_VALUE] * [SHELLOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "SHELLOUTLET_TMU"
       },
       {
@@ -239,7 +239,7 @@
       {
         "Name" : "Total Measurement Bias Uncertainty",
         "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEINLET_STD_ALL_DATA]^2 + [TUBEINLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
-        "Tag": "TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+        "Tag": "TUBEINLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "STDEV Data set",
@@ -253,7 +253,7 @@
       },
       {
         "Name" : "Tube Inlet TMU",
-        "Equation" : "sqrt([TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEINLET_STUDENT_T_VALUE] * [TUBEINLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Equation" : "sqrt([TUBEINLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEINLET_STUDENT_T_VALUE] * [TUBEINLET_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "TUBEINLET_TMU"
       },
       {
@@ -289,7 +289,7 @@
       {
         "Name" : "Total Measurement Bias Uncertainty",
         "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEOUTLET_STD_ALL_DATA]^2 + [TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY]^2)",
-        "Tag": "TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+        "Tag": "TUBEOUTLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "STDEV Data set",
@@ -303,7 +303,7 @@
       },
       {
         "Name" : "Tube Outlet TMU",
-        "Equation" : "sqrt([TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEOUTLET_STUDENT_T_VALUE] * [TUBEOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
+        "Equation" : "sqrt([TUBEOUTLET_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([TUBEOUTLET_STUDENT_T_VALUE] * [TUBEOUTLET_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "TUBEOUTLET_TMU"
       },
       {
@@ -339,7 +339,7 @@
       {
         "Name" : "ShellInlet Flow Total Measurement Bias Uncertainty",
         "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLINLET_FLOW_STD_ALL_DATA]^2 + [SHELLINLET_FLOW_SPATIAL_BIAS_UNCERTAINTY]^2)",
-        "Tag": "SHELLINLET_FLOW_TOTAL_MESUREMENT_BIAS_UNCERTAINTY"
+        "Tag": "SHELLINLET_FLOW_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY"
       },
       {
         "Name" : "ShellInlet Flow STDEV Data set",
@@ -353,7 +353,7 @@
       },
       {
         "Name" : "Shell Inlet TMU",
-        "Equation" : "sqrt([SHELLINLET_FLOW_TOTAL_MESUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_FLOW_STUDENT_T_VALUE] * [SHELLINLET_FLOW_STDEV_SAMPLE_MEAN]) ^2)",
+        "Equation" : "sqrt([SHELLINLET_FLOW_TOTAL_MEASUREMENT_BIAS_UNCERTAINTY] ^ 2 + ([SHELLINLET_FLOW_STUDENT_T_VALUE] * [SHELLINLET_FLOW_STDEV_SAMPLE_MEAN]) ^2)",
         "Tag": "SHELLINLET_FLOW_TMU"
       }
     ],
@@ -549,12 +549,12 @@
             "AssignedTag": "CLEANLINESS_FACTOR_UNCERTAINTY"
           },
           {
-            "Name": "Heat Flow",
-            "AssignedTag": "HEAT_FLOW"
+            "Name": "Heat Transfer Rate",
+            "AssignedTag": "HEAT_TRANSFER_RATE"
           },
           {
-            "Name": "Heat Flow Uncertainty",
-            "AssignedTag": "HEAT_FLOW_UNCERTAINTY"
+            "Name": "Heat Transfer Rate Uncertainty",
+            "AssignedTag": "HEAT_TRANSFER_RATE_UNCERTAINTY"
           }
         ]
       }

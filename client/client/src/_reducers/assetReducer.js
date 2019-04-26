@@ -25,6 +25,7 @@ export const asset = (state = {}, action) => {
         };
     case gConstants.GET_ASSET_SUCCESS:
         return {
+            ...state,
             gotData: true,
             data: action.data
         };

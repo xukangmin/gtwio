@@ -25,10 +25,6 @@ const ParameterInfo = (props) => {
         <Table striped>
           <tbody>
             <tr>
-              <th>Parameter ID</th>
-              <td>{parameter.ParameterID}</td>
-            </tr>
-            <tr>
               <th>Tag</th>
               <td>{parameter.Tag}</td>
             </tr>
@@ -36,7 +32,7 @@ const ParameterInfo = (props) => {
               <th>Equation</th>
               <td>
                 <EditEquation 
-                  equation={parameter.Equation} 
+                  equation={parameter.OriginalEquation} 
                   asset={asset} 
                   user={user}
                   item={parameter.ParameterID} 

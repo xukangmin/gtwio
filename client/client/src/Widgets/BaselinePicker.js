@@ -16,8 +16,8 @@ class BaselinePicker extends React.Component {
       const {data} = props;
       
       this.asset = data.AssetID;
-      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
       this.user = JSON.parse(localStorage.getItem('user'));
+      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
 
       this.state = {
         asset: this.asset,
@@ -56,26 +56,25 @@ class BaselinePicker extends React.Component {
       });
     }
 
-    deleteBaseline(t){
-      // console.log(this.state.baselines[this.state.activeBaseline].TimeStamp)
-      if (t == this.state.baselines[this.state.activeBaseline].TimeStamp){
-        this.setState({
-          activeBaseline: -1
-        });
-      }
-      let newBaselines = this.state.baselines.filter(x=>x.TimeStamp != t) || [];
+    deleteBaseline(i){  
+      let newBaselines = this.state.baselines;
+      delete newBaselines[i];
       this.setState({
         baselines: newBaselines
       });
     }
 
-    addBaseline(){
-      this.setState((prevState) => ({
-        baselines: [...prevState.baselines, {
-          TimeStamp: "",
-          Active: ""
-        }],
-      }));
+    addBaseline(){     
+      let baselines = this.state.baselines;
+      baselines.push({
+        TimeStamp: parseInt(moment().format('x')),
+        Active: 1
+      });
+
+      this.setState({
+        baselines: baselines,
+        activeBaseline: baselines.length - 1
+      });
     }
 
     handleBaselineApply(e){
@@ -118,22 +117,30 @@ class BaselinePicker extends React.Component {
       }
 
       function disabledDate(current) {
-        return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange).subtract(1,'days');
+        if(moment(MinTimeRange).format('L') == moment(MaxTimeRange).format('L')){
+          return current != moment(MinTimeRange);
+        } else {
+          return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange);
+        }        
       }
       
-      function disabledDateTime() {
-        return {
-          disabledHours: () => range(0, 24).splice(4, 20),
-          disabledMinutes: () => range(30, 60),
-          disabledSeconds: () => [55, 56],
-        };
+      function disabledDateTime(current) {
+        if(current.format('L') == moment(MaxTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(moment(MaxTimeRange).hour(), 24)
+          };
+        } else if (current.format('L') == moment(MinTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(0, moment(MinTimeRange).hour())
+          };
+        }        
       }
 
       return (
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Baseline: {this.state.activeBaseline>=0 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+            Baseline: {this.state.activeBaseline!= -1 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 
@@ -158,19 +165,20 @@ class BaselinePicker extends React.Component {
                         <th>
                           <input type="radio" name={i} value={this.state.activeBaseline == i} onChange={(e)=>this.updateBaselineActive(e)} checked={this.state.activeBaseline == i}/></th>
                         <th scope = "row" className="p-1">
-                          {x.TimeStamp ? 
-                            moment(x.TimeStamp).format('YYYY-MM-DD H:mm') : 
-                            <DatePicker
+                          <DatePicker
                             showTime={{ format: 'HH:mm' }}
                             format="YYYY-MM-DD HH:mm"
                             placeholder={'Time'}
+                            allowClear={false}
+                            defaultValue={ moment(this.state.baselines[i].TimeStamp) }
                             disabledDate={disabledDate}
+                            disabledTime={disabledDateTime}
+                            onChange={(t)=>this.updateBaselineTime(t, i)}
                             onOk={(t)=>this.updateBaselineTime(t, i)}
                           />
-                          }
                         </th>
                         <th className="p-1">
-                          <Button color="danger" onClick={()=>this.deleteBaseline(x.TimeStamp)}><i className ="fas fa-trash"></i></Button>
+                          <Button color="danger" title={i==this.state.activeBaseline ? "an active baseline can't be deleted" : "delete this baseline"} disabled={i==this.state.activeBaseline} onClick={()=>this.deleteBaseline(i)}><i className ="fas fa-trash"></i></Button>
                         </th>                              
                     </tr>)}
                     </tbody>

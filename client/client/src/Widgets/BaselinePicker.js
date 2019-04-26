@@ -169,6 +169,7 @@ class BaselinePicker extends React.Component {
                             showTime={{ format: 'HH:mm' }}
                             format="YYYY-MM-DD HH:mm"
                             placeholder={'Time'}
+                            allowClear={false}
                             defaultValue={ moment(this.state.baselines[i].TimeStamp) }
                             disabledDate={disabledDate}
                             disabledTime={disabledDateTime}

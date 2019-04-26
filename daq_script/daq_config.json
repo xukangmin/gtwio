@@ -1,16 +1,17 @@
 {
-	"LocalEndPoint": "http://localhost",
-	"CloudEndPoint": "http://xxx",
+	"LocalEndPoint": "http://localhost:8002",
+	"CloudEndPoint": "https://api.hxmonitor.com",
 	"CoreModules": [
 		{
-			"MacAddress": "CC:AB:F7:AA:8D:CC",
+			"MacAddress": "E7:3F:11:E7:AC:2C",
 			"BLEName": "GTW01A001",
 			"Devices": [
-				"02A001",
-				"02A002",
-				"02A003",
-				"02A004"
-			]
+				"02A007",
+				"02A008",
+				"02A009",
+				"02A010"
+			],
+			"Interval": 60
 		}
 	]
 }

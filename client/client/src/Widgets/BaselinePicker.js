@@ -49,7 +49,6 @@ class BaselinePicker extends React.Component {
     }
 
     updateBaselineTime(t,i){
-      console.log(t)
       let tempBaselines = this.state.baselines;
       tempBaselines[i].TimeStamp = parseInt(t.format('x'));
       this.setState({
@@ -84,7 +83,6 @@ class BaselinePicker extends React.Component {
       if(e.target.name == "apply"){
         let tempBaselines = [];
         for (var i in this.state.baselines){
-          console.log(i)
           if(this.state.baselines[i].TimeStamp){
             tempBaselines.push({
               TimeStamp: this.state.baselines[i].TimeStamp,
@@ -119,15 +117,23 @@ class BaselinePicker extends React.Component {
       }
 
       function disabledDate(current) {
-        return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange).subtract(1,'days');
+        if(moment(MinTimeRange).format('L') == moment(MaxTimeRange).format('L')){
+          return current != moment(MinTimeRange);
+        } else {
+          return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange);
+        }        
       }
       
-      function disabledDateTime() {
-        return {
-          disabledHours: () => range(0, 24).splice(4, 20),
-          disabledMinutes: () => range(30, 60),
-          disabledSeconds: () => [55, 56],
-        };
+      function disabledDateTime(current) {
+        if(current.format('L') == moment(MaxTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(moment(MaxTimeRange).hour(), 24)
+          };
+        } else if (current.format('L') == moment(MinTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(0, moment(MinTimeRange).hour())
+          };
+        }        
       }
 
       return (
@@ -165,6 +171,7 @@ class BaselinePicker extends React.Component {
                             placeholder={'Time'}
                             defaultValue={ moment(this.state.baselines[i].TimeStamp) }
                             disabledDate={disabledDate}
+                            disabledTime={disabledDateTime}
                             onChange={(t)=>this.updateBaselineTime(t, i)}
                             onOk={(t)=>this.updateBaselineTime(t, i)}
                           />

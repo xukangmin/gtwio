@@ -28,7 +28,8 @@ var functions = {
   getDeviceByAsset: getDeviceByAsset,
   getSingleDevice: getSingleDevice,
   _createDeviceWithParameter: _createDeviceWithParameter,
-  _getDeviceByAsset: _getDeviceByAsset
+  _getDeviceByAsset: _getDeviceByAsset,
+  getDeviceBySerialNumber: getDeviceBySerialNumber
 }
 
 for (var key in functions) {
@@ -382,6 +383,39 @@ function _getSingleDevice(deviceobj) {
     }
   );
 }
+
+function getDeviceBySerialNumber(req, res) {
+  var sn = req.swagger.params.SerialNumber.value;
+  
+  Device.findOne({SerialNumber: sn}, function(err, data){
+    if (err) {
+      var msg =  "Error:" + JSON.stringify(err, null, 2);
+      shareUtil.SendInternalErr(res,msg);
+    } else {
+      if (data)
+      {
+        parameterManage._getAllParameterByDeviceIDPromise(data.DeviceID)
+        .then(
+          ret => {
+            shareUtil.SendSuccessWithData(res, ret);
+          }
+        )
+        .catch(
+          err => {
+            var msg =  "Error:" + JSON.stringify(err, null, 2);
+            shareUtil.SendInternalErr(res,msg);
+          }
+        )
+      } else {
+        shareUtil.SendNotFound(res, "Serial number not found");
+      }
+
+    }
+  });
+
+}
+
+
 
 function getSingleDevice(req, res) {
   var deviceid = req.swagger.params.DeviceID.value;

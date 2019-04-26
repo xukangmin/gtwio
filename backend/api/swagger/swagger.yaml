@@ -848,6 +848,39 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /device/getDeviceBySerialNumber:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: deviceManage
+    get:
+      tags:
+      - device
+      description: Return list of device's attributes for a given SerialNumber
+      # used as the method name of the controller
+      operationId: getDeviceBySerialNumber
+      parameters:
+        - name: SerialNumber
+          in: query
+          description: SerialNumber
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DeviceModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /device/createDevice:
     x-swagger-router-controller: deviceManage
     post:

@@ -2,6 +2,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const CalculationHistorySchema = new Schema(
+  {
+    ResolvedEquation: String, 
+    TimeStamp: Number, 
+    Result: Number
+  }, 
+  {_id: false}
+);
+
 // this will be our data base's data structure
 const ParameterSchema = new Schema(
   {
@@ -27,7 +36,7 @@ const ParameterSchema = new Schema(
     Timeout: Number, // in seconds
     Baseline: Number, // epoch timestamp miliseconds
     DataAvailableTimeRange: [Number], // only store hourly data
-    CalculationHistory: [{RawEquation: String, TimeStamp: Number, Result: Number}] // only store recent 20 calculation
+    CalculationHistory: [CalculationHistorySchema] // only store recent 20 calculation
   },
   { timestamps: true }
 );

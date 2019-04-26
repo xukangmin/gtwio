@@ -268,8 +268,12 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             
             try {
               var result = parser.eval(new_eval);
+              var ret = {};
+
+              ret.Result = result;
+              ret.ResolvedEquation = new_eval
               // console.log("result=" + result);
-              resolve(result);
+              resolve(ret);
             }
             catch(err) {
               // console.log("error1:");
@@ -361,10 +365,11 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                       ret => {
                         rawdataobj[paraid] = [];
                         //console.log(ret);
-                        if (typeof ret === 'number')
+                        if (typeof ret.Result === 'number')
                         {
-                          if (isNaN(ret) === false){
-                            _addDataByParameterID(paraid, ret, max_timestamp, err => {if(err) console.error(err)});
+                          if (isNaN(ret.Result) === false){
+                            _addDataByParameterID(paraid, ret.Result, max_timestamp, err => {if(err) console.error(err)});
+                            _addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
                           }
                         }
                        
@@ -562,6 +567,23 @@ function _update_status(paraID, timestamp, currentValue) {
     }
   });
 
+}
+
+function _addEquationHistory(paraID, eqn, result, ts) {
+  Parameter.findOne({ParameterID: paraID}, function(err, data){
+    var history = {};
+    history.ResolvedEquation = eqn;
+    history.TimeStamp = ts;
+    history.Result = result;
+
+    if (data.CalculationHistory.length < 20) {
+      data.CalculationHistory.push(history);
+    } else {
+      data.CalculationHistory.shift();
+      data.CalculationHistory.push(history);
+    }
+    data.save();
+  });
 }
 
 function _addDataByParameterID(paraID, value, timestamp, callback) {

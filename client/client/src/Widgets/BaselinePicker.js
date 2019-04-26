@@ -16,8 +16,8 @@ class BaselinePicker extends React.Component {
       const {data} = props;
       
       this.asset = data.AssetID;
-      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
       this.user = JSON.parse(localStorage.getItem('user'));
+      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
 
       this.state = {
         asset: this.asset,
@@ -49,6 +49,7 @@ class BaselinePicker extends React.Component {
     }
 
     updateBaselineTime(t,i){
+      console.log(t)
       let tempBaselines = this.state.baselines;
       tempBaselines[i].TimeStamp = parseInt(t.format('x'));
       this.setState({
@@ -56,13 +57,9 @@ class BaselinePicker extends React.Component {
       });
     }
 
-    deleteBaseline(t){
-      if (t == this.state.baselines[this.state.activeBaseline].TimeStamp){
-        this.setState({
-          activeBaseline: -1
-        });
-      }
-      let newBaselines = this.state.baselines.filter(x=>x.TimeStamp != t) || [];
+    deleteBaseline(i){  
+      let newBaselines = this.state.baselines;
+      delete newBaselines[i];
       this.setState({
         baselines: newBaselines
       });
@@ -71,7 +68,7 @@ class BaselinePicker extends React.Component {
     addBaseline(){     
       let baselines = this.state.baselines;
       baselines.push({
-        TimeStamp: moment(),
+        TimeStamp: parseInt(moment().format('x')),
         Active: 1
       });
 
@@ -87,9 +84,10 @@ class BaselinePicker extends React.Component {
       if(e.target.name == "apply"){
         let tempBaselines = [];
         for (var i in this.state.baselines){
+          console.log(i)
           if(this.state.baselines[i].TimeStamp){
             tempBaselines.push({
-              TimeStamp: typeof(this.state.baselines[i].TimeStamp) == "object" ? moment(this.state.baselines[i].TimeStamp).format('x') : this.state.baselines[i].TimeStamp,
+              TimeStamp: this.state.baselines[i].TimeStamp,
               Active: this.state.activeBaseline == i ? 1 : 0
             });
           }          
@@ -172,7 +170,7 @@ class BaselinePicker extends React.Component {
                           />
                         </th>
                         <th className="p-1">
-                          <Button color="danger" onClick={()=>this.deleteBaseline(x.TimeStamp)}><i className ="fas fa-trash"></i></Button>
+                          <Button color="danger" title={i==this.state.activeBaseline ? "an active baseline can't be deleted" : "delete this baseline"} disabled={i==this.state.activeBaseline} onClick={()=>this.deleteBaseline(i)}><i className ="fas fa-trash"></i></Button>
                         </th>                              
                     </tr>)}
                     </tbody>

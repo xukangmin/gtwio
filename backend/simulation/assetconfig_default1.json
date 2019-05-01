@@ -50,17 +50,17 @@
       },
       {
         "Name" : "Delta T Ratio",
-        "Equation" : "[DELTA_T_S] / [DELTA_T_S,FIX,BASELINE]",
+        "Equation" : "[DELTA_T_S] / [DELTA_T_S,FIRST,BASELINE]",
         "Tag": "DELTA_T_RATIO"
       },
       {
         "Name" : "LMTD Ratio",
-        "Equation": "[LMTD] / [LMTD,FIX,BASELINE]",
+        "Equation": "[LMTD] / [LMTD,FIRST,BASELINE]",
         "Tag" : "LMTD_RATIO"
       },
       {
         "Name" : "Mass Flow Ratio",
-        "Equation": "[SHELL_FLOW_RATE] / [SHELL_FLOW_RATE,FIX,BASELINE]",
+        "Equation": "[SHELL_FLOW_RATE] / [SHELL_FLOW_RATE,FIRST,BASELINE]",
         "Tag" : "MASS_FLOW_RATIO"        
       },
       {
@@ -108,7 +108,7 @@
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
-        "Equation" : "sum([ShellInlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Equation" : "sum([ShellInlet/Temperature,COUNT,BASELINE])",
         "Tag": "SHELLINLET_NUMBER_DATA_SETS"
       },
       {
@@ -128,7 +128,7 @@
       },
       {
         "Name" : "ShellInlet STDEV of all data",
-        "Equation" : "std([ShellInlet/Temperature,RAW,SC,BASELINE,0])",
+        "Equation" : "std([ShellInlet/Temperature,RAW,BASELINE])",
         "Tag": "SHELLINLET_STD_ALL_DATA"
       },
       {
@@ -143,7 +143,7 @@
       },
       {
         "Name" : "STDEV Data set",
-        "Equation" : "std([AVG_SHELL_INLET,RAW,SC,BASELINE,0])",
+        "Equation" : "std([AVG_SHELL_INLET,RAW,BASELINE])",
         "Tag": "SHELLINLET_STDEV_DATA_SET"
       },
       {
@@ -158,7 +158,7 @@
       },
       {
         "Name" : "ShellOutlet Number Of Data Sets",
-        "Equation" : "sum([ShellOutlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Equation" : "sum([ShellOutlet/Temperature,COUNT,BASELINE])",
         "Tag": "SHELLOUTLET_NUMBER_DATA_SETS"
       },
       {
@@ -178,7 +178,7 @@
       },
       {
         "Name" : "ShellOutlet STDEV of all data",
-        "Equation" : "std([ShellOutlet/Temperature,RAW,SC,BASELINE,0])",
+        "Equation" : "std([ShellOutlet/Temperature,RAW,BASELINE])",
         "Tag": "SHELLOUTLET_STD_ALL_DATA"
       },
       {
@@ -193,7 +193,7 @@
       },
       {
         "Name" : "STDEV Data set",
-        "Equation" : "std([AVG_SHELL_OUTLET,RAW,SC,BASELINE,0])",
+        "Equation" : "std([AVG_SHELL_OUTLET,RAW,BASELINE])",
         "Tag": "SHELLOUTLET_STDEV_DATA_SET"
       },
       {
@@ -208,7 +208,7 @@
       },
       {
         "Name" : "TubeInlet Number Of Data Sets",
-        "Equation" : "sum([TubeInlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Equation" : "sum([TubeInlet/Temperature,COUNT,BASELINE])",
         "Tag": "TUBEINLET_NUMBER_DATA_SETS"
       },
       {
@@ -228,7 +228,7 @@
       },
       {
         "Name" : "TubeInlet STDEV of all data",
-        "Equation" : "std([TubeInlet/Temperature,RAW,SC,BASELINE,0])",
+        "Equation" : "std([TubeInlet/Temperature,RAW,BASELINE])",
         "Tag": "TUBEINLET_STD_ALL_DATA"
       },
       {
@@ -243,7 +243,7 @@
       },
       {
         "Name" : "STDEV Data set",
-        "Equation" : "std([AVG_TUBE_INLET,RAW,SC,BASELINE,0])",
+        "Equation" : "std([AVG_TUBE_INLET,RAW,BASELINE])",
         "Tag": "TUBEINLET_STDEV_DATA_SET"
       },
       {
@@ -258,7 +258,7 @@
       },
       {
         "Name" : "TubeOutlet Number Of Data Sets",
-        "Equation" : "sum([TubeOutlet/Temperature,COUNT,SC,BASELINE,0])",
+        "Equation" : "sum([TubeOutlet/Temperature,COUNT,BASELINE])",
         "Tag": "TUBEOUTLET_NUMBER_DATA_SETS"
       },
       {
@@ -278,7 +278,7 @@
       },
       {
         "Name" : "TubeOutlet STDEV of all data",
-        "Equation" : "std([TubeOutlet/Temperature,RAW,SC,BASELINE,0])",
+        "Equation" : "std([TubeOutlet/Temperature,RAW,BASELINE])",
         "Tag": "TUBEOUTLET_STD_ALL_DATA"
       },
       {
@@ -293,7 +293,7 @@
       },
       {
         "Name" : "STDEV Data set",
-        "Equation" : "std([AVG_TUBE_OUTLET,RAW,SC,BASELINE,0])",
+        "Equation" : "std([AVG_TUBE_OUTLET,RAW,BASELINE])",
         "Tag": "TUBEOUTLET_STDEV_DATA_SET"
       },
       {
@@ -308,7 +308,7 @@
       },
       {
         "Name" : "Shell Flow Number Of Data Sets",
-        "Equation" : "sum([ShellInlet/FlowRate,COUNT,SC,BASELINE,0])",
+        "Equation" : "sum([ShellInlet/FlowRate,COUNT,BASELINE])",
         "Tag": "SHELLINLET_FLOW_NUMBER_DATA_SETS"
       },
       {
@@ -328,7 +328,7 @@
       },
       {
         "Name" : "ShellInlet Flow STDEV of all data",
-        "Equation" : "std([ShellInlet/FlowRate,RAW,SC,BASELINE,0])",
+        "Equation" : "std([ShellInlet/FlowRate,RAW,BASELINE])",
         "Tag": "SHELLINLET_FLOW_STD_ALL_DATA"
       },
       {
@@ -343,7 +343,7 @@
       },
       {
         "Name" : "ShellInlet Flow STDEV Data set",
-        "Equation" : "std([SHELL_FLOW_RATE,RAW,SC,BASELINE,0])",
+        "Equation" : "std([SHELL_FLOW_RATE,RAW,BASELINE])",
         "Tag": "SHELLINLET_FLOW_STDEV_DATA_SET"
       },
       {

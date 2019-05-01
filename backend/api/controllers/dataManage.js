@@ -369,7 +369,7 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                         {
                           if (isNaN(ret.Result) === false){
                             _addDataByParameterID(paraid, ret.Result, max_timestamp, err => {if(err) console.error(err)});
-                            _addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
+                            //_addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
                           }
                         }
                        

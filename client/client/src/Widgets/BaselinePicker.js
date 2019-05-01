@@ -42,7 +42,7 @@ class BaselinePicker extends React.Component {
       });
     }
 
-    updateBaselineTime(t,i){
+    updateBaselineTime(t,i){      
       let tempBaselines = this.state.baselines;
       tempBaselines[i].TimeInterval = t;
       this.setState({
@@ -98,7 +98,6 @@ class BaselinePicker extends React.Component {
         let tempBaselines = this.baselines;
         tempBaselines[i].TimeInterval = parseInt(this.baselines[i].TimeInterval)/60/1000;
         this.setState({baselines: tempBaselines});
-        console.log(this.state.baselines)
       }
     }
 

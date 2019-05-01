@@ -17,7 +17,7 @@ const EmptyData = () => {
                 </span>
                 }
             >
-            <Button onClick={e=>document.getElementById('timePicker').click()} type="primary">Select a new time range</Button>
+                <Button onClick={e=>document.getElementById('timePicker').click()} type="primary">Select a new time range</Button>
             </Empty>
         </div>
     );

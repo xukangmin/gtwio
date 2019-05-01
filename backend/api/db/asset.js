@@ -29,7 +29,7 @@ const AssetSchema = new Schema(
       ],
       Baselines: [
         {
-          TimeStamp: Number,
+          TimeInterval: Number,
           Active: Number
         }
       ]

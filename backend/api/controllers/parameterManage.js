@@ -381,13 +381,13 @@ function compareStrings (string1, string2, ignoreCase) {
 
 
 
-function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_timestamp) {
+function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_timeinterval) {
   return new Promise(
     (resolve, reject) => {
       var new_paraobj = {};
       
       new_paraobj.ParameterID = paraobj.ParameterID;
-      new_paraobj.Baseline = baseline_timestamp;
+      new_paraobj.Baseline = baseline_timeinterval;
 
       // have to generate Equation from Original Equation
 
@@ -401,7 +401,7 @@ function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_
                 .then(
                   ret => {
                     new_paraobj.Equation = _replaceEquation(paraobj.OriginalEquation, taglist, ret);
-                    new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timestamp.toString());
+                    new_paraobj.Equation = new_paraobj.Equation.replace(/baseline/ig, baseline_timeinterval.toString());
 
                     // console.log(new_paraobj);
                     _updateParameter(new_paraobj)
@@ -431,11 +431,11 @@ function _updateBaselineforSingleParameter(assetid, paralist, paraobj, baseline_
     });
 }
 
-function _updateBaselineforAllParameters(assetid, baseline_timestamp) {
+function _updateBaselineforAllParameters(assetid, baseline_timeinterval) {
   dataManage._getAllParameterByAssetID(assetid)
     .then(
       paralist => {
-        Promise.all(paralist.map(item => _updateBaselineforSingleParameter(assetid, paralist, item, baseline_timestamp)))
+        Promise.all(paralist.map(item => _updateBaselineforSingleParameter(assetid, paralist, item, baseline_timeinterval)))
           .then(
             ret => {
               console.log("update ok");

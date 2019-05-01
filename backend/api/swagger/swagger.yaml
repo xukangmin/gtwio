@@ -176,7 +176,7 @@ paths:
         200:
           description: Success
           schema:
-            $ref: "#/definitions/AssetModel"
+            $ref: "#/definitions/BaselineModel"
         # responses may fall through to errors
         400:
           description: Invalid Input
@@ -205,7 +205,7 @@ paths:
         description: Asset object thats needs to be added into table
         required: true
         schema:
-          $ref: '#/definitions/AssetModel'
+          $ref: '#/definitions/BaselineModel'
       responses:
         200:
           description: Success
@@ -230,7 +230,7 @@ paths:
         description: Asset object thats needs to be added into table
         required: true
         schema:
-          $ref: '#/definitions/AssetModel'
+          $ref: '#/definitions/BaselineModel'
       responses:
         200:
           description: Success
@@ -255,7 +255,7 @@ paths:
         description: Asset object thats needs to be added into table
         required: true
         schema:
-          $ref: '#/definitions/AssetModel'
+          $ref: '#/definitions/BaselineModel'
       responses:
         200:
           description: Success
@@ -280,7 +280,7 @@ paths:
         description: Asset object thats needs to be added into table
         required: true
         schema:
-          $ref: '#/definitions/AssetModel'
+          $ref: '#/definitions/BaselineModel'
       responses:
         200:
           description: Success
@@ -1679,6 +1679,15 @@ definitions:
       DisplayName:
         type: string
       LatestTimeStamp:
+        type: integer
+  BaselineModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      TimeInterval:
+        type: integer
+      Active:
         type: integer
   LogInModel:
     type: object

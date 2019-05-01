@@ -1,13 +1,9 @@
 import React from 'react';
-import { matchRoutes } from 'react-router-config';
-import routes from '../_routes/routes';
-import { Redirect } from 'react-router-dom';
-import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux';
 import { assetActions } from '../_actions/assetAction';
-import { DatePicker } from 'antd';
+import { DatePicker, Slider, InputNumber } from 'antd';
 import 'antd/dist/antd.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Row, Col, Label, Input } from 'reactstrap';
 
 class BaselinePicker extends React.Component {
     constructor(props) {
@@ -17,7 +13,7 @@ class BaselinePicker extends React.Component {
       
       this.asset = data.AssetID;
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
+      this.baselines = data.Settings.Baselines ? data.Settings.Baselines : [];      
 
       this.state = {
         asset: this.asset,
@@ -25,8 +21,6 @@ class BaselinePicker extends React.Component {
         activeBaseline: (this.baselines.findIndex(x=>x.Active==1) >=0) ? this.baselines.findIndex(x=>x.Active==1) : -1,
         baselineModalOpen: false
       }
-
-      this.props.dispatch(assetActions.getTimeRangeByAsset(this.asset));
       
       this.baselineModalToggle = this.baselineModalToggle.bind(this);
       this.updateBaselineActive = this.updateBaselineActive.bind(this);
@@ -50,7 +44,7 @@ class BaselinePicker extends React.Component {
 
     updateBaselineTime(t,i){
       let tempBaselines = this.state.baselines;
-      tempBaselines[i].TimeStamp = parseInt(t.format('x'));
+      tempBaselines[i].TimeInterval = t;
       this.setState({
         baselines: tempBaselines
       });
@@ -67,7 +61,7 @@ class BaselinePicker extends React.Component {
     addBaseline(){     
       let baselines = this.state.baselines;
       baselines.push({
-        TimeStamp: parseInt(moment().format('x')),
+        TimeInterval: 30,
         Active: 1
       });
 
@@ -83,9 +77,9 @@ class BaselinePicker extends React.Component {
       if(e.target.name == "apply"){
         let tempBaselines = [];
         for (var i in this.state.baselines){
-          if(this.state.baselines[i].TimeStamp){
+          if(this.state.baselines[i].TimeInterval){
             tempBaselines.push({
-              TimeStamp: this.state.baselines[i].TimeStamp,
+              TimeInterval: parseInt(this.state.baselines[i].TimeInterval)*60*1000,
               Active: this.state.activeBaseline == i ? 1 : 0
             });
           }          
@@ -99,53 +93,33 @@ class BaselinePicker extends React.Component {
       }
     }
 
-    render() {
-      const timeRange = this.props.timeRange;
-      let MinTimeRange, MaxTimeRange;
-      
-      if(timeRange){
-        MaxTimeRange = Math.max(...timeRange);
-        MinTimeRange = Math.min(...timeRange);
+    componentDidMount(){
+      for (var i=0; i<this.baselines.length; i++){
+        let tempBaselines = this.baselines;
+        tempBaselines[i].TimeInterval = parseInt(this.baselines[i].TimeInterval)/60/1000;
+        this.setState({baselines: tempBaselines});
+        console.log(this.state.baselines)
       }
+    }
 
-      function range(start, end) {
-        const result = [];
-        for (let i = start; i < end; i++) {
-          result.push(i);
-        }
-        return result;
-      }
+    render() {    
 
-      function disabledDate(current) {
-        if(moment(MinTimeRange).format('L') == moment(MaxTimeRange).format('L')){
-          return current != moment(MinTimeRange);
-        } else {
-          return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange);
-        }        
+      function formatter(value) {
+        return `${value} min`;
       }
       
-      function disabledDateTime(current) {
-        if(current.format('L') == moment(MaxTimeRange).format('L')){
-          return {
-            disabledHours: () => range(0, 24).splice(moment(MaxTimeRange).hour(), 24)
-          };
-        } else if (current.format('L') == moment(MinTimeRange).format('L')){
-          return {
-            disabledHours: () => range(0, 24).splice(0, moment(MinTimeRange).hour())
-          };
-        }        
-      }
+      
 
       return (
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Baseline: {this.state.activeBaseline!= -1 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+            Baseline: {this.state.activeBaseline!= -1 ? this.state.baselines[this.state.activeBaseline].TimeInterval + (this.state.baselines[this.state.activeBaseline].TimeInterval == 1 ? " Minute" : " Minutes") : 'N/A'}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 
-          {timeRange &&
-            <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false}>
+          
+            <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false} style={{minWidth: "700"}}>
             <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
             <ModalBody>
             <Form>
@@ -155,7 +129,7 @@ class BaselinePicker extends React.Component {
                     <thead>
                       <tr>
                         <th>Active</th>
-                        <th>TimeStamp</th>
+                        <th>Interval</th>
                         <th>Delete</th>
                       </tr>
                     </thead>
@@ -165,17 +139,21 @@ class BaselinePicker extends React.Component {
                         <th>
                           <input type="radio" name={i} value={this.state.activeBaseline == i} onChange={(e)=>this.updateBaselineActive(e)} checked={this.state.activeBaseline == i}/></th>
                         <th scope = "row" className="p-1">
-                          <DatePicker
-                            showTime={{ format: 'HH:mm' }}
-                            format="YYYY-MM-DD HH:mm"
-                            placeholder={'Time'}
-                            allowClear={false}
-                            defaultValue={ moment(this.state.baselines[i].TimeStamp) }
-                            disabledDate={disabledDate}
-                            disabledTime={disabledDateTime}
-                            onChange={(t)=>this.updateBaselineTime(t, i)}
-                            onOk={(t)=>this.updateBaselineTime(t, i)}
-                          />
+                          <Row>
+                            <Col sm="8">
+                              <Slider 
+                                defaultValue={this.state.baselines[i].TimeInterval} 
+                                min={1}
+                                max={60}
+                                onChange={(t)=>this.updateBaselineTime(t, i)}
+                              />
+                            </Col>
+                            <Col sm="4" className="pt-2">
+                              <span>{this.state.baselines[i].TimeInterval + (this.state.baselines[i].TimeInterval == 1 ? " min" : " mins")}</span>
+                            </Col>
+                          </Row>
+                          
+                          
                         </th>
                         <th className="p-1">
                           <Button color="danger" title={i==this.state.activeBaseline ? "an active baseline can't be deleted" : "delete this baseline"} disabled={i==this.state.activeBaseline} onClick={()=>this.deleteBaseline(i)}><i className ="fas fa-trash"></i></Button>
@@ -193,9 +171,7 @@ class BaselinePicker extends React.Component {
               <Button color="primary" name="apply" onClick={e=>this.handleBaselineApply(e)}>Confirm</Button>
               <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Cancel</Button>
             </ModalFooter>
-          </Modal>        
-          }
-          
+          </Modal>   
         </div>
       );
     }
@@ -204,8 +180,7 @@ class BaselinePicker extends React.Component {
 function mapStateToProps(state) {
   const { data } = state.asset;
   return {
-    assetData: data,
-    timeRange: state.asset.timeRange
+    assetData: data
   };
 }
 

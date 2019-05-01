@@ -31,8 +31,16 @@ for (var key in functions) {
 function _remove_duplicates(arr) {
   var new_arr = [];
 
+  var active_timeinterval = 0;
+
   var exists;
   for(var i in arr) {
+
+    if (arr[i].Active === 1)
+    {
+      active_timeinterval = arr[i].Active;
+    }
+
     exists = false;
     for(var j in new_arr) {
       if (arr[i].TimeInterval === new_arr[j].TimeInterval) {
@@ -41,6 +49,12 @@ function _remove_duplicates(arr) {
     }
     if (!exists) {
       new_arr.push(arr[i]);
+    }
+  }
+
+  for(var i in new_arr) {
+    if (new_arr[i].TimeInterval === active_timeinterval) {
+      new_arr[i].Active = 1;
     }
   }
 

@@ -38,7 +38,7 @@ function _remove_duplicates(arr) {
 
     if (arr[i].Active === 1)
     {
-      active_timeinterval = arr[i].Active;
+      active_timeinterval = arr[i].TimeInterval;
     }
 
     exists = false;

@@ -1074,6 +1074,7 @@ function addDataBySerialNumber(req, res) {
     // find parameter id
     _getAllParameterBySerialNumber(dataobj.SerialNumber, function(err, data){
       if (err) {
+        // create device with serial number and data type
         var msg = "Device find Error2:" + JSON.stringify(err, null, 2);
         shareUtil.SendInvalidInput(res,msg);
       } else {

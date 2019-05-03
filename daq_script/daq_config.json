@@ -1,5 +1,5 @@
 {
-	"LocalEndPoint": "http://localhost:8002",
+	"LocalEndPoint": "http://192.168.1.25:8002",
 	"CloudEndPoint": "https://api.hxmonitor.com",
 	"CoreModules": [
 		{

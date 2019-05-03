@@ -881,6 +881,67 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /device/getGatewaySetting:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: deviceManage
+    get:
+      tags:
+      - device
+      description: Return gateway setting json file
+      # used as the method name of the controller
+      operationId: getGatewaySetting
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DeviceModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /device/updateGatewaySetting:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: deviceManage
+    post:
+      tags:
+      - device
+      description: update gateway setting json file
+      # used as the method name of the controller
+      operationId: updateGatewaySetting
+      parameters:
+      - in: body
+        name: body
+        description: Gateway setting file
+        required: true
+        schema:
+          $ref: '#/definitions/GatewaySetting'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/DeviceModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /device/createDevice:
     x-swagger-router-controller: deviceManage
     post:
@@ -1742,6 +1803,30 @@ definitions:
         type: string
       AddTimeStamp:
         type: integer
+  CoreModuleSetting:
+    type: object
+    properties:
+      MacAddress:
+        type: string
+      BLEName:
+        type: string
+      Devices:
+        type: array
+        items:
+          type: string
+      Interval:
+        type: integer
+  GatewaySetting:
+    type: object
+    properties:
+      LocalEndPoint:
+        type: string
+      CloudEndPoint:
+        type: string
+      CoreModules:
+        type: array
+        items:
+          $ref: "#/definitions/CoreModuleSetting"
   UpdateDeviceModel:
     type: object
     properties:

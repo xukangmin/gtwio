@@ -70,60 +70,10 @@ function createAsset(userid, assetconfig) {
     });
 }
 
-
-function updateRequireListByEquation(paraid) {
-  return new Promise(
-    (resolve, reject) => {
-      const requestOptions = {
-          headers: { 'Content-Type': 'application/json'},
-          method: 'PUT',
-          body: JSON.stringify({
-              'ParameterID': paraid
-          })
-      };
-
-      fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/parameter/updateRequireListByEquation', requestOptions)
-          .then(response => {
-              return Promise.all([response, response.json()])
-          })
-          .then( ([resRaw, resJSON]) => {
-              if (!resRaw.ok)
-              {
-                  return reject(resJSON.message);
-              }
-              return resJSON;
-          })
-          .then(user => {
-              //console.log(user);
-              resolve();
-          });
-    }
-  );
-
-}
-
-function createAssetType0() {
-  return new Promise(
-    (resolve, reject) => {
-
-    });
-}
-
-function createAssetType1() {
-
-}
-
-function createAssetType2() {
-
-}
-
 function createDemoAccount() {
   var asconfig0 = require('./assetconfig_default0.json');
   var asconfig1 = require('./assetconfig_default1.json')
   var asconfig2 = require('./assetconfig_default2.json')
-
-
-  //console.log(asconfig0);
 
   createUser(userid)
   .then(

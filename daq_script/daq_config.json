@@ -1,17 +1,17 @@
 {
-	"LocalEndPoint": "http://192.168.1.25:8002",
-	"CloudEndPoint": "https://api.hxmonitor.com",
-	"CoreModules": [
-		{
-			"MacAddress": "E7:3F:11:E7:AC:2C",
-			"BLEName": "GTW01A001",
-			"Devices": [
-				"02A007",
-				"02A008",
-				"02A009",
-				"02A010"
-			],
-			"Interval": 60
-		}
-	]
+  "LocalEndPoint": "http://192.168.1.25:8005",
+  "CloudEndPoint": "https://api.hxmonitor.com",
+  "CoreModules": [
+    {
+      "MacAddress": "E7:3F:11:E7:AC:2C",
+      "BLEName": "GTW01A001",
+      "Devices": [
+        "02A007",
+        "02A008",
+        "02A009",
+        "02A010"
+      ],
+      "Interval": 60
+    }
+  ]
 }

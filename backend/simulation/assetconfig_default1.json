@@ -29,6 +29,11 @@
         "Tag" : "SHELL_FLOW_RATE"
       },
       {
+        "Name" : "Vol Flow Rate (Shell) ft3/hr",
+        "Equation" : "[SHELL_FLOW_RATE] * 8.020833",
+        "Tag" : "SHELL_FLOW_RATE_FT3_HR"
+      },
+      {
         "Name" : "Delta T S",
         "Equation": "[AVG_SHELL_INLET] - [AVG_SHELL_OUTLET]",
         "Tag": "DELTA_T_S"
@@ -103,7 +108,7 @@
       },
       {
         "Name" : "Shell Heat Flow Uncertainty",
-        "Equation" : "[HEAT_TRANSFER_RATE] * 0.6",
+        "Equation" : "sqrt(([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_DELTA_T] * [SHELLINLET_FLOW_TMU])^2 + ([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_FLOW_RATE_FT3_HR] * [SHELLINLET_TMU])^2 + ([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_FLOW_RATE_FT3_HR] * [SHELLOUTLET_TMU])^2)",
         "Tag" : "HEAT_TRANSFER_RATE_UNCERTAINTY"
       },
       {

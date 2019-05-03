@@ -272,32 +272,32 @@
     "Devices":
     [
       {
-        "Name": "Real Sensor 1",
-        "SerialNumber": "02A007",
+        "Name": "Temperature Sensor 1",
+        "SerialNumber": "02A050",
         "Tag": "ShellInlet",
         "Alias": "T1",
         "Angle": 0,
         "Parameters": ["Temperature"]
       },
       {
-        "Name": "Real Sensor 2",
-        "SerialNumber": "02A008",
+        "Name": "Temperature Sensor 2",
+        "SerialNumber": "02A051",
         "Tag": "ShellInlet",
         "Alias": "T2",
         "Angle": 90,
         "Parameters": ["Temperature"]
       },
       {
-        "Name": "Real Sensor 3",
-        "SerialNumber": "02A009",
+        "Name": "Temperature Sensor 3",
+        "SerialNumber": "02A052",
         "Tag": "ShellInlet",
         "Alias": "T3",
         "Angle": 180,
         "Parameters": ["Temperature"]
       },
       {
-        "Name": "Real Sensor 4",
-        "SerialNumber": "02A010",
+        "Name": "Temperature Sensor 4",
+        "SerialNumber": "02A053",
         "Tag": "ShellInlet",
         "Alias": "T4",
         "Angle": 270,

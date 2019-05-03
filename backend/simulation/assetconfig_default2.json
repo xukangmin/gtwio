@@ -29,9 +29,19 @@
         "Tag" : "SHELL_FLOW_RATE"
       },
       {
+        "Name" : "Vol Flow Rate (Shell) ft3/hr",
+        "Equation" : "[SHELL_FLOW_RATE] * 8.020833",
+        "Tag" : "SHELL_FLOW_RATE_FT3_HR"
+      },
+      {
         "Name" : "Vol Flow Rate (Tube)",
         "Equation" : "Avg([TubeOutlet/FlowRate])",
         "Tag" : "TUBE_FLOW_RATE"
+      },
+      {
+        "Name" : "Vol Flow Rate (Tube) ft3/hr",
+        "Equation" : "[TUBE_FLOW_RATE] * 8.020833",
+        "Tag" : "TUBE_FLOW_RATE_FT3_HR"
       },
       {
         "Name" : "Delta T S",
@@ -132,8 +142,18 @@
         }
       },
       {
-        "Name" : "Heat Transfer Rate Uncertainty",
-        "Equation" : "[HEAT_TRANSFER_RATE] * 0.6",
+        "Name" : "Shell Heat Flow Uncertainty",
+        "Equation" : "sqrt(([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_DELTA_T] * [SHELLINLET_FLOW_TMU])^2 + ([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_FLOW_RATE_FT3_HR] * [SHELLINLET_TMU])^2 + ([SHELL_DENSITY] * [SHELL_SPEC_HEAT] * [SHELL_FLOW_RATE_FT3_HR] * [SHELLOUTLET_TMU])^2)",
+        "Tag" : "SHELL_HEAT_TRANSFER_RATE_UNCERTAINTY"
+      },
+      {
+        "Name" : "Tube Heat Flow Uncertainty",
+        "Equation" : "sqrt(([TUBE_DENSITY] * [TUBE_SPEC_HEAT] * [TUBE_DELTA_T] * [TUBEOUTLET_FLOW_TMU])^2 + ([TUBE_DENSITY] * [TUBE_SPEC_HEAT] * [TUBE_FLOW_RATE_FT3_HR] * [TUBEINLET_TMU])^2 + ([TUBE_DENSITY] * [TUBE_SPEC_HEAT] * [TUBE_FLOW_RATE_FT3_HR] * [TUBEOUTLET_TMU])^2)",
+        "Tag" : "TUBE_HEAT_TRANSFER_RATE_UNCERTAINTY"
+      },
+      {
+        "Name" : "Average Heat Flow Uncertainty",
+        "Equation" : "0.5 * [SHELL_HEAT_TRANSFER_RATE_UNCERTAINTY] + 0.5 * [TUBE_HEAT_TRANSFER_RATE_UNCERTAINTY]",
         "Tag" : "HEAT_TRANSFER_RATE_UNCERTAINTY"
       },
       {

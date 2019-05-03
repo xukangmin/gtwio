@@ -1,5 +1,5 @@
 //'use strict';
-
+var fs = require('fs');
 var shareUtil = require('./shareUtil.js');
 var asset = require('./assetManage.js');
 var userManage = require('./userManage.js');
@@ -8,6 +8,7 @@ const Asset = require('../db/asset.js');
 const Data = require('../db/data.js');
 const Parameter = require('../db/parameter.js');
 const parameterManage = require('./parameterManage.js');
+
 /*
  Once you 'require' a module you can reference the things that it exports.  These are defined in module.exports.
 
@@ -29,7 +30,9 @@ var functions = {
   getSingleDevice: getSingleDevice,
   _createDeviceWithParameter: _createDeviceWithParameter,
   _getDeviceByAsset: _getDeviceByAsset,
-  getDeviceBySerialNumber: getDeviceBySerialNumber
+  getDeviceBySerialNumber: getDeviceBySerialNumber,
+  getGatewaySetting: getGatewaySetting,
+  updateGatewaySetting: updateGatewaySetting
 }
 
 for (var key in functions) {
@@ -431,4 +434,38 @@ function getSingleDevice(req, res) {
         shareUtil.SendInternalErr(res,msg);
       }
     )
+}
+
+function getGatewaySetting(req, res) {
+
+  fs.readFile(__dirname + '../../../../daq_script/daq_config.json',function(err, data){
+    if (err){
+        shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+    } else {
+      var out_data = JSON.parse(data);
+      shareUtil.SendSuccessWithData(res, out_data);
+    }
+  })
+
+  
+  
+}
+
+function updateGatewaySetting(req, res) {
+  var settings = req.body;
+
+  var json_obj = JSON.stringify(settings,null,2);
+
+  fs.writeFile(__dirname + '../../../../daq_script/daq_config.json', json_obj, 'utf8', function(err){
+    if (err)
+    {
+      shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+    }
+    else {
+      shareUtil.SendSuccess(res);
+    }
+  })
+  
+  
+
 }

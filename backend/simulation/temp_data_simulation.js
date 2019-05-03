@@ -59,16 +59,16 @@ module.exports.simualte = (interval) => {
     for(var j = 0; j <= 32; j+= 16)
     {
       for(var i = j + 50; i <= j + 53; i++) {
-        generate_simulation_data('02A0' + i.toString(), "Temperature", 60, 61);
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 34.0, 34.2);
       }
       for(var i = j + 54; i <= j + 57; i++) {
-        generate_simulation_data('02A0' + i.toString(), "Temperature", 75, 76);
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 58.0, 58.2);
       }
       for(var i = j + 58; i <= j + 61; i++) {
-        generate_simulation_data('02A0' + i.toString(), "Temperature", 90, 91);
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 125.0, 125.2);
       }
       for(var i = j + 62; i <= j + 65; i++) {
-        generate_simulation_data('02A0' + i.toString(), "Temperature", 80, 81);
+        generate_simulation_data('02A0' + i.toString(), "Temperature", 88.0, 88.2);
       }
     }
 

@@ -72,9 +72,9 @@ module.exports.simualte = (interval) => {
       }
     }
 
-    generate_simulation_data('05A001', "FlowRate", 300, 350);
-    generate_simulation_data('05A002', "FlowRate", 300, 350);
-    generate_simulation_data('05A003', "FlowRate", 300, 350);
+    generate_simulation_data('05A001', "FlowRate", 85.0, 85.2);
+    generate_simulation_data('05A002', "FlowRate", 85.0, 85.2);
+    generate_simulation_data('05A003', "FlowRate", 55.0, 55.2);
   }
 
   setInterval(myFunc, interval, 'funky');

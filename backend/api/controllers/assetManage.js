@@ -14,6 +14,8 @@ var functions = {
   deleteAsset: deleteAsset,
   createAssetByConfig: createAssetByConfig,
   createAssetByConfigFile: createAssetByConfigFile,
+  createAllEquationWithInterval: createAllEquationWithInterval,
+  deleteAllEquationWithInterval: deleteAllEquationWithInterval,
   getConfigByAssetID: getConfigByAssetID,
   getAllConfigByUserID: getAllConfigByUserID,
   getBaselineByAssetID: getBaselineByAssetID,
@@ -31,30 +33,16 @@ for (var key in functions) {
 function _remove_duplicates(arr) {
   var new_arr = [];
 
-  var active_timeinterval = 0;
-
   var exists;
   for(var i in arr) {
-
-    if (arr[i].Active === 1)
-    {
-      active_timeinterval = arr[i].TimeInterval;
-    }
-
     exists = false;
     for(var j in new_arr) {
-      if (arr[i].TimeInterval === new_arr[j].TimeInterval) {
+      if (arr[i].TimeStamp === new_arr[j].TimeStamp) {
         exists = true;
       }
     }
     if (!exists) {
       new_arr.push(arr[i]);
-    }
-  }
-
-  for(var i in new_arr) {
-    if (new_arr[i].TimeInterval === active_timeinterval) {
-      new_arr[i].Active = 1;
     }
   }
 
@@ -99,7 +87,7 @@ function updateBaseline(req, res) {
                
                console.log(active_baseline);
 
-               parameterManage._updateBaselineforAllParameters(baseline_body.AssetID, active_baseline[0].TimeInterval);
+               parameterManage._updateBaselineforAllParameters(baseline_body.AssetID, active_baseline[0].TimeStamp);
 
                shareUtil.SendSuccess(res);
             } else {
@@ -212,7 +200,7 @@ function _addBaselineByAssetID(baseline_body) {
       Asset.findOneAndUpdate({AssetID: baseline_body.AssetID}, 
         {
           $addToSet:  {
-            "Settings.Baselines": {TimeInterval: baseline_body.TimeInterval, Active: 0}
+            "Settings.Baselines": {TimeStamp: baseline_body.TimeStamp, Active: 0}
           }
         }, function(err, data){
         if (err) {
@@ -237,7 +225,7 @@ function addBaselineByAssetID(req, res) {
           // check if exists
           var exists = false;
           for(var i in ret) {
-            if (ret[i].TimeInterval == baseline_body.TimeInterval) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
               exists = true;
             }
           }
@@ -274,7 +262,7 @@ function _deleteBaselineByAssetID(baseline_body) {
     (resolve, reject) => {
       Asset.findOneAndUpdate({AssetID: baseline_body.AssetID}, {
         $pull: {
-          "Settings.Baselines": {TimeInterval: baseline_body.TimeInterval}
+          "Settings.Baselines": {TimeStamp: baseline_body.TimeStamp}
         }
       }, function(err, data){
         if (err)
@@ -298,7 +286,7 @@ function deleteBaselineByAssetID(req, res) {
           // check if exists
           var exists = false;
           for(var i in ret) {
-            if (ret[i].TimeInterval == baseline_body.TimeInterval) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
               exists = true;
             }
           }
@@ -338,7 +326,7 @@ function _setBaselineActive(baseline_body) {
           if (data.Settings) {
             if (data.Settings.Baselines) {
               for(var i in data.Settings.Baselines) {
-                if (data.Settings.Baselines[i].TimeInterval == baseline_body.TimeInterval)
+                if (data.Settings.Baselines[i].TimeStamp == baseline_body.TimeStamp)
                 {
                   data.Settings.Baselines[i].Active = baseline_body.Active;
                   data.save();
@@ -367,7 +355,7 @@ function setBaselineActive(req, res) {
           // check if exists
           var exists = false;
           for(var i in ret) {
-            if (ret[i].TimeInterval == baseline_body.TimeInterval) {
+            if (ret[i].TimeStamp == baseline_body.TimeStamp) {
               exists = true;
             }
           }
@@ -835,7 +823,40 @@ function _createAssetPromise(userid, assetobj) {
 }
 
 
+function createAllEquationWithInterval(req, res)
+{
+  var data_body = req.body;
 
+  var assetid = data_body.AssetID;
+  var singleAssetConfig = data_body.Config;
+  var interval = data_body.Interval;
+
+  const _createEquations = async (assetid, equations) =>
+  {
+      for (let i = 0; i < equations.length; i++) {
+        // console.log("creating equation" + i + "," + JSON.stringify(equations[i],null,2));
+        let ret1 = await parameterManage._createEquationWithInterval(assetid, equations[i], interval);
+      }
+      return assetid;
+  };
+
+  _createEquations(assetid, singleAssetConfig.Equations)
+    .then(
+      ret => {
+        shareUtil.SendSuccess(res);
+      }
+    )
+    .catch(
+      err => {
+        console.log(err);
+        shareUtil.SendInternalErr(res, "Cannot create equation");
+      }
+    )
+}
+
+function deleteAllEquationWithInterval(req, res){
+
+}
 
 
 function _createSingleAsset(userid, singleAssetConfig) {

@@ -434,6 +434,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"    
+  /asset/createAllEquationWithInterval:
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: create equations by config with intervals
+      # used as the method name of the controller
+      operationId: createAllEquationWithInterval
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"    
   /asset/updateAsset:
     x-swagger-router-controller: assetManage
     put:

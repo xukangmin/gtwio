@@ -22,6 +22,7 @@ var functions = {
   getSingleParameter: getSingleParameter,
   updateRequireList: updateRequireList,
   _createEquation: _createEquation,
+  _createEquationWithInterval: _createEquationWithInterval,
   updateRequireListByEquation: updateRequireListByEquation,
   _getAllParameterByDeviceIDPromise: _getAllParameterByDeviceIDPromise,
   _createParameter: _createParameter,
@@ -173,6 +174,74 @@ function _createEquation(assetid, paraobj) {
   return new Promise(
     (resolve, reject) => {
       if (paraobj.Name && paraobj.Equation && paraobj.Tag) {
+
+        if (paraobj.Equation.includes("INTERVAL") || paraobj.Tag.includes("INTERVAL"))
+        {
+          resolve();
+        }
+        else {
+          var taglist = _getTagList(paraobj.Equation);
+          taglist = _remove_duplicates(taglist);
+  
+          dataManage._getAllParameterByAssetID(assetid)
+            .then(
+              paralist => {
+                Promise.all(taglist.map(item => _resolveSingleTagInAsset(assetid, paralist, item)))
+                  .then(
+                    ret => {
+                      paraobj.OriginalEquation = paraobj.Equation;
+                      paraobj.Equation = _replaceEquation(paraobj.Equation, taglist, ret);
+                      
+                      // console.log("OriginalEquation=" + paraobj.OriginalEquation);
+                      // console.log("resolved equation=" + paraobj.Equation);
+                      var filter_para = paralist.filter(item => item.Tag === paraobj.Tag);
+                      if (filter_para.length === 1) {
+                        // para already exist, update equation and name
+                        paraobj.ParameterID = filter_para[0].ParameterID;
+                        
+                        return _updateParameter(paraobj);
+                      } else if (filter_para.length === 0) {
+                        return _createParameter(null, assetid, paraobj, null);
+                      } else {
+                        // more than one para with same Tag exists
+                        console.log("more than 1 para exists");
+                        reject(new Error('More than 1 para exists'));
+                      }
+                    }
+                  )
+                  .then(
+                    ret1 => {
+                      resolve(ret1);
+                    }
+                  )
+                  .catch(
+                    err => {
+                      reject(err);
+                    }
+                  );
+  
+              }
+            )
+            .catch(
+              err => {
+                reject(err);
+              }
+            )
+        }
+      } else {
+        resolve();
+      }
+    });
+}
+
+function _createEquationWithInterval(assetid, paraobj, interval) {
+  return new Promise(
+    (resolve, reject) => {
+      if (paraobj.Name && paraobj.Equation && paraobj.Tag && (paraobj.Equation.includes("INTERVAL") || paraobj.Tag.includes("INTERVAL")))  {
+
+        paraobj.Equation = paraobj.Equation.replace(/INTERVAL/ig, interval.toString());
+        paraobj.Tag = paraobj.Tag.replace(/INTERVAL/ig, interval.toString());
+
         var taglist = _getTagList(paraobj.Equation);
         taglist = _remove_duplicates(taglist);
 

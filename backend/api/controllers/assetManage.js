@@ -57,8 +57,6 @@ function _updateBaseLineforSingleParameter(baseline, ParameterID) {
     });
 }
 
-
-
 function updateBaseline(req, res) {
   var baseline_body = req.body;
 
@@ -840,6 +838,7 @@ function createAllEquationWithInterval(req, res)
       return assetid;
   };
 
+  Asset.findOne("")
   _createEquations(assetid, singleAssetConfig[0].Equations)
     .then(
       ret => {
@@ -914,7 +913,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
     (resolve, reject) => {
       // first create asset
         var assetid;
-        _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName})
+        _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName, Config: singleAssetConfig})
           .then(
             ret => {
               // create device

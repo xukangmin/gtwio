@@ -16,6 +16,7 @@ var functions = {
   _updateParameter: _updateParameter,
   deleteParameter: deleteParameter,
   _deleteSingleParameter, _deleteSingleParameter,
+  _removeParameter: _removeParameter,
   getParameterByAsset: getParameterByAsset,
   getAllParameterByAsset: getAllParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
@@ -607,21 +608,29 @@ function deleteParameter(req, res) {
 
  if (paraID && assetID) {
     // remove parameter in asset
-    _removeParameter(assetID, null, paraID, function(err) {
-      if (err) {
-        shareUtil.SendInternalErr(res);
-      } else {
+    _removeParameter(assetID, null, paraID)
+      .then(
+        ret => {
+          shareUtil.SendSuccess(res);
+        }
+      )
+      .catch(
+        err => {
+          shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+        }
+      );
+ } else if (paraID && deviceID) {
+    _removeParameter(null, deviceID, paraID)
+    .then(
+      ret => {
         shareUtil.SendSuccess(res);
       }
-    });
- } else if (paraID && deviceID) {
-   _removeParameter(null, deviceID, paraID, function(err) {
-     if (err) {
-       shareUtil.SendInternalErr(res);
-     } else {
-       shareUtil.SendSuccess(res);
-     }
-   });
+    )
+    .catch(
+      err => {
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+      }
+    );
  } else {
    var msg = "parID or assetid or deviceid missing";
    shareUtil.SendInvalidInput(res, msg);
@@ -629,50 +638,84 @@ function deleteParameter(req, res) {
 
 }
 
-function _removeParameter(assetID, deviceID, paraID, callback) {
-
-  Parameter.deleteOne({ParameterID: paraID}, function(err) {
-    if (err)
-    {
-      callback(err);
-    }
-    else{
-      if (deviceID) {
-        Device.findOneAndUpdate({DeviceID: deviceID},
-            {
-              $pull:  {
-                Parameters: {ParameterID: paraID}
+function _removeParameter(assetID, deviceID, paraID) {
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.findOne({ParameterID: paraID}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          Promise.all(data.Require.map(item => _remove_single_parameter_require(item, paraID)))
+            .then(
+              ret => {
+                _removeSingleParameter(assetID, deviceID, paraID)
+                  .then(
+                    ret => {
+                      resolve();
+                    }
+                  )
+                  .catch(
+                    err => {
+                      reject(err);
+                    }
+                  );
               }
-            },
-          function(err, data) {
-            if (err)
-            {
-              callback(err);
-            } else {
-              callback(null);
-            }
-          });
-      } else if (assetID) {
-        Asset.findOneAndUpdate({AssetID: assetID},
-            {
-              $pull:  {
-                Parameters: {ParameterID: paraID}
+            )
+            .catch(
+              err => {
+                reject(err);
               }
-            },
-          function(err, data) {
-            if (err)
-            {
-              callback(err);
-            } else {
-              callback(null);
-            }
-          });
-      } else {
-        callback('please input deviceID or assetID');
-      }
-    }
-  });
+            )
+        }
+      });
+    });
+}
 
+function _removeSingleParameter(assetID, deviceID, paraID) {
+  return new Promise(
+    (resolve, reject) => {
+      Parameter.deleteOne({ParameterID: paraID}, function(err) {
+        if (err)
+        {
+          reject(err);
+        }
+        else{
+          if (deviceID) {
+            Device.findOneAndUpdate({DeviceID: deviceID},
+                {
+                  $pull:  {
+                    Parameters: {ParameterID: paraID}
+                  }
+                },
+              function(err, data) {
+                if (err)
+                {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+          } else if (assetID) {
+            Asset.findOneAndUpdate({AssetID: assetID},
+                {
+                  $pull:  {
+                    Parameters: {ParameterID: paraID}
+                  }
+                },
+              function(err, data) {
+                if (err)
+                {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });
+          } else {
+            reject('please input deviceID or assetID');
+          }
+        }
+      });
+    });
 }
 
 

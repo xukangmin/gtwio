@@ -265,6 +265,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/deleteAllEquationWithInterval:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    delete:
+      tags:
+      - asset
+      description: delete baseline to asset
+      # used as the method name of the controller
+      operationId: deleteAllEquationWithInterval
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/BaselineModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/setBaselineActive:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

@@ -828,19 +828,18 @@ function createAllEquationWithInterval(req, res)
   var data_body = req.body;
 
   var assetid = data_body.AssetID;
-  var singleAssetConfig = data_body.Config;
+  var singleAssetConfig = require('../../simulation/assetconfig_default0.json');
   var interval = data_body.Interval;
 
   const _createEquations = async (assetid, equations) =>
   {
       for (let i = 0; i < equations.length; i++) {
-        // console.log("creating equation" + i + "," + JSON.stringify(equations[i],null,2));
         let ret1 = await parameterManage._createEquationWithInterval(assetid, equations[i], interval);
       }
       return assetid;
   };
 
-  _createEquations(assetid, singleAssetConfig.Equations)
+  _createEquations(assetid, singleAssetConfig[0].Equations)
     .then(
       ret => {
         shareUtil.SendSuccess(res);
@@ -855,6 +854,35 @@ function createAllEquationWithInterval(req, res)
 }
 
 function deleteAllEquationWithInterval(req, res){
+  var assetid = req.body.AssetID;
+  var interval = req.body.Interval;
+
+  dataManage._getAllParameterByAssetIDPromise(assetid)
+    .then(
+      paralist => {
+        var filtered_list = paralist.filter(item => parseInt(item.Tag.split(":")[1]) === parseInt(interval));
+
+        //console.log(filtered_list);
+        
+        //shareUtil.SendSuccessWithData(res, filtered_list);
+        Promise.all(filtered_list.map(item => parameterManage._removeParameter(assetid, null, item.ParameterID)))
+          .then(
+            ret => {
+              shareUtil.SendSuccess(res);
+            }
+          )
+          .catch(
+            err => {
+              shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+            }
+          )
+      }
+    )
+    .catch(
+      err => {
+        shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+      }
+    )
 
 }
 

@@ -26,57 +26,57 @@
       {
         "Name" : "Avg Shell Inlet",
         "Equation": "avg([ShellInlet/Temperature,INTERVAL])",
-        "Tag": "AVG_SHELL_INLET|INTERVAL"
+        "Tag": "AVG_SHELL_INLET:INTERVAL"
       },
       {
         "Name" : "Avg Shell Outlet",
         "Equation": "avg([ShellOutlet/Temperature,INTERVAL])",
-        "Tag": "AVG_SHELL_OUTLET|INTERVAL"
+        "Tag": "AVG_SHELL_OUTLET:INTERVAL"
       },
       {
         "Name" : "Avg Tube Inlet",
         "Equation": "avg([TubeInlet/Temperature,INTERVAL])",
-        "Tag": "AVG_TUBE_INLET|INTERVAL"
+        "Tag": "AVG_TUBE_INLET:INTERVAL"
       },
       {
         "Name" : "Avg Tube Outlet",
         "Equation": "avg([TubeOutlet/Temperature,INTERVAL])",
-        "Tag": "AVG_TUBE_OUTLET|INTERVAL"
+        "Tag": "AVG_TUBE_OUTLET:INTERVAL"
       },
       {
         "Name" : "Delta T S",
-        "Equation": "[AVG_SHELL_INLET|INTERVAL] - [AVG_SHELL_OUTLET|INTERVAL]",
-        "Tag": "DELTA_T_S|INTERVAL"
+        "Equation": "[AVG_SHELL_INLET:INTERVAL] - [AVG_SHELL_OUTLET:INTERVAL]",
+        "Tag": "DELTA_T_S:INTERVAL"
       },
       {
         "Name" : "Delta T 1",
-        "Equation": "[AVG_TUBE_INLET|INTERVAL] - [AVG_SHELL_OUTLET|INTERVAL]",
-        "Tag": "DELTA_T_1|INTERVAL"
+        "Equation": "[AVG_TUBE_INLET:INTERVAL] - [AVG_SHELL_OUTLET:INTERVAL]",
+        "Tag": "DELTA_T_1:INTERVAL"
       },
       {
         "Name" : "Delta T 2",
-        "Equation": "[AVG_TUBE_OUTLET|INTERVAL] - [AVG_SHELL_INLET|INTERVAL]",
-        "Tag": "DELTA_T_2|INTERVAL"
+        "Equation": "[AVG_TUBE_OUTLET:INTERVAL] - [AVG_SHELL_INLET:INTERVAL]",
+        "Tag": "DELTA_T_2:INTERVAL"
       },
       {
         "Name" : "LMTD",
-        "Equation": "([DELTA_T_1|INTERVAL] - [DELTA_T_2|INTERVAL]) / log([DELTA_T_1|INTERVAL] / [DELTA_T_2|INTERVAL])",
-        "Tag": "LMTD|INTERVAL"
+        "Equation": "([DELTA_T_1:INTERVAL] - [DELTA_T_2:INTERVAL]) / log([DELTA_T_1:INTERVAL] / [DELTA_T_2:INTERVAL])",
+        "Tag": "LMTD:INTERVAL"
       },
       {
         "Name" : "Delta T Ratio",
-        "Equation" : "[DELTA_T_S|INTERVAL] / [DELTA_T_S|INTERVAL,FIX,BASELINE]",
-        "Tag": "DELTA_T_RATIO|INERVAL"
+        "Equation" : "[DELTA_T_S:INTERVAL] / [DELTA_T_S:INTERVAL,FIX,BASELINE]",
+        "Tag": "DELTA_T_RATIO:INTERVAL"
       },
       {
         "Name" : "LMTD Ratio",
-        "Equation": "[LMTD|INTERVAL] / [LMTD|INTERVAL,FIX,BASELINE]",
-        "Tag" : "LMTD_RATIO|INTERVAL"
+        "Equation": "[LMTD:INTERVAL] / [LMTD:INTERVAL,FIX,BASELINE]",
+        "Tag" : "LMTD_RATIO:INTERVAL"
       },
       {
         "Name" : "Cleanliness Factor",
-        "Equation" : "[DELTA_T_RATIO|INTERVAL] * [LMTD_RATIO|INTERVAL]",
-        "Tag" : "CLEANLINESS_FACTOR|INTERVAL",
+        "Equation" : "[DELTA_T_RATIO:INTERVAL] * [LMTD_RATIO:INTERVAL]",
+        "Tag" : "CLEANLINESS_FACTOR:INTERVAL",
         "Range" : {
           "UpperLimit": 1.2,
           "LowerLimit": 0
@@ -84,23 +84,23 @@
       },
       {
         "Name" : "Cleanliness Factor Uncertainty",
-        "Equation" : "[CLEANLINESS_FACTOR|INTERVAL] * 0.6",
-        "Tag" : "CLEANLINESS_FACTOR_UNCERTAINTY|INTERVAL"
+        "Equation" : "[CLEANLINESS_FACTOR:INTERVAL] * 0.6",
+        "Tag" : "CLEANLINESS_FACTOR_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "ShellInlet Number Of Data Sets",
         "Equation" : "sum([ShellInlet/Temperature,COUNT,INTERVAL])",
-        "Tag": "SHELLINLET_NUMBER_DATA_SETS|INTERVAL"
+        "Tag": "SHELLINLET_NUMBER_DATA_SETS:INTERVAL"
       },
       {
         "Name" : "ShellInlet Degree of Freedom",
-        "Equation" : "[SHELLINLET_NUMBER_DATA_SETS|INTERVAL] - 1",
-        "Tag": "SHELLINLET_DEGREE_OF_FREEDOM|INTERVAL"
+        "Equation" : "[SHELLINLET_NUMBER_DATA_SETS:INTERVAL] - 1",
+        "Tag": "SHELLINLET_DEGREE_OF_FREEDOM:INTERVAL"
       },
       {
         "Name" : "Two Tailed Student T Value",
-        "Equation" : "t_value(0.05,[SHELLINLET_DEGREE_OF_FREEDOM|INTERVAL])",
-        "Tag": "SHELLINLET_STUDENT_T_VALUE|INTERVAL"
+        "Equation" : "t_value(0.05,[SHELLINLET_DEGREE_OF_FREEDOM:INTERVAL])",
+        "Tag": "SHELLINLET_STUDENT_T_VALUE:INTERVAL"
       },
       {
         "Name" : "Number of sensors",
@@ -110,47 +110,47 @@
       {
         "Name" : "ShellInlet STDEV of all data",
         "Equation" : "std([ShellInlet/Temperature,RAW,INTERVAL])",
-        "Tag": "SHELLINLET_STD_ALL_DATA|INTERVAL"
+        "Tag": "SHELLINLET_STD_ALL_DATA:INTERVAL"
       },
       {
         "Name" : "ShellInlet Spatial Bias Uncertainty",
-        "Equation" : "[SHELLINLET_STUDENT_T_VALUE|INTERVAL] * [SHELLINLET_STD_ALL_DATA|INTERVAL] / sqrt([SHELLINLET_SENSOR_COUNT])",
-        "Tag": "SHELLINLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "[SHELLINLET_STUDENT_T_VALUE:INTERVAL] * [SHELLINLET_STD_ALL_DATA:INTERVAL] / sqrt([SHELLINLET_SENSOR_COUNT])",
+        "Tag": "SHELLINLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "Total Measurement Bias Uncertainty",
-        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLINLET_STD_ALL_DATA|INTERVAL]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL]^2)",
-        "Tag": "SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLINLET_STD_ALL_DATA:INTERVAL]^2 + [SHELLINLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL]^2)",
+        "Tag": "SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "STDEV Data set",
         "Equation" : "std([AVG_SHELL_INLET,RAW,INTERVAL])",
-        "Tag": "SHELLINLET_STDEV_DATA_SET|INTERVAL"
+        "Tag": "SHELLINLET_STDEV_DATA_SET:INTERVAL"
       },
       {
         "Name" : "STDEV Sample Mean",
-        "Equation" : "[SHELLINLET_STDEV_DATA_SET|INTERVAL] / sqrt([SHELLINLET_NUMBER_DATA_SETS|INTERVAL])",
-        "Tag": "SHELLINLET_STDEV_SAMPLE_MEAN|INTERVAL"
+        "Equation" : "[SHELLINLET_STDEV_DATA_SET:INTERVAL] / sqrt([SHELLINLET_NUMBER_DATA_SETS:INTERVAL])",
+        "Tag": "SHELLINLET_STDEV_SAMPLE_MEAN:INTERVAL"
       },
       {
         "Name" : "Shell Inlet TMU",
-        "Equation" : "sqrt([SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE|INTERVAL] * [SHELLINLET_STDEV_SAMPLE_MEAN|INTERVAL]) ^2)",
-        "Tag": "SHELLINLET_TMU|INTERVAL"
+        "Equation" : "sqrt([SHELLINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL] ^ 2 + ([SHELLINLET_STUDENT_T_VALUE:INTERVAL] * [SHELLINLET_STDEV_SAMPLE_MEAN:INTERVAL]) ^2)",
+        "Tag": "SHELLINLET_TMU:INTERVAL"
       },
       {
         "Name" : "ShellOutlet Number Of Data Sets",
         "Equation" : "sum([ShellOutlet/Temperature,COUNT,INTERVAL])",
-        "Tag": "SHELLOUTLET_NUMBER_DATA_SETS|INTERVAL"
+        "Tag": "SHELLOUTLET_NUMBER_DATA_SETS:INTERVAL"
       },
       {
         "Name" : "ShellOutlet Degree of Freedom",
-        "Equation" : "[SHELLOUTLET_NUMBER_DATA_SETS|INTERVAL] - 1",
-        "Tag": "SHELLOUTLET_DEGREE_OF_FREEDOM|INTERVAL"
+        "Equation" : "[SHELLOUTLET_NUMBER_DATA_SETS:INTERVAL] - 1",
+        "Tag": "SHELLOUTLET_DEGREE_OF_FREEDOM:INTERVAL"
       },
       {
         "Name" : "Two Tailed Student T Value",
-        "Equation" : "t_value(0.05,[SHELLOUTLET_DEGREE_OF_FREEDOM|INTERVAL])",
-        "Tag": "SHELLOUTLET_STUDENT_T_VALUE|INTERVAL"
+        "Equation" : "t_value(0.05,[SHELLOUTLET_DEGREE_OF_FREEDOM:INTERVAL])",
+        "Tag": "SHELLOUTLET_STUDENT_T_VALUE:INTERVAL"
       },
       {
         "Name" : "Number of sensors",
@@ -160,47 +160,47 @@
       {
         "Name" : "ShellOutlet STDEV of all data",
         "Equation" : "std([ShellOutlet/Temperature,RAW,INTERVAL])",
-        "Tag": "SHELLOUTLET_STD_ALL_DATA|INTERVAL"
+        "Tag": "SHELLOUTLET_STD_ALL_DATA:INTERVAL"
       },
       {
         "Name" : "ShellOutlet Spatial Bias Uncertainty",
-        "Equation" : "[SHELLOUTLET_STUDENT_T_VALUE|INTERVAL] * [SHELLOUTLET_STD_ALL_DATA|INTERVAL] / sqrt([SHELLOUTLET_SENSOR_COUNT])",
-        "Tag": "SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "[SHELLOUTLET_STUDENT_T_VALUE:INTERVAL] * [SHELLOUTLET_STD_ALL_DATA:INTERVAL] / sqrt([SHELLOUTLET_SENSOR_COUNT])",
+        "Tag": "SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "Total Measurement Bias Uncertainty",
-        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLOUTLET_STD_ALL_DATA|INTERVAL]^2 + [SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL]^2)",
-        "Tag": "SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [SHELLOUTLET_STD_ALL_DATA:INTERVAL]^2 + [SHELLOUTLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL]^2)",
+        "Tag": "SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "STDEV Data set",
         "Equation" : "std([AVG_SHELL_OUTLET,RAW,INTERVAL])",
-        "Tag": "SHELLOUTLET_STDEV_DATA_SET|INTERVAL"
+        "Tag": "SHELLOUTLET_STDEV_DATA_SET:INTERVAL"
       },
       {
         "Name" : "STDEV Sample Mean",
-        "Equation" : "[SHELLOUTLET_STDEV_DATA_SET|INTERVAL] / sqrt([SHELLOUTLET_NUMBER_DATA_SETS|INTERVAL])",
-        "Tag": "SHELLOUTLET_STDEV_SAMPLE_MEAN|INTERVAL"
+        "Equation" : "[SHELLOUTLET_STDEV_DATA_SET:INTERVAL] / sqrt([SHELLOUTLET_NUMBER_DATA_SETS:INTERVAL])",
+        "Tag": "SHELLOUTLET_STDEV_SAMPLE_MEAN:INTERVAL"
       },
       {
         "Name" : "Shell Outlet TMU",
-        "Equation" : "sqrt([SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL] ^ 2 + ([SHELLOUTLET_STUDENT_T_VALUE|INTERVAL] * [SHELLOUTLET_STDEV_SAMPLE_MEAN|INTERVAL]) ^2)",
-        "Tag": "SHELLOUTLET_TMU|INTERVAL"
+        "Equation" : "sqrt([SHELLOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL] ^ 2 + ([SHELLOUTLET_STUDENT_T_VALUE:INTERVAL] * [SHELLOUTLET_STDEV_SAMPLE_MEAN:INTERVAL]) ^2)",
+        "Tag": "SHELLOUTLET_TMU:INTERVAL"
       },
       {
         "Name" : "TubeInlet Number Of Data Sets",
         "Equation" : "sum([TubeInlet/Temperature,COUNT,INTERVAL])",
-        "Tag": "TUBEINLET_NUMBER_DATA_SETS|INTERVAL"
+        "Tag": "TUBEINLET_NUMBER_DATA_SETS:INTERVAL"
       },
       {
         "Name" : "TubeInlet Degree of Freedom",
-        "Equation" : "[TUBEINLET_NUMBER_DATA_SETS|INTERVAL] - 1",
-        "Tag": "TUBEINLET_DEGREE_OF_FREEDOM|INTERVAL"
+        "Equation" : "[TUBEINLET_NUMBER_DATA_SETS:INTERVAL] - 1",
+        "Tag": "TUBEINLET_DEGREE_OF_FREEDOM:INTERVAL"
       },
       {
         "Name" : "Two Tailed Student T Value",
-        "Equation" : "t_value(0.05,[TUBEINLET_DEGREE_OF_FREEDOM|INTERVAL])",
-        "Tag": "TUBEINLET_STUDENT_T_VALUE|INTERVAL"
+        "Equation" : "t_value(0.05,[TUBEINLET_DEGREE_OF_FREEDOM:INTERVAL])",
+        "Tag": "TUBEINLET_STUDENT_T_VALUE:INTERVAL"
       },
       {
         "Name" : "Number of sensors",
@@ -210,47 +210,47 @@
       {
         "Name" : "TubeInlet STDEV of all data",
         "Equation" : "std([TubeInlet/Temperature,RAW,INTERVAL])",
-        "Tag": "TUBEINLET_STD_ALL_DATA|INTERVAL"
+        "Tag": "TUBEINLET_STD_ALL_DATA:INTERVAL"
       },
       {
         "Name" : "TubeInlet Spatial Bias Uncertainty",
-        "Equation" : "[TUBEINLET_STUDENT_T_VALUE|INTERVAL] * [TUBEINLET_STD_ALL_DATA|INTERVAL] / sqrt([TUBEINLET_SENSOR_COUNT])",
-        "Tag": "TUBEINLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "[TUBEINLET_STUDENT_T_VALUE:INTERVAL] * [TUBEINLET_STD_ALL_DATA:INTERVAL] / sqrt([TUBEINLET_SENSOR_COUNT])",
+        "Tag": "TUBEINLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "Total Measurement Bias Uncertainty",
-        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEINLET_STD_ALL_DATA|INTERVAL]^2 + [TUBEINLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL]^2)",
-        "Tag": "TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEINLET_STD_ALL_DATA:INTERVAL]^2 + [TUBEINLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL]^2)",
+        "Tag": "TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "STDEV Data set",
         "Equation" : "std([AVG_TUBE_INLET,RAW,INTERVAL])",
-        "Tag": "TUBEINLET_STDEV_DATA_SET|INTERVAL"
+        "Tag": "TUBEINLET_STDEV_DATA_SET:INTERVAL"
       },
       {
         "Name" : "STDEV Sample Mean",
-        "Equation" : "[TUBEINLET_STDEV_DATA_SET|INTERVAL] / sqrt([TUBEINLET_NUMBER_DATA_SETS|INTERVAL])",
-        "Tag": "TUBEINLET_STDEV_SAMPLE_MEAN|INTERVAL"
+        "Equation" : "[TUBEINLET_STDEV_DATA_SET:INTERVAL] / sqrt([TUBEINLET_NUMBER_DATA_SETS:INTERVAL])",
+        "Tag": "TUBEINLET_STDEV_SAMPLE_MEAN:INTERVAL"
       },
       {
         "Name" : "Tube Inlet TMU",
-        "Equation" : "sqrt([TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL] ^ 2 + ([TUBEINLET_STUDENT_T_VALUE|INTERVAL] * [TUBEINLET_STDEV_SAMPLE_MEAN|INTERVAL]) ^2)",
-        "Tag": "TUBEINLET_TMU|INTERVAL"
+        "Equation" : "sqrt([TUBEINLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL] ^ 2 + ([TUBEINLET_STUDENT_T_VALUE:INTERVAL] * [TUBEINLET_STDEV_SAMPLE_MEAN:INTERVAL]) ^2)",
+        "Tag": "TUBEINLET_TMU:INTERVAL"
       },
       {
         "Name" : "TubeOutlet Number Of Data Sets",
         "Equation" : "sum([TubeOutlet/Temperature,COUNT,INTERVAL])",
-        "Tag": "TUBEOUTLET_NUMBER_DATA_SETS|INTERVAL"
+        "Tag": "TUBEOUTLET_NUMBER_DATA_SETS:INTERVAL"
       },
       {
         "Name" : "TubeOutlet Degree of Freedom",
-        "Equation" : "[TUBEOUTLET_NUMBER_DATA_SETS|INTERVAL] - 1",
-        "Tag": "TUBEOUTLET_DEGREE_OF_FREEDOM|INTERVAL"
+        "Equation" : "[TUBEOUTLET_NUMBER_DATA_SETS:INTERVAL] - 1",
+        "Tag": "TUBEOUTLET_DEGREE_OF_FREEDOM:INTERVAL"
       },
       {
         "Name" : "Two Tailed Student T Value",
-        "Equation" : "t_value(0.05,[TUBEOUTLET_DEGREE_OF_FREEDOM|INTERVAL])",
-        "Tag": "TUBEOUTLET_STUDENT_T_VALUE|INTERVAL"
+        "Equation" : "t_value(0.05,[TUBEOUTLET_DEGREE_OF_FREEDOM:INTERVAL])",
+        "Tag": "TUBEOUTLET_STUDENT_T_VALUE:INTERVAL"
       },
       {
         "Name" : "Number of sensors",
@@ -260,32 +260,32 @@
       {
         "Name" : "TubeOutlet STDEV of all data",
         "Equation" : "std([TubeOutlet/Temperature,RAW,INTERVAL])",
-        "Tag": "TUBEOUTLET_STD_ALL_DATA|INTERVAL"
+        "Tag": "TUBEOUTLET_STD_ALL_DATA:INTERVAL"
       },
       {
         "Name" : "TubeOutlet Spatial Bias Uncertainty",
-        "Equation" : "[TUBEOUTLET_STUDENT_T_VALUE|INTERVAL] * [TUBEOUTLET_STD_ALL_DATA|INTERVAL] / sqrt([TUBEOUTLET_SENSOR_COUNT])",
-        "Tag": "TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "[TUBEOUTLET_STUDENT_T_VALUE:INTERVAL] * [TUBEOUTLET_STD_ALL_DATA:INTERVAL] / sqrt([TUBEOUTLET_SENSOR_COUNT])",
+        "Tag": "TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "Total Measurement Bias Uncertainty",
-        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEOUTLET_STD_ALL_DATA|INTERVAL]^2 + [TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY|INTERVAL]^2)",
-        "Tag": "TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL"
+        "Equation" : "sqrt(0.1 ^ 2 + 0.05 ^ 2 + [TUBEOUTLET_STD_ALL_DATA:INTERVAL]^2 + [TUBEOUTLET_SPATIAL_BIAS_UNCERTAINTY:INTERVAL]^2)",
+        "Tag": "TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL"
       },
       {
         "Name" : "STDEV Data set",
         "Equation" : "std([AVG_TUBE_OUTLET,RAW,INTERVAL])",
-        "Tag": "TUBEOUTLET_STDEV_DATA_SET|INTERVAL"
+        "Tag": "TUBEOUTLET_STDEV_DATA_SET:INTERVAL"
       },
       {
         "Name" : "STDEV Sample Mean",
-        "Equation" : "[TUBEOUTLET_STDEV_DATA_SET|INTERVAL] / sqrt([TUBEOUTLET_NUMBER_DATA_SETS|INTERVAL])",
-        "Tag": "TUBEOUTLET_STDEV_SAMPLE_MEAN|INTERVAL"
+        "Equation" : "[TUBEOUTLET_STDEV_DATA_SET:INTERVAL] / sqrt([TUBEOUTLET_NUMBER_DATA_SETS:INTERVAL])",
+        "Tag": "TUBEOUTLET_STDEV_SAMPLE_MEAN:INTERVAL"
       },
       {
         "Name" : "Tube Outlet TMU",
-        "Equation" : "sqrt([TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY|INTERVAL] ^ 2 + ([TUBEOUTLET_STUDENT_T_VALUE|INTERVAL] * [TUBEOUTLET_STDEV_SAMPLE_MEAN|INTERVAL]) ^2)",
-        "Tag": "TUBEOUTLET_TMU|INTERVAL"
+        "Equation" : "sqrt([TUBEOUTLET_TOTAL_MESUREMENT_BIAS_UNCERTAINTY:INTERVAL] ^ 2 + ([TUBEOUTLET_STUDENT_T_VALUE:INTERVAL] * [TUBEOUTLET_STDEV_SAMPLE_MEAN:INTERVAL]) ^2)",
+        "Tag": "TUBEOUTLET_TMU:INTERVAL"
       }
 
     ],

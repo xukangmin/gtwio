@@ -16,6 +16,7 @@ var functions = {
   createAssetByConfigFile: createAssetByConfigFile,
   createAllEquationWithInterval: createAllEquationWithInterval,
   deleteAllEquationWithInterval: deleteAllEquationWithInterval,
+  getAllTimeInterval: getAllTimeInterval,
   getConfigByAssetID: getConfigByAssetID,
   getAllConfigByUserID: getAllConfigByUserID,
   getBaselineByAssetID: getBaselineByAssetID,
@@ -886,6 +887,27 @@ function deleteAllEquationWithInterval(req, res){
 
 }
 
+function getAllTimeInterval(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+
+  dataManage._getAllParameterByAssetIDPromise(assetid)
+    .then(
+      ret => {
+        var timeinterval = [];
+        for (var i in ret) {
+          var ts = parseInt(ret[i].Tag.split(":")[1]);
+          if (typeof ts != 'undefined' && isNaN(ts) === false) {
+            if (timeinterval.includes(ts) === false)
+            {
+              timeinterval.push(ts);
+            }
+          }
+        }
+
+        shareUtil.SendSuccessWithData(res, timeinterval);
+      }
+    )
+}
 
 function _createSingleAsset(userid, singleAssetConfig) {
   return new Promise(

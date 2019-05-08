@@ -24,7 +24,8 @@ var functions = {
   deleteBaselineByAssetID: deleteBaselineByAssetID,
   setBaselineActive: setBaselineActive,
   updateBaseline: updateBaseline,
-  getAssetTimeRange: getAssetTimeRange
+  getAssetTimeRange: getAssetTimeRange,
+  setTimerIntervalActiveForTag: setTimerIntervalActiveForTag
 };
 
 for (var key in functions) {
@@ -615,6 +616,19 @@ function getSingleAsset(req, res) {
   });
 }
 
+function _getAsset(assetID) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOne({AssetID: assetID}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+}
+
 function createAsset(req, res) {
   var assetobj = req.body;
   if (assetobj.constructor === Object && Object.keys(assetobj).length === 0) {
@@ -821,61 +835,174 @@ function _createAssetPromise(userid, assetobj) {
     });
 }
 
+const _createEquations = async (assetid, equations, interval) =>
+{
+    for (let i = 0; i < equations.length; i++) {
+      let ret1 = await parameterManage._createEquationWithInterval(assetid, equations[i], interval);
+    }
+    
+    return assetid;
+};
+
 
 function createAllEquationWithInterval(req, res)
 {
   var data_body = req.body;
 
   var assetid = data_body.AssetID;
-  var singleAssetConfig = require('../../simulation/assetconfig_default0.json');
   var interval = data_body.Interval;
 
-  const _createEquations = async (assetid, equations) =>
-  {
-      for (let i = 0; i < equations.length; i++) {
-        let ret1 = await parameterManage._createEquationWithInterval(assetid, equations[i], interval);
-      }
-      return assetid;
-  };
 
-  Asset.findOne("")
-  _createEquations(assetid, singleAssetConfig[0].Equations)
+  _getAsset(assetid)
     .then(
       ret => {
-        shareUtil.SendSuccess(res);
+        var exists = false;
+        if (ret.Config)
+        {
+          if (ret.Config.TimeInterval)
+          {
+            if (ret.Config.TimeInterval.includes(interval))
+            {
+              exists = true;
+            }
+          }
+        }
+
+        if (exists)
+        {
+          shareUtil.SendInvalidInput(res, "interval already exists");
+        } else {
+          if (ret.Config) {
+            Asset.findOneAndUpdate({AssetID: assetid},               {
+              $push:  {
+                "Config.TimeInterval": interval
+              }
+            },function(err,data) {
+              if (err) {
+                shareUtil.SendInternalErr(res, "cannot push interval");
+              } else {
+                _createEquations(assetid, ret.Config.Equations, interval)
+                .then(
+                  ret => {
+                    shareUtil.SendSuccess(res);
+                  }
+                )
+                .catch(
+                  err => {
+                    console.log(err);
+                    shareUtil.SendInternalErr(res, "Cannot create equation");
+                  }
+                )
+              }
+            });
+          } else {
+            shareUtil.SendInvalidInput(res, "config not exist, try import config first");
+          }
+
+        }
       }
     )
     .catch(
       err => {
-        console.log(err);
-        shareUtil.SendInternalErr(res, "Cannot create equation");
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
       }
     )
+
+  
+  
 }
 
 function deleteAllEquationWithInterval(req, res){
   var assetid = req.body.AssetID;
   var interval = req.body.Interval;
 
-  dataManage._getAllParameterByAssetIDPromise(assetid)
-    .then(
-      paralist => {
-        var filtered_list = paralist.filter(item => parseInt(item.Tag.split(":")[1]) === parseInt(interval));
+  _getAsset(assetid)
+  .then(
+    ret => {
+      var exists = false;
+      if (ret.Config)
+      {
+        if (ret.Config.TimeInterval)
+        {
+          if (ret.Config.TimeInterval.includes(interval))
+          {
+            exists = true;
+          }
+        }
+      }
 
-        //console.log(filtered_list);
+      if (exists)
+      {
+        Asset.findOneAndUpdate({AssetID: assetid},{
+          $pull:  {
+            "Config.TimeInterval": interval
+          }
+        },function(err,data) {
+          if (err) {
+            shareUtil.SendInternalErr(res, "cannot pull interval");
+          } else {
+            dataManage._getAllParameterByAssetIDPromise(assetid)
+              .then(
+                paralist => {
+                  var filtered_list = paralist.filter(item => parseInt(item.Tag.split(":")[1]) === parseInt(interval));
+
+                  //console.log(filtered_list);
+                  
+                  //shareUtil.SendSuccessWithData(res, filtered_list);
+                  Promise.all(filtered_list.map(item => parameterManage._removeParameter(assetid, null, item.ParameterID)))
+                    .then(
+                      ret => {
+                        shareUtil.SendSuccess(res);
+                      }
+                    )
+                    .catch(
+                      err => {
+                        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+                      }
+                    )
+                }
+              )
+              .catch(
+                err => {
+                  shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+                }
+              );
+          }
+        });
+      } else {
+        shareUtil.SendInvalidInput(res, "interval not exists");
         
-        //shareUtil.SendSuccessWithData(res, filtered_list);
-        Promise.all(filtered_list.map(item => parameterManage._removeParameter(assetid, null, item.ParameterID)))
-          .then(
-            ret => {
-              shareUtil.SendSuccess(res);
-            }
-          )
-          .catch(
-            err => {
-              shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
-            }
-          )
+      }
+    }
+  )
+  .catch(
+    err => {
+      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+    }
+  );
+
+
+
+  
+
+}
+
+function getAllTimeInterval(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+
+  _getAsset(assetid)
+    .then(
+      ret => {
+        if (ret.Config) {
+          if (ret.Config.TimeInterval)
+          {
+            shareUtil.SendSuccessWithData(res, ret.Config.TimeInterval);
+          } else {
+            shareUtil.SendSuccessWithData(res, []);
+          }
+        } else {
+          shareUtil.SendSuccessWithData(res, []);
+        }
       }
     )
     .catch(
@@ -884,28 +1011,68 @@ function deleteAllEquationWithInterval(req, res){
       }
     )
 
+  // dataManage._getAllParameterByAssetIDPromise(assetid)
+  //   .then(
+  //     ret => {
+  //       var timeinterval = [];
+  //       for (var i in ret) {
+  //         var ts = parseInt(ret[i].Tag.split(":")[1]);
+  //         if (typeof ts != 'undefined' && isNaN(ts) === false) {
+  //           if (timeinterval.includes(ts) === false)
+  //           {
+  //             timeinterval.push(ts);
+  //           }
+  //         }
+  //       }
+
+  //       shareUtil.SendSuccessWithData(res, timeinterval);
+  //     }
+  //   )
 }
 
-function getAllTimeInterval(req, res) {
-  var assetid = req.swagger.params.AssetID.value;
+function setTimerIntervalActiveForTag(req, res) {
+  var assetid = req.body.AssetID;
+  var tagName = req.body.TagName;
+  var equationName = req.body.AssignedTag;
+  var interval = req.body.Interval;
 
-  dataManage._getAllParameterByAssetIDPromise(assetid)
-    .then(
-      ret => {
-        var timeinterval = [];
-        for (var i in ret) {
-          var ts = parseInt(ret[i].Tag.split(":")[1]);
-          if (typeof ts != 'undefined' && isNaN(ts) === false) {
-            if (timeinterval.includes(ts) === false)
-            {
-              timeinterval.push(ts);
+  Asset.findOne({AssetID: assetid}, function(err,data){
+    if (err) {
+      shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+    } else {
+      if (data.Settings.Tags) {
+        var tags = data.Settings.Tags;
+        for(var i in tags) {
+          if (tags[i].TagName === tagName) {
+            // console.log(tags[i]);
+            
+            for (var j in tags[i].Data) {
+              if (tags[i].Data[j].AssignedTag === equationName) {
+                for (var k in tags[i].Data[j].ParameterList) {
+                  // console.log(tags[i].Data[j].ParameterList[k]);
+                  // console.log(typeof tags[i].Data[j].ParameterList[k]);
+                  if (tags[i].Data[j].ParameterList[k].Tag)
+                  {
+                    if (parseInt(tags[i].Data[j].ParameterList[k].Tag.split(":")[1]) === parseInt(interval))
+                    {
+                      tags[i].Data[j].ParameterList[k].Active = 1;
+                    } else {
+                      tags[i].Data[j].ParameterList[k].Active = 0;
+                    }
+                  }
+
+                }
+              }
             }
           }
         }
-
-        shareUtil.SendSuccessWithData(res, timeinterval);
+        data.save();
+        shareUtil.SendSuccess(res);
+      } else {
+        shareUtil.SendInternalErr(res, "no tags found");
       }
-    )
+    }
+  });
 }
 
 function _createSingleAsset(userid, singleAssetConfig) {
@@ -949,7 +1116,27 @@ function _createSingleAsset(userid, singleAssetConfig) {
           )
           .then(
             ret => {
-              console.log("create equation done");
+              console.log("create none interval equation done");
+
+              const _createEquationsWithInterval = async (assetid, equations, intervals) =>
+              {
+                  for (let i = 0; i < intervals.length; i++)
+                  {
+                    for (let j = 0; j < equations.length; j++) {
+                      // console.log("creating equation " + i + "," + JSON.stringify(equations[j],null,2) + ", interval=" + intervals[i]);
+                      let ret1 = await parameterManage._createEquationWithInterval(assetid, equations[j], intervals[i]);
+                    }
+                  }
+
+                  return assetid;
+              };
+
+              return _createEquationsWithInterval(ret, singleAssetConfig.Equations, singleAssetConfig.TimeInterval);
+            }
+          )
+          .then(
+            ret => {
+              console.log("create interval equation done");
 
               return dataManage._getAllParameterByAssetID(ret);
             }
@@ -957,17 +1144,29 @@ function _createSingleAsset(userid, singleAssetConfig) {
           .then(
             paralist => {
               var assetobj = {};
-              if (singleAssetConfig.Dashboard)
+              if (singleAssetConfig.DisplayTags)
               {
-                for(var i in singleAssetConfig.Dashboard) {
-                  for(var j in singleAssetConfig.Dashboard[i].Data) {
-                    if (singleAssetConfig.Dashboard[i].Data[j].AssignedTag) {
-                      var filterlist = paralist.filter(item => item.Tag === singleAssetConfig.Dashboard[i].Data[j].AssignedTag);
+                for(var i in singleAssetConfig.DisplayTags) {
+                  for(var j in singleAssetConfig.DisplayTags[i].Data) {
+                    if (singleAssetConfig.DisplayTags[i].Data[j].AssignedTag) {
+                      // var filterlist = paralist.filter(item => item.Tag.includes(singleAssetConfig.DisplayTags[i].Data[j].AssignedTag));
+                      var filterlist = paralist.filter(item => item.Tag.split(":")[0] === singleAssetConfig.DisplayTags[i].Data[j].AssignedTag);
                       if (filterlist.length > 0) {
-                        singleAssetConfig.Dashboard[i].Data[j].ParameterID = filterlist[0].ParameterID;
+                        
+                        singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];
+                        for(var k in filterlist)
+                        {
+                          var active = 0;
+                          if (k == 0)
+                          {
+                            active = 1;
+                          }
+                          singleAssetConfig.DisplayTags[i].Data[j].ParameterList.push({Tag: filterlist[k].Tag, ParameterID: filterlist[k].ParameterID, Active: active});
+                        }
                       } else {
-                        singleAssetConfig.Dashboard[i].Data[j].ParameterID = 'N/A';
+                        singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];
                       }
+                      
                     }
                   }
                 }
@@ -975,7 +1174,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
                 
                 assetobj.AssetID = assetid;
                 assetobj.Settings = {};
-                assetobj.Settings.Tags = singleAssetConfig.Dashboard;
+                assetobj.Settings.Tags = singleAssetConfig.DisplayTags;
                 return _updateAsset(assetobj);
               } else {
                 return assetid;

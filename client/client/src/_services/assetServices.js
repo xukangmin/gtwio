@@ -25,37 +25,59 @@ const getAssets = (user) => {
 }
 
 const _getSingleParameterCurrentValue = (dataObj) => {
+    return new Promise(
+      (resolve, reject) => {
+        if (dataObj.ParameterID == "N/A" || dataObj.ParameterID == "None" || dataObj.ParameterID == "Null")
+        {
+          dataObj.Value = "N/A";
+          resolve(dataObj);
+        } else {
+          parameterServices.getParameter(dataObj.ParameterID)
+            .then(ret => {
+              dataObj.Value  = ret.CurrentValue;
+              dataObj.Unit = ret.Unit;
+              if (ret.Range)
+              {
+                  dataObj.Range = ret.Range;
+              }
+              
+              resolve(dataObj);
+            })
+            .catch(
+              err => {
+                reject(err);
+              }
+            );
+        }
+      });
+  }
+
+const _getAllParameterCurrentValue = (tagdata) => {
   return new Promise(
     (resolve, reject) => {
-      if (dataObj.ParameterID == "N/A" || dataObj.ParameterID == "None" || dataObj.ParameterID == "Null")
-      {
-        dataObj.Value = "N/A";
-        resolve(dataObj);
-      } else {
-        parameterServices.getParameter(dataObj.ParameterID)
-          .then(ret => {
-            dataObj.Value  = ret.CurrentValue;
-            dataObj.Unit = ret.Unit;
-            if (ret.Range)
-            {
-                dataObj.Range = ret.Range;
-            }
-            
-              resolve(dataObj);
-          })
-          .catch(
-            err => {
-              reject(err);
-            }
-          );
-      }
+        if (tagdata.ParameterList.length > 0) {
+            Promise.all(tagdata.ParameterList.map(_getSingleParameterCurrentValue))
+                .then(
+                    ret => {
+                        tagdata.ParameterList = ret;
+                        resolve(tagdata);
+                    }
+                )
+                .catch(
+                    err => {
+                        reject(err);
+                    }
+                );
+        } else {
+            resolve([]);
+        }
     });
 }
 
 const _getSingleTag = (tag) => {
   return new Promise(
     (resolve, reject) => {
-      Promise.all(tag.Data.map(_getSingleParameterCurrentValue))
+      Promise.all(tag.Data.map(_getAllParameterCurrentValue))
         .then(
           ret => {
             tag.Data = ret;
@@ -442,6 +464,37 @@ const deleteTimeInterval = (assetID, interval) => {
     });
 }
 
+const setTimerIntervalActiveForTag = (assetID, tagName, assignedTag, interval) => {
+    let body = {
+      AssetID: assetID,
+      TagName: tagName,
+      AssignedTag: assignedTag,
+      Interval: interval
+    };
+    console.log(body);
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(process.env.API_HOST + '/asset/setTimerIntervalActiveForTag', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const assetServices = {
     getAssets,
     getAsset,
@@ -459,5 +512,6 @@ export const assetServices = {
     updateBaseline,
     getTimeIntervals,
     addTimeInterval,
-    deleteTimeInterval
+    deleteTimeInterval,
+    setTimerIntervalActiveForTag
 };

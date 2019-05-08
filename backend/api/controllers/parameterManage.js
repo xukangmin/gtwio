@@ -96,7 +96,7 @@ function _resolveSingleTagInAsset(assetid, paralist, tag) {
         
         if (filterlist.length === 0) {
           // create parameter with tag
-          console.log('create parameter with tag');
+          //console.log('create parameter with tag');
           
           var paraobj = {
             Tag: tag
@@ -235,9 +235,10 @@ function _createEquation(assetid, paraobj) {
     });
 }
 
-function _createEquationWithInterval(assetid, paraobj, interval) {
+function _createEquationWithInterval(assetid, inparaobj, interval) {
   return new Promise(
     (resolve, reject) => {
+      let paraobj = Object.assign({}, inparaobj);
       if (paraobj.Name && paraobj.Equation && paraobj.Tag && (paraobj.Equation.includes("INTERVAL") || paraobj.Tag.includes("INTERVAL")))  {
 
         paraobj.Equation = paraobj.Equation.replace(/INTERVAL/ig, interval.toString());

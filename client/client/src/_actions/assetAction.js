@@ -349,6 +349,25 @@ const deleteTimeInterval = (assetID, interval) => {
     function failure(error) { return { type: gConstants.DELETE_TIME_INTERVAL_FAILURE, error } }
 }
 
+
+const setTimerIntervalActiveForTag = (assetID, tagName, assignedTag, interval) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.setTimerIntervalActiveForTag(assetID, tagName, assignedTag, interval)
+            .then(
+                info => {
+                    dispatch(success(info));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.UPDATE_TAG_TIME_INTERVAL_REQUEST } }
+    function success(msg) { return { type: gConstants.UPDATE_TAG_TIME_INTERVAL_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.UPDATE_TAG_TIME_INTERVAL_FAILURE, error } }
+}
 export const assetActions = {
     getAssets,
     getAsset,
@@ -366,5 +385,6 @@ export const assetActions = {
     updateBaseline,
     getTimeIntervals,
     addTimeInterval,
-    deleteTimeInterval
+    deleteTimeInterval,
+    setTimerIntervalActiveForTag
 };

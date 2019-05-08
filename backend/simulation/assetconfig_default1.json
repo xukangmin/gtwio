@@ -530,7 +530,7 @@
         "Parameters": ["FlowRate"]
       }
     ],
-    "Dashboard": 
+    "DisplayTags": 
     [
       {
         "TagName": "ShellInlet",
@@ -593,7 +593,9 @@
           }
         ]
       }
-    ]
+    ],
+    "TimeInterval":
+    [600000, 1800000]
 
   }
 ]

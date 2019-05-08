@@ -348,6 +348,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/setTimerIntervalActiveForTag:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: set baseline active
+      # used as the method name of the controller
+      operationId: setTimerIntervalActiveForTag
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/BaselineModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/getConfigByAssetID:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

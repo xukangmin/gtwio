@@ -760,17 +760,23 @@ function _getAllParameterByAssetIDPromise(assetid) {
             if (err) {
               reject(err);
             } else {
-              if (data.Parameters) {
-                Promise.all(data.Parameters.map(_getParameter))
-                  .then(ret => {
-                    resolve(ret);
-                  })
-                  .catch(err => {
-                    reject(err);
-                  });
+              if (data)
+              {
+                if (data.Parameters) {
+                  Promise.all(data.Parameters.map(_getParameter))
+                    .then(ret => {
+                      resolve(ret);
+                    })
+                    .catch(err => {
+                      reject(err);
+                    });
+                } else {
+                  resolve([]);
+                }
               } else {
                 resolve([]);
               }
+
 
             }
           });
@@ -785,11 +791,17 @@ function _getAllDeviceByAssetID(assetid) {
             if (err) {
               reject(err);
             } else {
-              if (data.Devices) {
-                resolve(data.Devices);
+              if (data)
+              {
+                if (data.Devices) {
+                  resolve(data.Devices);
+                } else {
+                  resolve([]);
+                }
               } else {
                 resolve([]);
               }
+              
 
             }
           });

@@ -22,8 +22,8 @@ const AssetSchema = new Schema(
             [
               { 
                 Name: String, 
-                ParameterID: String, 
-                AssignedTag: String
+                AssignedTag: String,
+                ParameterList: [{Tag: String, ParameterID: String, Active: Number}]
               }
             ]
         }

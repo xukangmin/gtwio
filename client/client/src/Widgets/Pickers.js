@@ -14,6 +14,7 @@ const { RangePicker } = DatePicker;
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import { BaselinePicker } from './BaselinePicker.js';
+import { IntervalPicker } from './IntervalPicker.js';
 
 class Pickers extends React.Component {
     constructor(props) {
@@ -135,7 +136,9 @@ class Pickers extends React.Component {
 
       let liveDispatchInterval = 60*1000;
       if (asset) {
+        console.log('dispatch pickers')
         this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
+        this.props.dispatch(assetActions.getTimeIntervals(asset));
       }
 
       if (asset && device)
@@ -226,8 +229,12 @@ class Pickers extends React.Component {
             }
             <i className="fas fa-angle-down ml-3"></i>
           </Button>          
-          {this.props.assetData && this.props.assetTimeRange &&
-           <BaselinePicker data={this.props.assetData} range={this.props.assetTimeRange}/>
+          {this.props.assetData && this.props.assetTimeIntervals && this.props.assetTimeRange &&
+            <div style={{display: 'inline-block'}}>
+              <BaselinePicker data={this.props.assetData} range={this.props.assetTimeRange}/>
+              <IntervalPicker asset={this.props.assetData} data={this.props.assetTimeIntervals} range={this.props.assetTimeRange}/>
+            </div>
+           
           }               
           <Modal isOpen={this.state.rangeModalOpen} toggle={this.rangeModalToggle} backdrop={false} style={{maxWidth: "450px"}}>
             <ModalHeader toggle={this.rangeModalToggle}>Data Time Range Setting</ModalHeader>
@@ -310,9 +317,11 @@ class Pickers extends React.Component {
 
 function mapStateToProps(state) {
   const { data } = state.asset;
+  console.log(state.asset)
   return {
     assetData: data,
-    assetTimeRange: state.asset.timeRange
+    assetTimeRange: state.asset.timeRange,
+    assetTimeIntervals: state.asset.timeIntervals
   };
 }
 

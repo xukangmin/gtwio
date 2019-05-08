@@ -290,6 +290,65 @@ const updateBaseline = (user, assetID, data) => {
     function failure(error) { toastr.warning("Failed to Update Baseline"); return { type: gConstants.UPDATE_BASELINE_FAILURE, error } }
 }
 
+const getTimeIntervals = (assetID) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.getTimeIntervals(assetID)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_TIME_INTERVALS_REQUEST } }
+    function success(data) { return { type: gConstants.GET_TIME_INTERVALS_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_TIME_INTERVALS_FAILURE, error } }
+}
+
+const addTimeInterval = (assetID, interval) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.addTimeInterval(assetID, interval)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getTimeIntervals(assetID));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.ADD_TIME_INTERVAL_REQUEST } }
+    function success(msg) { return { type: gConstants.ADD_TIME_INTERVAL_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.ADD_TIME_INTERVAL_FAILURE, error } }
+}
+
+const deleteTimeInterval = (assetID, interval) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.deleteTimeInterval(assetID, interval)
+            .then(
+                info => {
+                    dispatch(success(info));
+                    dispatch(getTimeIntervals(assetID));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+    function request() { return { type: gConstants.DELETE_TIME_INTERVAL_REQUEST } }
+    function success(msg) { return { type: gConstants.DELETE_TIME_INTERVAL_SUCCESS, msg } }
+    function failure(error) { return { type: gConstants.DELETE_TIME_INTERVAL_FAILURE, error } }
+}
+
 export const assetActions = {
     getAssets,
     getAsset,
@@ -304,5 +363,8 @@ export const assetActions = {
     getBaselines,
     addBaseline,
     deleteBaseline,
-    updateBaseline
+    updateBaseline,
+    getTimeIntervals,
+    addTimeInterval,
+    deleteTimeInterval
 };

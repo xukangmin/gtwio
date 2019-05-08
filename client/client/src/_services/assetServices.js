@@ -368,6 +368,80 @@ const updateBaseline = (assetID, data) => {
     });
 }
 
+const getTimeIntervals = (assetID) => {
+    const requestOptions = {
+        headers: { 'Content-Type': 'application/json'},
+        method: 'GET'
+    };
+    return fetch(process.env.API_HOST + '/asset/getAllTimeInterval?AssetID=' + assetID, requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    });
+}
+
+const addTimeInterval = (assetID, interval) => {
+    let data = {
+        AssetID: assetID,
+        Interval: interval
+    }
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    };
+    return fetch(process.env.API_HOST + '/asset/createAllEquationWithInterval', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(data => {
+        return data;
+    });
+}
+
+const deleteTimeInterval = (assetID, interval) => {
+
+    let body = {
+        AssetID: assetID,
+        Interval: interval
+    };
+      console.log(body);
+      const requestOptions = {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json'
+                   },
+          body: JSON.stringify(body)
+      };
+
+    return fetch(process.env.API_HOST + '/asset/deleteAllEquationWithInterval', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 export const assetServices = {
     getAssets,
     getAsset,
@@ -382,5 +456,8 @@ export const assetServices = {
     getBaselines,
     addBaseline,
     deleteBaseline,
-    updateBaseline
+    updateBaseline,
+    getTimeIntervals,
+    addTimeInterval,
+    deleteTimeInterval
 };

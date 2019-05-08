@@ -127,6 +127,20 @@ export const asset = (state = {}, action) => {
             error: action.error
         };
 
+    case gConstants.GET_TIME_INTERVALS_REQUEST:
+        return {
+            ...state,
+            gettingAsset: true
+        };
+    case gConstants.GET_TIME_INTERVALS_SUCCESS:
+        return {
+            ...state,
+            timeIntervals: action.data
+        };
+    case gConstants.GET_TIME_INTERVALS_FAILURE:
+        return {
+            error: action.error
+        };
 
     default:
         return state;

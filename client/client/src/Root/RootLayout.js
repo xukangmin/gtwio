@@ -86,7 +86,7 @@ class RootLayout extends Component {
               <SubMenu
                 key="sub-1"
                 title={<span><Icon type="bars" /><span>Assets</span></span>}>
-                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
+                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID+index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
                 :<Loader/>}
               </SubMenu>
               

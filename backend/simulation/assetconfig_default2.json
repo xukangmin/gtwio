@@ -656,7 +656,7 @@
         "Parameters": ["FlowRate"]
       }
     ],
-    "Dashboard": 
+    "DisplayTags": 
     [
       {
         "TagName": "ShellInlet",
@@ -706,7 +706,7 @@
         "TagName": "ProgressBars",
         "Data": [
           {
-            "Name": "Cleanliness Factor ",
+            "Name": "Cleanliness Factor",
             "AssignedTag": "CLEANLINESS_FACTOR"
           },
           {
@@ -732,6 +732,8 @@
 
         ]
       }
-    ]
+    ],
+    "TimeInterval":
+    [600000, 1800000]
   }
 ]

@@ -47,14 +47,15 @@ class IntervalPicker extends React.Component {
     addInterval(){     
       
       var newInterval = prompt("Please enter an interval (min)");
-      // if(typeof(newInterval)=='number'){
+      console.log(typeof(newInterval))
+      if(!isNaN(newInterval)){
         let Intervals = this.state.Intervals;
         Intervals.push(newInterval);
         this.setState({
           Intervals: Intervals
         });
         this.props.dispatch(assetActions.addTimeInterval(this.asset, parseInt(newInterval)*60*1000));
-      // };
+      };
       
     }
 
@@ -130,21 +131,8 @@ class IntervalPicker extends React.Component {
                       <tbody>                      
                       {this.state.Intervals.map((x,i) =>
                       <tr key={i}>
-                        <th scope = "row" className="p-1">
-                          <Row>
-                            <Col sm="8" style={{display: "none"}}>
-                              <Slider 
-                                defaultValue={this.state.Intervals[i]} 
-                                min={1}
-                                max={60}
-                                onChange={(t)=>this.updateIntervalState(t, i)}
-                                onAfterChange={(t)=>this.updateInterval(t, i)}
-                              />
-                            </Col>
-                            <Col sm="4" className="pt-2" style={{textAlign: "center"}}>
-                              <span>{this.state.Intervals[i] + (this.state.Intervals[i] == 1 ? " min" : " mins")}</span>
-                            </Col>
-                          </Row>  
+                        <th scope = "row" className="p-1">                          
+                          <span>{this.state.Intervals[i] + (this.state.Intervals[i] == 1 ? " min" : " mins")}</span>
                         </th>
                         <th className="p-1">
                           <Button color="danger" title="delete this Interval" onClick={()=>this.deleteInterval(i)}><i className ="fas fa-trash"></i></Button>
@@ -159,8 +147,7 @@ class IntervalPicker extends React.Component {
             </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" name="apply" onClick={e=>this.handleIntervalApply(e)}>Confirm</Button>
-              <Button color="secondary" name="cancel" onClick={e=>this.handleIntervalApply(e)}>Cancel</Button>
+              <Button color="secondary" name="cancel" onClick={e=>this.handleIntervalApply(e)}>Close</Button>
             </ModalFooter>
           </Modal>   
         </div>

@@ -32,7 +32,7 @@
 	.arrow{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
 	.st18{fill:#FF8080;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st19{fill:#3F0700;}
-	.st20{fill:white;font-size:20px;}
+	.st20{fill:white;font-size:16px;}
 	.st21{fill:#3C94FA;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st22{fill:none;stroke:#FFFFFF;stroke-width:1.6908;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6908,5.0725;}
 	.st23{opacity:0.44;fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}

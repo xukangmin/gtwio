@@ -24,7 +24,8 @@ var functions = {
   deleteBaselineByAssetID: deleteBaselineByAssetID,
   setBaselineActive: setBaselineActive,
   updateBaseline: updateBaseline,
-  getAssetTimeRange: getAssetTimeRange
+  getAssetTimeRange: getAssetTimeRange,
+  setTimerIntervalActiveForTag: setTimerIntervalActiveForTag
 };
 
 for (var key in functions) {
@@ -1029,6 +1030,51 @@ function getAllTimeInterval(req, res) {
   //   )
 }
 
+function setTimerIntervalActiveForTag(req, res) {
+  var assetid = req.body.AssetID;
+  var tagName = req.body.TagName;
+  var equationName = req.body.AssignedTag;
+  var interval = req.body.Interval;
+
+  Asset.findOne({AssetID: assetid}, function(err,data){
+    if (err) {
+      shareUtil.SendInternalErr(res, JSON.stringify(err,null,2));
+    } else {
+      if (data.Settings.Tags) {
+        var tags = data.Settings.Tags;
+        for(var i in tags) {
+          if (tags[i].TagName === tagName) {
+            // console.log(tags[i]);
+            
+            for (var j in tags[i].Data) {
+              if (tags[i].Data[j].AssignedTag === equationName) {
+                for (var k in tags[i].Data[j].ParameterList) {
+                  // console.log(tags[i].Data[j].ParameterList[k]);
+                  // console.log(typeof tags[i].Data[j].ParameterList[k]);
+                  if (tags[i].Data[j].ParameterList[k].Tag)
+                  {
+                    if (parseInt(tags[i].Data[j].ParameterList[k].Tag.split(":")[1]) === parseInt(interval))
+                    {
+                      tags[i].Data[j].ParameterList[k].Active = 1;
+                    } else {
+                      tags[i].Data[j].ParameterList[k].Active = 0;
+                    }
+                  }
+
+                }
+              }
+            }
+          }
+        }
+        data.save();
+        shareUtil.SendSuccess(res);
+      } else {
+        shareUtil.SendInternalErr(res, "no tags found");
+      }
+    }
+  });
+}
+
 function _createSingleAsset(userid, singleAssetConfig) {
   return new Promise(
     (resolve, reject) => {
@@ -1103,13 +1149,19 @@ function _createSingleAsset(userid, singleAssetConfig) {
                 for(var i in singleAssetConfig.DisplayTags) {
                   for(var j in singleAssetConfig.DisplayTags[i].Data) {
                     if (singleAssetConfig.DisplayTags[i].Data[j].AssignedTag) {
-                      var filterlist = paralist.filter(item => item.Tag.includes(singleAssetConfig.DisplayTags[i].Data[j].AssignedTag));
+                      // var filterlist = paralist.filter(item => item.Tag.includes(singleAssetConfig.DisplayTags[i].Data[j].AssignedTag));
+                      var filterlist = paralist.filter(item => item.Tag.split(":")[0] === singleAssetConfig.DisplayTags[i].Data[j].AssignedTag);
                       if (filterlist.length > 0) {
                         
                         singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];
                         for(var k in filterlist)
                         {
-                          singleAssetConfig.DisplayTags[i].Data[j].ParameterList.push({Tag: filterlist[k].Tag, ParameterID: filterlist[k].ParameterID});
+                          var active = 0;
+                          if (k == 0)
+                          {
+                            active = 1;
+                          }
+                          singleAssetConfig.DisplayTags[i].Data[j].ParameterList.push({Tag: filterlist[k].Tag, ParameterID: filterlist[k].ParameterID, Active: active});
                         }
                       } else {
                         singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];

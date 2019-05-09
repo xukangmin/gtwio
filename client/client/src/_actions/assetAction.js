@@ -36,7 +36,7 @@ const getAsset = (user, assetID) => {
                       dispatch(success_tag(tags));
                     },
                     error => {
-                      dispatch(failure(error));
+                      dispatch(failure1(error));
                     }
                   );
               }
@@ -51,6 +51,7 @@ const getAsset = (user, assetID) => {
     function request() { return { type: gConstants.GET_ASSET_REQUEST } }
     function success(data) { return { type: gConstants.GET_ASSET_SUCCESS, data } }
     function failure(error) { return { type: gConstants.GET_ASSET_FAILURE, error } }
+    function failure1(error) { return { type: gConstants.GET_ASSET_TAG_FAILURE, error } }
     function success_tag(data) { return {type: gConstants.GET_ASSET_TAG_SUCCESS, data } }
 }
 
@@ -325,7 +326,7 @@ const addTimeInterval = (assetID, interval) => {
     }
 
     function request() { return { type: gConstants.ADD_TIME_INTERVAL_REQUEST } }
-    function success(msg) { return { type: gConstants.ADD_TIME_INTERVAL_SUCCESS, msg } }
+    function success(msg) { toastr.success("Interval added."); return { type: gConstants.ADD_TIME_INTERVAL_SUCCESS, msg } }
     function failure(error) { return { type: gConstants.ADD_TIME_INTERVAL_FAILURE, error } }
 }
 
@@ -345,7 +346,7 @@ const deleteTimeInterval = (assetID, interval) => {
     }
 
     function request() { return { type: gConstants.DELETE_TIME_INTERVAL_REQUEST } }
-    function success(msg) { return { type: gConstants.DELETE_TIME_INTERVAL_SUCCESS, msg } }
+    function success(msg) { toastr.success("Interval deleted."); return { type: gConstants.DELETE_TIME_INTERVAL_SUCCESS, msg } }
     function failure(error) { return { type: gConstants.DELETE_TIME_INTERVAL_FAILURE, error } }
 }
 

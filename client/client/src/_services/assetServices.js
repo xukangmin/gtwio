@@ -93,12 +93,7 @@ const _getSingleTag = (tag) => {
 }
 
 const getDataByTagList = (tagList) => {
-  return Promise.all(tagList.map(_getSingleTag))
-    .then(
-      ret => {
-        return ret;
-      }
-    )
+  return Promise.all(tagList.map(_getSingleTag));
 }
 
 const getAsset = (user, assetID) => {

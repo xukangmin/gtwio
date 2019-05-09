@@ -94,7 +94,7 @@ class BaselinePicker extends React.Component {
       } else if (e.target.name == "cancel"){
         this.setState({
           baselines: this.baselines,
-          activeBaseline: this.baselines.findIndex(x=>x.Active==1)
+          activeBaseline: this.baselines.findIndex(x=>x.Active==1) ? this.baselines.findIndex(x=>x.Active==1) : -1
         });
       }
     }

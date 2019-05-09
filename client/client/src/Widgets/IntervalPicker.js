@@ -36,19 +36,19 @@ class IntervalPicker extends React.Component {
     }
 
     deleteInterval(i){  
+      let toDelete = this.state.Intervals[i]
       let newIntervals = this.state.Intervals;
-      delete newIntervals[i];
+      newIntervals.splice(i,1);
       this.setState({
         Intervals: newIntervals
       });
-      this.props.dispatch(assetActions.deleteTimeInterval(this.asset, this.state.Intervals[i]*60*1000))
+      console.log(this.state.Intervals)
+      this.props.dispatch(assetActions.deleteTimeInterval(this.asset, toDelete*60*1000));
     }
 
     addInterval(){     
-      
-      var newInterval = prompt("Please enter an interval (min)");
-      console.log(typeof(newInterval))
-      if(!isNaN(newInterval)){
+      var newInterval = prompt("Please enter a new interval (1 ~ 60 min)");
+      if(newInterval && !isNaN(newInterval) && 1<=newInterval<=60 && !this.state.Intervals.find(i=>i==newInterval)){
         let Intervals = this.state.Intervals;
         Intervals.push(newInterval);
         this.setState({
@@ -111,7 +111,7 @@ class IntervalPicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.IntervalModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Intervals
+            Intervals: {this.state.Intervals.length ? this.state.Intervals.toString() + "(min)" : "N/A"} 
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 

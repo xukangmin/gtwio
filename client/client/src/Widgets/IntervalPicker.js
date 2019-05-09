@@ -42,7 +42,6 @@ class IntervalPicker extends React.Component {
       this.setState({
         Intervals: newIntervals
       });
-      console.log(this.state.Intervals)
       this.props.dispatch(assetActions.deleteTimeInterval(this.asset, toDelete*60*1000));
     }
 
@@ -111,7 +110,7 @@ class IntervalPicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.IntervalModalToggle} className="btn-light" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-clock mr-2"></i>
-            Intervals: {this.state.Intervals.length ? this.state.Intervals.toString() + "(min)" : "N/A"} 
+            Intervals: {this.state.Intervals.length ? this.state.Intervals.toString() + "  (min)" : "N/A"} 
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 

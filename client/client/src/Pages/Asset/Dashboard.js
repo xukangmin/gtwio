@@ -5,8 +5,10 @@ import { Row } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import HxSvg from 'raw-loader!../../Images/Hx.svg';
 import Loader from '../../Widgets/Loader';
-import { Progress, Icon } from 'antd';
+import { Progress, Icon, Button } from 'antd';
+const ButtonGroup = Button.Group;
 import '../../Root/antd.css';
+import { assetActions } from '../../_actions/assetAction';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class Dashboard extends React.Component {
 
     this.HandleText = this.HandleText.bind(this);  
     this.HandleTitle = this.HandleTitle.bind(this);  
+    this.updateInterval = this.updateInterval.bind(this);
   }  
 
   render() {
@@ -30,9 +33,9 @@ class Dashboard extends React.Component {
     if (assetTags){
       if (assetTags.find(tag => tag.TagName == "ProgressBars")){
         progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
-        cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
-        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
-        heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
+        cleanliness = progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR") && progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
+        heatFlow = progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE") && progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
+        heatBalanceError = progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR") && progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
       }      
     }
 
@@ -62,8 +65,11 @@ class Dashboard extends React.Component {
                     percent={cleanliness.Range ? ((cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100 : 0} 
                     format={()=>!isNaN(cleanliness.Value) ? cleanliness.Value.toFixed(2) : "N/A"} /> 
                     <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}</p>
-                    <p style={{position: "relative", top: "-30"}}><strong>Cleanliness Factor</strong></p>
+                    <p style={{position: "relative", top: "5"}}><strong>Cleanliness Factor</strong></p>
                   </a>
+                  <ButtonGroup style={{position: "relative", top: "-60"}}>
+                      {progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.map((x,i)=><Button onClick={()=>this.updateInterval('CLEANLINESS', x.Tag.split(':')[1])} key={i} size="small" type={x.Active == 1 ? 'primary' : 'default'}>{parseInt(x.Tag.split(':')[1])/60/1000 +" min"}</Button>)}
+                  </ButtonGroup>
                 </div>                
               }
               { heatFlow &&
@@ -75,10 +81,12 @@ class Dashboard extends React.Component {
                     width={140} 
                     percent={heatFlow.Range ? ((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100 : 0} 
                     format={()=>!isNaN(heatFlow.Value) ? parseInt(heatFlow.Value).toLocaleString('en') : "N/A"} /> 
-                    
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value).toLocaleString('en')}</p>
-                    <p style={{position: "relative", top: "-30"}}><strong>Heat Transfer Rate<br/>(btu/hr)</strong></p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value).toLocaleString('en')}</p>   
+                    <p style={{position: "relative", top: "6"}}><strong>Heat Transfer Rate<br/>(btu/hr)</strong></p>
                   </a>
+                  <ButtonGroup style={{position: "relative", top: "-80"}}>
+                    {progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.map((x,i)=><Button onClick={()=>this.updateInterval('HEAT_TRANSFER_RATE', x.Tag.split(':')[1])} key={i} size="small" type={x.Active == 1 ? 'primary' : 'default'}>{parseInt(x.Tag.split(':')[1])/60/1000 +" min"}</Button>)}
+                  </ButtonGroup>
                 </div>                
               }
               { heatBalanceError &&
@@ -93,8 +101,11 @@ class Dashboard extends React.Component {
                     status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
                     <p style={{position: "absolute", top: "0", right: "20", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
                     <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}%</p>
-                    <p style={{position: "absolute", top: "135", left: "0", right: "0"}}><strong>Heat Balance Error</strong></p>
+                    <p style={{position: "absolute", top: "170", left: "0", right: "0"}}><strong>Heat Balance Error</strong></p>
                   </a>
+                  <ButtonGroup style={{position: "relative", top: "-25"}}>
+                    {progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.map((x,i)=><Button onClick={()=>this.updateInterval('HEAT_BALANCE', x.Tag.split(':')[1])} key={i} size="small" type={x.Active == 1 ? 'primary' : 'default'}>{parseInt(x.Tag.split(':')[1])/60/1000 +" min"}</Button>)}
+                  </ButtonGroup>
                 </div>                
               }
               </div>              
@@ -132,6 +143,20 @@ class Dashboard extends React.Component {
 
   HandleTitle(assetData){
     document.getElementById("asset_name").innerHTML = assetData.DisplayName;
+  }
+
+  updateInterval(assignedTag, interval){
+    if (assignedTag == "CLEANLINESS"){
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "CLEANLINESS_FACTOR", interval));
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "CLEANLINESS_FACTOR_UNCERTAINTY", interval));
+    } else if (assignedTag == "HEAT_TRANSFER_RATE"){
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "HEAT_TRANSFER_RATE", interval));
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "HEAT_TRANSFER_RATE_UNCERTAINTY", interval));
+    } else if (assignedTag == "HEAT_BALANCE"){
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "HEAT_BALANCE_ERROR", interval));
+      this.props.dispatch(assetActions.setTimerIntervalActiveForTag(this.asset, "ProgressBars", "UNCERTAINTY_HBE", interval));
+    } 
+    window.location.reload();  
   }
 }
 

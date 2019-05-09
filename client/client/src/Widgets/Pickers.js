@@ -317,7 +317,6 @@ class Pickers extends React.Component {
 
 function mapStateToProps(state) {
   const { data } = state.asset;
-  console.log(state.asset)
   return {
     assetData: data,
     assetTimeRange: state.asset.timeRange,

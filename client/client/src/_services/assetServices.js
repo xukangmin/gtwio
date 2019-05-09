@@ -93,6 +93,8 @@ const _getSingleTag = (tag) => {
 }
 
 const getDataByTagList = (tagList) => {
+    console.log(tagList);
+    
   return Promise.all(tagList.map(_getSingleTag));
 }
 

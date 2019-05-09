@@ -25,7 +25,8 @@ var functions = {
   setBaselineActive: setBaselineActive,
   updateBaseline: updateBaseline,
   getAssetTimeRange: getAssetTimeRange,
-  setTimerIntervalActiveForTag: setTimerIntervalActiveForTag
+  setTimerIntervalActiveForTag: setTimerIntervalActiveForTag,
+  getAssetConfig: getAssetConfig
 };
 
 for (var key in functions) {
@@ -884,7 +885,18 @@ function createAllEquationWithInterval(req, res)
                 _createEquations(assetid, ret.Config.Equations, interval)
                 .then(
                   ret => {
-                    shareUtil.SendSuccess(res);
+                    console.log("update_asset_display_tags");
+                    _updateAssetDisplayTags(assetid)
+                      .then(
+                        ret => {
+                          shareUtil.SendSuccess(res);
+                        }
+                      )
+                      .catch(
+                        err => {
+                          shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+                        }
+                      );
                   }
                 )
                 .catch(
@@ -952,7 +964,17 @@ function deleteAllEquationWithInterval(req, res){
                   Promise.all(filtered_list.map(item => parameterManage._removeParameter(assetid, null, item.ParameterID)))
                     .then(
                       ret => {
-                        shareUtil.SendSuccess(res);
+                        _updateAssetDisplayTags(assetid)
+                          .then(
+                            ret => {
+                              shareUtil.SendSuccess(res);
+                            }
+                          )
+                          .catch(
+                            err => {
+                              shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+                            }
+                          );
                       }
                     )
                     .catch(
@@ -1073,6 +1095,74 @@ function setTimerIntervalActiveForTag(req, res) {
       }
     }
   });
+}
+
+function _updateAssetDisplayTags(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      var singleAssetConfig;
+      _getAsset(assetid)
+        .then(
+          ret => {
+            singleAssetConfig = ret.Config;
+            dataManage._getAllParameterByAssetID(assetid)
+              .then(
+                paralist => {
+                  var assetobj = {};
+
+                  for(var i in singleAssetConfig.DisplayTags) {
+                    for(var j in singleAssetConfig.DisplayTags[i].Data) {
+                      if (singleAssetConfig.DisplayTags[i].Data[j].AssignedTag) {
+                        // var filterlist = paralist.filter(item => item.Tag.includes(singleAssetConfig.DisplayTags[i].Data[j].AssignedTag));
+                        var filterlist = paralist.filter(item => item.Tag.split(":")[0] === singleAssetConfig.DisplayTags[i].Data[j].AssignedTag);
+                        if (filterlist.length > 0) {
+                          
+                          singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];
+                          for(var k in filterlist)
+                          {
+                            var active = 0;
+                            if (k == 0)
+                            {
+                              active = 1;
+                            }
+                            singleAssetConfig.DisplayTags[i].Data[j].ParameterList.push({Tag: filterlist[k].Tag, ParameterID: filterlist[k].ParameterID, Active: active});
+                          }
+                        } else {
+                          singleAssetConfig.DisplayTags[i].Data[j].ParameterList = [];
+                        }
+                        
+                      }
+                    }
+                  }
+    
+                  
+                  assetobj.AssetID = assetid;
+                  assetobj.Settings = {};
+                  assetobj.Settings.Tags = singleAssetConfig.DisplayTags;
+                  _updateAsset(assetobj)
+                    .then(ret => {
+                      resolve();
+                    })
+                    .catch(err => {
+                      reject(err);
+                    })
+
+                }
+              )
+              .catch(
+                err => {
+                  reject(err);
+                }
+              );
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        );
+     
+    });
 }
 
 function _createSingleAsset(userid, singleAssetConfig) {
@@ -1280,4 +1370,21 @@ function createAssetByConfig(req, res) {
       shareUtil.SendInvalidInput(res, msg);
     }
   }
+}
+
+
+function getAssetConfig(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+
+  Asset.findOne({AssetID: assetid},(err,data) => {
+    if (err) {
+      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+    } else {
+      if (data) {
+        shareUtil.SendSuccessWithData(res, data.Config);
+      } else {
+        shareUtil.SendInvalidInput(res, "asset not found");
+      }
+    }
+  });
 }

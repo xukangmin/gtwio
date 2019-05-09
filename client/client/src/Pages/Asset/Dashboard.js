@@ -30,9 +30,9 @@ class Dashboard extends React.Component {
     if (assetTags){
       if (assetTags.find(tag => tag.TagName == "ProgressBars")){
         progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
-        cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR");
-        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE");
-        heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR");
+        cleanliness = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
+        heatFlow = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
+        heatBalanceError = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
       }      
     }
 
@@ -52,7 +52,7 @@ class Dashboard extends React.Component {
             </Samy>
             <Row>
               <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
-              { !cleanliness &&
+              { cleanliness &&
                 <div style={{width: "200px"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.ParameterID}>
                     <Progress 
@@ -60,13 +60,13 @@ class Dashboard extends React.Component {
                     strokeLinecap="square"
                     width={140}
                     percent={cleanliness.Range ? ((cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100 : 0} 
-                    format={()=>cleanliness.Value ? cleanliness.Value.toFixed(2) : "N/A"} /> 
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").Value.toFixed(2)}</p>
-                    <p style={{position: "relative", top: "-30"}}><strong>{cleanliness.Name}</strong></p>
+                    format={()=>!isNaN(cleanliness.Value) ? cleanliness.Value.toFixed(2) : "N/A"} /> 
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}</p>
+                    <p style={{position: "relative", top: "-30"}}><strong>Cleanliness Factor</strong></p>
                   </a>
                 </div>                
               }
-              { !heatFlow &&
+              { heatFlow &&
                 <div style={{width: "200px"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.ParameterID}>
                     <Progress 
@@ -74,14 +74,14 @@ class Dashboard extends React.Component {
                     strokeLinecap="square"
                     width={140} 
                     percent={heatFlow.Range ? ((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100 : 0} 
-                    format={()=>heatFlow.Value ? parseInt(heatFlow.Value).toLocaleString('en') : "N/A"} /> 
+                    format={()=>!isNaN(heatFlow.Value) ? parseInt(heatFlow.Value).toLocaleString('en') : "N/A"} /> 
                     
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").Value).toLocaleString('en')}</p>
-                    <p style={{position: "relative", top: "-30"}}><strong>{heatFlow.Name}<br/>(btu/hr)</strong></p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value).toLocaleString('en')}</p>
+                    <p style={{position: "relative", top: "-30"}}><strong>Heat Transfer Rate<br/>(btu/hr)</strong></p>
                   </a>
                 </div>                
               }
-              { !heatBalanceError &&
+              { heatBalanceError &&
                 <div style={{width: "200px", position: "relative"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.ParameterID}>
                     <Progress 
@@ -89,11 +89,11 @@ class Dashboard extends React.Component {
                     strokeLinecap="square"
                     width={140}
                     percent={heatBalanceError.Range ? ((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100 : 0} 
-                    format={()=>heatBalanceError.Value ? heatBalanceError.Value.toFixed(2) + "%" : "N/A"} 
+                    format={()=>!isNaN(heatBalanceError.Value) ? heatBalanceError.Value.toFixed(2) + "%" : "N/A"} 
                     status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
-                    <p style={{position: "absolute", top: "0", right: "20", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value.toFixed(2)}%</p>
-                    <p style={{position: "absolute", top: "135", left: "0", right: "0"}}><strong>{heatBalanceError.Name}</strong></p>
+                    <p style={{position: "absolute", top: "0", right: "20", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "1.5em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}%</p>
+                    <p style={{position: "absolute", top: "135", left: "0", right: "0"}}><strong>Heat Balance Error</strong></p>
                   </a>
                 </div>                
               }
@@ -109,8 +109,8 @@ class Dashboard extends React.Component {
   }
 
   HandleText(elem, tag){
-    var temp_obj = tag.Data.find(item => item.Name === "Temperature");
-    var flow_obj = tag.Data.find(item => item.Name === "FlowRate");
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature").ParameterList.find(active=>active.Active==1);
+    var flow_obj = tag.Data.find(item => item.Name === "FlowRate") && tag.Data.find(item => item.Name === "FlowRate").ParameterList.find(active=>active.Active==1);
 
     if (temp_obj && typeof temp_obj.Value == 'number') {
       elem.children[0].innerHTML = temp_obj.Value.toFixed(2);

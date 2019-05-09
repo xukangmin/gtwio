@@ -32,7 +32,7 @@
 	.arrow{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
 	.st18{fill:#FF8080;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st19{fill:#3F0700;}
-	.st20{fill:white;font-size:16px;}
+	.st20{fill:white;font-size:20px;}
 	.st21{fill:#3C94FA;stroke:#fff;stroke-width:2.574;stroke-linecap:round;enable-background:new    ;}
 	.st22{fill:none;stroke:#FFFFFF;stroke-width:1.6908;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.6908,5.0725;}
 	.st23{opacity:0.44;fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.691;stroke-linecap:round;stroke-linejoin:round;}
@@ -56,15 +56,15 @@
 	<inkscape:path-effect  effect="spiro" id="path-effect4288-8-7" is_visible="true"></inkscape:path-effect>
 </defs>
 
-<path id="path6736" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="pink" d="
+<path id="path6736" transform="matrix(1 0 0 1 10 0)" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="pink" d="
 	M586.3,136c-47.3,0-85.7,37.4-85.7,83.6c0,46.2,38.4,83.6,85.7,83.6c0,0,0,0,0,0c47.3,0,85.7-37.4,85.7-83.6c0,0,0,0,0,0
 	C672,173.5,633.7,136,586.3,136z"/>
-<ellipse id="path4552" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="pink" cx="209.3" cy="219.6" rx="86.2" ry="83.5"></ellipse>
+<ellipse id="path4552" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="pink" cx="219.3" cy="219.6" rx="86.2" ry="83.5"></ellipse>
 
 <path id="path6276" inkscape:connector-curvature="0" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st4" d="
 	M300.3,301.7l-69.7-0.1v-81.9v-81.9l111.8-0.2c61.5-0.1,141.3-0.2,177.5-0.2l65.8,0v82.3v82.3l-107.8-0.1
 	C418.5,301.8,338.6,301.7,300.3,301.7L300.3,301.7z"/>
-<rect id="rect-pink-left" x="71.2" y="203.2" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st5" width="54.5" height="32.3">
+<rect id="rect-pink-left" x="81.2" y="203.2" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st5" width="54.5" height="32.3">
 </rect>
 <rect id="rect7266-48" x="273.5" y="84.1" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="st6" width="35.4" height="51.6">
 </rect>
@@ -83,7 +83,7 @@
 <path id="path4286" inkscape:connector-curvature="0" inkscape:original-d="m 373.70716,103.47996 0,55.25088" inkscape:path-effect="#path-effect4288" class="st13" d="
 	M290.5,131.4"/>
 <path class="st4" d=""/>
-<path id="path4487-7" transform="matrix(1 0 0 1 -20 0)" inkscape:connector-curvature="0" class="st13" d="M108.1,218.9l4.8-4.8L96,218.9l16.9,4.8L108.1,218.9z"/>
+<path id="path4487-7" transform="matrix(1 0 0 1 -10 0)" inkscape:connector-curvature="0" class="st13" d="M108.1,218.9l4.8-4.8L96,218.9l16.9,4.8L108.1,218.9z"/>
 <path id="path4286-6" inkscape:connector-curvature="0" inkscape:original-d="m 185.36497,271.30794 -58.70406,0" inkscape:path-effect="#path-effect4288-8" sodipodi:nodetypes="cc" class="st13" d="
 	M98.4,218.9"/>
 <path class="st4" d=""/>
@@ -96,36 +96,37 @@
 	M681.9,218.5"/>
 
 
-<line class="arrow" x1="76.1" y1="218.9" x2="122.7" y2="218.9"/><!-- left arrow line-->
+<line class="arrow" x1="96.1" y1="218.9" x2="132.7" y2="218.9"/><!-- left arrow line-->
 <line class="arrow" x1="689" y1="218.5" x2="725.6" y2="218.5"/>
 <line class="arrow" x1="290.9" y1="128.4" x2="290.9" y2="91.8"/>
 <line class="arrow" x1="529.5" y1="342.1" x2="529.5" y2="305.5"/>
 
-<rect id="center-rect" x="213" y="136" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="title" width="378.2" height="167.3"></rect>
+<rect id="center-rect" x="223" y="136" inkscape:export-xdpi="96" inkscape:export-ydpi="96" class="title" width="378.2" height="167.3"></rect>
 <text x="50%" y="50%" text-anchor="middle" id="asset_name" class="title-text">HX</text>
 
-<circle id="path4295-9-1-4" class="st21" cx="532.6" cy="401.4" r="34.3"/>
-<a href="#" id="ShellOutlet">
-	<text transform="matrix(1 0 0 1 507.6403 403.9592)" class="st20">N / A</text>
-	<text transform="matrix(1 0 0 1 523.6398 422.7033)" class="st15">°F</text>
+
+<circle id="path4295-9-1-4" class="st21" cx="532.6" cy="401.4" r="36.3"/>
+<a id="ShellOutlet">
+	<text x="532.6" y="401.4" class="st20" text-anchor="middle">N / A</text>
+	<text x="532.6" y="422.7" class="st15" text-anchor="middle">°F</text>
 </a>
 
-<circle id="path4295-9-1" class="st18" cx="34.1" cy="217.1" r="34.3"/>
+<circle id="path4295-9-1" class="st18" cx="35.1" cy="217.1" r="36.3"/>
 <a id="TubeOutlet">
-	<text id="TubeOutlet_n" transform="matrix(1 0 0 1 10 218.5259)" class="st19 st20">N / A</text>
-	<text transform="matrix(1 0 0 1 25 237.27)" class="st15">°F</text>
+	<text x="35.1" y="217.1" text-anchor="middle" class="st20">N / A</text>
+	<text x="35.1" y="237.27" text-anchor="middle" class="st15">°F</text>
 </a>
 
-<ellipse id="path4295-9-1-4-7" transform="matrix(0.1602 -0.9871 0.9871 0.1602 436.5919 945.0707)" class="st18" cx="773.7" cy="216" rx="34.3" ry="34.3"/>
+<circle id="path4295-9-1-4-7" class="st18" cx="780.7" cy="217.1" r="36.3"/>
 <a id="TubeInlet">
-	<text transform="matrix(1 0 0 1 751.0845 218.526)" class="st19 st20">N / A</text>
-	<text transform="matrix(1 0 0 1 767.0841 237.2702)" class="st15">°F</text>
+	<text x="780.7" y="217.1" text-anchor="middle" class="st20">N / A</text>
+	<text x="780.7" y="237.27"  text-anchor="middle" class="st15">°F</text>
 </a>
 
-<circle id="path4295" class="st21" cx="290.9" cy="43.3" r="34.3"/>
+<circle id="path4295" class="st21" cx="290.9" cy="43.3" r="36.3"/>
 <a id="ShellInlet">
-	<text transform="matrix(1 0 0 1 267.6403 43.9592)" class="st20">N / A</text>
-	<text transform="matrix(1 0 0 1 283.6398 62.7033)" class="st15">°F</text>
+	<text x="290.9" y="43.3"  text-anchor="middle" class="st20">N / A</text>
+	<text x="290.9" y="62.70"  text-anchor="middle" class="st15">°F</text>
 </a>
 
 <rect id="Rect_TubeInlet_flow" x="597.5" y="210.4" class="st26" width="67.5" height="24.7"/>
@@ -143,8 +144,8 @@
 	<text transform="matrix(1 0 0 1 258 161)" class="st24 st27"></text>
 </a>
 
-<rect id="Rect_TubeOutlet_flow" x="129.4" y="207.4" class="st26" width="79.8" height="24.7"/>
+<rect id="Rect_TubeOutlet_flow" x="139.4" y="207.4" class="st26" width="79.8" height="24.7"/>
 <a id="TubeOutlet_flow">
-	<text transform="matrix(1 0 0 1 135 225)" class="st24 st16"></text>
+	<text transform="matrix(1 0 0 1 148 225)" class="st24 st16"></text>
 </a>
 </svg>

@@ -120,6 +120,23 @@ const getAsset = (user, assetID) => {
         });
 }
 
+const getAssetConfig = (asset) => {
+    const requestOptions = {
+        headers: { 'Content-Type': 'application/json'}
+    };
+    return fetch(process.env.API_HOST + '/asset/getAssetConfig?AssetID=' + asset, requestOptions)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        });
+}
+
 const getConfigByAssetID = (user, assetID) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
@@ -495,6 +512,7 @@ const setTimerIntervalActiveForTag = (assetID, tagName, assignedTag, interval) =
 export const assetServices = {
     getAssets,
     getAsset,
+    getAssetConfig,
     getConfigByAssetID,
     getDataByTagList,
     addAsset,

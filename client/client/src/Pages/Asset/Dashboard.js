@@ -36,8 +36,6 @@ class Dashboard extends React.Component {
         cleanliness = progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR") && progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
         heatFlow = progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE") && progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
         heatBalanceError = progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR") && progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
-        console.log(((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100)
-        
       }      
     }
 

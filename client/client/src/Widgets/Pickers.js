@@ -136,9 +136,9 @@ class Pickers extends React.Component {
 
       let liveDispatchInterval = 60*1000;
       if (asset) {
-        console.log('dispatch pickers')
         this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
         this.props.dispatch(assetActions.getTimeIntervals(asset));
+        this.props.dispatch(assetActions.getAssetConfig(asset));
       }
 
       if (asset && device)

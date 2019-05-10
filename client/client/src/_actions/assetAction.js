@@ -55,6 +55,25 @@ const getAsset = (user, assetID) => {
     function success_tag(data) { return {type: gConstants.GET_ASSET_TAG_SUCCESS, data } }
 }
 
+const getAssetConfig = (asset) => {
+    return dispatch => {
+        dispatch(request());
+        assetServices.getAssetConfig(asset)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_ASSET_CONFIG_REQUEST } }
+    function success(data) { return { type: gConstants.GET_ASSET_CONFIG_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_ASSET_CONFIG_FAILURE, error } }
+}
+
 const getConfigByAssetID = (user, assetID) => {
     return dispatch => {
       dispatch(request());
@@ -372,6 +391,7 @@ const setTimerIntervalActiveForTag = (assetID, tagName, assignedTag, interval) =
 export const assetActions = {
     getAssets,
     getAsset,
+    getAssetConfig,
     getConfigByAssetID,
     getDevicesByAsset,
     getTimeRangeByAsset,

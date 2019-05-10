@@ -54,8 +54,7 @@ class IntervalPicker extends React.Component {
           Intervals: Intervals
         });
         this.props.dispatch(assetActions.addTimeInterval(this.asset, parseInt(newInterval)*60*1000));
-      };
-      
+      };      
     }
 
     updateIntervalState(t,i){
@@ -73,23 +72,9 @@ class IntervalPicker extends React.Component {
 
     handleIntervalApply(e){
       this.IntervalModalToggle();
-      
-      if(e.target.name == "apply"){
-          console.log('apply')
-          console.log(this.Intervals)
-          this.Intervals.forEach((e)=>this.props.dispatch(assetActions.deleteTimeInterval(this.asset, e*60*1000)));
-        
-          // const add = function (){
-          //   for (var i in this.state.Intervals){
-          //   console.log('a'+i)
-          //   this.props.dispatch(assetActions.addTimeInterval(this.asset, i*60*1000));      
-          // }
-        
-        
-      } else if (e.target.name == "cancel"){
-        this.setState({
-          Intervals: this.Intervals
-        });
+      if(this.Intervals != this.state.Intervals){
+        console.log('diff')
+        window.location.reload();
       }
     }
 

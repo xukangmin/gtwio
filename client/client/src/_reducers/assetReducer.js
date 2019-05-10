@@ -34,13 +34,29 @@ export const asset = (state = {}, action) => {
             error: action.error
         };
     //
+    case gConstants.GET_ASSET_CONFIG_REQUEST:
+        return {
+            ...state,
+            gettingAssetConfig: true
+        };
+    case gConstants.GET_ASSET_CONFIG_SUCCESS:
+        return {
+            ...state,
+            gotData: true,
+            data: action.data
+        };
+    case gConstants.GET_ASSET_CONFIG_FAILURE:
+        return {
+            error: action.error
+        };
+    //
     case gConstants.GET_ASSET_TAG_SUCCESS:
         return {
           ...state,
           gotData: true,
           tags: action.data
         };
-    
+    //
     case gConstants.GET_DEVICES_BY_ASSET_REQUEST:
         return {
             ...state,
@@ -51,6 +67,7 @@ export const asset = (state = {}, action) => {
             gotData: true,
             data: action.data
         };
+    //
     case gConstants.ADD_ASSET_REQUEST:
         return state;
     case gConstants.ADD_ASSET_SUCCESS:
@@ -62,6 +79,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+    //
     case gConstants.ADD_ASSET_BY_CONFIG_REQUEST:
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_SUCCESS:
@@ -73,6 +91,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+    //
     case gConstants.ADD_ASSET_BY_CONFIG_FILE_REQUEST:
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_FILE_SUCCESS:
@@ -84,7 +103,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-
+    //
     case gConstants.GET_BASELINES_REQUEST:
         return {
             ...state,
@@ -99,7 +118,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-
+    //
     case gConstants.GET_TIME_RANGE_BY_ASSET_REQUEST:
         return {
             ...state,
@@ -114,7 +133,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-
+    //
     case gConstants.ADD_BASELINE_REQUEST:
         return state;
     case gConstants.ADD_BASELINE_SUCCESS:
@@ -126,7 +145,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-
+    //
     case gConstants.GET_TIME_INTERVALS_REQUEST:
         return {
             ...state,
@@ -141,7 +160,7 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
-
+    //
     default:
         return state;
   }

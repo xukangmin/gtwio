@@ -99,8 +99,8 @@ class Dashboard extends React.Component {
                     width={140}
                     percent={heatBalanceError.Range ? ((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100 : 0} 
                     format={()=>!isNaN(heatBalanceError.Value) ? heatBalanceError.Value.toFixed(2) + "%" : "N/A"} 
-                    status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(0) ? "exception" : "normal"}/>                    
-                    <p style={{position: "absolute", top: "5", right: "30", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
+                    status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(2) ? "exception" : "normal"}/>                    
+                    <p style={{position: "absolute", top: "5", right: "30", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(2) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
                     <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}%</p>
                     <p style={{position: "absolute", top: "170", left: "0", right: "0"}}><strong>Heat Balance Error</strong></p>
                   </a>

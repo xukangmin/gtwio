@@ -120,11 +120,8 @@ const getAsset = (user, assetID) => {
         });
 }
 
-const getAssetConfig = (asset) => {
-    const requestOptions = {
-        headers: { 'Content-Type': 'application/json'}
-    };
-    return fetch(process.env.API_HOST + '/asset/getAssetConfig?AssetID=' + asset, requestOptions)
+const getAssetConfig = (assetID) => {    
+    return fetch(process.env.API_HOST + '/asset/getAssetConfig?AssetID=' + assetID)
         .then(response => {
             return Promise.all([response, response.json()])
         })
@@ -159,8 +156,7 @@ const getConfigByAssetID = (user, assetID) => {
         });
 }
 
-const getTimeRangeByAsset = (assetID) => {
-    
+const getTimeRangeByAsset = (assetID) => {    
     return fetch(process.env.API_HOST + '/asset/getAssetTimeRange?AssetID=' + assetID)
         .then(response => {
             return Promise.all([response, response.json()])

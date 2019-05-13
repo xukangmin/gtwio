@@ -84,6 +84,7 @@ export const asset = (state = {}, action) => {
         return state;
     case gConstants.ADD_ASSET_BY_CONFIG_SUCCESS:
         return {
+            ...state,
             addedData: true,
             msg: action.msg
         };

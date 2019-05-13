@@ -138,7 +138,7 @@ class Pickers extends React.Component {
       if (asset) {
         this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
         this.props.dispatch(assetActions.getTimeIntervals(asset));
-        this.props.dispatch(assetActions.getAssetConfig(asset));
+        // this.props.dispatch(assetActions.getAssetConfig(asset));
       }
 
       if (asset && device)

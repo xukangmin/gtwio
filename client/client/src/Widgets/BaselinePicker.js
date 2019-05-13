@@ -14,10 +14,11 @@ class BaselinePicker extends React.Component {
       super(props);
 
       const {data} = props;
-      
+      console.log(data)
       this.asset = data.AssetID;
+      
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.baselines = data.Settings && data.Settings.Baselines ? data.Settings.Baselines :[];
+      this.baselines = data.Settings && data.Settings.Baselines ? data.Settings.Baselines : [];
 
       this.state = {
         asset: this.asset,

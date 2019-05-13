@@ -17,7 +17,7 @@ class BaselinePicker extends React.Component {
       
       this.asset = data.AssetID;
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.baselines = data.Settings.Baselines ? data.Settings.Baselines :[];
+      this.baselines = data.Settings && data.Settings.Baselines ? data.Settings.Baselines :[];
 
       this.state = {
         asset: this.asset,

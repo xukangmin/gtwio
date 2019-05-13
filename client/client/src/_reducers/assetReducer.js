@@ -15,6 +15,7 @@ export const asset = (state = {}, action) => {
         };
     case gConstants.GET_ASSETS_FAILURE:
         return {
+            ...state,
             error: action.error
         };
     //
@@ -31,6 +32,7 @@ export const asset = (state = {}, action) => {
         };
     case gConstants.GET_ASSET_FAILURE:
         return {
+            ...state,
             error: action.error
         };
     //
@@ -47,6 +49,7 @@ export const asset = (state = {}, action) => {
         };
     case gConstants.GET_ASSET_CONFIG_FAILURE:
         return {
+            ...state,
             error: action.error
         };
     //

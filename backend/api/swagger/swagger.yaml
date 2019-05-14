@@ -356,6 +356,40 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /asset/updateAssetConfig:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: assetManage
+    post:
+      tags:
+      - asset
+      description: Return asset config
+      # used as the method name of the controller
+      operationId: updateAssetConfig
+      parameters:
+      - in: body
+        name: AssetObject
+        description: Asset config object thats needs to be added into table
+        required: true
+        schema:
+          $ref: '#/definitions/AssetConfigModel'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AssetConfigModel"
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /asset/setBaselineActive:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage
@@ -1882,6 +1916,13 @@ definitions:
         type: string
       LatestTimeStamp:
         type: integer
+  AssetConfigModel:
+    type: object
+    properties:
+      AssetID:
+        type: string
+      Config:
+        type: object
   BaselineModel:
     type: object
     properties:

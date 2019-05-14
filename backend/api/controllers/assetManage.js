@@ -26,7 +26,8 @@ var functions = {
   updateBaseline: updateBaseline,
   getAssetTimeRange: getAssetTimeRange,
   setTimerIntervalActiveForTag: setTimerIntervalActiveForTag,
-  getAssetConfig: getAssetConfig
+  getAssetConfig: getAssetConfig,
+  updateAssetConfig: updateAssetConfig
 };
 
 for (var key in functions) {
@@ -1382,6 +1383,25 @@ function getAssetConfig(req, res) {
     } else {
       if (data) {
         shareUtil.SendSuccessWithData(res, data.Config);
+      } else {
+        shareUtil.SendInvalidInput(res, "asset not found");
+      }
+    }
+  });
+}
+
+function updateAssetConfig(res, res) {
+  var assetid = req.body.AssetID;
+  var config = req.body.Config;
+
+  Asset.findOne({AssetID: assetid},(err,data) => {
+    if (err) {
+      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+    } else {
+      if (data) {
+        data.Config = config;
+        data.save();
+        shareUtil.SendSuccess(res);
       } else {
         shareUtil.SendInvalidInput(res, "asset not found");
       }

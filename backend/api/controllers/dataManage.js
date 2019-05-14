@@ -368,7 +368,15 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                         if (typeof ret.Result === 'number')
                         {
                           if (isNaN(ret.Result) === false){
-                            _addDataByParameterID(paraid, ret.Result, max_timestamp, err => {if(err) console.error(err)});
+                            _addDataByParameterID(paraid, ret.Result, max_timestamp, err => 
+                              {
+                                if(err) 
+                                {
+                                  console.log("calculated value save error:");
+                                  
+                                  console.error(err);
+                                }
+                              });
                             //_addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
                           }
                         }
@@ -601,12 +609,12 @@ function _addDataByParameterID(paraID, value, timestamp, callback) {
 //  console.log(value);
   data.save(err => {
     // trigger calculation
-    trigger_all_parameters(dataobj);
-    _update_status(paraID, timestamp, value);
     if (err)
     {
       callback(err);
     } else {
+      trigger_all_parameters(dataobj);
+      _update_status(paraID, timestamp, value);
       Parameter.findOneAndUpdate({ParameterID: paraID},{CurrentValue: value, CurrentTimeStamp: timestamp}, function(err) {
         callback(err);
       });

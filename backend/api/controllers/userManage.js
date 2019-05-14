@@ -2,7 +2,7 @@
 var shareUtil = require('./shareUtil.js');
 const User = require('../db/user.js');
 var dbTest = shareUtil.dbTest;
-
+var crypto = require('crypto');
 
 var functions = {
   createUser: createUser,
@@ -78,7 +78,6 @@ function resetUser(req, res) {
         // auto generate user id
         var epochtime = Math.floor((new Date).getTime()/1000);
         var uuidv1 = require('uuid/v1');
-        var crypto = require('crypto');
         var updateItems = "set VerificationCodeExpire = :v0, VerificationCode = :v1, Active = :v2";
         var expressvalues = {};
         expressvalues[":v0"] = epochtime + 1800;

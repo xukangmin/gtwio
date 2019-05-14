@@ -49,7 +49,7 @@ class Configurations extends React.Component {
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   } 
 
-  editToggle(checked){
+  editToggle(){
     this.setState({editMode: !this.state.editMode});
   }
 
@@ -141,7 +141,11 @@ class Configurations extends React.Component {
       mode: 'click',
       blurToSave: true,
       afterSaveCell: this.onAfterSaveCell
-    };    
+    };   
+    
+    const deviceTable = {
+
+    }
 
     function callback(key) {
       // console.log(key);
@@ -151,9 +155,8 @@ class Configurations extends React.Component {
       backgroundColor: "red"
     }
     return (
-      <div>
-        <Switch defaultChecked onChange={this.editToggle} checked={this.state.editMode}/> Edit Configurations
-        <Button onClick={this.saveChanges} className="ml-3"> Save Changes </Button>
+      <div style={{position: "relative"}}>
+        <Button style={{position: "absolute", top: "0", right:"0"}} type="primary" onClick={this.editToggle} className="primary"><Icon type="edit" /> Edit Configurations </Button>
 
         {device && parameter?         
         <Tabs className="mt-5" onChange={callback} type="card" defaultActiveKey="1">
@@ -162,7 +165,7 @@ class Configurations extends React.Component {
               <Col>                
                 <AddDevice mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                 <BootstrapTable
-                  tableStyle={{backgroundColor: "#fafafa", border: "black 2px #e8e8e8"}}
+                  tableStyle={{}}
                   data={device}
                   insertRow={false}
                   deleteRow={false}
@@ -207,7 +210,7 @@ class Configurations extends React.Component {
                   <TableHeaderColumn
                     headerAlign='center'
                     dataAlign='center'
-                    dataField='DisplayName'
+                    dataField='Name'
                     dataSort={true}>
                       Description
                   </TableHeaderColumn>
@@ -240,16 +243,6 @@ class Configurations extends React.Component {
                     dataSort={true}
                     editable={{type: 'select', options: {values: ["", "0", "90", "180", "270"]}}}>
                       Angle
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='LastCalibrationDate'
-                    editable={false}
-                    dataFormat={dateFormatter}
-                    dataSort={true}>
-                      Last Calibration Date
                   </TableHeaderColumn>
 
                   <TableHeaderColumn

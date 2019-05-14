@@ -74,6 +74,26 @@ const getAssetConfig = (asset) => {
     function failure(error) { return { type: gConstants.GET_ASSET_CONFIG_FAILURE, error } }
 }
 
+const updateAssetConfig = (asset, body) => {
+    return dispatch => {
+          dispatch(request());
+          assetServices.updateAsset(asset, body)
+              .then(
+                  info => {
+                      dispatch(getAssetConfig(asset));
+                      dispatch(success(info));
+                  },
+                  error => {
+                      dispatch(failure(error));
+                  }
+              );
+      };
+  
+      function request() { return { type: gConstants.UPDATE_ASSET_CONFIG_REQUEST } }
+      function success(data) { toastr.success("Configurations Updated"); return { type: gConstants.UPDATE_ASSET_CONFIG_SUCCESS, data } }
+      function failure(error) { toastr.warning("Failed to Update Configurations"); return { type: gConstants.UPDATE_ASSET_CONFIG_FAILURE, error } }
+  }
+
 const getConfigByAssetID = (user, assetID) => {
     return dispatch => {
       dispatch(request());
@@ -392,6 +412,7 @@ export const assetActions = {
     getAssets,
     getAsset,
     getAssetConfig,
+    updateAssetConfig,
     getConfigByAssetID,
     getDevicesByAsset,
     getTimeRangeByAsset,

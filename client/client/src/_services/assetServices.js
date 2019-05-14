@@ -134,6 +134,36 @@ const getAssetConfig = (assetID) => {
         });
 }
 
+const updateAssetConfig = (assetID, data) => {
+
+    let body = {
+      AssetID: assetID,
+      Config: data
+    };
+    console.log(body);
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'
+                 },
+        body: JSON.stringify(body)
+    };
+
+    return fetch(process.env.API_HOST + '/asset/updateAssetConfig', requestOptions)
+    .then(response => {
+        return Promise.all([response, response.json()])
+    })
+    .then( ([resRaw, resJSON]) => {
+        if (!resRaw.ok)
+        {
+            return Promise.reject(resJSON.message);
+        }
+        return resJSON;
+    })
+    .then(info => {
+        return info;
+    });
+}
+
 const getConfigByAssetID = (user, assetID) => {
     const requestOptions = {
         headers: { 'Content-Type': 'application/json' ,
@@ -509,6 +539,7 @@ export const assetServices = {
     getAssets,
     getAsset,
     getAssetConfig,
+    updateAssetConfig, 
     getConfigByAssetID,
     getDataByTagList,
     addAsset,

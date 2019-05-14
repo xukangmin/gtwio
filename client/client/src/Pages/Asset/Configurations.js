@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { deviceActions } from '../../_actions/deviceAction';
 import { parameterActions } from '../../_actions/parameterAction';
+import { assetActions } from '../../_actions/assetAction';
 
 import AddDevice from '../../Modals/AddDevice';
 import AddParameter from '../../Modals/AddParameter';
@@ -15,6 +16,7 @@ import { Tabs, Button, Icon, Switch } from 'antd';
 const TabPane = Tabs.TabPane;
 
 import { EditEquation } from '../../Modals/EditEquation';
+import { log } from 'util';
 
 class Configurations extends React.Component {
   constructor(props) {
@@ -28,6 +30,7 @@ class Configurations extends React.Component {
 
     this.editToggle = this.editToggle.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
+    this.testChange = this.testChange.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
   
@@ -55,6 +58,9 @@ class Configurations extends React.Component {
 
   saveChanges(){
     this.props.dispatch(assetActions.updateAssetConfig(this.asset));
+  }
+  testChange() {
+    this.props.dispatch(assetActions.removeDevice("02A051"));
   }
 
   deleteItem(itemID, itemName, itemType){
@@ -90,6 +96,10 @@ class Configurations extends React.Component {
   render() {
     const data = this.props.data;
     let device, parameter = [];
+
+    console.log("rerender");
+    
+
     if (data){
       device = data.Devices;
       parameter = data.Equations;
@@ -155,8 +165,13 @@ class Configurations extends React.Component {
       backgroundColor: "red"
     }
     return (
+
       <div style={{position: "relative"}}>
         <Button style={{position: "absolute", top: "0", right:"0"}} type="primary" onClick={this.editToggle} className="primary"><Icon type="edit" /> Edit Configurations </Button>
+
+        <Switch defaultChecked onChange={this.editToggle} checked={this.state.editMode}/> Edit Configurations
+        <Button onClick={this.saveChanges} className="ml-3"> Save Changes </Button>
+        <Button onClick={this.testChange} className="ml-3"> Test </Button>
 
         {device && parameter?         
         <Tabs className="mt-5" onChange={callback} type="card" defaultActiveKey="1">

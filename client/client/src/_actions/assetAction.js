@@ -408,6 +408,14 @@ const setTimerIntervalActiveForTag = (assetID, tagName, assignedTag, interval) =
     function success(msg) { return { type: gConstants.UPDATE_TAG_TIME_INTERVAL_SUCCESS, msg } }
     function failure(error) { return { type: gConstants.UPDATE_TAG_TIME_INTERVAL_FAILURE, error } }
 }
+
+const removeDevice = (sn) => {
+    return dispatch => {
+        dispatch(request(sn));
+    }
+
+    function request(sn) { return { type: gConstants.REMOVE_DEVICE_REQUEST, sn } }
+}
 export const assetActions = {
     getAssets,
     getAsset,
@@ -428,5 +436,6 @@ export const assetActions = {
     getTimeIntervals,
     addTimeInterval,
     deleteTimeInterval,
-    setTimerIntervalActiveForTag
+    setTimerIntervalActiveForTag,
+    removeDevice
 };

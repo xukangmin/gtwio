@@ -29,13 +29,16 @@ class Dashboard extends React.Component {
       maxHeight: "560px"
     };
 
-    let progressBars, cleanliness, heatFlow, heatBalanceError;
+    let progressBars, cleanliness, cleanlinessUncertainty, heatFlow, heatBalanceError, cleanlinessPercentage = undefined;
     if (assetTags){
-      if (assetTags.find(tag => tag.TagName == "ProgressBars")){
-        progressBars = assetTags.filter(tag => tag.TagName == "ProgressBars")[0].Data;
-        cleanliness = progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR") && progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
-        heatFlow = progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE") && progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
-        heatBalanceError = progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR") && progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
+      if (assetTags.find(tag => tag.TagName === "ProgressBars")){
+        progressBars = assetTags.find(tag => tag.TagName === "ProgressBars").Data;
+        cleanliness = progressBars.find(item=> item.AssignedTag === "CLEANLINESS_FACTOR") && progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR").ParameterList.find(active=>active.Active == 1);
+        cleanlinessUncertainty = progressBars.find(item=> item.AssignedTag === "CLEANLINESS_FACTOR_UNCERTAINTY").ParameterList.find(active=>active.Active == 1);
+        heatFlow = progressBars.find(item=> item.AssignedTag === "HEAT_TRANSFER_RATE") && progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE").ParameterList.find(active=>active.Active == 1);
+        heatBalanceError = progressBars.find(item=> item.AssignedTag === "HEAT_BALANCE_ERROR") && progressBars.find(item=> item.AssignedTag == "HEAT_BALANCE_ERROR").ParameterList.find(active=>active.Active == 1);
+      
+        cleanlinessPercentage = (cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit);
       }      
     }
 
@@ -63,9 +66,9 @@ class Dashboard extends React.Component {
                     type="dashboard" 
                     strokeLinecap="square"
                     width={140}
-                    percent={cleanliness.Range ? ((cleanliness.Value-cleanliness.Range.LowerLimit)/(cleanliness.Range.UpperLimit-cleanliness.Range.LowerLimit))*100 : 0} 
+                    percent={cleanliness.Range ? cleanlinessPercentage*100 : 0} 
                     format={()=>!isNaN(cleanliness.Value) ? cleanliness.Value.toFixed(2) : "N/A"} /> 
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "CLEANLINESS_FACTOR_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}</p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{cleanlinessUncertainty.Value.toFixed(2)}</p>
                     <p style={{position: "relative", top: "5"}}><strong>Cleanliness Factor</strong></p>
                   </a>
                   <ButtonGroup style={{position: "relative", top: "-70"}}>
@@ -82,7 +85,7 @@ class Dashboard extends React.Component {
                     width={140} 
                     percent={heatFlow.Range ? ((heatFlow.Value-heatFlow.Range.LowerLimit)/(heatFlow.Range.UpperLimit-heatFlow.Range.LowerLimit))*100 : 0} 
                     format={()=>!isNaN(heatFlow.Value) ? parseInt(heatFlow.Value).toLocaleString('en') : "N/A"} /> 
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag == "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value).toLocaleString('en')}</p>   
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{parseInt(progressBars.find(item=> item.AssignedTag === "HEAT_TRANSFER_RATE_UNCERTAINTY").ParameterList.find(active=>active.Active == 1).Value).toLocaleString('en')}</p>   
                     <p style={{position: "relative", top: "6"}}><strong>Heat Transfer Rate<br/>(btu/hr)</strong></p>
                   </a>
                   <ButtonGroup style={{position: "relative", top: "-90"}}>
@@ -99,9 +102,9 @@ class Dashboard extends React.Component {
                     width={140}
                     percent={heatBalanceError.Range ? ((heatBalanceError.Value-heatBalanceError.Range.LowerLimit)/(heatBalanceError.Range.UpperLimit-heatBalanceError.Range.LowerLimit))*100 : 0} 
                     format={()=>!isNaN(heatBalanceError.Value) ? heatBalanceError.Value.toFixed(2) + "%" : "N/A"} 
-                    status={progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").Value < heatBalanceError.Value.toFixed(2) ? "exception" : "normal"}/>                    
-                    <p style={{position: "absolute", top: "5", right: "30", color: progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(0) ? "red" : "green", fontSize: "2em"}}>{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(2) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
-                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag == "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}%</p>
+                    status={progressBars.find(item=> item.AssignedTag === "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(2) ? "exception" : "normal"}/>                    
+                    <p style={{position: "absolute", top: "5", right: "30", color: progressBars.find(item=> item.AssignedTag === "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(2) ? "red" : "green", fontSize: "2em"}}>{progressBars.find(item=> item.AssignedTag === "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value < heatBalanceError.Value.toFixed(2) ? <Icon type="exclamation-circle" /> : <Icon type="check-circle" />}</p>
+                    <p style={{position: "relative", top: "-40", fontSize: "0.7em"}}>±{progressBars.find(item=> item.AssignedTag === "UNCERTAINTY_HBE").ParameterList.find(active=>active.Active == 1).Value.toFixed(2)}%</p>
                     <p style={{position: "absolute", top: "170", left: "0", right: "0"}}><strong>Heat Balance Error</strong></p>
                   </a>
                   <ButtonGroup style={{position: "relative", top: "-34"}}>

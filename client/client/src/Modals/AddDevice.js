@@ -76,7 +76,7 @@ class AddDevice extends React.Component {
         const { displayName, serialNumber, sensorID, location, angle } = this.state;
 
         return(
-          <div>
+          <div style={{display: this.props.mode ? "block" : "none"}} className="mt-3">
             <Button color="primary" onClick={this.addModalToggle}>Add New Device</Button>
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Device</ModalHeader>

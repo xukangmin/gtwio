@@ -14,7 +14,6 @@ class BaselinePicker extends React.Component {
       super(props);
 
       const {data} = props;
-      console.log(data)
       this.asset = data.AssetID;
       
       this.user = JSON.parse(localStorage.getItem('user'));
@@ -23,7 +22,7 @@ class BaselinePicker extends React.Component {
       this.state = {
         asset: this.asset,
         baselines: this.baselines,
-        activeBaseline: (this.baselines.findIndex(x=>x.Active==1) >=0) ? this.baselines.findIndex(x=>x.Active==1) : -1,
+        activeBaseline: this.baselines.findIndex(x=>x.Active==1)!= -1 ? parseInt(this.baselines.findIndex(x=>x.Active==1)) : -1,
         baselineModalOpen: false
       }
 
@@ -80,7 +79,6 @@ class BaselinePicker extends React.Component {
 
     handleBaselineApply(e){
       this.baselineModalToggle();
-      
       if(e.target.name == "apply"){
         let tempBaselines = [];
         for (var i in this.state.baselines){
@@ -95,7 +93,7 @@ class BaselinePicker extends React.Component {
       } else if (e.target.name == "cancel"){
         this.setState({
           baselines: this.baselines,
-          activeBaseline: this.baselines.findIndex(x=>x.Active==1) ? this.baselines.findIndex(x=>x.Active==1) : -1
+          activeBaseline: this.baselines.findIndex(x=>x.Active==1) !== -1 ? parseInt(this.baselines.findIndex(x=>x.Active==1)) : -1
         });
       }
     }
@@ -141,7 +139,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light mr-3" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-minus mr-2"></i>
-            Baseline: {this.state.activeBaseline!= -1 ? moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm') : 'N/A'}
+            Baseline: {this.state.activeBaseline === -1 ? 'N/A' : moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm')}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 

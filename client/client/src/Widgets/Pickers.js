@@ -137,8 +137,7 @@ class Pickers extends React.Component {
       let liveDispatchInterval = 60*1000;
       if (asset) {
         this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
-        this.props.dispatch(assetActions.getTimeIntervals(asset));
-        // this.props.dispatch(assetActions.getAssetConfig(asset));
+        this.props.dispatch(assetActions.getTimeIntervals(asset));        
       }
 
       if (asset && device)
@@ -214,10 +213,44 @@ class Pickers extends React.Component {
           this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
         }
       }
+
+      else if (asset && m_res[item].match.url.includes("configurations")){
+        this.props.dispatch(assetActions.getAssetConfig(asset));
+      }
     }
+
+    
 
     render() {
       let intervalText = this.intervalToText(this.range.interval);
+
+      const timeRange = this.props.assetTimeRange;
+      let MinTimeRange, MaxTimeRange;
+      
+      if(timeRange){
+        MaxTimeRange = Math.max(...timeRange);
+        MinTimeRange = Math.min(...timeRange);
+      }
+
+      function disabledDate(current) {
+        if(moment(MinTimeRange).format('L') == moment(MaxTimeRange).format('L')){
+          return current != moment(MinTimeRange);
+        } else {
+          return current > moment(MaxTimeRange).add(1,'days') || current < moment(MinTimeRange);
+        }        
+      }
+      
+      function disabledDateTime(current) {
+        if(current.format('L') == moment(MaxTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(moment(MaxTimeRange).hour(), 24)
+          };
+        } else if (current.format('L') == moment(MinTimeRange).format('L')){
+          return {
+            disabledHours: () => range(0, 24).splice(0, moment(MinTimeRange).hour())
+          };
+        }        
+      }
 
       return (
         <div style={{display: 'inline-block'}}>
@@ -266,6 +299,8 @@ class Pickers extends React.Component {
                   defaultValue={[moment.unix(this.range.start), moment.unix(this.range.end)]}
                   format="YYYY-MM-DD HH:mm"
                   placeholder={['Start Time', 'End Time']}
+                  disabledDate={disabledDate}
+                  disabledTime={disabledDateTime}
                   ranges={{ Today: [moment().startOf('day'), moment().endOf('day')], Yesterday: [moment().subtract(1, "days").startOf('day'), moment().subtract(1, "days").endOf('day')], 'This Month': [moment().startOf('month'), moment().endOf('month')] }}
                   onChange={(t)=>this.handleRangeChange(t)}
                 />
@@ -276,9 +311,7 @@ class Pickers extends React.Component {
               <Button name="apply" color="primary" onClick={e=>this.handlePickerApply(e)}>Apply</Button>
               <Button name="cancel" onClick={this.handlePickerApply}>Cancel</Button>
             </ModalFooter>
-          </Modal>
-
-          
+          </Modal>          
         </div>
       );
     }

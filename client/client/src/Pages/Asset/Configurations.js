@@ -11,7 +11,7 @@ import { Row, Col } from 'reactstrap';
 
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Tabs, Button, Icon } from 'antd';
+import { Tabs, Button, Icon, Switch } from 'antd';
 const TabPane = Tabs.TabPane;
 
 import { EditEquation } from '../../Modals/EditEquation';
@@ -26,10 +26,13 @@ class Configurations extends React.Component {
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
     this.props.dispatch(parameterActions.getParameters(this.asset));
 
+    this.editToggle = this.editToggle.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
-
+  
     this.state = {
+      editMode: false,
       NewDevice: {
         DisplayName: '',
         SerialNumber: ''
@@ -45,6 +48,14 @@ class Configurations extends React.Component {
     this.props.dispatch(parameterActions.getParameters(this.asset));
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   } 
+
+  editToggle(checked){
+    this.setState({editMode: !this.state.editMode});
+  }
+
+  saveChanges(){
+    this.props.dispatch(assetActions.updateAssetConfig(this.asset));
+  }
 
   deleteItem(itemID, itemName, itemType){
     if (confirm("Are you sure to delete " + itemName + "?")){
@@ -77,7 +88,13 @@ class Configurations extends React.Component {
   }
 
   render() {
-    const { device, parameter } = this.props;
+    const data = this.props.data;
+    let device, parameter = [];
+    if (data){
+      device = data.Devices;
+      parameter = data.Equations;
+    }
+    
     const asset = this.asset;
     const user = this.user;
 
@@ -101,9 +118,8 @@ class Configurations extends React.Component {
 
     function linkFormatter(cell, row, enumObject){
       const assetID = enumObject;
-      const itemID = row.DeviceID ? row.DeviceID : row.ParameterID;
       const deviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
-      return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ assetID + deviceOrParameter + itemID}><Icon type="table" /></Button>
+      return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ assetID + deviceOrParameter + cell}><Icon type="table" /></Button>
     }
 
     function parameterFormatter(cell, row) {
@@ -131,19 +147,26 @@ class Configurations extends React.Component {
       // console.log(key);
     }
 
+    const editColumn = {
+      backgroundColor: "red"
+    }
     return (
       <div>
-        {device && parameter? 
-        <Tabs onChange={callback} type="card" defaultActiveKey="1">
+        <Switch defaultChecked onChange={this.editToggle} checked={this.state.editMode}/> Edit Configurations
+        <Button onClick={this.saveChanges} className="ml-3"> Save Changes </Button>
+
+        {device && parameter?         
+        <Tabs className="mt-5" onChange={callback} type="card" defaultActiveKey="1">
           <TabPane tab="Devices" key="1">
           <Row className="mt-3">
-              <Col>
-                <AddDevice user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+              <Col>                
+                <AddDevice mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                 <BootstrapTable
+                  tableStyle={{backgroundColor: "#fafafa", border: "black 2px #e8e8e8"}}
                   data={device}
                   insertRow={false}
                   deleteRow={false}
-                  search={true}
+                  search={false}
                   cellEdit={cellEditProp}
                   version='4'
                   bordered={false}
@@ -232,10 +255,11 @@ class Configurations extends React.Component {
                   <TableHeaderColumn
                     headerAlign='center'
                     dataAlign='center'
-                    dataField='DeviceID'
+                    dataField='SerialNumber'
                     editable={false}
                     formatExtraData={this.deleteItem}
-                    dataFormat={deleteFormatter}>
+                    dataFormat={deleteFormatter}
+                    columnClassName={editColumn}>
                       Delete
                   </TableHeaderColumn>
                 </BootstrapTable>
@@ -251,27 +275,17 @@ class Configurations extends React.Component {
                   data={parameter}
                   hover
                   height='80%' scrollTop={'Top'}
-                  search={true}
+                  search={false}
                   cellEdit={cellEditProp}
                   version='4'
                   bordered={false}
                   condensed
                 >
-                  <TableHeaderColumn 
-                    headerAlign='center' 
-                    dataAlign='center' 
-                    isKey={true} 
-                    dataField='ParameterID' 
-                    editable={false} 
-                    hidden>
-                      Parameter ID
-                  </TableHeaderColumn>
-
                   <TableHeaderColumn
                     headerAlign='center'
                     dataAlign='center'
                     width="55px"
-                    dataField='ParameterID'
+                    dataField='Tag'
                     editable={false}
                     dataFormat={linkFormatter}
                     formatExtraData={this.asset}>
@@ -280,29 +294,19 @@ class Configurations extends React.Component {
 
                   <TableHeaderColumn 
                     headerAlign='center' 
-                    dataAlign='center' 
+                    dataAlign='left' 
                     dataField='Tag' 
+                    isKey={true} 
                     editable={false} 
                     dataSort={true}
                     tdStyle={{whiteSpace: 'normal'}}>
                       Tag
-                  </TableHeaderColumn>
-                  
+                  </TableHeaderColumn>                
+                                    
                   <TableHeaderColumn 
                     headerAlign='center' 
-                    dataAlign='center' 
-                    width='15%' 
-                    dataField='DisplayName' 
-                    dataSort={true}
-                    tdStyle={{whiteSpace: 'normal'}}>
-                      Description
-                  </TableHeaderColumn>
-                  
-                  <TableHeaderColumn 
-                    headerAlign='center' 
-                    dataAlign='center' 
-                    width='50%' 
-                    dataField='OriginalEquation' 
+                    dataAlign='left' 
+                    dataField='Equation' 
                     editable={false}
                     formatExtraData={this.props.dispatch}
                     dataFormat={modalFormatter}
@@ -314,7 +318,8 @@ class Configurations extends React.Component {
                   <TableHeaderColumn
                     headerAlign='center'
                     dataAlign='center'
-                    dataField='ParameterID'
+                    dataField='Tag'
+                    width='65px'
                     editable={false}
                     formatExtraData={this.deleteItem}
                     dataFormat={deleteFormatter}>
@@ -333,11 +338,8 @@ class Configurations extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const device = state.device.all;
-  const parameterData = state.parameter.all;
   return {
-      device : device,
-      parameter: parameterData
+      data: state.asset.config
   };
 }
 

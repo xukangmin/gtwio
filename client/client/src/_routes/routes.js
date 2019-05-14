@@ -7,6 +7,7 @@ import { Dashboard } from '../Pages/Asset/Dashboard';
 import { Data } from '../Pages/Asset/Data';
 import { Configurations } from '../Pages/Asset/Configurations';
 import { Configurationsb } from '../Pages/Asset/Configurationsb';
+
 import { Device } from '../Pages/Asset/Device/Device';
 import { Parameter } from '../Pages/Asset/Parameter/Parameter';
 import { Tag } from '../Pages/Asset/Tag/Tag';

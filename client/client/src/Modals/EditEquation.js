@@ -107,7 +107,7 @@ class EditEquation extends React.Component {
   render() {
     let devices, parameters;
     if (this.props.devices && this.props.parameters){
-      devices = [...new Set(this.props.devices.map(x=> x.Parameters[0].Tag))];
+      devices = [...new Set(this.props.devices.map(x=> x.Tag + "/" + x.Parameters[0]))];
       parameters = this.props.parameters;
     }
     
@@ -244,8 +244,8 @@ function mapStateToProps(state) {
   return {
       parameterData: data,
       parameter: parameter,
-      devices: state.device.all,
-      parameters: state.parameter.all
+      devices: state.asset.config.Devices,
+      parameters: state.asset.config.Equations
   };
 }
 

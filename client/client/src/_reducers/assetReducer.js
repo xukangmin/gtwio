@@ -45,7 +45,7 @@ export const asset = (state = {}, action) => {
         return {
             ...state,
             gotData: true,
-            data: action.data
+            config: action.data
         };
     case gConstants.GET_ASSET_CONFIG_FAILURE:
         return {

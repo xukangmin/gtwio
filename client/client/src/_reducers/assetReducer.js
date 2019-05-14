@@ -164,6 +164,20 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+    case gConstants.REMOVE_DEVICE_REQUEST:
+
+        var conf = JSON.parse(JSON.stringify(state.config));
+        for(var i in conf.Devices)
+        {
+            if (conf.Devices[i].SerialNumber === action.sn)
+            {
+                conf.Devices.splice(i,1);
+            }
+        }
+        //state.config.Devices = state.config.Devices.filter(item => item.SerialNumber != action.sn);
+        return Object.assign({}, state, {
+            config: conf
+        });
     //
     default:
         return state;

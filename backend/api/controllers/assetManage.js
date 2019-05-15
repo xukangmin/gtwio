@@ -1414,7 +1414,7 @@ function _getAssetConfig(assetid) {
 function getAssetConfig(req, res) {
   var assetid = req.swagger.params.AssetID.value;
 
-  _getAssetConfig
+  _getAssetConfig(assetid)
     .then(
       ret => {
         shareUtil.SendSuccessWithData(res, ret);

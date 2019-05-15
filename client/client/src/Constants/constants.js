@@ -118,6 +118,7 @@ export const gConstants = {
     UPDATE_TAG_TIME_INTERVAL_FAILURE: 'UPDATE_TAG_TIME_INTERVAL_FAILURE',
 
     REMOVE_DEVICE_REQUEST: 'REMOVE_DEVICE_REQUEST',
+    REMOVE_PARAMETER_REQUEST: 'REMOVE_PARAMETER_REQUEST',
     // ****************************
 
     // ********* DEVICE ************

@@ -74,10 +74,10 @@ const getAssetConfig = (asset) => {
     function failure(error) { return { type: gConstants.GET_ASSET_CONFIG_FAILURE, error } }
 }
 
-const updateAssetConfig = (asset, body) => {
+const updateAssetConfig = (asset, data) => {
     return dispatch => {
           dispatch(request());
-          assetServices.updateAsset(asset, body)
+          assetServices.updateAssetConfig(asset, data)
               .then(
                   info => {
                       dispatch(getAssetConfig(asset));
@@ -413,9 +413,30 @@ const removeDevice = (sn) => {
     return dispatch => {
         dispatch(request(sn));
     }
-
     function request(sn) { return { type: gConstants.REMOVE_DEVICE_REQUEST, sn } }
 }
+
+const updateDevice = (data) => {
+    return dispatch => {
+        dispatch(request(data));
+    }
+    function request(data) { return { type: gConstants.UPDATE_DEVICE_REQUEST, data } }
+}
+
+const removeParameter = (tag) => {
+    return dispatch => {
+        dispatch(request(tag));
+    }
+    function request(sn) { return { type: gConstants.REMOVE_PARAMETER_REQUEST, tag } }
+}
+
+const updateParameter = (data) => {
+    return dispatch => {
+        dispatch(request(data));
+    }
+    function request(data) { return { type: gConstants.UPDATE_PARAMETER_REQUEST, data } }
+}
+
 export const assetActions = {
     getAssets,
     getAsset,
@@ -437,5 +458,8 @@ export const assetActions = {
     addTimeInterval,
     deleteTimeInterval,
     setTimerIntervalActiveForTag,
-    removeDevice
+    removeDevice,
+    updateDevice,
+    removeParameter,
+    updateParameter
 };

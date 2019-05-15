@@ -59,7 +59,7 @@ class AddParameter extends React.Component {
         const { displayName, equation, Tag } = this.state;
 
         return(
-          <div>
+          <div style={{display: this.props.mode ? "block" : "none"}} className="my-2">
             <Button color="primary" onClick={this.addModalToggle}>Add New Parameter</Button>
             <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
               <ModalHeader toggle={this.addModalToggle}>Add New Parameter</ModalHeader>

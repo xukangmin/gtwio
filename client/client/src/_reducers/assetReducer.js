@@ -53,6 +53,11 @@ export const asset = (state = {}, action) => {
             error: action.error
         };
     //
+    case gConstants.UPDATE_ASSET_CONFIG_REQUEST:
+        return {
+            ...state
+        };
+    //
     case gConstants.GET_ASSET_TAG_SUCCESS:
         return {
           ...state,
@@ -164,19 +169,33 @@ export const asset = (state = {}, action) => {
         return {
             error: action.error
         };
+    //
     case gConstants.REMOVE_DEVICE_REQUEST:
-
-        var conf = JSON.parse(JSON.stringify(state.config));
-        for(var i in conf.Devices)
-        {
-            if (conf.Devices[i].SerialNumber === action.sn)
-            {
-                conf.Devices.splice(i,1);
-            }
-        }
-        //state.config.Devices = state.config.Devices.filter(item => item.SerialNumber != action.sn);
+        var config = JSON.parse(JSON.stringify(state.config));        
+        config.Devices = config.Devices.filter(item => item.SerialNumber != action.sn);
         return Object.assign({}, state, {
-            config: conf
+            config: config
+        });
+    
+    case gConstants.UPDATE_DEVICE_REQUEST:
+        var config = JSON.parse(JSON.stringify(state.config));        
+        config.Devices.find(item => item.SerialNumber === action.data[0])[action.data[1]] = action.data[2];
+        return Object.assign({}, state, {
+            config: config
+        });
+    //
+    case gConstants.REMOVE_PARAMETER_REQUEST:
+        var config = JSON.parse(JSON.stringify(state.config));        
+        config.Equations = config.Equations.filter(item => item.Tag != action.tag);
+        return Object.assign({}, state, {
+            config: config
+        });
+    
+    case gConstants.UPDATE_PARAMETER_REQUEST:
+        var config = JSON.parse(JSON.stringify(state.config));        
+        config.Equations.find(item => item.Tag === action.data[0])[action.data[1]] = action.data[2];
+        return Object.assign({}, state, {
+            config: config
         });
     //
     default:

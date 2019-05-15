@@ -29,8 +29,7 @@ class Configurations extends React.Component {
     this.props.dispatch(parameterActions.getParameters(this.asset));
 
     this.editToggle = this.editToggle.bind(this);
-    this.saveChanges = this.saveChanges.bind(this);
-    this.testChange = this.testChange.bind(this);
+    this.discardChanges = this.discardChanges.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
   
@@ -52,40 +51,41 @@ class Configurations extends React.Component {
     this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   } 
 
-  editToggle(){
+  editToggle(config, device, equation){    
+    let result = {...config};
+    result.Devices = device;
+    result.Equations = equation;
+
+    if(this.state.editMode){
+      this.props.dispatch(assetActions.updateAssetConfig(this.asset, result));
+    }
     this.setState({editMode: !this.state.editMode});
   }
 
-  saveChanges(){
-    this.props.dispatch(assetActions.updateAssetConfig(this.asset));
-  }
-  testChange() {
-    this.props.dispatch(assetActions.removeDevice("02A051"));
+  discardChanges(){
+    this.props.dispatch(assetActions.getAssetConfig(this.asset));
+    this.setState({editMode: !this.state.editMode});
   }
 
-  deleteItem(itemID, itemName, itemType){
+  deleteItem(itemID, itemName, itemType) {
+    console.log(...arguments)
     if (confirm("Are you sure to delete " + itemName + "?")){
       if (itemType == "device"){
-        this.props.dispatch(deviceActions.deleteDevice(this.user.UserID, this.asset, itemID));
+        this.props.dispatch(assetActions.removeDevice(itemID));          
       } else if (itemType == "parameter"){
-        this.props.dispatch(parameterActions.deleteParameter(this.asset, itemID));
+        this.props.dispatch(assetActions.removeParameter(itemID));
       }
     }
-  }
+  }  
 
   onAfterSaveCell(row, cellName, cellValue) {
-    if(row.DeviceID){
-      let data = {
-        DeviceID: row.DeviceID,
-        [cellName]: cellValue
-      };
-      this.props.dispatch(deviceActions.updateDevice(this.user, this.asset, data));
-    } else if(row.ParameterID){
-      let data = {
-        ParameterID: row.ParameterID,
-        [cellName]: cellValue
-      }
-      this.props.dispatch(parameterActions.updateParameter(this.asset, data));
+    console.log(...arguments)
+    if(row.SerialNumber){
+      let data = [row.SerialNumber, cellName, cellValue];
+      this.props.dispatch(assetActions.updateDevice(data));
+    } else if(row.Tag){
+      let data = [row.Tag, cellName, cellValue];
+      this.props.dispatch(assetActions.updateParameter(data));
     }
     let rowStr = '';
     for (const prop in row) {
@@ -94,19 +94,210 @@ class Configurations extends React.Component {
   }
 
   render() {
+    const asset = this.asset;
+    const user = this.user;
     const data = this.props.data;
     let device, parameter = [];
 
-    console.log("rerender");
-    
-
     if (data){
-      device = data.Devices;
-      parameter = data.Equations;
-    }
-    
-    const asset = this.asset;
-    const user = this.user;
+      device = [...data.Devices];
+      parameter = [...data.Equations];
+    }   
+
+    const cellEditProp = {
+      mode: 'click',
+      blurToSave: true,
+      afterSaveCell: this.onAfterSaveCell
+    };  
+
+    return (
+      <div style={{position: "relative"}}>
+        <div style={{position: "absolute", top: "0", right:"0", zIndex: "999"}} >          
+          <Button type={this.state.editMode ? "default" : "primary"} onClick={()=>this.editToggle(data, device, parameter)} className="primary" icon={this.state.editMode ? "save" : "edit"}> {this.state.editMode ? "Save Changes" : "Edit Configurations"} </Button>
+          <Button style={{display: this.state.editMode ? "inline" : "none"}} onClick={()=>this.discardChanges()} className="ml-3">Discard Changes</Button>
+          <p style={{color: "red"}} className="mt-2">{this.state.editMode ? "Changes not saved yet.   " : ""}</p>
+        </div>
+        {device && parameter?         
+        <Tabs className="mt-5" onChange={callback} type="card" defaultActiveKey="1">
+          <TabPane tab="Devices" key="1">
+          <Row className="mt-3">
+              <Col>                
+                <AddDevice mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                <BootstrapTable
+                  tableStyle={{backgroundColor: this.state.editMode ? "f0f2f5" : "white"}}
+                  data={device}
+                  insertRow={false}
+                  deleteRow={false}
+                  search={false}
+                  cellEdit={cellEditProp}
+                  version='4'
+                  bordered={false}
+                  hover
+                  height='80%'
+                  scrollTop={'Top'} 
+                  condensed                     
+                >
+
+                <TableHeaderColumn
+                  headerAlign='center'
+                  dataAlign='center'
+                  dataField='SerialNumber'
+                  editable={false}
+                  dataFormat={linkFormatter}
+                  formatExtraData={this.asset}
+                  hidden={this.state.editMode}>
+                    Data
+                </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    isKey
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='SerialNumber'
+                    editable={false}
+                    dataSort={true}>
+                      Serial Number
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Alias'
+                    editable={this.state.editMode}
+                    dataSort={true}
+                    tdStyle={{backgroundColor: 'white'}}>
+                      SensorID
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Name'
+                    dataSort={true}
+                    editable={this.state.editMode}
+                    tdStyle={{backgroundColor: 'white'}}>
+                      Description
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Parameters'
+                    dataFormat={parameterFormatter}
+                    editable={false}
+                    dataSort={true}
+                    hidden>
+                      Parameter
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Tag'
+                    dataSort={true}
+                    editable={this.state.editMode ? {type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}} : false}
+                    tdStyle={{backgroundColor: 'white'}}>
+                   
+                      Location
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Angle'
+                    dataFormat={angleFormatter}
+                    dataSort={true}
+                    editable={this.state.editMode ? {type: 'select', options: {values: ["", "0", "90", "180", "270"]}} : false}
+                    tdStyle={{backgroundColor: 'white'}}>
+                      Angle
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='SerialNumber'
+                    editable={false}
+                    formatExtraData={this.deleteItem}
+                    dataFormat={deleteFormatter}
+                    hidden={!this.state.editMode}
+                    tdStyle={{backgroundColor: 'white'}}>
+                      Delete
+                  </TableHeaderColumn>
+                </BootstrapTable>
+              </Col>
+            </Row>
+          </TabPane>
+
+          <TabPane tab="Parameters & Calculations" key="2">
+            <Row className="mt-3">
+              <Col>
+                <AddParameter mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
+                <BootstrapTable
+                  tableStyle={{backgroundColor: this.state.editMode ? "f0f2f5" : "white"}}
+                  data={parameter}
+                  hover
+                  height='80%' scrollTop={'Top'}
+                  search={false}
+                  cellEdit={cellEditProp}
+                  version='4'
+                  bordered={false}
+                  condensed
+                >
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    width="55px"
+                    dataField='Tag'
+                    editable={false}
+                    dataFormat={linkFormatter}
+                    formatExtraData={this.asset}
+                    hidden={this.state.editMode}>
+                      Data
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='left' 
+                    dataField='Tag' 
+                    isKey={true} 
+                    editable={false} 
+                    dataSort={true}
+                    tdStyle={{whiteSpace: 'normal'}}>
+                      Tag
+                  </TableHeaderColumn>                
+                                    
+                  <TableHeaderColumn 
+                    headerAlign='center' 
+                    dataAlign='left' 
+                    dataField='Equation' 
+                    editable={false}
+                    formatExtraData={[this.props.dispatch,'123']}
+                    dataFormat={modalFormatter}
+                    dataSort={true}
+                    tdStyle={{whiteSpace: 'normal', backgroundColor: "white"}}>
+                      Equation
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='Tag'
+                    width='65px'
+                    editable={false}
+                    formatExtraData={this.deleteItem}
+                    dataFormat={deleteFormatter}
+                    tdStyle={{backgroundColor: 'white'}}>
+                      Delete
+                  </TableHeaderColumn>
+                </BootstrapTable>
+              </Col>
+            </Row>
+          </TabPane>
+        </Tabs>
+        :
+        <Loader/>}
+      </div>
+    );
 
     function afterSearch(searchText, result) {
       //although this is not used, this function has to be exist
@@ -117,13 +308,15 @@ class Configurations extends React.Component {
     }
 
     function deleteFormatter(cell, row, enumObject){
-      let type;
-      if(row.DeviceID){
+      let type, name = "";
+      if(row.SerialNumber){
         type = 'device';
-      } else if (row.ParameterID){
+        name = row.SerialNumber
+      } else if (row.Tag){
         type = 'parameter';
+        name = row.Tag;
       }
-      return <button type="button" title="Delete this Item" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell, row.DisplayName, type)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+      return <button type="button" title="Delete this Item" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>enumObject(cell, name, type)}><i className="fa fa-trash" aria-hidden="true"></i></button>
     }
 
     function linkFormatter(cell, row, enumObject){
@@ -145,203 +338,11 @@ class Configurations extends React.Component {
 
     function dateFormatter(cell, row){
       return moment(cell).format('MMMM Do YYYY');
-    }
-
-    const cellEditProp = {
-      mode: 'click',
-      blurToSave: true,
-      afterSaveCell: this.onAfterSaveCell
-    };   
-    
-    const deviceTable = {
-
-    }
+    }    
 
     function callback(key) {
       // console.log(key);
     }
-
-    const editColumn = {
-      backgroundColor: "red"
-    }
-    return (
-
-      <div style={{position: "relative"}}>
-        <Button style={{position: "absolute", top: "0", right:"0"}} type="primary" onClick={this.editToggle} className="primary"><Icon type="edit" /> Edit Configurations </Button>
-
-        <Switch defaultChecked onChange={this.editToggle} checked={this.state.editMode}/> Edit Configurations
-        <Button onClick={this.saveChanges} className="ml-3"> Save Changes </Button>
-        <Button onClick={this.testChange} className="ml-3"> Test </Button>
-
-        {device && parameter?         
-        <Tabs className="mt-5" onChange={callback} type="card" defaultActiveKey="1">
-          <TabPane tab="Devices" key="1">
-          <Row className="mt-3">
-              <Col>                
-                <AddDevice mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-                <BootstrapTable
-                  tableStyle={{}}
-                  data={device}
-                  insertRow={false}
-                  deleteRow={false}
-                  search={false}
-                  cellEdit={cellEditProp}
-                  version='4'
-                  bordered={false}
-                  hover
-                  height='80%'
-                  scrollTop={'Top'} 
-                  condensed                     
-                >
-
-                <TableHeaderColumn
-                  headerAlign='center'
-                  dataAlign='center'
-                  dataField='SerialNumber'
-                  editable={false}
-                  dataFormat={linkFormatter}
-                  formatExtraData={this.asset}>
-                    Data
-                </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    isKey
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='SerialNumber'
-                    editable={false}
-                    dataSort={true}>
-                      Serial Number
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Alias'
-                    dataSort={true}>
-                      SensorID
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Name'
-                    dataSort={true}>
-                      Description
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Parameters'
-                    dataFormat={parameterFormatter}
-                    editable={false}
-                    dataSort={true}
-                    hidden>
-                      Parameter
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Tag'
-                    dataSort={true}
-                    editable={{type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}}}>
-                      Location
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Angle'
-                    dataFormat={angleFormatter}
-                    dataSort={true}
-                    editable={{type: 'select', options: {values: ["", "0", "90", "180", "270"]}}}>
-                      Angle
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='SerialNumber'
-                    editable={false}
-                    formatExtraData={this.deleteItem}
-                    dataFormat={deleteFormatter}
-                    columnClassName={editColumn}>
-                      Delete
-                  </TableHeaderColumn>
-                </BootstrapTable>
-              </Col>
-            </Row>
-          </TabPane>
-
-          <TabPane tab="Parameters & Calculations" key="2">
-            <Row className="mt-3">
-              <Col>
-                <AddParameter user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
-                <BootstrapTable
-                  data={parameter}
-                  hover
-                  height='80%' scrollTop={'Top'}
-                  search={false}
-                  cellEdit={cellEditProp}
-                  version='4'
-                  bordered={false}
-                  condensed
-                >
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    width="55px"
-                    dataField='Tag'
-                    editable={false}
-                    dataFormat={linkFormatter}
-                    formatExtraData={this.asset}>
-                      Data
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn 
-                    headerAlign='center' 
-                    dataAlign='left' 
-                    dataField='Tag' 
-                    isKey={true} 
-                    editable={false} 
-                    dataSort={true}
-                    tdStyle={{whiteSpace: 'normal'}}>
-                      Tag
-                  </TableHeaderColumn>                
-                                    
-                  <TableHeaderColumn 
-                    headerAlign='center' 
-                    dataAlign='left' 
-                    dataField='Equation' 
-                    editable={false}
-                    formatExtraData={this.props.dispatch}
-                    dataFormat={modalFormatter}
-                    dataSort={true}
-                    tdStyle={{whiteSpace: 'normal'}}>
-                      Equation
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    headerAlign='center'
-                    dataAlign='center'
-                    dataField='Tag'
-                    width='65px'
-                    editable={false}
-                    formatExtraData={this.deleteItem}
-                    dataFormat={deleteFormatter}>
-                      Delete
-                  </TableHeaderColumn>
-                </BootstrapTable>
-              </Col>
-            </Row>
-          </TabPane>
-        </Tabs>
-        :
-        <Loader/>}
-      </div>
-    );
   }
 }
 

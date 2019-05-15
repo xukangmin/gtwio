@@ -32,6 +32,7 @@ const ParameterInfo = (props) => {
               <th>Equation</th>
               <td>
                 <EditEquation 
+                  mode={true}
                   equation={parameter.OriginalEquation} 
                   asset={asset} 
                   user={user}

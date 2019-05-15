@@ -80,9 +80,12 @@ class EditEquation extends React.Component {
   }
 
   modalToggle(){
-    this.setState(prevState => ({
-      modalOpen: !prevState.modalOpen
-    }));
+    console.log(this.props.mode)
+    if(this.props.mode){
+      this.setState(prevState => ({
+        modalOpen: !prevState.modalOpen
+      }));
+    }    
   }
 
   addButtonClicked(){

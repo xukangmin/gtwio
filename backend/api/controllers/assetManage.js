@@ -25,8 +25,10 @@ var functions = {
   setBaselineActive: setBaselineActive,
   updateBaseline: updateBaseline,
   getAssetTimeRange: getAssetTimeRange,
+  _getAssetTimeRange: _getAssetTimeRange,
   setTimerIntervalActiveForTag: setTimerIntervalActiveForTag,
   getAssetConfig: getAssetConfig,
+  _getAssetConfig: _getAssetConfig,
   updateAssetConfig: updateAssetConfig
 };
 
@@ -137,40 +139,60 @@ function _getBaselineByAssetID(assetid) {
     });
 }
 
+function _getAssetTimeRange(assetID) {
+  return new Promise(
+    (resolve, reject) => {
+      var timerange = [];
+      dataManage._getAllParameterByAssetID(assetID)
+        .then(
+          ret => {
+            if (ret.length > 0) 
+            {
+              
+              for(var i in ret) {
+                if (ret[i].DataAvailableTimeRange)
+                {
+                  var daobj = ret[i].DataAvailableTimeRange.toObject();
+                  if (daobj.length > 0)
+                  {
+                    for (var j in daobj) {
+                      if (timerange.includes(daobj[j]) === false)
+                      {
+                        timerange.push(daobj[j]);
+                      }
+                    }
+                  }
+  
+                }
+              }
+  
+              resolve(timerange);
+  
+            } else {
+              resolve([]);
+            }
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+    });
+}
+
 function getAssetTimeRange(req, res) {
   var assetID = req.swagger.params.AssetID.value;
   if (assetID) {
-    var timerange = [];
-    dataManage._getAllParameterByAssetID(assetID)
+    _getAssetTimeRange(assetID)
       .then(
         ret => {
-          if (ret.length > 0) 
-          {
-            
-            for(var i in ret) {
-              if (ret[i].DataAvailableTimeRange)
-              {
-                var daobj = ret[i].DataAvailableTimeRange.toObject();
-                if (daobj.length > 0)
-                {
-                  for (var j in daobj) {
-                    if (timerange.includes(daobj[j]) === false)
-                    {
-                      timerange.push(daobj[j]);
-                    }
-                  }
-                }
-
-              }
-            }
-
-            shareUtil.SendSuccessWithData(res, timerange);
-
-          } else {
-            shareUtil.SendSuccessWithData(res, []);
-          }
+          shareUtil.SendSuccessWithData(res, ret);
         }
       )
+      .catch(err => {
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null , 2));
+      });
   } else {
     shareUtil.SendInvalidInput(res, 'assetid not found');
   }
@@ -1372,22 +1394,37 @@ function createAssetByConfig(req, res) {
     }
   }
 }
-
+function _getAssetConfig(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOne({AssetID: assetid},(err,data) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (data) {
+            resolve(data.Config);
+          } else {
+            reject("asset not found");
+          }
+        }
+      });
+    });
+}
 
 function getAssetConfig(req, res) {
   var assetid = req.swagger.params.AssetID.value;
 
-  Asset.findOne({AssetID: assetid},(err,data) => {
-    if (err) {
-      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
-    } else {
-      if (data) {
-        shareUtil.SendSuccessWithData(res, data.Config);
-      } else {
-        shareUtil.SendInvalidInput(res, "asset not found");
+  _getAssetConfig
+    .then(
+      ret => {
+        shareUtil.SendSuccessWithData(res, ret);
       }
-    }
-  });
+    )
+    .catch(
+      err => {
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+      }
+    );
 }
 
 function updateAssetConfig(req, res) {

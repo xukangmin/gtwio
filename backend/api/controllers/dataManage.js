@@ -8,6 +8,7 @@ const Asset = require('../db/asset.js');
 const math = require('mathjs');
 const path = require('path');
 var parameterManage = require('./parameterManage.js');
+var assetManage = require('./assetManage.js');
 var jStat = require('jStat').jStat;
 //const Promise = require('bluebird');
 
@@ -20,6 +21,7 @@ var functions = {
   getDataByTag: getDataByTag,
   getDataByAssetID: getDataByAssetID,
   getDataByDeviceID: getDataByDeviceID,
+  getDataForBaselineSelection: getDataForBaselineSelection,
   testFunc: testFunc,
   addDataByParticleEvent: addDataByParticleEvent,
   _getAllParameterByAssetID: _getAllParameterByAssetID,
@@ -870,30 +872,33 @@ function _getRawDataByType(deviceobj, sTS, eTS) {
     );
 }
 
-function _getRawDataByTag(assetid, tag, sTS, eTS, callback) {
-  _getAllDeviceByAssetID(assetid)
-    .then(
-      devicelist => {
-        return Promise.all(devicelist.map(_getDeviceInfoByDeviceID));
-      }
-    )
-    .then(
-      devicelist =>
-      {
-        devicelist = devicelist.filter(item => item.Tag === tag);
-        return Promise.all(devicelist.map(item => _getRawDataByType(item, sTS, eTS)));
-      }
-    )
-    .then(
-      ret => {
-        callback(null, ret);
-      }
-    )
-    .catch(
-      err => {
-        callback(err, null);
-      }
-    )
+function _getRawDataByTag(assetid, tag, sTS, eTS) {
+  return new Promise(
+    (resolve, reject) => {
+      _getAllDeviceByAssetID(assetid)
+        .then(
+          devicelist => {
+            return Promise.all(devicelist.map(_getDeviceInfoByDeviceID));
+          }
+        )
+        .then(
+          devicelist =>
+          {
+            devicelist = devicelist.filter(item => item.Tag === tag);
+            return Promise.all(devicelist.map(item => _getRawDataByType(item, sTS, eTS)));
+          }
+        )
+        .then(
+          ret => {
+            resolve(ret);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+    });
 }
 
 
@@ -1255,13 +1260,17 @@ function getDataByTag(req, res) {
   var eTS = req.swagger.params.EndTimeStamp.value;
 
   if (assetid && tag && sTS && eTS) {
-    _getRawDataByTag(assetid, tag, sTS, eTS, function(err, data) {
-      if (err) {
-        shareUtil.SendInternalErr(res,  "tag search error:" + JSON.stringify(err, null, 2));
-      } else {
-        shareUtil.SendSuccessWithData(res, data);
-      }
-    });
+    _getRawDataByTag(assetid, tag, sTS, eTS)
+      .then(
+        ret => {
+          shareUtil.SendSuccessWithData(res, ret);
+        }
+      )
+      .catch(
+        err => {
+          shareUtil.SendInternalErr(res,  "tag search error:" + JSON.stringify(err, null, 2));
+        }
+      );
   } else {
     var msg = "assetid or tag or type or StartTimeStamp or EndTimeStamp missing";
     shareUtil.SendInvalidInput(res, msg);
@@ -1603,5 +1612,24 @@ function getDataByAssetID(req, res) {
 }
 
 function getDataByDeviceID(req, res) {
+
+}
+
+function getDataForBaselineSelection(req, res) {
+  var assetid = req.swagger.params.AssetID.value;
+  var timerange, config;
+  const tag_list = ['ShellInlet','ShellOutlet','TubeInlet','TubeOutlet'];
+  assetManage._getAssetTimeRange(assetid)
+    .then(
+      ret => {
+        timerange = ret;
+        return Promise.all(tag_list.map(item => _getRawDataByTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
+      }
+    )
+    .then(
+      ret => {
+        shareUtil.SendSuccessWithData(res, ret);
+      }
+    )
 
 }

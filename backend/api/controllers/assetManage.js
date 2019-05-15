@@ -1390,7 +1390,7 @@ function getAssetConfig(req, res) {
   });
 }
 
-function updateAssetConfig(res, res) {
+function updateAssetConfig(req, res) {
   var assetid = req.body.AssetID;
   var config = req.body.Config;
 

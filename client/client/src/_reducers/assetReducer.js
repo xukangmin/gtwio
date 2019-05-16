@@ -198,6 +198,7 @@ export const asset = (state = {}, action) => {
             config: config
         });
     //
+
     default:
         return state;
   }

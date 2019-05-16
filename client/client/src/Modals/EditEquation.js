@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { parameterActions } from '../_actions/parameterAction';
+import { assetActions } from '../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag, Icon } from 'antd';
 import { Controlled as CodeMirror } from 'react-codemirror2';
@@ -80,20 +80,13 @@ class EditEquation extends React.Component {
   }
 
   modalToggle(){
-    console.log(this.props.mode)
-    if(this.props.mode){
       this.setState(prevState => ({
         modalOpen: !prevState.modalOpen
       }));
-    }    
   }
 
   addButtonClicked(){
-    let data = {
-      'ParameterID': this.state.parameter,
-      'OriginalEquation': this.state.value
-    };    
-    this.props.dispatch(parameterActions.updateParameter(this.asset, data));
+    this.props.dispatch(assetActions.updateParameter([this.state.parameter,"Equation",this.state.value]));
     this.setState(prevState => ({
       equation: this.state.value,
       modalOpen: !prevState.modalOpen

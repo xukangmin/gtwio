@@ -124,7 +124,7 @@ class Configurations extends React.Component {
               <Col>                
                 <AddDevice mode={this.state.editMode} user={this.user} asset={this.asset} dispatch={this.props.dispatch}/>
                 <BootstrapTable
-                  tableStyle={{backgroundColor: this.state.editMode ? "f0f2f5" : "white"}}
+                  tableStyle={{backgroundColor: this.state.editMode ? "f0f2f5" : "white", padding: '2px'}}
                   data={device}
                   insertRow={false}
                   deleteRow={false}
@@ -137,17 +137,17 @@ class Configurations extends React.Component {
                   scrollTop={'Top'} 
                   condensed                     
                 >
-
-                <TableHeaderColumn
-                  headerAlign='center'
-                  dataAlign='center'
-                  dataField='SerialNumber'
-                  editable={false}
-                  dataFormat={linkFormatter}
-                  formatExtraData={this.asset}
-                  hidden={this.state.editMode}>
-                    Data
-                </TableHeaderColumn>
+                
+                  <TableHeaderColumn
+                    headerAlign='center'
+                    dataAlign='center'
+                    dataField='SerialNumber'
+                    editable={false}
+                    dataFormat={linkFormatter}
+                    formatExtraData={this.asset}
+                    hidden={this.state.editMode}>
+                      Data
+                  </TableHeaderColumn>
 
                   <TableHeaderColumn
                     isKey
@@ -271,7 +271,7 @@ class Configurations extends React.Component {
                     dataAlign='left' 
                     dataField='Equation' 
                     editable={false}
-                    formatExtraData={[this.props.dispatch,'123']}
+                    formatExtraData={this.state.editMode}
                     dataFormat={modalFormatter}
                     dataSort={true}
                     tdStyle={{whiteSpace: 'normal', backgroundColor: "white"}}>
@@ -303,8 +303,8 @@ class Configurations extends React.Component {
       //although this is not used, this function has to be exist
     }
 
-    function modalFormatter(cell, row, enumObject){
-      return <EditEquation equation={cell} asset={asset} user={user} item={row.ParameterID} dispatch={enumObject}/>
+    function modalFormatter(cell, row, editMode){
+      return editMode ? <EditEquation equation={cell} item={row.Tag}/> : <p>{cell}</p>; 
     }
 
     function deleteFormatter(cell, row, enumObject){

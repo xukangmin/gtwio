@@ -51,18 +51,7 @@ function _deleteAllData(paraobj) {
 
 }
 
-function testFunc(req, res) {
-   
-  
-    //res.download('./delpayManage.js');
-    //shareUtil.SendSuccess(res);
-    var testvar = {};
-    testvar.AssetID = "test";
-    testvar.WWW = "123";
 
-    res.status(200).sendFile(testvar);
-
-}
 function _getSingleDataPoint(paraid, currentTimeStamp) {
     return new Promise(
       (resolve, reject) => {
@@ -261,7 +250,13 @@ function _perform_calculation(dataobj, equation, latestTimeStamp) {
             const parser = math.parser();
 
             parser.set('t_value', function (X, df) {
-              return -jStat.studentt.inv(X/2,df);
+              if (df == 0)
+              {
+                return 0;
+              } else {
+                return -jStat.studentt.inv(X/2,df);
+              }
+              
             });
             
             parser.set('count', function (...args) {
@@ -1612,6 +1607,239 @@ function getDataByAssetID(req, res) {
 }
 
 function getDataByDeviceID(req, res) {
+
+}
+
+function _getDataForBaselineSelection(assetid)
+{
+  return new Promise(
+    (resolve, reject) => {
+      var timerange, config;
+      const tag_list = ['ShellInlet','ShellOutlet','TubeInlet','TubeOutlet'];
+      assetManage._getAssetTimeRange(assetid)
+        .then(
+          ret => {
+            timerange = ret;
+            return Promise.all(tag_list.map(item => _getRawDataByTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
+          }
+        )
+        .then(
+          ret => {
+            resolve(ret);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+  });
+}
+
+function _resolve_single_para(para, raw_data, config, sTS, eTS) {
+
+
+  var paralist = para.replace(/[\[\]]/g,'').split(",");
+  var grpdata = [];
+  //console.log(paralist);
+  if (para.includes("/")) // raw data
+  {
+    var ptag = paralist[0].split('/')[0];
+    var ptype = paralist[0].split('/')[1];
+  
+    for(var i in raw_data) {
+      for(var j in raw_data[i])
+      {
+        var single_data = raw_data[i][j];
+  
+        if (single_data.Tag === ptag) {
+          for (var k in single_data.Parameters) {
+            var single_p = single_data.Parameters[k];
+            if (single_p.Type === ptype) {
+              for (var l in single_p.Data) {
+                if (single_p.Data[l].TimeStamp >= sTS && single_p.Data[l].TimeStamp <= eTS) {
+                  grpdata.push(single_p.Data[l].Value);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if (paralist.length === 1) {
+      return grpdata;
+    } else if (paralist.length > 1) {
+      if (paralist[1] === "COUNT") {
+        return grpdata.length;
+      } else {
+        return grpdata
+      }
+    } else {
+      return grpdata;
+    }
+    
+  } else { // calculated data
+    var ptag = paralist[0];
+    var single_para = config.Equations.filter(item => item.Tag === ptag);
+    if (single_para.length === 1) {
+      if (single_para[0].Value) {
+        if (ptag.includes("COUNT") && single_para[0].Value.length > 1) {
+          return single_para[0].Value[single_para[0].Value.length - 1];
+        } else{
+          return single_para[0].Value;
+        }
+        
+      } else {
+
+        return para;
+      }
+    } else {
+      return para;
+    }
+  }
+}
+
+function _check_resolve(config) {
+
+  var resolved = config.Equations.filter(item => (typeof item.Value === "number" || typeof item.Value === "object"));
+
+  return resolved.length / config.Equations.length;
+
+}
+
+function _eval_engine(new_eval) {
+  console.log(new_eval);
+  new_eval = _math_op_convert(new_eval);
+  new_eval = new_eval.replace(/[\[\]]/g,'');
+
+  const parser = math.parser();
+
+  parser.set('t_value', function (X, df) {
+    return -jStat.studentt.inv(X/2,df);
+  });
+  
+  parser.set('count', function (...args) {
+    return args.length;
+  });
+  
+  try {
+    var result = parser.eval(new_eval);
+    var ret = {};
+
+    ret.Result = result;
+    ret.ResolvedEquation = new_eval
+    // console.log("result=" + result);
+    return ret;
+  }
+  catch(err) {
+    // console.log("error1:");
+    // console.error(err);
+    var ret = {};
+    ret.Error = err;
+    return ret;
+  }
+}
+
+function _resolve_single_equation(equ_index, raw_data, config, sTS, eTS) {
+  var eqn = config.Equations[equ_index].Equation;
+  var tag = config.Equations[equ_index].Tag;
+
+  var reg = /\[[^\]]+\]/g;
+
+  var paralist = eqn.match(reg);
+
+  if (tag.includes("INTERVAL"))
+  {
+    var new_eval = eqn;
+    for(var i in paralist) {
+      var ret = _resolve_single_para(paralist[i], raw_data, config, sTS, eTS);
+      if (typeof ret === 'object') {
+        if (Array.isArray(ret) && ret.length > 0) {
+          new_eval = new_eval.replace(paralist[i], ret.join(","));
+        }
+      } else if (typeof ret === 'number')
+      {
+        new_eval = new_eval.replace(paralist[i], ret.toString());
+      }
+    }
+    var eval_ret = _eval_engine(new_eval);
+
+    if (eval_ret.Result) {
+      config.Equations[equ_index].Value = eval_ret.Result;
+    }
+
+    
+
+  } else { // calculate multiple values
+    var value = [];
+    for(var s = sTS; s < eTS; s += 60000) {
+      var new_eval = eqn;
+      for(var i in paralist) {
+        var ret = _resolve_single_para(paralist[i], raw_data, config, s, s + 60000);
+        if (typeof ret === 'object') {
+          if (Array.isArray(ret) && ret.length > 0) {
+            new_eval = new_eval.replace(paralist[i], ret.join(","));
+          } 
+        } else if (typeof ret === 'number')
+        {
+          new_eval = new_eval.replace(paralist[i], ret.toString());
+        }
+      }
+      var eval_ret = _eval_engine(new_eval);
+
+      if (eval_ret.Result) {
+        value.push(eval_ret.Result);
+      }
+    }
+
+    if (value.length > 0) {
+      config.Equations[equ_index].Value = value;
+    }
+  }
+
+}
+
+function _baseline_parameter_calculate(raw_data, config, sTS, eTS) {
+  var all_resolved = false;
+  // var ei = 0;
+  // while(!all_resolved) {
+    
+  // }
+  var retry = 10;
+  var resolve_per = 0;
+  while(retry-- && resolve_per < 1) {
+    for(var i in config.Equations){
+      _resolve_single_equation(i, raw_data, config, sTS, eTS);
+    }
+    
+    resolve_per = _check_resolve(config);
+  }
+  
+
+
+}
+
+function testFunc(req, res) {
+   
+  var assetid = req.swagger.params.AssetID.value;
+  //res.download('./delpayManage.js');
+  //shareUtil.SendSuccess(res);
+ var raw_data, equations;
+  _getDataForBaselineSelection(assetid)
+    .then(
+      ret => {
+        raw_data = ret;
+        return assetManage._getAssetConfig(assetid);
+      }
+    ).then(
+      ret => {
+        equations = ret;
+
+        _baseline_parameter_calculate(raw_data, equations, 1558361699136, 1558362303098);
+        shareUtil.SendSuccessWithData(res, equations);
+      }
+    )
+  
 
 }
 

@@ -868,6 +868,33 @@ function _getRawDataByType(deviceobj, sTS, eTS) {
     );
 }
 
+function _getDataByParameterTag(assetid, tag, sTS, eTS) {
+  return new Promise(
+    (resolve, reject) => {
+      var para;
+      _getAllParameterByAssetID(assetid)
+        .then(
+          ret => {
+            para = ret;
+            var paralist = para.filter(item => item.Tag === tag);
+            
+            return _getDataByParameterIDWithParaInfo(paralist[0], sTS, eTS);
+          }
+        )
+        .then(
+          ret => {
+            resolve(ret);
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+  });
+  
+}
+
 function _getRawDataByTag(assetid, tag, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
@@ -1158,6 +1185,7 @@ function _getDataByParameterIDWithParaInfo(para, sTS, eTS) {
               var min = dataarr.reduce((min, p) => Math.min(min,p));
               var max = dataarr.reduce((max, p) => Math.max(max,p));
               var stdev = math.std(dataarr);
+              stat.Count = dataarr.length;
               stat.Sum = sum;
               stat.Avg = avg;
               stat.Min = min;
@@ -1843,12 +1871,30 @@ function testFunc(req, res) {
 function getDataForBaselineSelection(req, res) {
   var assetid = req.swagger.params.AssetID.value;
   var timerange, config;
-  const tag_list = ['ShellInlet','ShellOutlet','TubeInlet','TubeOutlet'];
-  assetManage._getAssetTimeRange(assetid)
+  var tag_list = ['SHELLINLET_TMU:INTERVAL','SHELLOUTLET_TMU:INTERVAL'];
+  var new_tag_list = [];
+
+  assetManage._getAssetConfig(assetid)
+    .then(
+      ret => {
+        config = ret;
+        for(var i in tag_list) {
+          for(var j in config.TimeInterval)
+          {
+            var new_string = tag_list[i].replace("INTERVAL", config.TimeInterval[j].toString());
+            new_tag_list.push(new_string);
+          }
+         
+        }
+        //shareUtil.SendSuccessWithData(res, new_tag_list);
+
+        return assetManage._getAssetTimeRange(assetid);
+      }
+    )
     .then(
       ret => {
         timerange = ret;
-        return Promise.all(tag_list.map(item => _getRawDataByTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
+        return Promise.all(new_tag_list.map(item => _getDataByParameterTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
       }
     )
     .then(
@@ -1856,6 +1902,19 @@ function getDataForBaselineSelection(req, res) {
         shareUtil.SendSuccessWithData(res, ret);
       }
     )
+
+  // assetManage._getAssetTimeRange(assetid)
+  //   .then(
+  //     ret => {
+  //       timerange = ret;
+  //       return Promise.all(tag_list.map(item => _getRawDataByTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
+  //     }
+  //   )
+  //   .then(
+  //     ret => {
+  //       shareUtil.SendSuccessWithData(res, ret);
+  //     }
+  //   )
 
 }
 

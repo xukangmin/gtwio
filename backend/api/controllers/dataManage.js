@@ -22,6 +22,7 @@ var functions = {
   getDataByAssetID: getDataByAssetID,
   getDataByDeviceID: getDataByDeviceID,
   getDataForBaselineSelection: getDataForBaselineSelection,
+  getCalculatedDataForBaseline: getCalculatedDataForBaseline,
   testFunc: testFunc,
   addDataByParticleEvent: addDataByParticleEvent,
   _getAllParameterByAssetID: _getAllParameterByAssetID,
@@ -1708,7 +1709,7 @@ function _check_resolve(config) {
 }
 
 function _eval_engine(new_eval) {
-  console.log(new_eval);
+  //console.log(new_eval);
   new_eval = _math_op_convert(new_eval);
   new_eval = new_eval.replace(/[\[\]]/g,'');
 
@@ -1800,11 +1801,7 @@ function _resolve_single_equation(equ_index, raw_data, config, sTS, eTS) {
 }
 
 function _baseline_parameter_calculate(raw_data, config, sTS, eTS) {
-  var all_resolved = false;
-  // var ei = 0;
-  // while(!all_resolved) {
-    
-  // }
+
   var retry = 10;
   var resolve_per = 0;
   while(retry-- && resolve_per < 1) {
@@ -1815,7 +1812,7 @@ function _baseline_parameter_calculate(raw_data, config, sTS, eTS) {
     resolve_per = _check_resolve(config);
   }
   
-
+  return config;
 
 }
 
@@ -1860,4 +1857,30 @@ function getDataForBaselineSelection(req, res) {
       }
     )
 
+}
+
+function getCalculatedDataForBaseline(req, res) {
+  var assetid  = req.swagger.params.AssetID.value;
+  var sTS  = req.swagger.params.StartTimeStamp.value;
+  var eTS  = req.swagger.params.EndTimeStamp.value;
+  var raw_data, config;
+  if (assetid && sTS && eTS) {
+    _getDataForBaselineSelection(assetid)
+    .then(
+      ret => {
+        raw_data = ret;
+        return assetManage._getAssetConfig(assetid);
+      }
+    ).then(
+      ret => {
+        config = ret;
+
+        _baseline_parameter_calculate(raw_data, config, sTS, eTS);
+        shareUtil.SendSuccessWithData(res, config);
+      }
+    )
+
+  } else {
+    shareUtil.SendInvalidInput(res, "assetid or start time stamp or end time stamp missing");
+  }
 }

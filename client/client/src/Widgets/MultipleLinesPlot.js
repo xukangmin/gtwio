@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Plot from 'react-plotly.js';
 import moment from "moment";
 import { assetActions } from '../_actions/assetAction';
+import Loader from './Loader';
 
 class MultipleLinesPlot extends React.Component {
   constructor(props){
@@ -12,41 +13,24 @@ class MultipleLinesPlot extends React.Component {
   }
 
   onClick (data) {
-    let x = data.points[0].x;
-    let y = data.points[0].y;
-    
-    let newBaseline = [{
-      TimeStamp: moment(x.toString(),"MMMM Do, H:mm").format('x'),
-      Active: 1
-    }]
+    if(this.props.for === "baseline"){
+      let x = data.points[0].x;
+      let y = data.points[0].y;
 
-    let confirmBaseline = confirm (`update baseline to ${x}?`);
-    if (confirmBaseline){
-      this.baseline = moment(x.toString(),"MMMM Do, H:mm").format('x');
-      this.props.dispatch(assetActions.updateBaseline(this.props.user, this.props.asset, newBaseline));
-      this.forceUpdate();
+      let newBaseline = [{
+        TimeStamp: moment(x.toString(),"MMMM Do, H:mm").format('x'),
+        Active: 1
+      }]
+
+      let confirmBaseline = confirm (`update baseline to ${x}?`);
+      if (confirmBaseline){
+        this.baseline = moment(x.toString(),"MMMM Do, H:mm").format('x');
+        this.props.dispatch(assetActions.updateBaseline(this.props.user, this.props.asset, newBaseline));
+        this.forceUpdate();
+      }    
     }
-    
-    // let {selectedPoints} = this.state;
-     
-    // let selectedIndex = selectedPoints.x.indexOf(x)
-    // if(selectedIndex === -1) {
-    //    newSelected = {
-    //      x:selectedPoints.x.push(x),
-    //      y:selectedPoints.y.push(y)
-    //    }
-    // } else {
-    //    newSelected = {
-    //       x: selectedPoints.x.delete(selectedIndex),
-    //       y: selectedPoints.y.delete(selectedIndex)
-    //    }
-    // }
-
-    // this.setState({
-    //   selectedPoints:newSelected
-    // })
-
   }
+
   shouldComponentUpdate(nextProps) {
     if (this.props.assetData !== nextProps.assetData ) {
       return true;
@@ -63,6 +47,7 @@ class MultipleLinesPlot extends React.Component {
     let allData = [];
     let layout = {};
     let baseline = undefined;
+    let dataDone = false;
 
     if(this.props.assetData && this.props.assetData.Settings){
       baseline = this.props.assetData.Settings.Baselines[0].TimeStamp;
@@ -84,6 +69,7 @@ class MultipleLinesPlot extends React.Component {
         });
         allData.push(data[i].Parameters[0].Data.map((item,i) => item.Value));
       }
+      dataDone = true;
 
       layout = {
         title: 'Line Chart',
@@ -104,17 +90,22 @@ class MultipleLinesPlot extends React.Component {
         }
       }
 
-    } else {
+    } else if (data){
       isRangeBiggerThanADay = true;
-      for (var i = 0; i < data.length; i++){
+      
+      let addData = function() {
+        for (var i = 0; i < data.length; i++){
         formattedData.push({
-          x: data[i].Data.map((item,i) => moment(new Date(item.TimeStamp)).format('MMMM Do, H:mm')),
-          // x: data[i].Data.map((item,i) => item.TimeStamp),
-          y: data[i].Data.map((item,i) => item.Value.toFixed(2)),
+          x: data[i].Data.map((item,i) => item.TimeStamp ? moment(new Date(item.TimeStamp)).format('MMMM Do, H:mm'): 0),
+          y: data[i].Data.map((item,i) => item.Value ? item.Value.toFixed(2) : 0),
           type: 'scatter',
           name: parseInt(data[i].Tag.split(':')[1])/60000 + "min"
         });
       }
+      console.log('done');
+      dataDone = true;
+    }();
+      
 
       layout = {
         yaxis: {
@@ -139,30 +130,49 @@ class MultipleLinesPlot extends React.Component {
            line: {
              color: 'red',
              width: 3
-           },
-           text: '123'
+           }
          }
+      ],
+      annotations: [
+        {
+          xref: 'x',
+          yref: 'y',
+          x: moment(new Date(baseline)).format('MMMM Do, H:mm'),
+          xanchor: 'center',
+          y: 0.2,
+          yanchor: 'bottom',
+          text: 'current baseline',
+          showarrow: false,
+          font: { color: 'red'}
+        }
       ],
         margin:{
           l: 50,
           t: 30
         },
         legend: {
-          orientation: 'h'
+          orientation: 'h',
+          xanchor: 'center',
+          yanchor: 'bottom',
+          x: 0.5,
+          y: -0.3
         }
       }      
     }
       
 
     return(
+      
       <div>
-        <h4 style={{textAlign: "center"}}>Baseline: {moment(new Date(baseline)).format('YYYY MMMM Do, H:mm')}</h4>
+        <h4 style={{textAlign: "center", display: this.props.for ==='baseline' ? 'block' : 'none'}}>Baseline: {moment(new Date(baseline)).format('YYYY MMMM Do, H:mm')}</h4>
+        {dataDone ?
         <Plot
-          data = {formattedData}
+          data = {formattedData ? formattedData : []}
           layout = {layout}
           style = {{width:"100%"}}
           onClick = {this.onClick}
-        />
+        />:
+        <Loader/>}
       </div>
     );
   }

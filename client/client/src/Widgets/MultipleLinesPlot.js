@@ -14,16 +14,17 @@ class MultipleLinesPlot extends React.Component {
   onClick (data) {
     let x = data.points[0].x;
     let y = data.points[0].y;
-   
-    console.log(x);
-    let baseline = [{
+    
+    let newBaseline = [{
       TimeStamp: moment(x.toString(),"MMMM Do, H:mm").format('x'),
       Active: 1
     }]
 
     let confirmBaseline = confirm (`update baseline to ${x}?`);
     if (confirmBaseline){
-      this.props.dispatch(assetActions.updateBaseline(this.props.user, this.props.asset, baseline));
+      this.baseline = moment(x.toString(),"MMMM Do, H:mm").format('x');
+      this.props.dispatch(assetActions.updateBaseline(this.props.user, this.props.asset, newBaseline));
+      this.forceUpdate();
     }
     
     // let {selectedPoints} = this.state;
@@ -46,6 +47,12 @@ class MultipleLinesPlot extends React.Component {
     // })
 
   }
+  shouldComponentUpdate(nextProps) {
+    if (this.props.assetData !== nextProps.assetData ) {
+      return true;
+    }
+    return false;
+  }
 
   render(){
     const { data } = this.props;
@@ -55,6 +62,11 @@ class MultipleLinesPlot extends React.Component {
     let formattedData = [];
     let allData = [];
     let layout = {};
+    let baseline = undefined;
+
+    if(this.props.assetData && this.props.assetData.Settings){
+      baseline = this.props.assetData.Settings.Baselines[0].TimeStamp;
+    }    
 
     if (this.props.for != 'baseline'){
       if (JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).interval)>=1440){
@@ -100,7 +112,7 @@ class MultipleLinesPlot extends React.Component {
           // x: data[i].Data.map((item,i) => item.TimeStamp),
           y: data[i].Data.map((item,i) => item.Value.toFixed(2)),
           type: 'scatter',
-          name: data[i].Tag
+          name: parseInt(data[i].Tag.split(':')[1])/60000 + "min"
         });
       }
 
@@ -117,6 +129,20 @@ class MultipleLinesPlot extends React.Component {
           tickfont: { size: 10},
           spikemode: 'toaxis'
         },
+        shapes: [
+          {
+           type: 'line',
+           x0: moment(new Date(baseline)).format('MMMM Do, H:mm'),
+           y0: 0,
+           x1: moment(new Date(baseline)).format('MMMM Do, H:mm'),
+           y1: 0.2,
+           line: {
+             color: 'red',
+             width: 3
+           },
+           text: '123'
+         }
+      ],
         margin:{
           l: 50,
           t: 30
@@ -130,8 +156,7 @@ class MultipleLinesPlot extends React.Component {
 
     return(
       <div>
-        <h3 style={{textAlign: "center"}}> Baseline: {this.state.activeBaseline === -1 ? 'N/A' : moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm')}</h3>
-        <hr/>
+        <h4 style={{textAlign: "center"}}>Baseline: {moment(new Date(baseline)).format('YYYY MMMM Do, H:mm')}</h4>
         <Plot
           data = {formattedData}
           layout = {layout}
@@ -144,7 +169,9 @@ class MultipleLinesPlot extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    assetData: state.asset.data
+  };
 }
 
 const connectedPage = connect(mapStateToProps)(MultipleLinesPlot);

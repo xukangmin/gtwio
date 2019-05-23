@@ -182,9 +182,7 @@ class Parameter extends React.Component {
         {parameter?
           <div>
             <h4>{parameter[0].DisplayName}</h4>
-            <Tabs>
-                
-              
+            <Tabs>      
             {parameter.map((x, i)=>
               <TabPane tab={x.DisplayName + (x.Tag.split(':')[1] ? ' - ' + parseInt(x.Tag.split(':')[1])/60000+'min' : '')} key={i}>
                 <ParameterInfo 
@@ -194,10 +192,8 @@ class Parameter extends React.Component {
                   update={this.updateEquation} 
                   updateLimit={this.updateLimit}/>
               </TabPane>
-
             )}
-            </Tabs>
-            
+            </Tabs>            
             
             {parameterData && parameterData.length ?
             <div className = "row mt-3">

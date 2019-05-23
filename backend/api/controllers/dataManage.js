@@ -28,7 +28,8 @@ var functions = {
   _getAllParameterByAssetID: _getAllParameterByAssetID,
   _getAllParameterByAssetIDPromise: _getAllParameterByAssetIDPromise,
   _getAllDeviceByAssetID: _getAllDeviceByAssetID,
-  _deleteAllData:_deleteAllData
+  _deleteAllData:_deleteAllData,
+  _recalculateAsset: _recalculateAsset
 }
 
 for (var key in functions) {
@@ -1828,6 +1829,10 @@ function _resolve_single_equation(equ_index, raw_data, config, sTS, eTS) {
 
 }
 
+function _parameter_recalculat(raw_data, config, baseline, sTS, eTS) {
+
+}
+
 function _baseline_parameter_calculate(raw_data, config, sTS, eTS) {
 
   var retry = 10;
@@ -1949,4 +1954,42 @@ function getCalculatedDataForBaseline(req, res) {
   } else {
     shareUtil.SendInvalidInput(res, "assetid or start time stamp or end time stamp missing");
   }
+}
+
+function _deleteCalculatedData(assetid) {
+  return new Promise(
+    (resolve, reject) => {
+      _getAllParameterByAssetIDPromise(assetid)
+      .then(
+        ret => {
+          return Promise.all(ret.map(_deleteAllData));
+        }
+      )
+      .then(
+        ret => {
+          resolve();
+        }
+      )
+      .catch(
+        err => {
+          reject(err);
+        }
+      )
+  });
+}
+
+function _recalculateAsset(assetid, config) {
+  _deleteCalculatedData(assetid)
+  .then(
+    ret => {
+      console.log("delete all calculated data done");
+      return _getDataForBaselineSelection(assetid);
+    }
+  )
+  .then(
+    ret => {
+      // start calculation
+      
+    }
+  )
 }

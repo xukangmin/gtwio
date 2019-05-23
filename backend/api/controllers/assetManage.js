@@ -1438,6 +1438,10 @@ function updateAssetConfig(req, res) {
       if (data) {
         data.Config = config;
         data.save();
+        // trigger recalculation
+        // 1. delete all calculated data for assetid
+        // 2. start recalculation
+        dataManage._recalculateAsset(assetid, config);
         shareUtil.SendSuccess(res);
       } else {
         shareUtil.SendInvalidInput(res, "asset not found");

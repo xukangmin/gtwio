@@ -10,7 +10,6 @@ import { DatePicker, Tabs } from 'antd';
 import 'antd/dist/antd.css';
 const TabPane = Tabs.TabPane;
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from 'recharts';
 import { MultipleLinesPlot } from '../Widgets/MultipleLinesPlot';
 
 class BaselinePicker extends React.Component {

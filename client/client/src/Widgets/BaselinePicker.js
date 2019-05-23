@@ -103,14 +103,20 @@ class BaselinePicker extends React.Component {
       }
     }
 
+    componentWillReceiveProps(nextProps) { 
+      this.baselines = nextProps.assetData.Settings.Baselines;
+    }    
+
     render() {
       const timeRange = this.props.timeRange;
       let baselineSel = this.props.baselineSel;
       let MinTimeRange, MaxTimeRange;
 
       let shell_inlet_tmu = [];
+      let shell_outlet_tmu = [];
       if(baselineSel){
         shell_inlet_tmu = baselineSel.filter(x=>x.DisplayName === "Shell Inlet TMU");
+        shell_outlet_tmu = baselineSel.filter(x=>x.DisplayName === "Shell Outlet TMU");
       }
       
       if(timeRange){
@@ -150,7 +156,7 @@ class BaselinePicker extends React.Component {
         <div style={{display: "inline-block"}}>
           <Button onClick={this.baselineModalToggle} className="btn-light mr-3" style={{border: "1px solid #d3d3d3"}}>
             <i className ="fas fa-minus mr-2"></i>
-            Baseline: {this.state.activeBaseline === -1 ? 'N/A' : moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm')}
+            Baseline: {this.state.activeBaseline === -1 ? 'N/A' : moment(this.baselines[0].TimeStamp).format('YYYY-MM-DD H:mm')}
             <i className="fas fa-angle-down ml-3"></i>
           </Button>   
 
@@ -160,15 +166,17 @@ class BaselinePicker extends React.Component {
             <ModalBody>
               
               <Tabs>
-                <TabPane tab="Shell Inlet TMU" key="1">
+                {shell_inlet_tmu && 
+                  <TabPane tab="Shell Inlet TMU" key={'shell_inlet_tmu'}>
                   <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'} asset={this.asset} user={this.user}/>
                 </TabPane>
-                <TabPane tab="Shell Outlet TMU" key="2">
-                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'}/>
+                }
+
+                {shell_outlet_tmu &&
+                  <TabPane tab="Shell Outlet TMU" key={'shell_outlet_tmu'}>
+                  <MultipleLinesPlot data={shell_outlet_tmu} for={'baseline'} asset={this.asset} user={this.user}/>
                 </TabPane>
-                <TabPane tab="Tube Inlet TMU" key="3">
-                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'}/>
-                </TabPane>
+                }                
               </Tabs>
             
             <Form style={{display: "none"}}>

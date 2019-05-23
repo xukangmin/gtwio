@@ -41,6 +41,25 @@ const getParameter = (parameterID) => {
     function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
 }
 
+const getParameterByTag = (tag, asset) => {
+    return dispatch => {
+        dispatch(request());
+        parameterServices.getParameterByTag(tag, asset)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_PARAMETER_REQUEST } }
+    function success(data) { return { type: gConstants.GET_PARAMETER_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_PARAMETER_FAILURE, error } }
+}
+
 const addParameter = (assetID, data) => {
     return dispatch => {
         dispatch(request());
@@ -104,6 +123,7 @@ const deleteParameter = (asset, parameterID) => {
 export const parameterActions = {
     getParameters,
     getParameter,
+    getParameterByTag,
     addParameter,
     updateParameter,
     deleteParameter

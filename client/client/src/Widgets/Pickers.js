@@ -155,9 +155,9 @@ class Pickers extends React.Component {
 
       else if (asset && parameter)
       {
-        this.props.dispatch(parameterActions.getParameter(parameter));
+        this.props.dispatch(parameterActions.getParameterByTag(parameter, asset));
         setInterval(() => {
-          this.props.dispatch(parameterActions.getParameter(parameter));
+          this.props.dispatch(parameterActions.getParameterByTag(parameter, asset));
         }, liveDispatchInterval);
 
         if (this.range.live){

@@ -130,6 +130,8 @@ class MultipleLinesPlot extends React.Component {
 
     return(
       <div>
+        <h3 style={{textAlign: "center"}}> Baseline: {this.state.activeBaseline === -1 ? 'N/A' : moment(this.state.baselines[this.state.activeBaseline].TimeStamp).format('YYYY-MM-DD H:mm')}</h3>
+        <hr/>
         <Plot
           data = {formattedData}
           layout = {layout}

@@ -13,14 +13,15 @@ import EmptyData from '../../../Widgets/EmptyData';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import InlineEdit from 'react-inline-edit-input';
 
+import { Tabs } from 'antd';
+import 'antd/dist/antd.css';
+const TabPane = Tabs.TabPane;
+
 const ParameterInfo = (props) => {
   const parameter = props.data;
   const { asset, user } = props;
   return(
-    <div className = "row">
-      <div className="col-12">
-        <h4>{parameter.DisplayName}</h4>
-      </div>
+    <div className = "row">      
       <div className = "col-lg-6 col-sm-12">
         <Table striped>
           <tbody>
@@ -165,9 +166,14 @@ class Parameter extends React.Component {
   }
 
   render() {
-    const { parameter } = this.props;
+    let { parameter } = this.props;
     let { parameterData } = this.props;
 
+    if (parameter){
+      console.log(parameter)
+    // parameter = parameter[0];
+    }
+    
     if (!this.user) {
       return (<Redirect to = '/login' />);
     } else{
@@ -175,12 +181,23 @@ class Parameter extends React.Component {
         <div className = "mt-3">
         {parameter?
           <div>
-            <ParameterInfo 
-              data={parameter} 
-              user={this.user} 
-              asset={this.state.AssetID} 
-              update={this.updateEquation} 
-              updateLimit={this.updateLimit}/>
+            <h4>{parameter[0].DisplayName}</h4>
+            <Tabs>
+                
+              
+            {parameter.map((x, i)=>
+              <TabPane tab={x.DisplayName + (x.Tag.split(':')[1] ? ' - ' + parseInt(x.Tag.split(':')[1])/60000+'min' : '')} key={i}>
+                <ParameterInfo 
+                  data={x} 
+                  user={this.user} 
+                  asset={this.state.AssetID} 
+                  update={this.updateEquation} 
+                  updateLimit={this.updateLimit}/>
+              </TabPane>
+
+            )}
+            </Tabs>
+            
             
             {parameterData && parameterData.length ?
             <div className = "row mt-3">

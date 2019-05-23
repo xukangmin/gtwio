@@ -61,7 +61,7 @@ class Dashboard extends React.Component {
               <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
               { cleanliness &&
                 <div style={{width: "200px"}}>
-                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.ParameterID}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard" 
                     strokeLinecap="square"
@@ -78,7 +78,7 @@ class Dashboard extends React.Component {
               }
               { heatFlow &&
                 <div style={{width: "200px"}}>
-                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.ParameterID}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard"
                     strokeLinecap="square"
@@ -95,7 +95,7 @@ class Dashboard extends React.Component {
               }
               { heatBalanceError &&
                 <div style={{width: "200px", position: "relative"}}>
-                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.ParameterID}>
+                  <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard" 
                     strokeLinecap="square"

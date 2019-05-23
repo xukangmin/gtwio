@@ -318,7 +318,6 @@ class Configurations extends React.Component {
     }
 
     function linkFormatter(cell, row, enumObject){
-      console.log(row)
       const assetID = enumObject;
       const deviceOrParameter = row.SerialNumber ? "/device/" : "/parameter/";
       return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ assetID + deviceOrParameter + cell}><Icon type="table" /></Button>

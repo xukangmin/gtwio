@@ -1375,6 +1375,43 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /parameter/getParameterByTag:
+    x-swagger-router-controller: parameterManage
+    get:
+      tags:
+      - parameter
+      summary: get all parameter
+      description: get all parameter by tag
+      # used as the method name of the controller
+      operationId: getParameterByTag
+      parameters:
+      - name: ParameterTag
+        in: query
+        description: ParameterTag
+        required: true
+        type: string
+      - name: AssetID
+        in: query
+        description: AssetID
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/ParameterModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /parameter/getAllParameterByAsset:
     x-swagger-router-controller: parameterManage
     get:

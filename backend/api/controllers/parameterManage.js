@@ -21,6 +21,7 @@ var functions = {
   getAllParameterByAsset: getAllParameterByAsset,
   getParameterbyDevice: getParameterbyDevice,
   getSingleParameter: getSingleParameter,
+  getParameterByTag: getParameterByTag,
   updateRequireList: updateRequireList,
   _createEquation: _createEquation,
   _createEquationWithInterval: _createEquationWithInterval,
@@ -1122,4 +1123,28 @@ function getSingleParameter(req, res) {
     shareUtil.SendInvalidInput(res, msg);
   }
 
+}
+
+function getParameterByTag(req, res) {
+  var para_tag = req.swagger.params.ParameterTag.value;
+  var assetid = req.swagger.params.AssetID.value;
+
+  if (para_tag && assetid) {
+    dataManage._getAllParameterByAssetIDPromise(assetid)
+    .then(
+      ret => {
+        var matched_tag = ret.filter(item => item.Tag.split(":")[0] === para_tag);
+
+        shareUtil.SendSuccessWithData(res, matched_tag);
+      }
+    )
+    .catch(
+      err => {
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+      }
+    )
+
+  } else {
+    shareUtil.SendInvalidInput(res, "asset id or para tag missing");
+  }
 }

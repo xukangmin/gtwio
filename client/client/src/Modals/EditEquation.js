@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { assetActions } from '../_actions/assetAction';
+import { deviceActions } from '../_actions/deviceAction';
+import { parameterActions } from '../_actions/parameterAction';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import { Tag, Icon } from 'antd';
 import { Controlled as CodeMirror } from 'react-codemirror2';
@@ -39,6 +41,10 @@ class EditEquation extends React.Component {
       this.validate = this.validate.bind(this);
       this.addButtonClicked = this.addButtonClicked.bind(this);
       this.cancelButtonClicked = this.cancelButtonClicked.bind(this);      
+
+      this.props.dispatch(assetActions.getAssetConfig(this.asset));
+      this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
+      this.props.dispatch(parameterActions.getParameters(this.asset));
   }
 
   addText(text) {
@@ -102,9 +108,9 @@ class EditEquation extends React.Component {
   
   render() {
     let devices, parameters;
-    if (this.props.devices && this.props.parameters){
-      devices = [...new Set(this.props.devices.map(x=> x.Tag + "/" + x.Parameters[0]))];
-      parameters = this.props.parameters;
+    if (this.props.config){
+      devices = [...new Set(this.props.config.Devices.map(x=> x.Tag + "/" + x.Parameters[0]))];
+      parameters = this.props.config.Equations;
     }
     
     const operators = [
@@ -240,8 +246,7 @@ function mapStateToProps(state) {
   return {
       parameterData: data,
       parameter: parameter,
-      devices: state.asset.config.Devices,
-      parameters: state.asset.config.Equations
+      config: state.asset.config
   };
 }
 

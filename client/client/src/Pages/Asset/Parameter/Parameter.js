@@ -36,7 +36,7 @@ const ParameterInfo = (props) => {
                   equation={parameter.OriginalEquation} 
                   asset={asset} 
                   user={user}
-                  item={parameter.ParameterID} 
+                  item={parameter.Tag} 
                 />
               </td>
             </tr>

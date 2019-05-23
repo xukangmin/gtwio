@@ -1979,17 +1979,17 @@ function _deleteCalculatedData(assetid) {
 }
 
 function _recalculateAsset(assetid, config) {
-  _deleteCalculatedData(assetid)
-  .then(
-    ret => {
-      console.log("delete all calculated data done");
-      return _getDataForBaselineSelection(assetid);
-    }
-  )
-  .then(
-    ret => {
-      // start calculation
+  // _deleteCalculatedData(assetid)
+  // .then(
+  //   ret => {
+  //     console.log("delete all calculated data done");
+  //     return _getDataForBaselineSelection(assetid);
+  //   }
+  // )
+  // .then(
+  //   ret => {
+  //     // start calculation
       
-    }
-  )
+  //   }
+  // )
 }

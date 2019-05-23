@@ -73,9 +73,29 @@ const getDataBySerialNumber = (serialNumber, t1, t2) => {
     function failure(error) { return { type: gConstants.GET_SERIAL_NUMBER_DATA_FAILURE, error } }
 }
 
+const getDataForBaselineSelection = (assetID) => {
+    return dispatch => {
+      dispatch(request());
+      dataServices.getDataForBaselineSelection(assetID)
+        .then(
+          data => {
+            dispatch(success(data));
+          },
+          error => {
+            dispatch(failure(error));
+          }
+        )
+    };
+
+    function request() { return { type: gConstants.GET_DATA_FOR_BASELINE_SELECTION_REQUEST } }
+    function success(data) { return { type: gConstants.GET_DATA_FOR_BASELINE_SELECTION_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_DATA_FOR_BASELINE_SELECTION_FAILURE, error } }
+}
+
 export const dataActions = {
     getSingleTagData,
     getSingleParameterData,
     getDataByAssetID,
-    getDataBySerialNumber
+    getDataBySerialNumber,
+    getDataForBaselineSelection
 };

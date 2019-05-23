@@ -78,6 +78,29 @@ export const data = (state = {}, action) => {
         return {
             error: action.error
         };
+    
+    //
+    case gConstants.GET_DATA_FOR_BASELINE_SELECTION_REQUEST:
+        return {
+            ...state,
+            gettingDataForBaselineSel: true
+        };
+    case gConstants.GET_DATA_FOR_BASELINE_SELECTION_SUCCESS:
+        return {
+            ...state,
+            gotData: true,
+            baselineSel: action.data
+        };
+    case gConstants.GET_DATA_FOR_BASELINE_SELECTION_FAILURE:
+        return {
+            ...state,
+            error: action.error
+        };
+    //
+    case gConstants.UPDATE_ASSET_CONFIG_REQUEST:
+        return {
+            ...state
+        };
     default:
         return state;
   }

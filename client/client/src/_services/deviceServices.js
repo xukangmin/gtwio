@@ -39,6 +39,23 @@ const getDevice = (deviceID) => {
         });
 }
 
+const getDeviceBySerialNumber = (sn) => {
+    return fetch(process.env.API_HOST + '/device/getDeviceBySerialNumber?SerialNumber=' + sn)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        })
+        .then(data => {
+            return data;
+        });
+}
+
 const addDevice = (user, assetID, data) => {
     let body = data;
     body.AssetID = assetID;
@@ -124,6 +141,7 @@ const updateDevice = (data) => {
 export const deviceServices = {
     getDevices,
     getDevice,
+    getDeviceBySerialNumber,
     addDevice,
     deleteDevice,
     updateDevice

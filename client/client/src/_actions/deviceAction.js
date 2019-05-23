@@ -46,6 +46,25 @@ const getDevice = (deviceID, t1, t2) => {
     function failure(error) { return { type: gConstants.GET_DEVICE_FAILURE, error } }
 }
 
+const getDeviceBySerialNumber = (sn) => {
+    return dispatch => {
+        dispatch(request());
+        deviceServices.getDeviceBySerialNumber(sn)
+            .then(
+                data => {
+                    dispatch(success(data));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            );
+    };
+
+    function request() { return { type: gConstants.GET_DEVICE_BY_SN_REQUEST } }
+    function success(data) { return { type: gConstants.GET_DEVICE_BY_SN_SUCCESS, data } }
+    function failure(error) { return { type: gConstants.GET_DEVICE_BY_SN_FAILURE, error } }
+}
+
 const addDevice = (user, assetID, data) => {
     return dispatch => {
         dispatch(request());
@@ -109,6 +128,7 @@ const updateDevice = (user, assetID, data) => {
 export const deviceActions = {
     getDevices,
     getDevice,
+    getDeviceBySerialNumber,
     addDevice,
     deleteDevice,
     updateDevice

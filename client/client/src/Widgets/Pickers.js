@@ -142,14 +142,15 @@ class Pickers extends React.Component {
 
       if (asset && device)
       {
-        if (this.range.live){
-          this.props.dispatch(deviceActions.getDevice(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
-          setInterval(() => {
-            this.props.dispatch(deviceActions.getDevice(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
-          }, liveDispatchInterval);
-        } else {
-            this.props.dispatch(deviceActions.getDevice(device, this.range.start*1000, this.range.end*1000));
-        }
+        this.props.dispatch(deviceActions.getDeviceBySerialNumber(device));
+        // if (this.range.live){
+        //   this.props.dispatch(deviceActions.getDevice(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+        //   setInterval(() => {
+        //     this.props.dispatch(deviceActions.getDevice(device, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+        //   }, liveDispatchInterval);
+        // } else {
+        //     this.props.dispatch(deviceActions.getDevice(device, this.range.start*1000, this.range.end*1000));
+        // }
       }
 
       else if (asset && parameter)

@@ -5,9 +5,13 @@ import { Redirect } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import { connect } from 'react-redux';
 import { assetActions } from '../_actions/assetAction';
-import { DatePicker } from 'antd';
+import { dataActions } from '../_actions/dataAction';
+import { DatePicker, Tabs } from 'antd';
 import 'antd/dist/antd.css';
+const TabPane = Tabs.TabPane;
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from 'recharts';
+import { MultipleLinesPlot } from '../Widgets/MultipleLinesPlot';
 
 class BaselinePicker extends React.Component {
     constructor(props) {
@@ -27,6 +31,7 @@ class BaselinePicker extends React.Component {
       }
 
       this.props.dispatch(assetActions.getTimeRangeByAsset(this.asset));
+      this.props.dispatch(dataActions.getDataForBaselineSelection(this.asset));
       
       this.baselineModalToggle = this.baselineModalToggle.bind(this);
       this.updateBaselineActive = this.updateBaselineActive.bind(this);
@@ -100,7 +105,13 @@ class BaselinePicker extends React.Component {
 
     render() {
       const timeRange = this.props.timeRange;
+      let baselineSel = this.props.baselineSel;
       let MinTimeRange, MaxTimeRange;
+
+      let shell_inlet_tmu = [];
+      if(baselineSel){
+        shell_inlet_tmu = baselineSel.filter(x=>x.DisplayName === "Shell Inlet TMU");
+      }
       
       if(timeRange){
         MaxTimeRange = Math.max(...timeRange);
@@ -144,10 +155,23 @@ class BaselinePicker extends React.Component {
           </Button>   
 
           {timeRange &&
-            <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false}>
+            <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false} style={{maxWidth: '1200'}}>
             <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
             <ModalBody>
-            <Form>
+              
+              <Tabs>
+                <TabPane tab="Shell Inlet TMU" key="1">
+                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'} asset={this.asset} user={this.user}/>
+                </TabPane>
+                <TabPane tab="Shell Outlet TMU" key="2">
+                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'}/>
+                </TabPane>
+                <TabPane tab="Tube Inlet TMU" key="3">
+                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'}/>
+                </TabPane>
+              </Tabs>
+            
+            <Form style={{display: "none"}}>
               <FormGroup>
                 <div className = "table-responsive">
                   <table className = "table mt-3" style={{textAlign: "center"}}>
@@ -189,8 +213,8 @@ class BaselinePicker extends React.Component {
             </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" name="apply" onClick={e=>this.handleBaselineApply(e)}>Confirm</Button>
-              <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Cancel</Button>
+              <Button style={{display: "none"}} color="primary" name="apply" onClick={e=>this.handleBaselineApply(e)}>Confirm</Button>
+              <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Close</Button>
             </ModalFooter>
           </Modal>        
           }
@@ -204,7 +228,8 @@ function mapStateToProps(state) {
   const { data } = state.asset;
   return {
     assetData: data,
-    timeRange: state.asset.timeRange
+    timeRange: state.asset.timeRange,
+    baselineSel: state.data.baselineSel
   };
 }
 

@@ -1894,7 +1894,14 @@ function getDataForBaselineSelection(req, res) {
     .then(
       ret => {
         timerange = ret;
-        return Promise.all(new_tag_list.map(item => _getDataByParameterTag(assetid, item, timerange[0], timerange[timerange.length - 1])));
+        if (timerange.length === 0)
+        {
+          return [];
+        } else {
+          return Promise.all(new_tag_list.map(item => _getDataByParameterTag(assetid, item, timerange[0], timerange[timerange.length - 1] + 3600000)));
+        }
+
+        
       }
     )
     .then(

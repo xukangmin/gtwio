@@ -25,9 +25,6 @@ class Configurations extends React.Component {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.asset = props.match.params.assetID;
 
-    this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
-    this.props.dispatch(parameterActions.getParameters(this.asset));
-
     this.editToggle = this.editToggle.bind(this);
     this.discardChanges = this.discardChanges.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -286,7 +283,8 @@ class Configurations extends React.Component {
                     editable={false}
                     formatExtraData={this.deleteItem}
                     dataFormat={deleteFormatter}
-                    tdStyle={{backgroundColor: 'white'}}>
+                    tdStyle={{backgroundColor: 'white'}}
+                    hidden={!this.state.editMode}>
                       Delete
                   </TableHeaderColumn>
                 </BootstrapTable>
@@ -320,8 +318,9 @@ class Configurations extends React.Component {
     }
 
     function linkFormatter(cell, row, enumObject){
+      console.log(row)
       const assetID = enumObject;
-      const deviceOrParameter = row.DeviceID ? "/device/" : "/parameter/";
+      const deviceOrParameter = row.SerialNumber ? "/device/" : "/parameter/";
       return <Button title="Go to Data Page" onClick={()=>location.href='/asset/'+ assetID + deviceOrParameter + cell}><Icon type="table" /></Button>
     }
 

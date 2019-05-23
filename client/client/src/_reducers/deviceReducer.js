@@ -29,11 +29,30 @@ export const device = (state = {}, action) => {
             gotData: true,
             single: action.data
         };
+
+    case gConstants.GET_DEVICE_BY_SN_FAILURE:
+        return {
+            error: action.error,
+            single: {Items: [], Count: 0}
+        };
+
+        case gConstants.GET_DEVICE_BY_SN_REQUEST:
+        return {
+            ...state,
+            gettingDEVICE: true
+        };
+    case gConstants.GET_DEVICE_BY_SN_SUCCESS:
+        return {
+            ...state,
+            gotData: true,
+            single: action.data
+        };
     case gConstants.GET_DEVICE_FAILURE:
         return {
             error: action.error,
             single: {Items: [], Count: 0}
         };
+
     case gConstants.ADD_DEVICE_REQUEST:
         return state;
     case gConstants.ADD_DEVICE_SUCCESS:

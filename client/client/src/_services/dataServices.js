@@ -65,9 +65,24 @@ const getDataBySerialNumber = (serialNumber, t1, t2) => {
         });
 }
 
+const getDataForBaselineSelection = (assetID) => {
+    return fetch(process.env.API_HOST + '/data/getDataForBaselineSelection?AssetID=' + assetID)
+        .then(response => {
+            return Promise.all([response, response.json()])
+        })
+        .then( ([resRaw, resJSON]) => {
+            if (!resRaw.ok)
+            {
+                return Promise.reject(resJSON.message);
+            }
+            return resJSON;
+        });
+}
+
 export const dataServices = {
     getSingleTagData,
     getSingleParameterData,
     getDataByAssetID,
-    getDataBySerialNumber
+    getDataBySerialNumber,
+    getDataForBaselineSelection
 };

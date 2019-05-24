@@ -1,5 +1,5 @@
 import React from 'react';
-import { parameterActions } from '../_actions/parameterAction';
+import { assetActions } from '../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class AddParameter extends React.Component {
@@ -27,12 +27,13 @@ class AddParameter extends React.Component {
 
     addButtonClicked(){
       const newParameter = {
-        DisplayName: this.state.displayName,
+        Name: this.state.displayName,
         Equation: this.state.equation,
         Tag: this.state.Tag
       };
 
-      this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter));
+      // this.props.dispatch(parameterActions.addParameter(this.props.asset, newParameter));
+      this.props.dispatch(assetActions.addParameter(newParameter)); 
       this.setState(prevState => ({
         displayName: '',
         equation: '',

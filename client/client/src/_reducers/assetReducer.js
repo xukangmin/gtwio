@@ -178,6 +178,23 @@ export const asset = (state = {}, action) => {
         return Object.assign({}, state, {
             config: config
         });
+        
+    case gConstants.ADD_DEVICE_TO_CONFIG_REQUEST:
+        var config = JSON.parse(JSON.stringify(state.config));      
+         
+        config.Devices.push(action.data);
+        return Object.assign({}, state, {
+            config: config
+        });
+
+    case gConstants.ADD_PARAMETER_TO_CONFIG_REQUEST:
+        var config = JSON.parse(JSON.stringify(state.config));      
+         
+        config.Equations.push(action.data);
+        return Object.assign({}, state, {
+            config: config
+        });
+        
     //
     case gConstants.REMOVE_PARAMETER_REQUEST:
         var config = JSON.parse(JSON.stringify(state.config));        

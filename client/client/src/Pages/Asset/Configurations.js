@@ -44,8 +44,8 @@ class Configurations extends React.Component {
       addNewParameterModalOpen: false
     };
 
-    this.props.dispatch(parameterActions.getParameters(this.asset));
-    this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
+    // this.props.dispatch(parameterActions.getParameters(this.asset));
+    // this.props.dispatch(deviceActions.getDevices(this.user, this.asset));
   } 
 
   editToggle(config, device, equation){    
@@ -193,8 +193,7 @@ class Configurations extends React.Component {
                     dataField='Tag'
                     dataSort={true}
                     editable={this.state.editMode ? {type: 'select', options: {values: ["ShellInlet", "ShellOutlet", "TubeInlet", "TubeOutlet"]}} : false}
-                    tdStyle={{backgroundColor: 'white'}}>
-                   
+                    tdStyle={{backgroundColor: 'white'}}>                   
                       Location
                   </TableHeaderColumn>
 
@@ -324,7 +323,7 @@ class Configurations extends React.Component {
     }
 
     function parameterFormatter(cell, row) {
-      return cell[0] ? cell[0].DisplayName : '';
+      return (cell && cell[0]) ? cell[0].DisplayName : '';
     }
 
     function angleFormatter(cell, row){

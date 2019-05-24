@@ -109,7 +109,7 @@ class EditEquation extends React.Component {
   render() {
     let devices, parameters;
     if (this.props.config){
-      devices = [...new Set(this.props.config.Devices.map(x=> x.Tag + "/" + x.Parameters[0]))];
+      devices = [...new Set(this.props.config.Devices.map(x=> x.Tag + (x.Parameters ? ("/" + x.Parameters[0]) : '')))];
       parameters = this.props.config.Equations;
     }
     

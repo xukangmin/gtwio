@@ -1,5 +1,5 @@
 import React from 'react';
-import { deviceActions } from '../_actions/deviceAction';
+import { assetActions } from '../_actions/assetAction';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class AddDevice extends React.Component {
@@ -39,13 +39,14 @@ class AddDevice extends React.Component {
         return;
       }
       const newDevice = {
-        DisplayName: this.state.displayName,
+        Name: this.state.displayName,
         SerialNumber: this.state.serialNumber,
         Alias: this.state.sensorID,
         Tag: this.state.location,
         Angle: this.state.angle
       };
-      this.props.dispatch(deviceActions.addDevice(this.props.user, this.props.asset, newDevice));
+      // this.props.dispatch(deviceActions.addDevice(this.props.user, this.props.asset, newDevice));
+      this.props.dispatch(assetActions.addDevice(newDevice)); 
       this.setState(prevState => ({
         displayName: '',
         serialNumber: '',

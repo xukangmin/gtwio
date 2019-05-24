@@ -423,6 +423,13 @@ const updateDevice = (data) => {
     function request(data) { return { type: gConstants.UPDATE_DEVICE_REQUEST, data } }
 }
 
+const addDevice = (data) => {
+    return dispatch => {
+        dispatch(request(data));
+    }
+    function request(data) { return { type: gConstants.ADD_DEVICE_TO_CONFIG_REQUEST, data } }
+}
+
 const removeParameter = (tag) => {
     return dispatch => {
         dispatch(request(tag));
@@ -436,6 +443,14 @@ const updateParameter = (data) => {
     }
     function request(data) { return { type: gConstants.UPDATE_PARAMETER_REQUEST, data } }
 }
+
+const addParameter = (data) => {
+    return dispatch => {
+        dispatch(request(data));
+    }
+    function request(data) { return { type: gConstants.ADD_PARAMETER_TO_CONFIG_REQUEST, data } }
+}
+
 
 export const assetActions = {
     getAssets,
@@ -460,6 +475,8 @@ export const assetActions = {
     setTimerIntervalActiveForTag,
     removeDevice,
     updateDevice,
+    addDevice,
     removeParameter,
-    updateParameter
+    updateParameter,
+    addParameter
 };

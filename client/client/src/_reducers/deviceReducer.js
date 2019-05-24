@@ -27,7 +27,7 @@ export const device = (state = {}, action) => {
         return {
             ...state,
             gotData: true,
-            single: action.data
+            // single: action.data
         };
 
     case gConstants.GET_DEVICE_BY_SN_FAILURE:

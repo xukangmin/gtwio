@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { parameterActions } from '../../../_actions/parameterAction';
 import { Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
+import { DeviceParameter } from '../Device/DeviceParameter';
 
 import Loader from '../../../Widgets/Loader';
 import toastr from 'toastr';
@@ -139,36 +140,6 @@ const DeviceInfo = (props) => {
   );
 };
 
-const ParameterTable = (props) => {
-  const parameter = props.data;
-  const device = props.device;
-  return(
-    <div>
-      <Table
-        style={{
-          display: "block",
-          height: "50vh",
-          overflowY: "scroll"
-        }}>
-        <thead>
-          <tr>
-            <th>Timestamp</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {parameter.map((item,i) =>
-              <tr key = {i} >
-                <td style = {{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + device.Parameters[0].Unit}</td>
-              </tr>
-          )}
-        </tbody>
-      </Table>
-    </div>
-  );
-};
-
 class Device extends React.Component {
   constructor(props) {
     super(props);
@@ -249,32 +220,18 @@ class Device extends React.Component {
   }
 
   render() {
-    const { AssetID } = this.state;
     const { deviceData } = this.props;
-    const { parameterData } = this.props;
+    console.log(deviceData)
     if (!this.user) {
       return (<Redirect to = '/login' />);
     } else {
       return (
         <div className = "mt-3">
-        {deviceData ?
+        {deviceData &&
           <div>
             <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability}/>
-            {parameterData && parameterData.length?
-              <div className = "row mt-3">
-                <div className = "col-auto">
-                  <h6>History</h6>
-                  <ParameterTable data={this.sortTime(parameterData)} device={deviceData}/>
-                </div>
-                <div className = "col-sm-auto col-lg-8">
-                  <SingleLinePlot parameterData={this.sortTime(parameterData)}/>
-                </div>
-              </div>
-              :
-              <EmptyData/>
-            }
-          </div> :
-          <Loader/>
+            <DeviceParameter data={deviceData}/>
+          </div>
         }
         </div>
       );
@@ -284,8 +241,7 @@ class Device extends React.Component {
 
 function mapStateToProps(state) {
   return {
-      deviceData : state.device.single,
-      parameterData: state.data.data
+      deviceData : state.device.single
   };
 }
 

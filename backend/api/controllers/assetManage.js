@@ -1427,25 +1427,76 @@ function getAssetConfig(req, res) {
     );
 }
 
+function _validate_config_file(config) {
+  var shellintlet_num = config.Devices.filter(item => item.Tag === "ShellInlet").length;
+  var shelloutlet_num = config.Devices.filter(item => item.Tag === "ShellOutlet").length;
+  var tubeinlet_num = config.Devices.filter(item => item.Tag === "TubeInlet").length;
+  var tubeoutlet_num = config.Devices.filter(item => item.Tag === "TubeOutlet").length;
+
+  var ret = {};
+
+  ret.isValid = true;
+  ret.msg = "";
+
+  if (shellintlet_num === 0)
+  {
+    ret.isValid = false;
+    ret.msg = ret.msg + "No ShellInlet sensors ";
+  }
+
+  if (shelloutlet_num === 0)
+  {
+    ret.isValid = false;
+    ret.msg = ret.msg + "No ShellOutlet sensors ";
+  }
+
+  if (tubeinlet_num === 0)
+  {
+    ret.isValid = false;
+    ret.msg = ret.msg + "No TubeInlet sensors ";
+  }
+
+  
+  if (tubeoutlet_num === 0)
+  {
+    ret.isValid = false;
+    ret.msg = ret.msg + "No TubeOutlet sensors ";
+  }
+
+  return ret;
+}
+
 function updateAssetConfig(req, res) {
   var assetid = req.body.AssetID;
   var config = req.body.Config;
 
-  Asset.findOne({AssetID: assetid},(err,data) => {
-    if (err) {
-      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
-    } else {
-      if (data) {
-        data.Config = config;
-        data.save();
-        // trigger recalculation
-        // 1. delete all calculated data for assetid
-        // 2. start recalculation
-        dataManage._recalculateAsset(assetid, config);
-        shareUtil.SendSuccess(res);
+  var ret = _validate_config_file(config)
+  if (ret.isValid)
+  {
+    Asset.findOne({AssetID: assetid},(err,data) => {
+      if (err) {
+        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
       } else {
-        shareUtil.SendInvalidInput(res, "asset not found");
+        if (data) {
+          console.log("update asset");
+          
+          var prev_config = JSON.parse(JSON.stringify(data.Config));
+          data.Config = config;
+          data.save();
+          // trigger recalculation
+          // 1. delete all calculated data for assetid
+          // 2. start recalculation
+          dataManage._recalculateAsset(assetid, prev_config, config);
+          shareUtil.SendSuccess(res);
+        } else {
+          shareUtil.SendInvalidInput(res, "asset not found");
+        }
       }
-    }
-  });
+    });
+  }
+  else {
+    shareUtil.SendInvalidInput(res, ret.msg);
+  }
+
+
 }

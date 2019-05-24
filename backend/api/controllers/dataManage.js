@@ -1979,59 +1979,7 @@ function _deleteCalculatedData(assetid) {
 }
 
 function _recalculateAsset(assetid, prev_config, config) {
-  var device_dirty = false;
 
-  var para_dirty = false;
-
-  var interval_dirty = false;
-
-  if (!(JSON.stringify(prev_config.Devices) === JSON.stringify(config.Devices))) {
-    device_dirty = true;
-    console.log("device dirty");
-  } 
-
-  if (!(JSON.stringify(prev_config.Equations) === JSON.stringify(config.Equations))) {
-    para_dirty = true;
-    console.log("Equations dirty");
-  } 
-
-  if (!(JSON.stringify(prev_config.TimeInterval) === JSON.stringify(config.TimeInterval))) {
-    interval_dirty = true;
-    console.log("TimeInterval dirty");
-  }
-
-  if (para_dirty) {
-    // delete and recalculate
-    _deleteCalculatedData(assetid)
-    .then(
-      ret => {
-        console.log("delete all calculated data done");
-        return _getDataForBaselineSelection(assetid);
-      }
-    )
-    .then(
-      ret => {
-        // start recalculation
-      }
-    )
-  }
-
-  if (device_dirty) {
-    // add and delete device
-    var device_add_list = [];
-    var device_delete_list = [];
-    for(var i in prev_config.Devices)
-    {
-      var f_dev = config.Devices.filter(item => item.SerialNumber === prev_config.Devices[i].SerialNumber);
-
-      if (f_dev.length === 0)
-      {
-        device_delete_list.push(prev_config.Devices[i].SerialNumber);
-      }
-    }
-
-    console.log(device_delete_list);
-  }
   // _deleteCalculatedData(assetid)
   // .then(
   //   ret => {

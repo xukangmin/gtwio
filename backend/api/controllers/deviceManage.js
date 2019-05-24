@@ -39,7 +39,78 @@ for (var key in functions) {
   module.exports[key] = functions[key];
 }
 
+function _add_device_to_asset(assetid, deviceid) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOneAndUpdate({AssetID: assetid}, {
+        $push:  {
+          Devices: {DeviceID: deviceid}
+        }
+      },(err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+  });
+}
 
+function _remove_device_from_asset(assetid, deviceid) {
+  return new Promise(
+    (resolve, reject) => {
+      Asset.findOneAndUpdate({AssetID: assetid}, {
+        $pull:  {
+          Devices: {DeviceID: deviceid}
+        }
+      },(err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+  });
+}
+
+function _getDeviceBySerialNumber(sn) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({SerialNumber: sn}, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (data) {
+            resolve(data);
+          } else {
+            reject("device with serialnumber " + sn +  " not exists");
+          }
+        }
+      });
+  });
+}
+
+function _remove_device_from_asset_by_serialnumber(assetid, sn) {
+  return new Promise(
+    (resolve, reject) => {
+      _getDeviceBySerialNumber(sn)
+      .then(
+        ret => {
+          _remove_device_from_asset(assetid, ret.DeviceID)
+          .then(
+            ret => {
+              resolve();
+            }
+          )
+          .catch(
+            err => {
+              reject(err);
+            }
+          );
+        }
+      )
+  });
+}
 
 function _createDeviceWithParameter(assetid, deviceobj) {
   return new Promise(
@@ -169,6 +240,50 @@ function createDevice(req, res) {
     var msg = "AssetID or Display Name missing";
     shareUtil.SendInvalidInput(res, msg);
   }
+}
+
+function _add_update_device_by_serial_number(dev_obj) {
+  return new Promise(
+    (resolve, reject) => {
+      Device.findOne({SerialNumber: dev_obj.sn}, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          if (data) {
+            if (dev_obj.Name)
+            {
+              data.DisplayName = dev_obj.Name;
+            }
+
+            if (dev_obj.Tag)
+            {
+              data.Tag = dev_obj.Tag;
+            }
+            
+            if (dev_obj.Alias)
+            {
+              data.Alias = dev_obj.Alias;
+            }
+
+            if (dev_obj.Angle)
+            {
+              data.Angle = dev_obj.Angle;
+            }
+
+            data.save(err => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          } else {
+            // reject("serial number not found");
+            
+          }
+        }
+      });
+  });
 }
 
 function updateDevice(req, res) {
@@ -390,31 +505,49 @@ function _getSingleDevice(deviceobj) {
 function getDeviceBySerialNumber(req, res) {
   var sn = req.swagger.params.SerialNumber.value;
   
-  Device.findOne({SerialNumber: sn}, function(err, data){
-    if (err) {
+  _getDeviceBySerialNumber(sn)
+  .then(
+    ret => {
+      return parameterManage._getAllParameterByDeviceIDPromise(ret.DeviceID);
+    }
+  )
+  .then(
+    ret => {
+      shareUtil.SendSuccessWithData(res, ret);
+    }
+  )
+  .catch(
+    err => {
       var msg =  "Error:" + JSON.stringify(err, null, 2);
       shareUtil.SendInternalErr(res,msg);
-    } else {
-      if (data)
-      {
-        parameterManage._getAllParameterByDeviceIDPromise(data.DeviceID)
-        .then(
-          ret => {
-            shareUtil.SendSuccessWithData(res, ret);
-          }
-        )
-        .catch(
-          err => {
-            var msg =  "Error:" + JSON.stringify(err, null, 2);
-            shareUtil.SendInternalErr(res,msg);
-          }
-        )
-      } else {
-        shareUtil.SendNotFound(res, "Serial number not found");
-      }
-
     }
-  });
+  );
+
+  // Device.findOne({SerialNumber: sn}, function(err, data){
+  //   if (err) {
+  //     var msg =  "Error:" + JSON.stringify(err, null, 2);
+  //     shareUtil.SendInternalErr(res,msg);
+  //   } else {
+  //     if (data)
+  //     {
+  //       parameterManage._getAllParameterByDeviceIDPromise(data.DeviceID)
+  //       .then(
+  //         ret => {
+  //           shareUtil.SendSuccessWithData(res, ret);
+  //         }
+  //       )
+  //       .catch(
+  //         err => {
+  //           var msg =  "Error:" + JSON.stringify(err, null, 2);
+  //           shareUtil.SendInternalErr(res,msg);
+  //         }
+  //       )
+  //     } else {
+  //       shareUtil.SendNotFound(res, "Serial number not found");
+  //     }
+
+  //   }
+  // });
 
 }
 

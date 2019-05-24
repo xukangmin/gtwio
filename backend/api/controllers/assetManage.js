@@ -1466,6 +1466,65 @@ function _validate_config_file(config) {
   return ret;
 }
 
+function _check_config_changes(assetid, prev_config, config) {
+  return new Promise(
+    (resolve, reject) => {
+      var device_dirty = false;
+
+      var para_dirty = false;
+
+      if (!(JSON.stringify(prev_config.Devices) === JSON.stringify(config.Devices))) {
+        device_dirty = true;
+        console.log("device dirty");
+      } 
+
+      if (!(JSON.stringify(prev_config.Equations) === JSON.stringify(config.Equations))) {
+        para_dirty = true;
+        console.log("Equations dirty");
+      } 
+
+      if (!(JSON.stringify(prev_config.TimeInterval) === JSON.stringify(config.TimeInterval))) {
+        interval_dirty = true;
+        console.log("TimeInterval dirty");
+      }
+
+      if (device_dirty) {
+        // add and delete device
+        var device_add_list = [];
+        var device_delete_list = [];
+        for(var i in prev_config.Devices)
+        {
+          var f_dev = config.Devices.filter(item => item.SerialNumber === prev_config.Devices[i].SerialNumber);
+
+          if (f_dev.length === 0)
+          {
+            device_delete_list.push(prev_config.Devices[i]);
+          }
+        }
+
+        for(var i in config.Devices) {
+          var f_dev = prev_config.Devices.filter(item => item.SerialNumber === config.Devices[i].SerialNumber);
+
+          if (f_dev.length === 0)
+          {
+            device_add_list.push(config.Devices[i]);
+          }
+        }
+
+        
+      }
+  });
+
+}
+
+function _rebuild_device() {
+  
+}
+
+function _rebuild_equation() {
+
+}
+
 function updateAssetConfig(req, res) {
   var assetid = req.body.AssetID;
   var config = req.body.Config;
@@ -1481,12 +1540,21 @@ function updateAssetConfig(req, res) {
           console.log("update asset");
           
           var prev_config = JSON.parse(JSON.stringify(data.Config));
+
+          _apply_config_changes(assetid, prev_config, config)
+          .then(
+            ret => {
+
+            }
+          )
+
           data.Config = config;
           data.save();
           // trigger recalculation
           // 1. delete all calculated data for assetid
           // 2. start recalculation
-          dataManage._recalculateAsset(assetid, prev_config, config);
+          
+          // dataManage._recalculateAsset(assetid, prev_config, config);
           shareUtil.SendSuccess(res);
         } else {
           shareUtil.SendInvalidInput(res, "asset not found");

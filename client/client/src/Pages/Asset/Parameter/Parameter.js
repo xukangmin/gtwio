@@ -125,19 +125,19 @@ const ParameterTable = (props) => {
 
 class Parameter extends React.Component {
   constructor(props) {
-    super(props);
+    super(props);    
 
     this.state = {
         AssetID : props.match.params.assetID,
-        ParameterID: props.match.params.parameterID
+        ParameterID: props.match.params.parameterID,
+        activePara: undefined
     }
 
     this.updateLimit = this.updateLimit.bind(this);
     this.user = JSON.parse(localStorage.getItem('user'));
     this.assets = JSON.parse(localStorage.getItem('assets'));
 
-    this.props.dispatch(parameterActions.getParameters(this.state.AssetID));
-    this.props.dispatch(deviceActions.getDevices(this.user, this.state.AssetID));
+    this.getParameterData = this.getParameterData.bind(this);
   }
 
   updateLimit(parameter, item, value){
@@ -165,14 +165,29 @@ class Parameter extends React.Component {
     ))
   }
 
+  componentDidUpdate (){    
+    if(this.props.parameter && this.state.activePara === undefined){
+      this.getParameterData(this.props.parameter[0].ParameterID);
+    }
+  }
+
+  getParameterData(activeParameter){
+    this.range = JSON.parse(localStorage.getItem('range'));
+    let liveDispatchInterval = 60*1000;
+    this.setState({activePara: activeParameter})
+    if (this.range.live){
+      this.props.dispatch(dataActions.getSingleParameterData(activeParameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+      setInterval(() => {
+        this.props.dispatch(dataActions.getSingleParameterData(activeParameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+      }, liveDispatchInterval);
+    } else {
+      this.props.dispatch(dataActions.getSingleParameterData(activeParameter, this.range.start*1000, this.range.end*1000));
+    }      
+  }
+
   render() {
     let { parameter } = this.props;
-    let { parameterData } = this.props;
-
-    if (parameter){
-      console.log(parameter)
-    // parameter = parameter[0];
-    }
+    let { parameterData } = this.props;    
     
     if (!this.user) {
       return (<Redirect to = '/login' />);
@@ -182,9 +197,11 @@ class Parameter extends React.Component {
         {parameter?
           <div>
             <h4>{parameter[0].DisplayName}</h4>
-            <Tabs>      
+            <Tabs onChange={this.getParameterData}>      
             {parameter.map((x, i)=>
-              <TabPane tab={x.DisplayName + (x.Tag.split(':')[1] ? ' - ' + parseInt(x.Tag.split(':')[1])/60000+'min' : '')} key={i}>
+              <TabPane 
+                tab={x.DisplayName + (x.Tag.split(':')[1] ? ' - ' + parseInt(x.Tag.split(':')[1])/60000+'min' : '')} 
+                key={x.ParameterID}>
                 <ParameterInfo 
                   data={x} 
                   user={this.user} 

@@ -160,14 +160,14 @@ class Pickers extends React.Component {
           this.props.dispatch(parameterActions.getParameterByTag(parameter, asset));
         }, liveDispatchInterval);
 
-        if (this.range.live){
-          this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
-          setInterval(() => {
-            this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
-          }, liveDispatchInterval);
-        } else {
-          this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
-        }        
+        // if (this.range.live){
+        //   this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+        //   setInterval(() => {
+        //     this.props.dispatch(dataActions.getSingleParameterData(parameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+        //   }, liveDispatchInterval);
+        // } else {
+        //   this.props.dispatch(dataActions.getSingleParameterData(parameter, this.range.start*1000, this.range.end*1000));
+        // }        
       }
 
       else if (asset && flow)

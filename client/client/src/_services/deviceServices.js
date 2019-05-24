@@ -2,8 +2,7 @@ import SortDevices from '../Functions/sortDevices';
 
 const getDevices = (user, assetID) => {
     const requestOptions = {
-        headers: { 'Content-Type': 'application/json' ,
-                   'x-api-key' : user.ApiKey}
+        headers: { 'Content-Type': 'application/json'}
     };
 
     return fetch(process.env.API_HOST + '/device/getDeviceByAsset?AssetID=' + assetID, requestOptions)

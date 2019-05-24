@@ -12,6 +12,9 @@ class AddDevice extends React.Component {
             sensorID: '',
             location: '',
             angle: '',
+            Temperature: false,
+            FlowRate: false,
+            Humidity: false,
             addModalOpen: false
         };
 
@@ -19,6 +22,7 @@ class AddDevice extends React.Component {
         this.addButtonClicked = this.addButtonClicked.bind(this);
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleCheckChange = this.handleCheckChange.bind(this);
     }
 
     addModalToggle(){
@@ -38,12 +42,23 @@ class AddDevice extends React.Component {
         alert("Description is required.")
         return;
       }
+      let parametersArr = [];
+      if(this.state.Temperature){
+        parametersArr.push('Temperature');
+      }
+      if(this.state.FlowRate){
+        parametersArr.push('FlowRate');
+      }
+      if(this.state.Humidity){
+        parametersArr.push('Humidity');
+      }
       const newDevice = {
         Name: this.state.displayName,
         SerialNumber: this.state.serialNumber,
         Alias: this.state.sensorID,
         Tag: this.state.location,
-        Angle: this.state.angle
+        Angle: this.state.angle,
+        Parameters: parametersArr
       };
       // this.props.dispatch(deviceActions.addDevice(this.props.user, this.props.asset, newDevice));
       this.props.dispatch(assetActions.addDevice(newDevice)); 
@@ -53,6 +68,9 @@ class AddDevice extends React.Component {
         sensorID: '',
         location: '',
         angle: '',
+        Temperature: false,
+        FlowRate: false,
+        Humidity: false,
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -64,6 +82,9 @@ class AddDevice extends React.Component {
         sensorID: '',
         location: '',
         angle: '',
+        Temperature: false,
+        FlowRate: false,
+        Humidity: false,
         addModalOpen: !prevState.addModalOpen
       }));
     }
@@ -73,8 +94,13 @@ class AddDevice extends React.Component {
       this.setState({ [name]: value});
     }
 
+    handleCheckChange(event){
+      const { name } = event.target;
+      this.setState({ [name]: !this.state[name]})
+    }
+
     render() {
-        const { displayName, serialNumber, sensorID, location, angle } = this.state;
+        const { displayName, serialNumber, sensorID, location, angle, Temperature, FlowRate, Humidity } = this.state;
 
         return(
           <div style={{display: this.props.mode ? "block" : "none"}} className="my-2">
@@ -110,6 +136,23 @@ class AddDevice extends React.Component {
                       <option value="180">180°</option>
                       <option value="270">270°</option>
                     </Input>
+                  </FormGroup>
+                  
+                  <Label for="parameters">Parameters</Label><br/>
+                  <FormGroup check inline>
+                    <Label check>
+                      <Input type="checkbox" name="Temperature" defaultChecked={Temperature} onChange={this.handleCheckChange}/> Temperature
+                    </Label>
+                  </FormGroup>
+                  <FormGroup check inline>
+                    <Label check>
+                      <Input type="checkbox" name="FlowRate" defaultChecked={FlowRate} onChange={this.handleCheckChange}/> FlowRate
+                    </Label>
+                  </FormGroup>
+                  <FormGroup check inline>
+                    <Label check>
+                      <Input type="checkbox" name="Humidity" defaultChecked={Humidity} onChange={this.handleCheckChange}/> Humidity
+                    </Label>
                   </FormGroup>
                 </Form>
               </ModalBody>

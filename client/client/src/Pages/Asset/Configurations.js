@@ -183,7 +183,7 @@ class Configurations extends React.Component {
                     dataFormat={parameterFormatter}
                     editable={false}
                     dataSort={true}
-                    hidden>
+                  >
                       Parameter
                   </TableHeaderColumn>
 
@@ -323,7 +323,7 @@ class Configurations extends React.Component {
     }
 
     function parameterFormatter(cell, row) {
-      return (cell && cell[0]) ? cell[0].DisplayName : '';
+      return cell ? cell.join(',') : '';
     }
 
     function angleFormatter(cell, row){

@@ -18,6 +18,61 @@ const TabPane = Tabs.TabPane;
 import { EditEquation } from '../../Modals/EditEquation';
 import { log } from 'util';
 
+let Parameters = [ {label:'T',name:'Temperature'}, {label:'F',name:'FlowRate'}, {label:'H',name:'Humidity'} ];
+class ParameterEditor extends React.Component {
+  constructor(props) {
+    
+    super(props);
+    console.log(props)
+    this.updateData = this.updateData.bind(this);
+    this.state = { Parameters: props.defaultValue };
+    this.onToggleParameter = this.onToggleParameter.bind(this);
+  }
+  focus() {
+  }
+  onToggleParameter(event) {
+    let Parameter = event.currentTarget.name;
+    
+    if (this.state.Parameters.indexOf(Parameter) < 0) {
+      this.setState({ Parameters: this.state.Parameters.concat([ Parameter ]) });
+    } else {
+      this.setState({ Parameters: this.state.Parameters.filter(r => r !== Parameter) });
+    }
+
+    setTimeout(function(){ this.props.onUpdate(this.state.Parameters); }.bind(this), 1000);
+    
+  }
+  updateData() {
+    console.log(this.state.Parameters)
+    this.props.onUpdate(this.state.Parameters);
+  }
+  render() {
+    
+    const regionCheckBoxes = Parameters.map(item => (
+      <div key={ `span-${item.label}` }>
+        <input
+          type='checkbox'
+          key={ item.label }
+          name={ item.name}
+          checked={ this.state.Parameters.indexOf(item.name) > -1 }
+          onKeyDown={ this.props.onKeyDown }
+          onChange={ this.onToggleParameter } />
+        <label key={ `label-${item.label}` } htmlFor={ item.label }>{ " "+item.name }</label>
+      </div>
+    ));
+    return (
+      <span ref='inputRef'>
+        { regionCheckBoxes }
+        <button style={{display: "none"}}
+          className='btn btn-info btn-xs textarea-save-btn'
+          onClick={ this.updateData }>
+          save
+        </button>
+      </span>
+    );
+  }
+}
+
 class Configurations extends React.Component {
   constructor(props) {
     super(props);
@@ -107,6 +162,8 @@ class Configurations extends React.Component {
       afterSaveCell: this.onAfterSaveCell
     };  
 
+    const createRegionsEditor = (onUpdate, props) => (<ParameterEditor onUpdate={ onUpdate } {...props}/>);
+
     return (
       <div style={{position: "relative"}}>
         <div style={{position: "absolute", top: "0", right:"0", zIndex: "999"}} >          
@@ -181,7 +238,9 @@ class Configurations extends React.Component {
                     dataAlign='center'
                     dataField='Parameters'
                     dataFormat={parameterFormatter}
-                    editable={false}
+                    editable={this.state.editMode ? true : false}
+                    customEditor={ this.state.editMode ? {getElement: createRegionsEditor}: false }
+                    tdStyle={{backgroundColor: 'white'}}
                     dataSort={true}
                   >
                       Parameter
@@ -323,7 +382,7 @@ class Configurations extends React.Component {
     }
 
     function parameterFormatter(cell, row) {
-      return cell ? cell.join(',') : '';
+      return cell ? cell.join('<br/>') : '';
     }
 
     function angleFormatter(cell, row){

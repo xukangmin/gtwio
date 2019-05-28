@@ -49,15 +49,16 @@ class ParameterEditor extends React.Component {
   render() {
     
     const regionCheckBoxes = Parameters.map(item => (
-      <div key={ `span-${item.label}` }>
+      <div key={ `span-${item.label}` } style={{textAlign: "center"}}>
         <input
           type='checkbox'
           key={ item.label }
           name={ item.name}
           checked={ this.state.Parameters.indexOf(item.name) > -1 }
           onKeyDown={ this.props.onKeyDown }
-          onChange={ this.onToggleParameter } />
-        <label key={ `label-${item.label}` } htmlFor={ item.label }>{ " "+item.name }</label>
+          onChange={ this.onToggleParameter } 
+          className='mr-1'/>
+        <label key={ `label-${item.label}` } htmlFor={ item.label }>{ item.name }</label>
       </div>
     ));
     return (

@@ -165,23 +165,13 @@ class BaselinePicker extends React.Component {
             <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
             <ModalBody>
               
-              <Tabs>
-                {shell_inlet_tmu && 
-                  <TabPane tab="Shell Inlet TMU" key={'shell_inlet_tmu'}>
+              
+                
                   {this.props.baselineSel?
-                  <MultipleLinesPlot data={shell_inlet_tmu} for={'baseline'} asset={this.asset} user={this.user}/>
+                  <MultipleLinesPlot data={this.props.baselineSel} for={'baseline'} asset={this.asset} user={this.user}/>
                   :<Loader/>}  
-                </TabPane>
-                }
 
-                {shell_outlet_tmu &&
-                  <TabPane tab="Shell Outlet TMU" key={'shell_outlet_tmu'}>
-                  {this.props.baselineSel?
-                    <MultipleLinesPlot data={shell_outlet_tmu} for={'baseline'} asset={this.asset} user={this.user}/>
-                  :<Loader/>}                  
-                </TabPane>
-                }                
-              </Tabs>
+                
             
             <Form style={{display: "none"}}>
               <FormGroup>

@@ -99,10 +99,10 @@ class MultipleLinesPlot extends React.Component {
           x: data[i].Data.map((item,i) => item.TimeStamp ? moment(new Date(item.TimeStamp)).format('MMMM Do, H:mm'): 0),
           y: data[i].Data.map((item,i) => item.Value ? item.Value.toFixed(2) : 0),
           type: 'scatter',
-          name: data[i].Tag.split(':')[0] + parseInt(data[i].Tag.split(':')[1])/60000 + "min"
+          name: data[i].Tag.split(':')[0] + parseInt(data[i].Tag.split(':')[1])/60000 + "min",
+          legendgroup: data[i].Tag.split(':')[1]
         });
       }
-      console.log('done');
       dataDone = true;
     }();
       

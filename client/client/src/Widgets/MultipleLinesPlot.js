@@ -50,7 +50,7 @@ class MultipleLinesPlot extends React.Component {
     let dataDone = false;
 
     if(this.props.assetData && this.props.assetData.Settings){
-      baseline = this.props.assetData.Settings.Baselines[0].TimeStamp;
+      baseline = this.props.assetData.Settings.Baselines.length ? this.props.assetData.Settings.Baselines[0].TimeStamp : undefined ;
     }    
 
     if (this.props.for != 'baseline'){
@@ -123,17 +123,17 @@ class MultipleLinesPlot extends React.Component {
         shapes: [
           {
            type: 'line',
-           x0: moment(new Date(baseline)).format('MMMM Do, H:mm'),
+           x0: baseline ? moment(new Date(baseline)).format('MMMM Do, H:mm') : 0,
            y0: 0,
-           x1: moment(new Date(baseline)).format('MMMM Do, H:mm'),
-           y1: 0.2,
+           x1: baseline ? moment(new Date(baseline)).format('MMMM Do, H:mm') : 0,
+           y1: baseline ? 0.2 : 0,
            line: {
              color: 'red',
-             width: 3
+             width: baseline ? 3 : 0
            }
          }
       ],
-      annotations: [
+      annotations: [ baseline ?
         {
           xref: 'x',
           yref: 'y',
@@ -144,7 +144,7 @@ class MultipleLinesPlot extends React.Component {
           text: 'current baseline',
           showarrow: false,
           font: { color: 'red'}
-        }
+        } : ""
       ],
         margin:{
           l: 50,
@@ -164,7 +164,7 @@ class MultipleLinesPlot extends React.Component {
     return(
       
       <div>
-        <h4 style={{textAlign: "center", display: this.props.for ==='baseline' ? 'block' : 'none'}}>Baseline: {moment(new Date(baseline)).format('YYYY MMMM Do, H:mm')}</h4>
+        <h4 style={{textAlign: "center", display: this.props.for ==='baseline' ? 'block' : 'none'}}>Baseline: {baseline ? moment(new Date(baseline)).format('YYYY MMMM Do, H:mm') : "N/A"}</h4>
         {dataDone ?
         <Plot
           data = {formattedData ? formattedData : []}

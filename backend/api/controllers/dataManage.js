@@ -7,6 +7,7 @@ const Parameter = require('../db/parameter.js');
 const Asset = require('../db/asset.js');
 const math = require('mathjs');
 const path = require('path');
+var assetManage = require('./assetManage.js');
 var parameterManage = require('./parameterManage.js');
 var assetManage = require('./assetManage.js');
 var jStat = require('jStat').jStat;
@@ -590,6 +591,30 @@ function _addEquationHistory(paraID, eqn, result, ts) {
       data.CalculationHistory.push(history);
     }
     data.save();
+  });
+}
+
+function _addDataByParameterIDNoTrigger(paraID, value, timestamp) {
+  return new Promise(
+    (resolve, reject) => {
+      let data = new Data(); 
+      data.ParameterID = paraID;
+      data.Value = value;
+      data.TimeStamp = timestamp;
+
+      var dataobj = {
+        ParameterID: paraID,
+        Value: value,
+        TimeStamp: timestamp
+      };
+
+      data.save(err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
   });
 }
 
@@ -1738,7 +1763,7 @@ function _check_resolve(config) {
 }
 
 function _eval_engine(new_eval) {
-  //console.log(new_eval);
+  console.log(new_eval);
   new_eval = _math_op_convert(new_eval);
   new_eval = new_eval.replace(/[\[\]]/g,'');
 
@@ -1864,8 +1889,7 @@ function testFunc(req, res) {
     ).then(
       ret => {
         equations = ret;
-
-        _baseline_parameter_calculate(raw_data, equations, 1558361699136, 1558362303098);
+        _baseline_parameter_calculate(raw_data, equations, 1558720065114, 1558720125114);
         shareUtil.SendSuccessWithData(res, equations);
       }
     )
@@ -1978,19 +2002,103 @@ function _deleteCalculatedData(assetid) {
   });
 }
 
-function _recalculateAsset(assetid, prev_config, config) {
+function _update_single_equation(paralist, single_equation, timestamp) {
+  return new Promise(
+    (resolve, reject) => {
+      var eqn = paralist.filter(item => item.Tag === single_equation);
 
-  // _deleteCalculatedData(assetid)
-  // .then(
-  //   ret => {
-  //     console.log("delete all calculated data done");
-  //     return _getDataForBaselineSelection(assetid);
-  //   }
-  // )
-  // .then(
-  //   ret => {
-  //     // start calculation
-      
-  //   }
-  // )
+      if (eqn.length === 1) {
+        if (eqn[0].Value)  
+        {
+          if (isArray(eqn[0].Value))
+          {
+
+          } else {
+            _addDataByParameterIDNoTrigger(eqn[0].ParameterID, eqn[0].Value, timestamp);
+          }
+          
+        } else {
+          resolve();
+        }
+        
+      } else {
+        resolve();
+      }
+  });
+
+}
+
+function _recalculate_one_data_set(raw_data, config, currentT) {
+  return new Promise(
+    (resolve, reject) => {
+      var instant_data = JSON.parse(JSON.stringify(config));
+  
+      _baseline_parameter_calculate(raw_data, instant_data, currentT - 60000, currentT);
+    
+      Promise.all(instant_data.Equations.map(_update_single_equation))
+        .then(
+          ret => {
+            resolve();
+          }
+        )
+        .catch(
+          err => {
+            reject(err);
+          }
+        )
+    
+      // for(var i in config.TimeInterval) {
+      //   var interval_data = JSON.parse(JSON.stringify(config));
+      //   _baseline_parameter_calculate(raw_data, interval_data, currentT - config.TimeInterval[i], currentT);
+        
+      // }
+  });
+  
+
+  
+}
+
+function _recalculateAsset(assetid, prev_config, config) {
+  return new Promise(
+    (resolve, reject) => {
+      var raw_data, time_range, interval;
+      var sTS, eTS;
+
+      _deleteCalculatedData(assetid)
+      .then(
+        ret => {
+          console.log("delete all calculated data done");
+          return _getDataForBaselineSelection(assetid);
+        }
+      )
+      .then(
+        ret => {
+          // start calculation
+          raw_data = ret;
+          return assetManage._getAssetTimeRange(assetid);
+        }
+      )
+      .then(
+        ret => {
+          time_range = ret;
+          if (time_range.length === 0)
+          {
+            console.log("no raw data to calculate");
+            resolve();
+          } else {
+            sTS = time_range[0] + 60000;
+            eTS = time_range[time_range.length - 1] + 3600000;
+
+            _recalculate_one_data_set(raw_data, config, 1558720485080);            
+            // for(var t = sTS; t < eTS; t += 60000) {
+            //   _recalculate_one_data_set(t);
+            // }
+            resolve(config);
+          }
+          
+          
+        }
+      )
+  });
+
 }

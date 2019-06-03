@@ -32,7 +32,9 @@ var functions = {
   _getDeviceByAsset: _getDeviceByAsset,
   getDeviceBySerialNumber: getDeviceBySerialNumber,
   getGatewaySetting: getGatewaySetting,
-  updateGatewaySetting: updateGatewaySetting
+  updateGatewaySetting: updateGatewaySetting,
+  _remove_device_from_asset_by_serialnumber: _remove_device_from_asset_by_serialnumber,
+  _add_device_to_asset_gen: _add_device_to_asset_gen
 }
 
 for (var key in functions) {
@@ -53,6 +55,55 @@ function _add_device_to_asset(assetid, deviceid) {
           resolve();
         }
       });
+  });
+}
+
+function _add_device_to_asset_gen(assetid, deviceobj) {
+  return new Promise(
+    (resolve, reject) => {
+      _getDeviceByAsset(assetid)
+      .then(
+        devicelist => {
+          var filter_list = devicelist.filter(item => item.SerialNumber === deviceobj.SerialNumber);
+
+          if (filter_list.length > 0) {
+            // already exists
+            console.log("already exists")
+            resolve();
+          } else {
+            // check all devices
+            return _getDeviceBySerialNumber(deviceobj.SerialNumber);
+          }
+        }
+      )
+      .then(
+        ret => {
+          // device exist, add to asset
+          console.log(ret);
+          _add_device_to_asset(assetid, ret.DeviceID)
+          .then(
+            ret => {
+              resolve();
+            }
+          )
+        }
+      )
+      .catch(
+        err => {
+          // device not exist, create new device and add to asset
+          _createDeviceWithParameter(assetid, deviceobj)
+          .then(
+            ret => {
+              resolve();
+            }
+          )
+          .catch(
+            err => {
+              reject("cannot create device");
+            }
+          )
+        }
+      )
   });
 }
 

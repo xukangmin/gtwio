@@ -13,6 +13,7 @@ const AssetSchema = new Schema(
     Parameters: [{ParameterID: String}],
     Devices: [{DeviceID: String}],
     Dashboards: [{DashboardID: String}],
+    RecalculationProgress: Number,
     Config : Object,
     Settings: {
       Tags: [

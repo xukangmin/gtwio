@@ -1194,7 +1194,7 @@ function _createSingleAsset(userid, singleAssetConfig) {
     (resolve, reject) => {
       // first create asset
         var assetid;
-        _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName, Config: singleAssetConfig})
+        _createAssetPromise(userid, {DisplayName: singleAssetConfig.AssetName, Config: singleAssetConfig, AssetType: singleAssetConfig.AssetType})
           .then(
             ret => {
               // create device

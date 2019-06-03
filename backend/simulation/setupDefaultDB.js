@@ -74,7 +74,7 @@ function createDemoAccount() {
   var asconfig0 = require('./assetconfig_default0.json');
   var asconfig1 = require('./assetconfig_default1.json')
   var asconfig2 = require('./assetconfig_default2.json')
-
+  var realsensor = require('./assetconfig_realsensor.json');
   createUser(userid)
   .then(
     ret => {
@@ -89,6 +89,11 @@ function createDemoAccount() {
   .then(
     ret => {
       return createAsset(userid, asconfig2);
+    }
+  )
+  .then(
+    ret => {
+      return createAsset(userid, realsensor);
     }
   )
   .catch(

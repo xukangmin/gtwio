@@ -1,6 +1,7 @@
 [
   {
-    "AssetName" : "demo_hx_asset(1)",
+    "AssetName" : "Illinois_Cooling_Tower-1",
+    "AssetType" : "HeatExchanger",
     "Equations" :
     [
       {

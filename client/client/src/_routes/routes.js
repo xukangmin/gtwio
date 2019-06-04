@@ -4,6 +4,7 @@ import { LoginMain } from '../UserManagement/LoginMain';
 import { Home } from '../Pages/Home';
 import { Settings } from '../Pages/Settings';
 import { Dashboard } from '../Pages/Asset/Dashboard';
+import { TempGauge } from '../Pages/Asset/TempGauge';
 import { Data } from '../Pages/Asset/Data';
 import { Configurations } from '../Pages/Asset/Configurations';
 import { Configurationsb } from '../Pages/Asset/Configurationsb';
@@ -44,6 +45,10 @@ const routes = [
         {
           path: '/asset/:assetID/dashboard',
           component: Dashboard
+        },
+        {
+          path: '/asset/:assetID/gauge',
+          component: TempGauge
         },
         {
           path: '/asset/:assetID/data',

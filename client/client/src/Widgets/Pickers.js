@@ -193,7 +193,7 @@ class Pickers extends React.Component {
         }
       }
 
-      else if (asset && m_res[item].match.url.includes("dashboard")){
+      else if (asset && (m_res[item].match.url.includes("dashboard") || m_res[item].match.url.includes("gauge"))){
         if (this.range.live){
           this.props.dispatch(assetActions.getAsset(this.user, asset));
           setInterval(() => {

@@ -26,7 +26,7 @@ class Dashboard extends React.Component {
 
     const Hx_style = {
       maxWidth: "1200px",
-      maxHeight: "560px"
+      maxHeight: "560px",
     };
 
     let progressBars, cleanliness, cleanlinessUncertainty, heatFlow, heatBalanceError, cleanlinessPercentage = undefined;
@@ -60,7 +60,7 @@ class Dashboard extends React.Component {
             <Row>
               <div style={{width: '50%', marginTop: "-150px", display: 'flex', textAlign: 'center'}}>
               { cleanliness &&
-                <div style={{width: "200px"}}>
+                <div style={{margin: "0 2%"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + cleanliness.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard" 
@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
                 </div>                
               }
               { heatFlow &&
-                <div style={{width: "200px"}}>
+                <div style={{margin: "0 2%"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatFlow.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard"
@@ -94,7 +94,7 @@ class Dashboard extends React.Component {
                 </div>                
               }
               { heatBalanceError &&
-                <div style={{width: "200px", position: "relative"}}>
+                <div style={{margin: "0 2%", position: "relative"}}>
                   <a href={"/asset/" + assetData.AssetID + "/parameter/" + heatBalanceError.Tag.split(':')[0]}>
                     <Progress 
                     type="dashboard" 

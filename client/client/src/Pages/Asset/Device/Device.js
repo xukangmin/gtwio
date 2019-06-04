@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { parameterActions } from '../../../_actions/parameterAction';
-import { Table } from 'reactstrap';
+import { Row, Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
 import { DeviceParameter } from '../Device/DeviceParameter';
 
@@ -12,131 +12,165 @@ import toastr from 'toastr';
 import InlineEdit from 'react-inline-edit-input';
 import EmptyData from '../../../Widgets/EmptyData';
 
+import { Tabs } from 'antd';
+import 'antd/dist/antd.css';
+const TabPane = Tabs.TabPane;
+
 const DeviceInfo = (props) => {
   const device = props.data;
   
   return(
-    <div className = "row">
+    <div>
+    <Row>
       <div className="col-12">
         <h4>{device.DisplayName}</h4>
-      </div>
-      <div className = "col-lg-6 col-sm-12">
-        <Table striped>
-          <tbody>
-            <tr>
-              <th>Device ID</th>
-              <td>{device.DeviceID}</td>
-            </tr>
-            <tr>
-              <th>Serial Number</th>
-              <td>{device.SerialNumber}</td>
-            </tr>
-            <tr>
-              <th>Last Calibration Date</th>
-              <td>{moment(device.LastCalibrationDate).format('MMMM Do YYYY')}</td>
-            </tr>
-            {device.Parameters[0].CurrentValue &&
-            <tr>
-              <th>Current Value</th>
-              <td>{device.Parameters[0].CurrentValue.toFixed(2) + ' ' + device.Parameters[0].Unit}</td>
-            </tr>
-            }
-            {device.Parameters[0].CurrentTimeStamp &&
-            <tr>
-              <th>Current Time Stamp</th>
-              <td>{moment(new Date(Number(device.Parameters[0].CurrentTimeStamp))).format('MMMM Do YYYY, H:mm')}</td>
-            </tr>
-            }
-          </tbody>
-        </Table>
-      </div>
-      <div className = "col-lg-6 col-sm-12">
-        <Table striped>
-          <tbody>
-            <tr>
-              <th>Lower Alarm Limit</th>
-              <td>
-                <div style={{display: "flex"}}>
-                  <InlineEdit
-                    value={device.Parameters[0].Range.LowerLimit}
-                    tag="span"
-                    type="text"
-                    saveLabel="Update"
-                    saveColor="#17a2b8"
-                    cancelLabel="Cancel"
-                    cancelColor="#6c757d"
-                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "LowerLimit", Number(value))}
-                  />
-                  <span>{device.Parameters[0].Unit}</span>
-                </div>                
-              </td>
-            </tr>
-            <tr>
-              <th>Upper Alarm Limit</th>
-              <td>
-                <div style={{display: "flex"}}>
-                  <InlineEdit
-                    value={device.Parameters[0].Range.UpperLimit}
-                    tag="span"
-                    type="text"
-                    saveLabel="Update"
-                    saveColor="#17a2b8"
-                    cancelLabel="Cancel"
-                    cancelColor="#6c757d"
-                    onSave={value => props.update(device.Parameters[0].ParameterID, device.Parameters[0].Range, "UpperLimit", Number(value))}
-                  />
-                  {device.Parameters[0].Unit}
+        </div>
+    </Row>
+    <Row>
+    <Tabs className="col-12">      
+          {device.Parameters.map((x, i)=>
+            
+            <TabPane 
+              tab={x.DisplayName} 
+              key={i}
+              >
+              <Row>
+              <div className = "col-lg-6 col-sm-12">
+                <Table striped>
+                  <tbody>
+                    <tr>
+                      <th>Device ID</th>
+                      <td>{device.DeviceID}</td>
+                    </tr>
+                    <tr>
+                      <th>Serial Number</th>
+                      <td>{device.SerialNumber}</td>
+                    </tr>
+                    <tr>
+                      <th>Last Calibration Date</th>
+                      <td>{moment(device.LastCalibrationDate).format('MMMM Do YYYY')}</td>
+                    </tr>
+                    {x.CurrentValue &&
+                    <tr>
+                      <th>Current Value</th>
+                      <td>{x.CurrentValue.toFixed(2) + ' ' + x.Unit}</td>
+                    </tr>
+                    }
+                    {x.CurrentTimeStamp &&
+                    <tr>
+                      <th>Current Time Stamp</th>
+                      <td>{moment(new Date(Number(x.CurrentTimeStamp))).format('MMMM Do YYYY, H:mm')}</td>
+                    </tr>
+                    }
+                  </tbody>
+                </Table>
+              </div>
+              <div className = "col-lg-6 col-sm-12">
+                <Table striped>
+                  <tbody>
+                    <tr>
+                      <th>Lower Alarm Limit</th>
+                      <td>
+                        <div style={{display: "flex"}}>
+                          <InlineEdit
+                            value={x.Range.LowerLimit}
+                            tag="span"
+                            type="text"
+                            saveLabel="Update"
+                            saveColor="#17a2b8"
+                            cancelLabel="Cancel"
+                            cancelColor="#6c757d"
+                            onSave={value => props.update(x.ParameterID, x.Range, "LowerLimit", Number(value))}
+                          />
+                          <span>{x.Unit}</span>
+                        </div>                
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Upper Alarm Limit</th>
+                      <td>
+                        <div style={{display: "flex"}}>
+                          <InlineEdit
+                            value={x.Range.UpperLimit}
+                            tag="span"
+                            type="text"
+                            saveLabel="Update"
+                            saveColor="#17a2b8"
+                            cancelLabel="Cancel"
+                            cancelColor="#6c757d"
+                            onSave={value => props.update(x.ParameterID, x.Range, "UpperLimit", Number(value))}
+                          />
+                          {x.Unit}
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Stability Criteria - Window Size</th>
+                      <td>
+                        <div style={{display: "flex"}}>
+                          <InlineEdit
+                            value={x.StabilityCriteria.WindowSize}
+                            tag="span"
+                            type="text"
+                            saveLabel="Update"
+                            saveColor="#17a2b8"
+                            cancelLabel="Cancel"
+                            cancelColor="#6c757d"
+                            onSave={value => props.updateStability(x.ParameterID, "WindowSize", value, x.StabilityCriteria)}
+                          />
+                          {" minutes"}
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Stability Criteria - Upper Threshold</th>
+                      <td>
+                        <div style={{display: "flex"}}>
+                          <InlineEdit
+                            value={x.StabilityCriteria.UpperLimit}
+                            tag="span"
+                            type="text"
+                            saveLabel="Update"
+                            saveColor="#17a2b8"
+                            cancelLabel="Cancel"
+                            cancelColor="#6c757d"
+                            onSave={value => props.updateStability(x.ParameterID, "UpperLimit", value, x.StabilityCriteria)}
+                          />
+                          {x.Unit}
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Stability</th>
+                      <td>{x.StandardDeviation.toFixed(2) + ' ' + x.Unit + '/hr'}</td>
+                    </tr>
+                    <tr>
+                      <th>Status</th>
+                      <td style={{color: x.Status == "Valid" ? "green" : "red", fontWeight: "bold"}}>{x.Status}</td>
+                    </tr>
+                  </tbody>
+                </Table>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <th>Stability Criteria - Window Size</th>
-              <td>
-                <div style={{display: "flex"}}>
-                  <InlineEdit
-                    value={device.Parameters[0].StabilityCriteria.WindowSize}
-                    tag="span"
-                    type="text"
-                    saveLabel="Update"
-                    saveColor="#17a2b8"
-                    cancelLabel="Cancel"
-                    cancelColor="#6c757d"
-                    onSave={value => props.updateStability(device.Parameters[0].ParameterID, "WindowSize", value, device.Parameters[0].StabilityCriteria)}
-                  />
-                  {" minutes"}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th>Stability Criteria - Upper Threshold</th>
-              <td>
-                <div style={{display: "flex"}}>
-                  <InlineEdit
-                    value={device.Parameters[0].StabilityCriteria.UpperLimit}
-                    tag="span"
-                    type="text"
-                    saveLabel="Update"
-                    saveColor="#17a2b8"
-                    cancelLabel="Cancel"
-                    cancelColor="#6c757d"
-                    onSave={value => props.updateStability(device.Parameters[0].ParameterID, "UpperLimit", value, device.Parameters[0].StabilityCriteria)}
-                  />
-                  {device.Parameters[0].Unit}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th>Stability</th>
-              <td>{device.Parameters[0].StandardDeviation.toFixed(2) + ' ' + device.Parameters[0].Unit + '/hr'}</td>
-            </tr>
-            <tr>
-              <th>Status</th>
-              <td style={{color: device.Parameters[0].Status == "Valid" ? "green" : "red", fontWeight: "bold"}}>{device.Parameters[0].Status}</td>
-            </tr>
-          </tbody>
-        </Table>
+              </Row>
+              <div className="col-12">
+              <DeviceParameter data={device}/>
+
+              </div>
+            
+
+
+              
+              
+            </TabPane>
+          )}
+          </Tabs>     
+    </Row>
+      
+        
+        
+        
+        
       </div>
-    </div>
   );
 };
 
@@ -147,6 +181,7 @@ class Device extends React.Component {
     this.state = {
         AssetID : props.match.params.assetID,
         DeviceID: props.match.params.deviceID,
+        activePara: undefined
     }
 
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -155,6 +190,8 @@ class Device extends React.Component {
     this.updateLimit = this.updateLimit.bind(this);
     this.updateStability = this.updateStability.bind(this);
   }
+
+  
 
   sortTime(data){
     return(data.sort(
@@ -229,8 +266,9 @@ class Device extends React.Component {
         <div className = "mt-3">
         {deviceData &&
           <div>
+                
             <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability}/>
-            <DeviceParameter data={deviceData}/>
+            
           </div>
         }
         </div>

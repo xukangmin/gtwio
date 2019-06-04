@@ -35,7 +35,7 @@ class RootLayout extends Component {
     let m_res = matchRoutes(routes, window.location.pathname);
     for(var item in m_res) {
       if (m_res[item].match.isExact) {
-        this.asset = m_res[item].match.params.assetID;        
+        this.asset = m_res[item].match.params.assetID;    
       }
 
       if(m_res[item].match.url.includes("dashboard")){
@@ -64,7 +64,7 @@ class RootLayout extends Component {
     } else{
       assets_display = assets;
     }
-
+    console.log(assets_display)
     if (!this.user) {
       return (<Redirect to='/login'/>);
     } else {
@@ -86,7 +86,7 @@ class RootLayout extends Component {
               <SubMenu
                 key="sub-1"
                 title={<span><Icon type="bars" /><span>Assets</span></span>}>
-                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID+index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
+                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID+index}><a href={"/asset/" + asset.AssetID + (asset.AssetType == "HeatExchanger" ? "/dashboard" : "/gauge")}>{asset.DisplayName}</a></Menu.Item>)
                 :<Loader/>}
               </SubMenu>
               
@@ -111,7 +111,7 @@ class RootLayout extends Component {
               
                 <Menu defaultSelectedKeys={[this.activeNav]} mode="inline">
                   <Menu.Item key="dashboard">
-                    <a href={"/asset/" + this.asset + "/dashboard"}>
+                    <a href={"/asset/" + this.asset + (assets_display.find(i => i.AssetID === this.asset).AssetType == "HeatExchanger" ? "/dashboard" : "/gauge")}>
                       <Icon type="dashboard" />
                       <span>Dashboard</span>
                     </a>

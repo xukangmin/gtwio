@@ -41,6 +41,7 @@ class MultipleLinesPlot extends React.Component {
   render(){
     const { data } = this.props;
     const { unit } = this.props;
+    const { type } =this.props;
 
     let isRangeBiggerThanADay = false;
     let formattedData = [];
@@ -49,6 +50,7 @@ class MultipleLinesPlot extends React.Component {
     let baseline = undefined;
     let dataDone = false;
 
+    console.log(data)
     if(this.props.assetData && this.props.assetData.Settings){
       baseline = this.props.assetData.Settings.Baselines.length ? this.props.assetData.Settings.Baselines[0].TimeStamp : undefined ;
     }    
@@ -62,12 +64,12 @@ class MultipleLinesPlot extends React.Component {
   
       for (var i = 0; i < data.length; i++){
         formattedData.push({
-          x: data[i].Parameters[0].Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
-          y: data[i].Parameters[0].Data.map((item,i) => item.Value.toFixed(2)),
+          x: data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+          y: data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => item.Value.toFixed(2)),
           type: 'scatter',
           name: data[i].SerialNumber
         });
-        allData.push(data[i].Parameters[0].Data.map((item,i) => item.Value));
+        allData.push(data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => item.Value));
       }
       dataDone = true;
 

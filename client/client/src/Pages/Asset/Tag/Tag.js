@@ -38,6 +38,7 @@ class Tag extends React.Component {
     let SensorShow = queryString.parse(location.search).SensorShow;
     let Type = queryString.parse(location.search).Type;
     
+    console.log(DeviceData)
     return(
       <div>
         {AssetData && DeviceData ?
@@ -49,9 +50,8 @@ class Tag extends React.Component {
               <TabPane tab="Temperature" key="1">
               <Row>
                 <div className = "col-8">
-                  <MultipleLinesPlot 
-                    data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
-                    unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
+                  
+                  
                 </div>
                 <div className = "col-4">
                   {DeviceData[0].Parameters[0].DataStatistics?
@@ -108,12 +108,12 @@ class Tag extends React.Component {
             <h3>{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
             {DeviceData[0].Parameters[0].Data.length?
               <MultipleLinesPlot 
-              data={DeviceData[0].filter(item=>item.Parameters[0].Type==Type)} 
-              unit={DeviceData[0].Parameters[0].Unit}/>
+              type={Type}
+              data={DeviceData.filter(item=>item.Parameters[0])} 
+              unit={Type=="Temperature"?"°F":"%"}/>
             :
             <EmptyData/>
             }
-            
           </div>
           </div>
 

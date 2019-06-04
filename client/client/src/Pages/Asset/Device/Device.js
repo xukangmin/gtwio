@@ -431,10 +431,14 @@ class Device extends React.Component {
                           </div>
                         </td>
                       </tr>
-                      <tr>
+                      {x.StandardDeviation &&
+                        <tr>
                         <th>Stability</th>
                         <td>{x.StandardDeviation.toFixed(2) + ' ' + x.Unit + '/hr'}</td>
                       </tr>
+                      
+                      }
+                      
                       <tr>
                         <th>Status</th>
                         <td style={{ color: x.Status == "Valid" ? "green" : "red", fontWeight: "bold" }}>{x.Status}</td>

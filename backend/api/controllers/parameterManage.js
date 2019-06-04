@@ -334,6 +334,27 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
             }
 
           } else if (typeof paraobj === 'object') {
+            if (paraobj.Type === 'Temperature') { //populate default parameters for temperature
+              para.DisplayName = 'Temperature Value';
+              para.Unit = '°F';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
+              para.Range = {UpperLimit: 100, LowerLimit: 32};
+            } else if (paraobj.Type === 'FlowRate') { // populate default parameters for flowrate
+              para.DisplayName = 'Flow Rate Value';
+              para.Unit = 'gpm';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
+              para.Range = {UpperLimit: 100, LowerLimit: -100};
+            } else if (paraobj.Type === 'Humidity') {
+              para.DisplayName = 'Humidity Value';
+              para.Unit = '%';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 3};
+              para.Range = {UpperLimit: 100, LowerLimit: 0};
+            } else {
+              para.DisplayName = paraobj.Type;
+              para.Unit = 'N/A';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 99999};
+              para.Range = {UpperLimit: 99999, LowerLimit: -99999};
+            }
             for (var key in paraobj) {
               para[key] = paraobj[key];
             }

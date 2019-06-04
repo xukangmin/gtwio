@@ -61,35 +61,27 @@
         },
         {
           "Name": "Thermistor 1",
-          "SerialNumber": "03A001a",
+          "SerialNumber": "03A001",
           "Tag": "1701",
           "Alias": "T5",
           "Angle": 0,
-          "Parameters": ["Temperature"]
-        },
-        {
-          "Name": "Thermistor 2",
-          "SerialNumber": "03A001b",
-          "Tag": "1701",
-          "Alias": "T6",
-          "Angle": 90,
-          "Parameters": ["Temperature"]
-        },
-        {
-          "Name": "Thermistor 3",
-          "SerialNumber": "03A001c",
-          "Tag": "1701",
-          "Alias": "T7",
-          "Angle": 180,
-          "Parameters": ["Temperature"]
-        },
-        {
-          "Name": "Thermistor 4",
-          "SerialNumber": "03A001d",
-          "Tag": "1701",
-          "Alias": "T8",
-          "Angle": 270,
-          "Parameters": ["Temperature"]
+          "Parameters": [
+            {
+              "DisplayName": "Channel-A",
+              "Type":"Temperature"
+            },
+            {
+              "DisplayName": "Channel-B",
+              "Type":"Temperature"
+            },
+            {
+              "DisplayName": "Channel-C",
+              "Type":"Temperature"
+            },
+            {
+              "DisplayName": "Channel-D",
+              "Type":"Temperature"
+            }]
         },
         {
           "Name": "Temperature RH 1",

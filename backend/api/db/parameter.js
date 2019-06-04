@@ -19,6 +19,7 @@ const ParameterSchema = new Schema(
     Alias: String,
     CurrentValue: Number,
     CurrentTimeStamp: Number,
+    Channel: String,
     Unit: String,
     Type: String,
     Tag: {type: String, index: true},

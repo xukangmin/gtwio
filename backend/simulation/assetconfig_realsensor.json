@@ -30,7 +30,7 @@
         {
           "Name": "Temperature Sensor 1",
           "SerialNumber": "02A007",
-          "Tag": "1707_TEMP",
+          "Tag": "1707",
           "Alias": "T1",
           "Angle": 0,
           "Parameters": ["Temperature"]
@@ -38,7 +38,7 @@
         {
           "Name": "Temperature Sensor 2",
           "SerialNumber": "02A008",
-          "Tag": "1707_TEMP",
+          "Tag": "1707",
           "Alias": "T2",
           "Angle": 90,
           "Parameters": ["Temperature"]
@@ -46,7 +46,7 @@
         {
           "Name": "Temperature Sensor 3",
           "SerialNumber": "02A009",
-          "Tag": "1707_TEMP",
+          "Tag": "1707",
           "Alias": "T3",
           "Angle": 180,
           "Parameters": ["Temperature"]
@@ -54,62 +54,62 @@
         {
           "Name": "Temperature Sensor 4",
           "SerialNumber": "02A010",
-          "Tag": "1707_TEMP",
+          "Tag": "1707",
           "Alias": "T4",
           "Angle": 270,
           "Parameters": ["Temperature"]
         },
         {
           "Name": "Thermistor 1",
-          "SerialNumber": "03A01A",
-          "Tag": "1701_TEMP",
+          "SerialNumber": "03A001a",
+          "Tag": "1701",
           "Alias": "T5",
           "Angle": 0,
           "Parameters": ["Temperature"]
         },
         {
           "Name": "Thermistor 2",
-          "SerialNumber": "03A01B",
-          "Tag": "1701_TEMP",
+          "SerialNumber": "03A001b",
+          "Tag": "1701",
           "Alias": "T6",
           "Angle": 90,
           "Parameters": ["Temperature"]
         },
         {
           "Name": "Thermistor 3",
-          "SerialNumber": "03A01C",
-          "Tag": "1701_TEMP",
+          "SerialNumber": "03A001c",
+          "Tag": "1701",
           "Alias": "T7",
           "Angle": 180,
           "Parameters": ["Temperature"]
         },
         {
           "Name": "Thermistor 4",
-          "SerialNumber": "03A01D",
-          "Tag": "1701_TEMP",
+          "SerialNumber": "03A001d",
+          "Tag": "1701",
           "Alias": "T8",
           "Angle": 270,
           "Parameters": ["Temperature"]
         },
         {
           "Name": "Temperature RH 1",
-          "SerialNumber": "04A001",
-          "Tag": "1708_TEMP",
+          "SerialNumber": "08A002",
+          "Tag": "1708",
           "Alias": "T9",
           "Angle": 0,
           "Parameters": ["Temperature","Humidity"]
         },
         {
           "Name": "Temperature RH 2",
-          "SerialNumber": "04A002",
-          "Tag": "1708_TEMP",
+          "SerialNumber": "08A003",
+          "Tag": "1708",
           "Alias": "T10",
           "Angle": 90,
           "Parameters": ["Temperature","Humidity"]
         },
         {
           "Name": "Temperature RH 3",
-          "SerialNumber": "04A003",
+          "SerialNumber": "08A004",
           "Tag": "1708",
           "Alias": "T11",
           "Angle": 180,
@@ -117,7 +117,7 @@
         },
         {
           "Name": "Temperature RH 4",
-          "SerialNumber": "04A004",
+          "SerialNumber": "08A005",
           "Tag": "1708",
           "Alias": "T12",
           "Angle": 270,

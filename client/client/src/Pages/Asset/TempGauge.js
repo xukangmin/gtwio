@@ -27,7 +27,7 @@ class TempGauge extends React.Component {
       <div style={{marginTop: "55px", height: height, display: "flex", justifyContent: "space-around", flexWrap: 'wrap', alignItems: 'center', alignContent: 'space-evenly'}}>
       
         {gauges ? 
-          gauges.map((x,i)=><Gauge key={i} data={x}/>)
+          gauges.map((x,i)=><Gauge key={i} data={x} asset={this.asset}/>)
           :<Loader/>}
       
     </div>

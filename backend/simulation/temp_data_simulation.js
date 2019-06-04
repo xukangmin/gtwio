@@ -81,20 +81,20 @@ module.exports.simualte = (interval) => {
     generate_simulation_data('02A009', "Temperature", 83.0, 84.2);
     generate_simulation_data('02A010', "Temperature", 85.0, 86.2);
 
-    generate_simulation_data('03A01A', "Temperature", 88.0, 88.2);
-    generate_simulation_data('03A01B', "Temperature", 81.0, 83.2);
-    generate_simulation_data('03A01C', "Temperature", 83.0, 84.2);
-    generate_simulation_data('03A01D', "Temperature", 85.0, 86.2);
+    generate_simulation_data('03A001a', "Temperature", 88.0, 88.2);
+    generate_simulation_data('03A001b', "Temperature", 81.0, 83.2);
+    generate_simulation_data('03A001c', "Temperature", 83.0, 84.2);
+    generate_simulation_data('03A001d', "Temperature", 85.0, 86.2);
 
-    generate_simulation_data('04A001', "Temperature", 88.0, 88.2);
-    generate_simulation_data('04A002', "Temperature", 81.0, 83.2);
-    generate_simulation_data('04A003', "Temperature", 83.0, 84.2);
-    generate_simulation_data('04A004', "Temperature", 85.0, 86.2);
+    generate_simulation_data('08A002', "Temperature", 88.0, 88.2);
+    generate_simulation_data('08A003', "Temperature", 81.0, 83.2);
+    generate_simulation_data('08A004', "Temperature", 83.0, 84.2);
+    generate_simulation_data('08A005', "Temperature", 85.0, 86.2);
 
-    generate_simulation_data('04A001', "Humidity", 38.0, 38.2);
-    generate_simulation_data('04A002', "Humidity", 31.0, 33.2);
-    generate_simulation_data('04A003', "Humidity", 33.0, 34.2);
-    generate_simulation_data('04A004', "Humidity", 35.0, 36.2);
+    generate_simulation_data('08A002', "Humidity", 38.0, 38.2);
+    generate_simulation_data('08A003', "Humidity", 31.0, 33.2);
+    generate_simulation_data('08A004', "Humidity", 33.0, 34.2);
+    generate_simulation_data('08A005', "Humidity", 35.0, 36.2);
   }
 
   setInterval(myFunc, interval, 'funky');

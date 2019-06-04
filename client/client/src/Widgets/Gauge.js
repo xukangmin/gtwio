@@ -16,7 +16,7 @@ class Gauge extends React.Component {
     let range = humidity ? [0, 20, 40, 60, 80, 100] : [0, 20, 40, 60, 80, 100, 120];
     return(
       <div style={{width: "50%", display: "flex", justifyContent: "center"}}>
-      <a href={"/asset/" + asset + "/tag/" + data.TagName + "?tab=1&SensorShow=true"}>
+      <a href={"/asset/" + asset + "/tag/" + data.TagName + "?tab=1&SensorShow=true&Type=" + data.Data[0].Name}>
         <RadialGauge
         units={data.TagName}
         title={title}

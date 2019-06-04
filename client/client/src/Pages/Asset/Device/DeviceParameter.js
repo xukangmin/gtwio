@@ -32,7 +32,7 @@ const ParameterTable = (props) => {
           {parameter.map((item,i) =>
               <tr key = {i} >
                 <td style = {{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + device.Parameters[0].Unit}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + props.unit}</td>
               </tr>
           )}
         </tbody>
@@ -47,7 +47,8 @@ class DeviceParameter extends React.Component {
 
     console.log(props)
     this.state = {
-        DeviceID: props.data.Parameters[0].ParameterID,
+        DeviceID: props.data.Parameters[props.type].ParameterID,
+        unit: props.unit
     }
 
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -83,6 +84,7 @@ class DeviceParameter extends React.Component {
 
   render() {
     const { parameterData } = this.props;
+    console.log(parameterData)
     
       return (
         <div className = "mt-3">
@@ -92,7 +94,7 @@ class DeviceParameter extends React.Component {
               <div className = "row mt-3">
                 <div className = "col-auto">
                   <h6>History</h6>
-                  <ParameterTable data={this.sortTime(parameterData)} device={this.props.data}/>
+                  <ParameterTable data={this.sortTime(parameterData)} device={this.props.data} unit={this.state.unit}/>
                 </div>
                 <div className = "col-sm-auto col-lg-8">
                   <SingleLinePlot parameterData={this.sortTime(parameterData)}/>

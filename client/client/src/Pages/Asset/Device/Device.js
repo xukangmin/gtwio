@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-
+import { dataActions } from '../../../_actions/dataAction';
 import { parameterActions } from '../../../_actions/parameterAction';
 import { Row, Table } from 'reactstrap';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
@@ -16,9 +16,39 @@ import { Tabs } from 'antd';
 import 'antd/dist/antd.css';
 const TabPane = Tabs.TabPane;
 
+const ParameterTable = (props) => {
+  const parameter = props.data;
+  const device = props.device;
+  return(
+    <div>
+      <Table
+        style={{
+          display: "block",
+          height: "50vh",
+          overflowY: "scroll"
+        }}>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parameter.map((item,i) =>
+              <tr key = {i} >
+                <td style = {{padding:0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{item.Value.toFixed(2) + props.unit}</td>
+              </tr>
+          )}
+        </tbody>
+      </Table>
+    </div>
+  );
+};
+
 const DeviceInfo = (props) => {
   const device = props.data;
-
+  console.log(device)
   return (
     <div>
       <Row>
@@ -28,7 +58,7 @@ const DeviceInfo = (props) => {
       </Row>
       <Row>
         <div className="col-12">
-        <Tabs >
+        <Tabs onChange={this.get}>
           {device.Parameters.map((x, i) =>
             <TabPane
               tab={x.DisplayName}
@@ -118,7 +148,7 @@ const DeviceInfo = (props) => {
                               cancelColor="#6c757d"
                               onSave={value => props.updateStability(x.ParameterID, "WindowSize", value, x.StabilityCriteria)}
                             />
-                            {" minutes"}
+                            {" seconds"}
                           </div>
                         </td>
                       </tr>
@@ -153,7 +183,7 @@ const DeviceInfo = (props) => {
                 </div>
               </Row>
               <div className="col-12">
-                <DeviceParameter data={device} />
+                <DeviceParameter data={device} type={i} unit={x.Unit}/>
               </div>
             </TabPane>
           )}
@@ -171,7 +201,8 @@ class Device extends React.Component {
     this.state = {
       AssetID: props.match.params.assetID,
       DeviceID: props.match.params.deviceID,
-      activePara: undefined
+      activePara: undefined,
+      Unit: undefined
     }
 
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -179,9 +210,17 @@ class Device extends React.Component {
 
     this.updateLimit = this.updateLimit.bind(this);
     this.updateStability = this.updateStability.bind(this);
+
+    this.getParameterData = this.getParameterData.bind(this);
   }
 
-
+  componentDidUpdate (){    
+    if(this.state.DeviceID && this.state.activePara === undefined){
+      console.log(this.state.activePara)
+      console.log(this.props.deviceData)
+      this.getParameterData(this.props.deviceData.Parameters[0].ParameterID);
+    }
+  }
 
   sortTime(data) {
     return (data.sort(
@@ -244,19 +283,186 @@ class Device extends React.Component {
     updateData.StabilityCriteria[type] = Number(value);
     this.props.dispatch(parameterActions.updateParameter(this.state.AssetID, updateData));
   }
+  
+  getParameterData(activeParameter){
+    console.log('00000000000',activeParameter)
+    this.range = JSON.parse(localStorage.getItem('range'));
+    let liveDispatchInterval = 60*1000;
+    this.setState({activePara: activeParameter, Unit: this.props.deviceData.Parameters.find(i=>i.ParameterID==activeParameter).Unit})
+    if (this.range.live){
+      this.props.dispatch(dataActions.getSingleParameterData(activeParameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+      setInterval(() => {
+        this.props.dispatch(dataActions.getSingleParameterData(activeParameter, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+      }, liveDispatchInterval);
+    } else {
+      this.props.dispatch(dataActions.getSingleParameterData(activeParameter, this.range.start*1000, this.range.end*1000));
+    }      
+  }
 
   render() {
-    const { deviceData } = this.props;
-    console.log(deviceData)
+    const device  = this.props.deviceData;
+    let { parameterData } = this.props;   
+    console.log(device)
     if (!this.user) {
       return (<Redirect to='/login' />);
     } else {
       return (
         <div className="mt-3">
-          {deviceData &&
+          {device &&
             <div>
 
-              <DeviceInfo data={deviceData} update={this.updateLimit} updateStability={this.updateStability} />
+<div>
+      <Row>
+        <div className="col-12">
+          <h4>{device.DisplayName}</h4>
+        </div>
+      </Row>
+      <Row>
+        <div className="col-12">
+        <Tabs onChange={this.getParameterData}>
+          {device.Parameters.map((x, i) =>
+            <TabPane
+              tab={x.DisplayName}
+              key={device.Parameters[i].ParameterID}
+            >
+              <Row>
+                <div className="col-lg-6 col-sm-12">
+                  <Table striped>
+                    <tbody>
+                      <tr>
+                        <th>Device ID</th>
+                        <td>{device.DeviceID}</td>
+                      </tr>
+                      <tr>
+                        <th>Serial Number</th>
+                        <td>{device.SerialNumber}</td>
+                      </tr>
+                      <tr>
+                        <th>Last Calibration Date</th>
+                        <td>{moment(device.LastCalibrationDate).format('MMMM Do YYYY')}</td>
+                      </tr>
+                      {x.CurrentValue &&
+                        <tr>
+                          <th>Current Value</th>
+                          <td>{x.CurrentValue.toFixed(2) + ' ' + x.Unit}</td>
+                        </tr>
+                      }
+                      {x.CurrentTimeStamp &&
+                        <tr>
+                          <th>Current Time Stamp</th>
+                          <td>{moment(new Date(Number(x.CurrentTimeStamp))).format('MMMM Do YYYY, H:mm')}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </Table>
+                </div>
+                <div className="col-lg-6 col-sm-12">
+                  <Table striped>
+                    <tbody>
+                      <tr>
+                        <th>Lower Alarm Limit</th>
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <InlineEdit
+                              value={x.Range.LowerLimit}
+                              tag="span"
+                              type="text"
+                              saveLabel="Update"
+                              saveColor="#17a2b8"
+                              cancelLabel="Cancel"
+                              cancelColor="#6c757d"
+                              onSave={value => this.updateLimit(x.ParameterID, x.Range, "LowerLimit", Number(value))}
+                            />
+                            <span>{x.Unit}</span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Upper Alarm Limit</th>
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <InlineEdit
+                              value={x.Range.UpperLimit}
+                              tag="span"
+                              type="text"
+                              saveLabel="Update"
+                              saveColor="#17a2b8"
+                              cancelLabel="Cancel"
+                              cancelColor="#6c757d"
+                              onSave={value => this.updateLimit(x.ParameterID, x.Range, "UpperLimit", Number(value))}
+                            />
+                            {x.Unit}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Stability Criteria - Window Size</th>
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <InlineEdit
+                              value={x.StabilityCriteria.WindowSize}
+                              tag="span"
+                              type="text"
+                              saveLabel="Update"
+                              saveColor="#17a2b8"
+                              cancelLabel="Cancel"
+                              cancelColor="#6c757d"
+                              onSave={value => this.updateStability(x.ParameterID, "WindowSize", value, x.StabilityCriteria)}
+                            />
+                            {" minutes"}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Stability Criteria - Upper Threshold</th>
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <InlineEdit
+                              value={x.StabilityCriteria.UpperLimit}
+                              tag="span"
+                              type="text"
+                              saveLabel="Update"
+                              saveColor="#17a2b8"
+                              cancelLabel="Cancel"
+                              cancelColor="#6c757d"
+                              onSave={value => this.updateStability(x.ParameterID, "UpperLimit", value, x.StabilityCriteria)}
+                            />
+                            {x.Unit}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Stability</th>
+                        <td>{x.StandardDeviation.toFixed(2) + ' ' + x.Unit + '/hr'}</td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <td style={{ color: x.Status == "Valid" ? "green" : "red", fontWeight: "bold" }}>{x.Status}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+              </Row>              
+            </TabPane>
+          )}
+        </Tabs>
+
+        {parameterData && parameterData.length ?
+            <div className = "row mt-3">
+              <div className = "col-auto">
+                <h6>History</h6>
+                <ParameterTable data={this.sortTime(parameterData)} unit={this.state.Unit}/>
+              </div>
+              <div className = "col-sm-auto col-lg-8">
+                <SingleLinePlot parameterData={this.sortTime(parameterData)} unit={this.state.Unit}/>
+              </div>
+            </div>
+           :
+           <EmptyData/>
+           }
+        </div>
+      </Row>
+    </div>
 
             </div>
           }
@@ -267,8 +473,10 @@ class Device extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const { data } = state.data;
   return {
-    deviceData: state.device.single
+    deviceData: state.device.single,
+    parameterData: data
   };
 }
 

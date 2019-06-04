@@ -23,7 +23,6 @@ class Tag extends React.Component {
   render(){
     const { AssetData } = this.props;
     const { DeviceData } = this.props;
-    const SensorShow = false;
 
     function callback(key) {
       console.log(key);
@@ -36,14 +35,14 @@ class Tag extends React.Component {
       }
     }    
 
-    if (queryString.parse(location.search).SensorShow){
-      SensorShow = true;
-    }
+    let SensorShow = queryString.parse(location.search).SensorShow;
+    let Type = queryString.parse(location.search).Type;
     
     return(
       <div>
-        {AssetData && DeviceData && !SensorShow?
+        {AssetData && DeviceData ?
           <div>
+            <div style={{display: SensorShow ? "none" : "block"}}>
             <h3>{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
             {DeviceData[0].Parameters[0].Data.length?
               <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
@@ -102,32 +101,23 @@ class Tag extends React.Component {
               </Tabs>
             :
             <EmptyData/>
-            
             }
-            </div>
-          :
-          <Loader/>}  
-
-          {AssetData && DeviceData && SensorShow ?
-          <div>
+            
+          </div>
+          <div style={{display: !SensorShow ? "none" : "block"}}>
             <h3>{AssetData.DisplayName} - {this.props.match.params.tagID}</h3>
             {DeviceData[0].Parameters[0].Data.length?
-              <Tabs onChange={callback} type="card" defaultActiveKey={defaultActive}>
-              <TabPane tab="Temperature" key="1">
-              <Row>
-                <div className = "col-8">
-                  <MultipleLinesPlot 
-                    data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
-                    unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}/>
-                </div>
-              </Row>              
-              </TabPane>
-              </Tabs>
+              <MultipleLinesPlot 
+              data={DeviceData[0].filter(item=>item.Parameters[0].Type==Type)} 
+              unit={DeviceData[0].Parameters[0].Unit}/>
             :
             <EmptyData/>
             }
             
           </div>
+          </div>
+
+          
           :
           <Loader/>}      
       </div>

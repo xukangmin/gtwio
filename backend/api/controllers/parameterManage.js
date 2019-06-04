@@ -321,6 +321,16 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
               para.Unit = 'gpm';
               para.StabilityCriteria = {WindowSize: 300, UpperLimit: 1};
               para.Range = {UpperLimit: 100, LowerLimit: -100};
+            } else if (paraobj === 'Humidity') {
+              para.DisplayName = 'Humidity Value';
+              para.Unit = '%';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 3};
+              para.Range = {UpperLimit: 100, LowerLimit: 0};
+            } else {
+              para.DisplayName = paraobj;
+              para.Unit = 'N/A';
+              para.StabilityCriteria = {WindowSize: 300, UpperLimit: 99999};
+              para.Range = {UpperLimit: 99999, LowerLimit: -99999};
             }
 
           } else if (typeof paraobj === 'object') {

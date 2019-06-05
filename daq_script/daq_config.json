@@ -1,5 +1,4 @@
 {
-  "LocalEndPoint": "http://192.168.1.25:8005",
   "CloudEndPoint": "https://api.hxmonitor.com",
   "CoreModules": [
     {
@@ -63,10 +62,12 @@
           "SerialNumber": "08A002",
           "Data" : [
             {
-              "Type": "Temperature"
+              "Type": "Temperature",
+              "Channel": "a"
             },
             {
-              "Type": "Humidity"
+              "Type": "Humidity",
+              "Channel": "n"
             }
           ]
         },
@@ -74,10 +75,12 @@
           "SerialNumber": "08A003",
           "Data" : [
             {
-              "Type": "Temperature"
+              "Type": "Temperature",
+              "Channel": "a"
             },
             {
-              "Type": "Humidity"
+              "Type": "Humidity",
+              "Channel": "n"
             }
           ]
         },
@@ -85,10 +88,12 @@
           "SerialNumber": "08A004",
           "Data" : [
             {
-              "Type": "Temperature"
+              "Type": "Temperature",
+              "Channel": "a"
             },
             {
-              "Type": "Humidity"
+              "Type": "Humidity",
+              "Channel": "n"
             }
           ]
         },
@@ -96,10 +101,12 @@
           "SerialNumber": "08A005",
           "Data" : [
             {
-              "Type": "Temperature"
+              "Type": "Temperature",
+              "Channel": "a"
             },
             {
-              "Type": "Humidity"
+              "Type": "Humidity",
+              "Channel": "n"
             }
           ]
         }

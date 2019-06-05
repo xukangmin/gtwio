@@ -12,6 +12,7 @@ class AddDevice extends React.Component {
             sensorID: '',
             location: '',
             angle: '',
+            parameters: [{Type: "Temperature", Channel:"", DisplayName: ""}],
             Temperature: false,
             FlowRate: false,
             Humidity: false,
@@ -23,8 +24,14 @@ class AddDevice extends React.Component {
         this.cancelButtonClicked = this.cancelButtonClicked.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleCheckChange = this.handleCheckChange.bind(this);
+        this.addParameter = this.addParameter.bind(this);
     }
 
+    addParameter(){
+        this.setState({
+          parameter: this.state.parameters.push({Type: "Temperature", Channel:"", DisplayName: ""})
+        });
+    }
     addModalToggle(){
       this.setState(prevState => ({
         addModalOpen: !prevState.addModalOpen
@@ -42,23 +49,14 @@ class AddDevice extends React.Component {
         alert("Description is required.")
         return;
       }
-      let parametersArr = [];
-      if(this.state.Temperature){
-        parametersArr.push('Temperature');
-      }
-      if(this.state.FlowRate){
-        parametersArr.push('FlowRate');
-      }
-      if(this.state.Humidity){
-        parametersArr.push('Humidity');
-      }
+      
       const newDevice = {
         Name: this.state.displayName,
         SerialNumber: this.state.serialNumber,
         Alias: this.state.sensorID,
         Tag: this.state.location,
         Angle: this.state.angle,
-        Parameters: parametersArr
+        Parameters: this.state.parameters
       };
       // this.props.dispatch(deviceActions.addDevice(this.props.user, this.props.asset, newDevice));
       this.props.dispatch(assetActions.addDevice(newDevice)); 
@@ -68,6 +66,7 @@ class AddDevice extends React.Component {
         sensorID: '',
         location: '',
         angle: '',
+        parameters: [{Type: "Temperature", Channel:"", DisplayName: ""}],
         Temperature: false,
         FlowRate: false,
         Humidity: false,
@@ -82,6 +81,7 @@ class AddDevice extends React.Component {
         sensorID: '',
         location: '',
         angle: '',
+        parameters: [{Type: "Temperature", Channel:"", DisplayName: ""}],
         Temperature: false,
         FlowRate: false,
         Humidity: false,
@@ -90,8 +90,19 @@ class AddDevice extends React.Component {
     }
 
     handleChange(event) {
-      const { name, value } = event.target;
-      this.setState({ [name]: value});
+      
+      let { name, value, id } = event.target;
+      if (id.split("-")[0] === "Parameter"){
+        let content = this.state.parameters;
+        console.log(content)
+        content[name][id.split("-")[1]] = value;
+        console.log(content)
+        this.setState({parameters: content});
+        console.log(this.state)
+      } else {
+        this.setState({ [name]: value});
+      }
+      
     }
 
     handleCheckChange(event){
@@ -105,7 +116,7 @@ class AddDevice extends React.Component {
         return(
           <div style={{display: this.props.mode ? "block" : "none"}} className="my-2">
             <Button color="primary" onClick={this.addModalToggle}>Add New Device</Button>
-            <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle}>
+            <Modal isOpen={this.state.addModalOpen} toggle={this.addModalToggle} style={{minWidth: "600px"}}>
               <ModalHeader toggle={this.addModalToggle}>Add New Device</ModalHeader>
               <ModalBody>
                 <Form>
@@ -138,22 +149,39 @@ class AddDevice extends React.Component {
                     </Input>
                   </FormGroup>
                   
-                  <Label for="parameters">Parameters</Label><br/>
-                  <FormGroup check inline>
-                    <Label check>
-                      <Input type="checkbox" name="Temperature" defaultChecked={Temperature} onChange={this.handleCheckChange}/> Temperature
-                    </Label>
-                  </FormGroup>
-                  <FormGroup check inline>
-                    <Label check>
-                      <Input type="checkbox" name="FlowRate" defaultChecked={FlowRate} onChange={this.handleCheckChange}/> FlowRate
-                    </Label>
-                  </FormGroup>
-                  <FormGroup check inline>
-                    <Label check>
-                      <Input type="checkbox" name="Humidity" defaultChecked={Humidity} onChange={this.handleCheckChange}/> Humidity
-                    </Label>
-                  </FormGroup>
+                  <Label for="parameters">Parameters</Label>
+                  <Button className="ml-2 mb-1 btn-sm" id="add" onClick={this.addParameter}><i className="fas fa-plus"></i> Add New Parameter</Button>
+                  <div className = "table-responsive">
+                  <table className = "table" style={{textAlign: "center"}}>
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>DisplayName</th>
+                        <th>Channel</th>
+                      </tr>
+                    </thead>
+                      <tbody>                      
+                      {this.state.parameters.map((x,i) =>
+                      <tr key={i}>
+                        <th scope = "row" className="p-1">                          
+                          <Input type="select" id="Parameter-Type" name={i} value={this.state.parameters[i].Type} onChange={this.handleChange}>
+                            
+                            <option value="Temperature">Temperature</option>
+                            <option value="FlowRate">Flow Rate</option>
+                            <option value="Humidity">Humidity</option>
+                          </Input>
+                        </th>
+                        <th className="p-1">
+                          <Input type="text" id="Parameter-DisplayName" name={i} value={this.state.parameters[i].DisplayName} onChange={this.handleChange}/>
+                        </th>   
+                        <th className="p-1">
+                          <Input type="text" id="Parameter-Channel" name={i} value={this.state.parameters[i].Channel} onChange={this.handleChange}/>
+                        </th>                             
+                    </tr>)}
+                    </tbody>
+                  </table>
+                  
+                </div>        
                 </Form>
               </ModalBody>
               <ModalFooter>

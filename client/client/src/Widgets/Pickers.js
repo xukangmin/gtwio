@@ -15,6 +15,7 @@ import 'antd/dist/antd.css';
 import moment from 'moment';
 import { BaselinePicker } from './BaselinePicker.js';
 import { IntervalPicker } from './IntervalPicker.js';
+const queryString = require('query-string');
 
 class Pickers extends React.Component {
     constructor(props) {
@@ -219,7 +220,7 @@ class Pickers extends React.Component {
         this.props.dispatch(assetActions.getAssetConfig(asset));
       }
 
-      if(m_res[item].match.url.includes("gauge")){
+      if(m_res[item].match.url.includes("gauge") || queryString.parse(location.search).SensorShow){
         this.inGauge = true;
       }
     }

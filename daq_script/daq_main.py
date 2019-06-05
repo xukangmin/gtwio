@@ -222,6 +222,20 @@ class CoreModule:
 
 
 
+def build_query_list(device_data):
+
+    query_list = []
+
+    for d in device_data:
+        sn = d['SerialNumber']
+        for c in d.data:
+            if 'Channel' in c:
+                query_list.append(sn + c['Channel'])
+            else:
+                query_list.append(sn)
+
+    return query_list
+
 with open('daq_config.json') as data_file:
     config_data = json.load(data_file)
 
@@ -232,22 +246,24 @@ core_modules = config_data['CoreModules']
 while True:
     for single_cm in core_modules:
         devices = single_cm['Devices']
+        query_list = build_query_list(devices)
         mac_address = single_cm['MacAddress']
-        cm = CoreModule(mac_address)
-        cm.cm_connect()
-        if internet():
-            # sync time stamp
-            cm.sync_time()    
+        print(query_list)
+        # cm = CoreModule(mac_address)
+        # cm.cm_connect()
+        # if internet():
+        #     # sync time stamp
+        #     cm.sync_time()    
             
-        # sync interval
+        # # sync interval
 
-        daq_interval = single_cm['Interval']
+        # daq_interval = single_cm['Interval']
 
-        cm.sync_interval(daq_interval)
+        # cm.sync_interval(daq_interval)
 
-        cm.sync_device(single_cm['Devices'])
-        cm.sync_data(single_cm['Devices'], local_end_point)
-        cm.cm_disconnect()
+        # cm.sync_device(single_cm['Devices'])
+        # cm.sync_data(single_cm['Devices'], local_end_point)
+        # cm.cm_disconnect()
 
     time.sleep(60)
 

@@ -43,6 +43,8 @@ class MultipleLinesPlot extends React.Component {
     const { unit } = this.props;
     const { type } =this.props;
 
+    console.log(type)
+
     let isRangeBiggerThanADay = false;
     let formattedData = [];
     let allData = [];
@@ -62,17 +64,27 @@ class MultipleLinesPlot extends React.Component {
         isRangeBiggerThanADay = true;
       }   
   
+      console.log('CREATE'+type)
       for (var i = 0; i < data.length; i++){
-        formattedData.push({
-          x: data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
-          y: data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => item.Value.toFixed(2)),
-          type: 'scatter',
-          name: data[i].SerialNumber
-        });
-        allData.push(data[i].Parameters.find(item=>item.Type==type).Data.map((item,i) => item.Value));
+        
+        let toAdd = data[i].Parameters.filter(p=>p.Type===type)[0];
+        // console.log(toAdd)
+        if(toAdd!==undefined){
+          console.log('TOADD',toAdd)
+          formattedData.push({
+            x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+            y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
+            type: 'scatter',
+            name: data[i].SerialNumber
+          });
+          allData.push(toAdd.Data.map((item,i) => item.Value));
+        }
+        
       }
-      dataDone = true;
 
+      
+      dataDone = true;
+      console.log('FORMATTED',formattedData)
       layout = {
         title: 'Line Chart',
         yaxis: {
@@ -174,9 +186,9 @@ class MultipleLinesPlot extends React.Component {
       
       <div>
         <h4 style={{textAlign: "center", display: this.props.for ==='baseline' ? 'block' : 'none'}}>Baseline: {baseline ? moment(new Date(baseline)).format('YYYY MMMM Do, H:mm') : "N/A"}</h4>
-        {dataDone ?
+        {formattedData ?
         <Plot
-          data = {formattedData ? formattedData : []}
+          data = {formattedData}
           layout = {layout}
           style = {{width:"100%"}}
           onClick = {this.onClick}

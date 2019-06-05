@@ -14,6 +14,7 @@ class Gauge extends React.Component {
     let title = data.Data[0].ParameterList[0].Value.toFixed(2) + (humidity ? "%" : "°F");
     let max = humidity ? 100 : 120;
     let range = humidity ? [0, 20, 40, 60, 80, 100] : [0, 20, 40, 60, 80, 100, 120];
+    let highlight = humidity ? {"from": 75, "to": 100, "color": "rgba(200, 50, 50, .75)"} : {"from": 100, "to": 120, "color": "rgba(200, 50, 50, .75)"};
     return(
       <div style={{width: "50%", display: "flex", justifyContent: "center"}}>
       <a href={"/asset/" + asset + "/tag/" + data.TagName + "?tab=1&SensorShow=true&Type=" + data.Data[0].Name}>
@@ -30,13 +31,11 @@ class Gauge extends React.Component {
         startAngle={90}
         ticksAngle={180}
         valueBox={false}
-        maxValue={300}
+        maxValue={max}
         majorTicks={range}
         minorTicks="2"
         strokeTicks={true}
-        highlights={[
-            {"from": 200, "to": 300, "color": "rgba(200, 50, 50, .75)"}
-        ]}
+        highlights={[highlight]}
         colorPlate="#fff"
         borderShadowWidth="0"
         borders={false}

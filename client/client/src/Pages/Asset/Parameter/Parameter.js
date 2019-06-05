@@ -37,7 +37,7 @@ const ParameterInfo = (props) => {
             </tr>
             <tr>
               <th>Current Value</th>
-              <td>{parameter.CurrentValue ? parameter.CurrentValue.toFixed(2) : "N/A"}{parameter.Unit && parameter.Unit}</td>
+              <td>{parameter.CurrentValue && parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
             </tr>
             <tr>
               <th>Current Time Stamp</th>
@@ -181,7 +181,9 @@ class Parameter extends React.Component {
 
   render() {
     let { parameter } = this.props;
-    let { parameterData } = this.props;    
+    let { parameterData } = this.props;  
+    
+    console.log(parameter)
     
     if (!this.user) {
       return (<Redirect to = '/login' />);

@@ -308,9 +308,22 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
         } else {
           let para = new Parameter();
 
+          para.DisplayName = 'N/A';
+          para.Unit = 'N/A';
+          para.StabilityCriteria = {WindowSize: 300, UpperLimit: 99999};
+          para.Range = {UpperLimit: 99999, LowerLimit: -99999};
+          para.CurrentValue = 0;
+          para.CurrentTimeStamp = 0;
+          para.StreamingStatus = "Unknown";
+          para.Timeout = 600;
+          para.Channel = 'N/A';
+          para.Status = 'N/A';
+          para.StatusCode = 0;
+          para.StandardStandardDeviation = 0;
+          
           if (typeof paraobj === 'string') {
             // single string, treat as parameter type
-            para.Type = paraobj; 
+            para.Type = paraobj;
             if (paraobj === 'Temperature') { //populate default parameters for temperature
               para.DisplayName = 'Temperature Value';
               para.Unit = '°F';
@@ -373,10 +386,7 @@ function _createParameter(deviceid, assetid, paraobj, devicetag) {
           }
 
           para.ParameterID = "P" + shortid.generate();
-          para.CurrentValue = 0;
-          para.CurrentTimeStamp = 0;
-          para.StreamingStatus = "Unknown";
-          para.Timeout = 600;
+
 
           para.save(err => {
             if (err)

@@ -1084,6 +1084,11 @@ function addDataByDeviceID(req, res)  {
           timestamp = Math.floor((new Date).getTime());
         }
         data = data.filter(item => item.Type === dataobj.DataType);
+
+        if (dataobj.Channel) {
+          data = data.filter(item => item.Channel === dataobj.Channel);
+        }
+
         if (data.length > 0)
         {
           Promise.all(data.map(item => _addDataByParameterIDPromise(item, dataobj.Value, timestamp)))
@@ -1161,6 +1166,12 @@ function addDataBySerialNumber(req, res) {
           timestamp = Math.floor((new Date).getTime());
         }
         data = data.filter(item => item.Type === dataobj.DataType);
+
+        
+        if (dataobj.Channel) {
+          data = data.filter(item => item.Channel === dataobj.Channel);
+        }
+
         if (data.length > 0)
         {
           Promise.all(data.map(item => _addDataByParameterIDPromise(item, dataobj.Value, timestamp)))
@@ -1171,7 +1182,7 @@ function addDataBySerialNumber(req, res) {
               shareUtil.SendInternalErr(res,  "data add error:" + JSON.stringify(err, null, 2));
             });
         } else {
-          shareUtil.SendSuccessWithData(res, {message: 'No data added'});
+          shareUtil.SendSuccessWithData(res, {message: 'No matching parameter found, No data added'});
         }
       }
     });

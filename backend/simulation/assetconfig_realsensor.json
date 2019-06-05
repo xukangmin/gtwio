@@ -68,19 +68,23 @@
           "Parameters": [
             {
               "DisplayName": "Channel-A",
-              "Type":"Temperature"
+              "Type":"Temperature",
+              "Channel": "a"
             },
             {
               "DisplayName": "Channel-B",
-              "Type":"Temperature"
+              "Type":"Temperature",
+              "Channel": "b"
             },
             {
               "DisplayName": "Channel-C",
-              "Type":"Temperature"
+              "Type":"Temperature",
+              "Channel": "c"
             },
             {
               "DisplayName": "Channel-D",
-              "Type":"Temperature"
+              "Type":"Temperature",
+              "Channel": "d"
             }]
         },
         {
@@ -89,7 +93,18 @@
           "Tag": "1708",
           "Alias": "T9",
           "Angle": 0,
-          "Parameters": ["Temperature","Humidity"]
+          "Parameters": [  
+              {
+              "DisplayName": "TempReading",
+              "Type":"Temperature",
+              "Channel": "a"
+              },
+              {
+                "DisplayName": "HumidityReading",
+                "Type":"Humidity",
+                "Channel": "n"
+              }
+          ]
         },
         {
           "Name": "Temperature RH 2",
@@ -97,7 +112,18 @@
           "Tag": "1708",
           "Alias": "T10",
           "Angle": 90,
-          "Parameters": ["Temperature","Humidity"]
+          "Parameters": [  
+            {
+              "DisplayName": "TempReading",
+              "Type":"Temperature",
+              "Channel": "a"
+            },
+            {
+              "DisplayName": "HumidityReading",
+              "Type":"Humidity",
+              "Channel": "n"
+            }
+          ]
         },
         {
           "Name": "Temperature RH 3",
@@ -105,7 +131,18 @@
           "Tag": "1708",
           "Alias": "T11",
           "Angle": 180,
-          "Parameters": ["Temperature","Humidity"]
+          "Parameters": [  
+            {
+              "DisplayName": "TempReading",
+              "Type":"Temperature",
+              "Channel": "a"
+            },
+            {
+              "DisplayName": "HumidityReading",
+              "Type":"Humidity",
+              "Channel": "n"
+            }
+          ]
         },
         {
           "Name": "Temperature RH 4",
@@ -113,7 +150,18 @@
           "Tag": "1708",
           "Alias": "T12",
           "Angle": 270,
-          "Parameters": ["Temperature","Humidity"]
+          "Parameters": [  
+            {
+              "DisplayName": "TempReading",
+              "Type":"Temperature",
+              "Channel": "a"
+            },
+            {
+              "DisplayName": "HumidityReading",
+              "Type":"Humidity",
+              "Channel": "n"
+            }
+          ]
         }
       ],
       "DisplayTags": 

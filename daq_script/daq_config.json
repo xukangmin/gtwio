@@ -6,10 +6,103 @@
       "MacAddress": "E7:3F:11:E7:AC:2C",
       "BLEName": "GTW01A001",
       "Devices": [
-        "02A007",
-        "02A008",
-        "02A009",
-        "02A010"
+        {
+          "SerialNumber": "02A007",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "02A008",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "02A009",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "02A010",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "03A001",
+          "Data" : [
+            {
+              "Type": "Temperature",
+              "Channel": "a"
+            },
+            {
+              "Type": "Temperature",
+              "Channel": "b"
+            },
+            {
+              "Type": "Temperature",
+              "Channel": "c"
+            },
+            {
+              "Type": "Temperature",
+              "Channel": "d"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "08A002",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            },
+            {
+              "Type": "Humidity"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "08A003",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            },
+            {
+              "Type": "Humidity"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "08A004",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            },
+            {
+              "Type": "Humidity"
+            }
+          ]
+        },
+        {
+          "SerialNumber": "08A005",
+          "Data" : [
+            {
+              "Type": "Temperature"
+            },
+            {
+              "Type": "Humidity"
+            }
+          ]
+        }
       ],
       "Interval": 60
     }

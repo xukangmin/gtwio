@@ -74,7 +74,8 @@ class RootLayout extends Component {
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
-            style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}>
+            style={{position: 'fixed', marginTop: '58px', height: '100vh', backgroundColor: 'white'}}
+            width={250}>
             <Menu defaultSelectedKeys={[this.activeNav, this.asset]} mode="inline" className="pt-2">
               <Menu.Item key="home">
                 <a href="/">
@@ -154,7 +155,7 @@ class RootLayout extends Component {
                 </div>
               </div>          
             </Header>
-            <Content style={{ padding: '70px 16px 16px 16px', overflow: 'hidden', marginLeft: this.state.collapsed ? '80px' : '200px'}} >
+            <Content style={{ padding: '70px 16px 16px 16px', overflow: 'hidden', marginLeft: this.state.collapsed ? '80px' : '250px'}} >
               {renderRoutes(this.props.route.routes, {store : this.props.store})}            
             </Content>
           </Layout>

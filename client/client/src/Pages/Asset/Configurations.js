@@ -383,6 +383,9 @@ class Configurations extends React.Component {
     }
 
     function parameterFormatter(cell, row) {
+      if (typeof cell[0] !== "string"){
+        cell = cell.map(x=>x.Type);
+      } 
       return cell ? cell.join('<br/>') : '';
     }
 

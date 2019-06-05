@@ -867,7 +867,6 @@ function _getRawDataByType(deviceobj, sTS, eTS) {
           Promise.all(deviceobj.Parameters.map(_getParameter))
             .then(
               ret => {
-                console.log(ret);
                 return Promise.all(ret.map(item => _getDataByParameterIDWithParaInfo(item, sTS, eTS)));
               }
             )
@@ -925,9 +924,6 @@ function _getDataByParameterTag(assetid, tag, sTS, eTS) {
 function _getRawDataByTag(assetid, tag, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
-      console.log("_getRawDataByTag called,tag=" + tag);
-      console.log("_getRawDataByTag called,sTS=" + sTS);
-      console.log("_getRawDataByTag called,eTS=" + eTS);
       _getAllDeviceByAssetID(assetid)
         .then(
           devicelist => {
@@ -1248,7 +1244,6 @@ function _getDataByParameterIDWithParaInfo(para, sTS, eTS) {
           }
         });
       } else {
-        console.log(para);
         reject('parameterid not exists');
       }
      

@@ -45,8 +45,6 @@ function generate_simulation_data(sn, type, ch, lowRange, highRange) {
     body: JSON.stringify(cus_body)
 };
   
-  console.log(requestOptions);
-  
 
 //    fetch(process.env.CLOUD_HOST + '/data/addDataBySerialNumber', requestOptions)
     fetch(process.env.APP_HOST + ':' + process.env.APP_PORT + '/data/addDataBySerialNumber', requestOptions)

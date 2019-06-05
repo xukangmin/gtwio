@@ -867,6 +867,7 @@ function _getRawDataByType(deviceobj, sTS, eTS) {
           Promise.all(deviceobj.Parameters.map(_getParameter))
             .then(
               ret => {
+                console.log(ret);
                 return Promise.all(ret.map(item => _getDataByParameterIDWithParaInfo(item, sTS, eTS)));
               }
             )
@@ -924,6 +925,9 @@ function _getDataByParameterTag(assetid, tag, sTS, eTS) {
 function _getRawDataByTag(assetid, tag, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
+      console.log("_getRawDataByTag called,tag=" + tag);
+      console.log("_getRawDataByTag called,sTS=" + sTS);
+      console.log("_getRawDataByTag called,eTS=" + eTS);
       _getAllDeviceByAssetID(assetid)
         .then(
           devicelist => {
@@ -1205,43 +1209,49 @@ function _cleanData(dataobj) {
 function _getDataByParameterIDWithParaInfo(para, sTS, eTS) {
   return new Promise(
     (resolve, reject) => {
-      Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value Valid -_id', function(err, data) {
-        if (err) {
-          console.log(err);
-          reject(err);
-        } else {
-          if (data.length > 0)
-          {
-            try{
+      if (para) {
+        Data.find({ParameterID: para.ParameterID, TimeStamp: {$gte: sTS, $lte: eTS}},'TimeStamp Value Valid -_id', function(err, data) {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            if (data.length > 0)
+            {
+              try{
+                var paraobj = para.toObject();
+                paraobj.Data = data;
+                var dataarr = data.map(item => item.Value);
+                var stat = {};
+                var sum = dataarr.reduce((total, p) => total + p, 0);
+                var avg = sum / dataarr.length;
+                var min = dataarr.reduce((min, p) => Math.min(min,p));
+                var max = dataarr.reduce((max, p) => Math.max(max,p));
+                var stdev = math.std(dataarr);
+                stat.Count = dataarr.length;
+                stat.Sum = sum;
+                stat.Avg = avg;
+                stat.Min = min;
+                stat.Max = max;
+                stat.STDEV = stdev;
+                paraobj.DataStatistics = stat;
+              } catch(err) {
+                reject(err);
+              }
+              resolve(paraobj);
+            } else {
               var paraobj = para.toObject();
               paraobj.Data = data;
-              var dataarr = data.map(item => item.Value);
-              var stat = {};
-              var sum = dataarr.reduce((total, p) => total + p, 0);
-              var avg = sum / dataarr.length;
-              var min = dataarr.reduce((min, p) => Math.min(min,p));
-              var max = dataarr.reduce((max, p) => Math.max(max,p));
-              var stdev = math.std(dataarr);
-              stat.Count = dataarr.length;
-              stat.Sum = sum;
-              stat.Avg = avg;
-              stat.Min = min;
-              stat.Max = max;
-              stat.STDEV = stdev;
-              paraobj.DataStatistics = stat;
-            } catch(err) {
-              reject(err);
+              resolve(paraobj)
             }
-            resolve(paraobj);
-          } else {
-            var paraobj = para.toObject();
-            paraobj.Data = data;
-            resolve(paraobj)
+  
+            
           }
-
-          
-        }
-      });
+        });
+      } else {
+        console.log(para);
+        reject('parameterid not exists');
+      }
+     
     }
   );
 }

@@ -89,6 +89,13 @@ class MultipleLinesPlot extends React.Component {
         margin:{
           l: 50,
           t: 30
+        },
+        legend: {
+          orientation: 'h',
+          xanchor: 'center',
+          yanchor: 'bottom',
+          x: 0.5,
+          y: -0.3
         }
       }
 

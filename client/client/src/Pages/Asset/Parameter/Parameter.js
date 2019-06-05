@@ -181,7 +181,9 @@ class Parameter extends React.Component {
 
   render() {
     let { parameter } = this.props;
-    let { parameterData } = this.props;    
+    let { parameterData } = this.props;  
+    
+    console.log(parameter)
     
     if (!this.user) {
       return (<Redirect to = '/login' />);

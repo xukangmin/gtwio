@@ -52,7 +52,7 @@ class MultipleLinesPlot extends React.Component {
     let baseline = undefined;
     let dataDone = false;
 
-    console.log(data)
+    console.log('DATA',data)
     if(this.props.assetData && this.props.assetData.Settings){
       baseline = this.props.assetData.Settings.Baselines.length ? this.props.assetData.Settings.Baselines[0].TimeStamp : undefined ;
     }    
@@ -65,27 +65,50 @@ class MultipleLinesPlot extends React.Component {
       }   
   
       console.log('CREATE'+type)
-      if(this.props.sensorShow){
+      console.log('SENSHOW',this.props.SensorShow)
+      if(this.props.SensorShow){
         console.log("IF")
-        data = data[0].Parameters;
-        console.log(data)
+        // data = data.length == 1 ? data[0].Parameters : data.Parameters;
+        console.log('SENDATA',data)
 
-        for (var i = 0; i < data.length; i++){
-        
-          let toAdd = data[i];
-          // console.log(toAdd)
-          if(toAdd!==undefined && toAdd.Type == type){
-            console.log('TOADD',toAdd)
-            formattedData.push({
-              x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
-              y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
-              type: 'scatter',
-              name: toAdd.DisplayName
-            });
-            allData.push(toAdd.Data.map((item,i) => item.Value));
-          }
+        if(data.length == 1){
+          console.log('CHANNELS')
+          data = data[0].Parameters;
+          for (var i = 0; i < data.length; i++){
           
+            let toAdd = data[i];
+            // console.log(toAdd)
+            if(toAdd!==undefined && toAdd.Type == type){
+              console.log('TOADD',toAdd)
+              formattedData.push({
+                x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+                y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
+                type: 'scatter',
+                name: toAdd.DisplayName
+              });
+              allData.push(toAdd.Data.map((item,i) => item.Value));
+            }
+            
+          }
+        } else {
+          for (var i = 0; i < data.length; i++){
+            console.log('DEVICES')
+            let toAdd = data[i].Parameters[0];
+            // console.log(toAdd)
+            if(toAdd!==undefined && toAdd.Type == type){
+              console.log('TOADD',toAdd)
+              formattedData.push({
+                x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+                y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
+                type: 'scatter',
+                name: data[i].SerialNumber
+              });
+              allData.push(toAdd.Data.map((item,i) => item.Value));
+            }
+            
+          }
         }
+        
       } else {
         console.log('ELSE')
         for (var i = 0; i < data.length; i++){

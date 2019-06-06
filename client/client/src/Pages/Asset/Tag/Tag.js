@@ -113,7 +113,8 @@ class Tag extends React.Component {
               <MultipleLinesPlot 
               type={Type}
               data={DeviceData.filter(item=>item.Parameters)} 
-              unit={Type=="Temperature"?"°F":"%"}/>
+              unit={Type=="Temperature"?"°F":"%"}
+              sensorShow={SensorShow}/>
             :
             <EmptyData/>
             }

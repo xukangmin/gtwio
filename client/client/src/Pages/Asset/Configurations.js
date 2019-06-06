@@ -8,71 +8,107 @@ import { assetActions } from '../../_actions/assetAction';
 import AddDevice from '../../Modals/AddDevice';
 import AddParameter from '../../Modals/AddParameter';
 import Loader from '../../Widgets/Loader';
-import { Row, Col } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Row, Col } from 'reactstrap';
 
 import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import {  BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Tabs, Button, Icon, Switch } from 'antd';
 const TabPane = Tabs.TabPane;
 
 import { EditEquation } from '../../Modals/EditEquation';
 import { log } from 'util';
 
-let Parameters = [ {label:'T',name:'Temperature'}, {label:'F',name:'FlowRate'}, {label:'H',name:'Humidity'} ];
 class ParameterEditor extends React.Component {
   constructor(props) {
     
     super(props);
-    console.log(props)
+    console.log('CONSTRUCTOR',props)
     this.updateData = this.updateData.bind(this);
-    this.state = { Parameters: props.defaultValue };
+    this.state = { 
+      Parameters: props.defaultValue,
+    modal: true };
     this.onToggleParameter = this.onToggleParameter.bind(this);
+      this.modalToggle = this.modalToggle.bind(this);
   }
   focus() {
   }
 
+  modalToggle (){
+    this.setState({modal: !this.state.modal})
+  }
   onToggleParameter(event) {
-    let Parameter = event.currentTarget.name;
-
-
     
-    if (this.state.Parameters.indexOf(Parameter) < 0) {
-      this.setState({ Parameters: this.state.Parameters.concat([ Parameter ]) });
-    } else {
-      this.setState({ Parameters: this.state.Parameters.filter(r => r !== Parameter) });
-    }
+    console.log('ONTOGGLE');
+    
+    // if (this.state.Parameters.indexOf(Parameter) < 0) {
+    //   this.setState({ Parameters: this.state.Parameters.concat([ Parameter ]) });
+    // } else {
+    //   this.setState({ Parameters: this.state.Parameters.filter(r => r !== Parameter) });
+    // }
 
-    setTimeout(function(){ this.props.onUpdate(this.state.Parameters); }.bind(this), 1000);
+    this.props.onUpdate(this.state.Parameters);
     
   }
-  updateData() {
-    console.log(this.state.Parameters)
-    this.props.onUpdate(this.state.Parameters);
+  updateData(e) {
+    let content = this.state.Parameters;
+
+    console.log(content[e.target.id])
+    let par = content[e.target.id];
+    let name = e.target.name;
+    console.log(name)
+    par[name] = e.target.value;
+    this.setState({
+      Parameters: content
+    })
+    console.log('UPDATE',this.state.Parameters)
+    // this.props.onUpdate(this.state.Parameters);
   }
   render() {
     
-    const regionCheckBoxes = Parameters.map(item => (
-      <div key={ `span-${item.label}` } style={{textAlign: "center"}}>
-        <input
-          type='checkbox'
-          key={ item.label }
-          name={ item.name}
-          checked={ this.state.Parameters.indexOf(item.name) > -1 }
-          onKeyDown={ this.props.onKeyDown }
-          onChange={ this.onToggleParameter } 
-          className='mr-1'/>
-        <label key={ `label-${item.label}` } htmlFor={ item.label }>{ item.name }</label>
-      </div>
-    ));
     return (
-      <span ref='inputRef'>
-        { regionCheckBoxes }
-        <button style={{display: "none"}}
-          className='btn btn-info btn-xs textarea-save-btn'
-          onClick={ this.updateData }>
-          save
-        </button>
-      </span>
+      <div>{this.state.Parameters.map((x,i) => <span>{x.DisplayName}</span>)}
+      <Modal isOpen={this.state.modal} toggle={this.modalToggle} style={{minWidth: "600px"}}>
+       <ModalHeader>Edit Parameter</ModalHeader>
+       <ModalBody>
+       <table className = "table" style={{textAlign: "center"}}>
+                   <thead>
+                     <tr>
+                       <th>Type</th>
+                       <th>DisplayName</th>
+                       <th>Channel</th>
+                       <th>Del</th>
+                     </tr>
+                   </thead>
+                   <tbody>   
+       {this.state.Parameters.map((x,i) =>
+                     <tr key={i}>
+                       <th scope = "row" className="p-1">                          
+                         <Input type="select" id={i} name="Type" value={this.state.Parameters[i].Type} onChange={this.updateData}>
+                           
+                           <option value="Temperature">Temperature</option>
+                           <option value="FlowRate">Flow Rate</option>
+                           <option value="Humidity">Humidity</option>
+                         </Input>
+                       </th>
+                       <th className="p-1">
+                         <Input type="text" id={i} name="DisplayName" value={this.state.Parameters[i].DisplayName} onChange={this.updateData}/>
+                       </th>   
+                       <th className="p-1">
+                         <Input type="text" id={i} name="Channel" value={this.state.Parameters[i].Channel} onChange={this.updateData}/>
+                       </th>        
+                       <th className="p-1">
+                         <button type="button" title="Delete this Item" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>this.handleDelete(x,i)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+                       </th>                        
+                   </tr>)}
+                   
+                   </tbody>
+                 </table>
+                 <Button className="ml-2 mb-1 btn-sm" id="add" onClick={this.addParameter}><i className="fas fa-plus"></i> Add New Parameter</Button>
+                 
+       </ModalBody>
+       </Modal></div>
+      
+        
     );
   }
 }
@@ -242,8 +278,8 @@ class Configurations extends React.Component {
                     dataAlign='center'
                     dataField='Parameters'
                     dataFormat={parameterFormatter}
-                    editable={false}
                     customEditor={ this.state.editMode ? {getElement: createRegionsEditor}: false }
+                    editable={this.state.editMode}
                     tdStyle={{backgroundColor: 'white'}}
                     dataSort={true}
                   >

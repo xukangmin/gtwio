@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RadialGauge } from 'react-canvas-gauges';
+import {RadialGauge} from '../react-canvas-gauges'
 
 class Gauge extends React.Component {
   constructor(props){
@@ -21,6 +21,7 @@ class Gauge extends React.Component {
         <RadialGauge
         units={data.TagName}
         title={title}
+        fontUnitsSize={40}
         fontTitleSize={65}
         fontTitleWeight="bold"
         value={data.Data[0].ParameterList[0].Value}
@@ -45,7 +46,7 @@ class Gauge extends React.Component {
         needleCircleOuter="true"
         needleCircleInner="false"
         animationDuration={1500}
-        animationRule="linear"
+        animationRule={"linear"}
         ></RadialGauge>
       </a></div>
       

@@ -25,8 +25,13 @@ class AddDevice extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleCheckChange = this.handleCheckChange.bind(this);
         this.addParameter = this.addParameter.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+
     }
 
+    handleDelete (x, i){
+      this.state.parameters.filter((p, index)=>index!=i);
+    }
     addParameter(){
         this.setState({
           parameter: this.state.parameters.push({Type: "Temperature", Channel:"", DisplayName: ""})
@@ -158,6 +163,7 @@ class AddDevice extends React.Component {
                         <th>Type</th>
                         <th>DisplayName</th>
                         <th>Channel</th>
+                        <th>Del</th>
                       </tr>
                     </thead>
                       <tbody>                      
@@ -176,7 +182,10 @@ class AddDevice extends React.Component {
                         </th>   
                         <th className="p-1">
                           <Input type="text" id="Parameter-Channel" name={i} value={this.state.parameters[i].Channel} onChange={this.handleChange}/>
-                        </th>                             
+                        </th>        
+                        <th className="p-1">
+                          <button type="button" title="Delete this Item" className="btn btn-danger react-bs-table-add-btn ml-1" onClick={()=>this.handleDelete(x,i)}><i className="fa fa-trash" aria-hidden="true"></i></button>
+                        </th>                        
                     </tr>)}
                     </tbody>
                   </table>

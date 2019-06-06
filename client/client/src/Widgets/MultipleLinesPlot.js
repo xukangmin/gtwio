@@ -39,7 +39,7 @@ class MultipleLinesPlot extends React.Component {
   }
 
   render(){
-    const { data } = this.props;
+    let { data } = this.props;
     const { unit } = this.props;
     const { type } =this.props;
 
@@ -65,22 +65,47 @@ class MultipleLinesPlot extends React.Component {
       }   
   
       console.log('CREATE'+type)
-      for (var i = 0; i < data.length; i++){
+      if(this.props.sensorShow){
+        console.log("IF")
+        data = data[0].Parameters;
+        console.log(data)
+
+        for (var i = 0; i < data.length; i++){
         
-        let toAdd = data[i].Parameters.filter(p=>p.Type===type)[0];
-        // console.log(toAdd)
-        if(toAdd!==undefined){
-          console.log('TOADD',toAdd)
-          formattedData.push({
-            x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
-            y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
-            type: 'scatter',
-            name: data[i].SerialNumber
-          });
-          allData.push(toAdd.Data.map((item,i) => item.Value));
+          let toAdd = data[i];
+          // console.log(toAdd)
+          if(toAdd!==undefined && toAdd.Type == type){
+            console.log('TOADD',toAdd)
+            formattedData.push({
+              x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+              y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
+              type: 'scatter',
+              name: toAdd.DisplayName
+            });
+            allData.push(toAdd.Data.map((item,i) => item.Value));
+          }
+          
         }
-        
+      } else {
+        console.log('ELSE')
+        for (var i = 0; i < data.length; i++){
+          
+          let toAdd = data[i].Parameters.filter(p=>p.Type===type)[0];
+          // console.log(toAdd)
+          if(toAdd!==undefined){
+            console.log('TOADD',toAdd)
+            formattedData.push({
+              x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+              y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
+              type: 'scatter',
+              name: data[i].SerialNumber
+            });
+            allData.push(toAdd.Data.map((item,i) => item.Value));
+          }
+          
+        }
       }
+      
 
       
       dataDone = true;

@@ -1,0 +1,3 @@
+[submodule "client/client/src/react-canvas-gauges"]
+	path = client/client/src/react-canvas-gauges
+	url = https://github.com/1995parham/react-canvas-gauges.git

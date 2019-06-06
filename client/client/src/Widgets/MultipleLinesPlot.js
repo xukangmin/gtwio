@@ -81,7 +81,7 @@ class MultipleLinesPlot extends React.Component {
             if(toAdd!==undefined && toAdd.Type == type){
               console.log('TOADD',toAdd)
               formattedData.push({
-                x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
+                x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm"))[0],
                 y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
                 type: 'scatter',
                 name: toAdd.DisplayName

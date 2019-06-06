@@ -17,7 +17,7 @@ class Gauge extends React.Component {
     let highlight = humidity ? {"from": 75, "to": 100, "color": "rgba(200, 50, 50, .75)"} : {"from": 100, "to": 120, "color": "rgba(200, 50, 50, .75)"};
     return(
       <div style={{width: "50%", display: "flex", justifyContent: "center"}}>
-      <a href={"/asset/" + asset + "/tag/" + data.TagName + "?tab=1&SensorShow=true&Type=" + data.Data[0].Name}>
+      <a href={"/asset/" + asset + "/tag/" + data.TagName + "?SensorShow=true&Type=" + data.Data[0].Name}>
         <RadialGauge
         units={data.TagName}
         title={title}

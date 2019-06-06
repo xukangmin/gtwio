@@ -1,4 +1,5 @@
 {
+  "LocalEndPoint": "http://localhost",
   "CloudEndPoint": "https://api.hxmonitor.com",
   "CoreModules": [
     {

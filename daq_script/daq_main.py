@@ -133,26 +133,33 @@ class CoreModule:
         if len(ret) > 1: # at least one device 
             for i in ret:
                 if i[:2] != b'\xdb\x07':
-                    cm_device_list.append(i[2:].decode())
+                    cm_device_list.append(i[3:].decode())
+
+        print(cm_device_list)
 
         for d in device_list:
             if d not in cm_device_list:
                 add_list.append(d)
 
+        print(add_list)
+
         for d in cm_device_list:
             if d not in device_list:
                 rm_list.append(d)
 
+        print(rm_list)
+
         for d in add_list:
-            add_cmd = CMD_ADD_DAQ_SENSOR + d.encode()
+            add_cmd = CMD_ADD_DAQ_SENSOR + bytes([len(d)]) + d.encode()
             ret = self.SendCmdWithResponse(add_cmd)
 
         for d in rm_list:
-            rm_cmd = CMD_RM_DAQ_SENSOR + d.encode()
+            rm_cmd = CMD_RM_DAQ_SENSOR + bytes([len(d)]) + d.encode()
             ret = self.SendCmdWithResponse(rm_cmd)
 
-    def sync_single_device(self, sn, endpoint):
-        req = endpoint + '/device/getDeviceBySerialNumber?SerialNumber=' + sn
+    def sync_single_device(self, device_def, endpoint):
+        
+        req = endpoint + '/device/getDeviceBySerialNumber?SerialNumber=' + device_def['SerialNumber']
         print(req)
         try:
             with urllib.request.urlopen(req,timeout=500) as f:
@@ -163,51 +170,77 @@ class CoreModule:
 
         device_info = json.loads(buf)
 
-        if device_info['SerialNumber'] == sn: # match request
+        if device_info['SerialNumber'] == device_def['SerialNumber']: # match request
             db_para = device_info['Parameters']
-            db_ts = 0
-            cm_ts = 0
+
             for p in db_para:
-                if p['Type'] == 'Temperature':
-                    db_ts = p['CurrentTimeStamp']
-                    db_ts = int(db_ts / 1000)
-            print("db_ts=" + str(db_ts))
-            cm_cmd = CMD_READ_RECENT_DATA + sn.encode()
-            ret = self.SendCmdWithResponse(cm_cmd)
-            if len(ret) == 1 and len(ret[0]) == 14:
-                cm_ts = struct.unpack('<L',ret[0][6:10])[0]
-                print('cm_ts=' + str(cm_ts))
-            
-            if db_ts < cm_ts:
-                # potential data for update, read data from core module
-                cm_cmd = CMD_READ_BULK_DATA_BY_TIMESTAMP + sn.encode() + struct.pack('<L', db_ts + 1) + struct.pack('<L', cm_ts)
-                print(cm_cmd.hex())
+                # sync each parameter
+                db_ts = 0
+                cm_ts = 0
+                query_str = device_info['SerialNumber']
+                if 'Channel' in p:
+                    if p['Channel'] != 'N/A':
+                        query_str += p['Channel']
+
+                print('query_string=' + str(query_str))
+
+                db_ts = p['CurrentTimeStamp']
+                db_ts = int(db_ts / 1000)
+
+                print("db_ts=" + str(db_ts))
+
+                cm_cmd = CMD_READ_RECENT_DATA + bytes([len(query_str)]) + query_str.encode()
+
                 ret = self.SendCmdWithResponse(cm_cmd)
-                print('data_size=' + str(len(ret) - 1))
-                header_size = struct.unpack('<L',ret[0][2:])[0]
-                print('header_size=' + str(header_size))
-                if len(ret) - 1 == header_size: # check size if match
-                    print('size match')
-                    for data in ret:
-                        if len(data) == 12:
-                            data_index = struct.unpack('<L', data[:4])[0]
-                            data_ts = struct.unpack('<L', data[4:8])[0]
-                            data_value = struct.unpack('<f', data[8:])[0]
 
-                            data_ts = data_ts * 1000 # convert to ms since cloud all use ms format
-                            data_value = data_value * 1.8 + 32 # convert from C to F
+                if len(ret) == 1 and len(ret[0]) == 14:
+                    cm_ts = struct.unpack('<L',ret[0][6:10])[0]
+                    print('cm_ts=' + str(cm_ts))
+            
+                if db_ts < cm_ts:
+                    # potential data for update, read data from core module
+                    cm_cmd = CMD_READ_BULK_DATA_BY_TIMESTAMP + bytes([len(query_str)]) + query_str.encode() + struct.pack('<L', db_ts + 1) + struct.pack('<L', cm_ts)
+                    print(cm_cmd.hex())
+                    ret = self.SendCmdWithResponse(cm_cmd)
+                    print('data_size=' + str(len(ret) - 1))
+                    if len(ret) - 1 > 0:
 
-                            print("index=" + str(data_index) + ",ts=" + str(data_ts) + ",value=" + str(data_value))
-                            # push data to the cloud / local end point
-                            push_data = {"SerialNumber": sn, "Value": data_value, "DataType": "Temperature", "TimeStamp": data_ts}
-                            push_params = json.dumps(push_data).encode('utf8')
-                            push_url = endpoint + '/data/addDataBySerialNumber'
-                            req = urllib.request.Request(push_url,data=push_params,headers={'content-type': 'application/json'})
-                            try:
-                                with urllib.request.urlopen(req,timeout=500) as f:
-                                    buf = f.read().decode('utf-8')
-                            except:
-                                print('push error happened, skip')
+                    # header_size = struct.unpack('<L',ret[0][2:])[0]
+                    # print('header_size=' + str(header_size))
+                    # if len(ret) - 1 == header_size: # check size if match
+                        # print('size match')
+                        for data in ret:
+                            if len(data) == 12:
+                                data_index = struct.unpack('<L', data[:4])[0]
+                                data_ts = struct.unpack('<L', data[4:8])[0]
+                                data_value = struct.unpack('<f', data[8:])[0]
+
+                                data_ts = data_ts * 1000 # convert to ms since cloud all use ms format
+                                if p['Type'] == "Temperature":
+                                    data_value = data_value * 1.8 + 32 # convert from C to F
+
+                                print("index=" + str(data_index) + ",ts=" + str(data_ts) + ",value=" + str(data_value))
+                                # push data to the cloud / local end point
+
+                                ch_required = False
+                                if 'Channel' in p:
+                                    if p['Channel'] != 'N/A':
+                                        ch_required = True
+
+                                if ch_required:
+                                    push_data = {"SerialNumber": device_info['SerialNumber'], "Value": data_value, "DataType": p['Type'], "TimeStamp": data_ts, "Channel": p['Channel']}
+                                else:
+                                    push_data = {"SerialNumber": device_info['SerialNumber'], "Value": data_value, "DataType": p['Type'], "TimeStamp": data_ts}
+                                
+                                print(push_data)
+                                push_params = json.dumps(push_data).encode('utf8')
+                                push_url = endpoint + '/data/addDataBySerialNumber'
+                                req = urllib.request.Request(push_url,data=push_params,headers={'content-type': 'application/json'})
+                                try:
+                                    with urllib.request.urlopen(req,timeout=500) as f:
+                                        buf = f.read().decode('utf-8')
+                                except:
+                                    print('push error happened, skip')
                             
         # except:
         #     print("no sensor found or other error")
@@ -225,10 +258,9 @@ class CoreModule:
 def build_query_list(device_data):
 
     query_list = []
-
     for d in device_data:
         sn = d['SerialNumber']
-        for c in d.data:
+        for c in d['Data']:
             if 'Channel' in c:
                 query_list.append(sn + c['Channel'])
             else:
@@ -248,22 +280,22 @@ while True:
         devices = single_cm['Devices']
         query_list = build_query_list(devices)
         mac_address = single_cm['MacAddress']
-        print(query_list)
-        # cm = CoreModule(mac_address)
-        # cm.cm_connect()
-        # if internet():
-        #     # sync time stamp
-        #     cm.sync_time()    
+
+        cm = CoreModule(mac_address)
+        cm.cm_connect()
+        if internet():
+            # sync time stamp
+            cm.sync_time()    
             
-        # # sync interval
+        # sync interval
 
-        # daq_interval = single_cm['Interval']
+        daq_interval = single_cm['Interval']
 
-        # cm.sync_interval(daq_interval)
+        cm.sync_interval(daq_interval)
 
-        # cm.sync_device(single_cm['Devices'])
-        # cm.sync_data(single_cm['Devices'], local_end_point)
-        # cm.cm_disconnect()
+        cm.sync_device(query_list)
+        cm.sync_data(devices, cloud_end_point)
+        cm.cm_disconnect()
 
     time.sleep(60)
 

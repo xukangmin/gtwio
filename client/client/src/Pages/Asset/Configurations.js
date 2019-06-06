@@ -30,8 +30,11 @@ class ParameterEditor extends React.Component {
   }
   focus() {
   }
+
   onToggleParameter(event) {
     let Parameter = event.currentTarget.name;
+
+
     
     if (this.state.Parameters.indexOf(Parameter) < 0) {
       this.setState({ Parameters: this.state.Parameters.concat([ Parameter ]) });
@@ -239,7 +242,7 @@ class Configurations extends React.Component {
                     dataAlign='center'
                     dataField='Parameters'
                     dataFormat={parameterFormatter}
-                    editable={this.state.editMode ? true : false}
+                    editable={false}
                     customEditor={ this.state.editMode ? {getElement: createRegionsEditor}: false }
                     tdStyle={{backgroundColor: 'white'}}
                     dataSort={true}
@@ -384,7 +387,7 @@ class Configurations extends React.Component {
 
     function parameterFormatter(cell, row) {
       if (typeof cell[0] !== "string"){
-        cell = cell.map(x=>x.Type);
+        cell = cell.map(x=>x.Type+"-"+x.Channel);
       } 
       return cell ? cell.join('<br/>') : '';
     }

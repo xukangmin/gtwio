@@ -64,6 +64,7 @@ class MultipleLinesPlot extends React.Component {
         isRangeBiggerThanADay = true;
       }   
   
+      console.log('DAY',isRangeBiggerThanADay);
       console.log('CREATE'+type)
       console.log('SENSHOW',this.props.SensorShow)
       if(this.props.SensorShow){
@@ -80,8 +81,9 @@ class MultipleLinesPlot extends React.Component {
             // console.log(toAdd)
             if(toAdd!==undefined && toAdd.Type == type){
               console.log('TOADD',toAdd)
+              console.log('TIMESTAMP', toAdd.Data.TimeStamp)
               formattedData.push({
-                x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm"))[0],
+                x: toAdd.Data.map((item,i) => item.TimeStamp).map(x=>new Date(x)),
                 y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
                 type: 'scatter',
                 name: toAdd.DisplayName
@@ -143,6 +145,7 @@ class MultipleLinesPlot extends React.Component {
           title: "("+unit+")"
         },
         xaxis: {
+          tickformat: '%c',
           showline: false,
           autotick: true,
           ticklen: 8,
@@ -231,6 +234,10 @@ class MultipleLinesPlot extends React.Component {
       }      
     }
       
+    // for (let i in formatterData){
+    //   formattedData[i].x.map((i)=>"?")
+    // }
+    
 
     return(
       

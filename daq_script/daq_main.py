@@ -282,20 +282,21 @@ while True:
         mac_address = single_cm['MacAddress']
 
         cm = CoreModule(mac_address)
-        cm.cm_connect()
-        if internet():
-            # sync time stamp
-            cm.sync_time()    
-            
-        # sync interval
 
-        daq_interval = single_cm['Interval']
+        if cm.cm_connect():
+            if internet():
+                # sync time stamp
+                cm.sync_time()    
+                
+            # sync interval
 
-        cm.sync_interval(daq_interval)
+            daq_interval = single_cm['Interval']
 
-        cm.sync_device(query_list)
-        cm.sync_data(devices, cloud_end_point)
-        cm.cm_disconnect()
+            cm.sync_interval(daq_interval)
+
+            cm.sync_device(query_list)
+            cm.sync_data(devices, cloud_end_point)
+            cm.cm_disconnect()
 
     time.sleep(60)
 

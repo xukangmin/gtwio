@@ -4,6 +4,8 @@ import json
 from bluepy import btle
 import struct
 import urllib.request
+import queue
+import threading
 
 SERVICE_UUID = '00004754-1212-efde-1523-785fef13d123'
 READ_UUID = '00004755-1212-efde-1523-785fef13d123'
@@ -26,6 +28,7 @@ CMD_READ_BULK_DATA_BY_REC_NO        =   b'\xDB\x14'
 CMD_READ_BULK_DATA_BY_TIMESTAMP     =   b'\xDB\x15'
 CMD_TRUNCATE_DATA                   =   b'\xDB\x16'
 
+data_post_q = queue.Queue()
 
 def internet(host="8.8.8.8", port=53, timeout=3):
    """
@@ -90,7 +93,7 @@ class CoreModule:
 
         self.ch_write[0].write(cmd)
 
-        while self.cm_p.waitForNotifications(2):
+        while self.cm_p.waitForNotifications(10):
             continue
 
         return self.cm_p.delegate.recv
@@ -239,14 +242,7 @@ class CoreModule:
                                     push_data = {"SerialNumber": device_info['SerialNumber'], "Value": data_value, "DataType": p['Type'], "TimeStamp": data_ts}
                                 
                                 print(push_data)
-                                push_params = json.dumps(push_data).encode('utf8')
-                                push_url = endpoint + '/data/addDataBySerialNumber'
-                                req = urllib.request.Request(push_url,data=push_params,headers={'content-type': 'application/json'})
-                                try:
-                                    with urllib.request.urlopen(req,timeout=500) as f:
-                                        buf = f.read().decode('utf-8')
-                                except:
-                                    print('push error happened, skip')
+                                data_post_q.put(push_data)
                             
         # except:
         #     print("no sensor found or other error")
@@ -259,7 +255,18 @@ class CoreModule:
             print(d)
             self.sync_single_device(d, endpoint)
 
+def post_data(q, endpoint):
 
+    while True:
+        single_post_data = data_post_q.get()
+        push_params = json.dumps(single_post_data).encode('utf8')
+        push_url = endpoint + '/data/addDataBySerialNumber'
+        req = urllib.request.Request(push_url,data=push_params,headers={'content-type': 'application/json'})
+        try:
+            with urllib.request.urlopen(req,timeout=500) as f:
+                buf = f.read().decode('utf-8')
+        except:
+            print('push error happened, skip')
 
 def build_query_list(device_data):
 
@@ -280,6 +287,10 @@ with open('daq_config.json') as data_file:
 local_end_point = config_data['LocalEndPoint']
 cloud_end_point = config_data['CloudEndPoint']
 core_modules = config_data['CoreModules']
+
+t1 = threading.Thread(target=post_data, args=(data_post_q,cloud_end_point,))
+
+t1.start()
 
 while True:
     for single_cm in core_modules:

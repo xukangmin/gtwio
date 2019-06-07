@@ -76,11 +76,10 @@ class CoreModule:
 
                 self.cm_p.writeCharacteristic(noti_handle, (1).to_bytes(2, byteorder='little'))
             # enable notification
+            return True
         except btle.BTLEException as ex:
             print("Unable to connect to device {}".format(self.addr))
             return False
-        finally:
-            return True
 
     def cm_disconnect(self):
         self.cm_p.disconnect()
@@ -305,6 +304,8 @@ while True:
             cm.sync_data(devices, cloud_end_point)
             cm.cm_disconnect()
 
-    time.sleep(60)
+        
+        print("core module done: " + str(mac_address))
+    time.sleep(10)
 
 

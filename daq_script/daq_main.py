@@ -76,11 +76,10 @@ class CoreModule:
 
                 self.cm_p.writeCharacteristic(noti_handle, (1).to_bytes(2, byteorder='little'))
             # enable notification
+            return True
         except btle.BTLEException as ex:
             print("Unable to connect to device {}".format(self.addr))
             return False
-        finally:
-            return True
 
     def cm_disconnect(self):
         self.cm_p.disconnect()
@@ -130,10 +129,17 @@ class CoreModule:
 
         rm_list = []
 
+        isValid = True 
+
         if len(ret) > 1: # at least one device 
             for i in ret:
-                if i[:2] != b'\xdb\x07':
-                    cm_device_list.append(i[3:].decode())
+                if len(i) > 3:
+                    if i[:2] != b'\xdb\x07':
+                        if len(i) == i[2] + 3:
+                            try:
+                                cm_device_list.append(i[3:].decode())
+                            except:
+                                return
 
         print(cm_device_list)
 
@@ -282,21 +288,24 @@ while True:
         mac_address = single_cm['MacAddress']
 
         cm = CoreModule(mac_address)
-        cm.cm_connect()
-        if internet():
-            # sync time stamp
-            cm.sync_time()    
-            
-        # sync interval
 
-        daq_interval = single_cm['Interval']
+        if cm.cm_connect():
+            if internet():
+                # sync time stamp
+                cm.sync_time()    
+                
+            # sync interval
 
-        cm.sync_interval(daq_interval)
+            daq_interval = single_cm['Interval']
 
-        cm.sync_device(query_list)
-        cm.sync_data(devices, cloud_end_point)
-        cm.cm_disconnect()
+            cm.sync_interval(daq_interval)
 
-    time.sleep(60)
+            cm.sync_device(query_list)
+            cm.sync_data(devices, cloud_end_point)
+            cm.cm_disconnect()
+
+        
+        print("core module done: " + str(mac_address))
+    time.sleep(10)
 
 

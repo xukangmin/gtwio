@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {RadialGauge} from '../react-canvas-gauges'
+import {RadialGauge} from 'react-canvas-gauges'
 
 class Gauge extends React.Component {
   constructor(props){

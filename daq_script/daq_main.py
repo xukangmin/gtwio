@@ -130,10 +130,17 @@ class CoreModule:
 
         rm_list = []
 
+        isValid = True 
+
         if len(ret) > 1: # at least one device 
             for i in ret:
-                if i[:2] != b'\xdb\x07':
-                    cm_device_list.append(i[3:].decode())
+                if len(i) > 3:
+                    if i[:2] != b'\xdb\x07':
+                        if len(i) == i[2] + 3:
+                            try:
+                                cm_device_list.append(i[3:].decode())
+                            except:
+                                return
 
         print(cm_device_list)
 

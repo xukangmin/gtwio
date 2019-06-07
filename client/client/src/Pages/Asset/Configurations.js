@@ -29,6 +29,13 @@ class ParameterEditor extends React.Component {
     modal: true };
     this.onToggleParameter = this.onToggleParameter.bind(this);
       this.modalToggle = this.modalToggle.bind(this);
+      this.addParameter = this.addParameter.bind(this);
+  }
+
+  addParameter (){
+    this.setState({
+      Parameters: this.state.Parameters.push({Type: "Temperature", DisplayName: "", Channel:""})
+    })
   }
   focus() {
   }
@@ -66,7 +73,7 @@ class ParameterEditor extends React.Component {
   render() {
     
     return (
-      <div>{this.state.Parameters.map((x,i) => <span>{x.DisplayName}</span>)}
+      <div>{this.state.Parameters.map((x,i) => <span className="textCenter" style={{display: "block", textAlign: "center"}}>{x.Type + "-" + x.DisplayName}</span>)}
       <Modal isOpen={this.state.modal} toggle={this.modalToggle} style={{minWidth: "600px"}}>
        <ModalHeader>Edit Parameter</ModalHeader>
        <ModalBody>
@@ -423,9 +430,9 @@ class Configurations extends React.Component {
 
     function parameterFormatter(cell, row) {
       if (typeof cell[0] !== "string"){
-        cell = cell.map(x=>x.Type+"-"+x.Channel);
+        cell = cell.map(x=>x.Type+"-"+x.DisplayName);
       } 
-      return cell ? cell.join('<br/>') : '';
+      return cell ? cell.join(',<br/>') : '';
     }
 
     function angleFormatter(cell, row){

@@ -64,7 +64,7 @@ class RootLayout extends Component {
     } else{
       assets_display = assets;
     }
-    console.log(assets_display)
+    
     if (!this.user) {
       return (<Redirect to='/login'/>);
     } else {

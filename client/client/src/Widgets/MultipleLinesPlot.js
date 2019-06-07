@@ -92,8 +92,10 @@ class MultipleLinesPlot extends React.Component {
           }
         } else {
           for (var i = 0; i < data.length; i++){
-            console.log('DEVICES')
-            let toAdd = data[i].Parameters[0];
+            
+
+            let toAdd = data[i].Parameters.find(x=>x.Type == type);
+            console.log('DEVICES', toAdd.Type, type)
             // console.log(toAdd)
             if(toAdd!==undefined && toAdd.Type == type){
               console.log('TOADD',toAdd)

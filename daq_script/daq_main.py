@@ -93,7 +93,7 @@ class CoreModule:
 
         self.ch_write[0].write(cmd)
 
-        while self.cm_p.waitForNotifications(10):
+        while self.cm_p.waitForNotifications(1):
             continue
 
         return self.cm_p.delegate.recv

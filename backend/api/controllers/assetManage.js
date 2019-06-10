@@ -1586,55 +1586,55 @@ function updateAssetConfig(req, res) {
   var assetid = req.body.AssetID;
   var config = req.body.Config;
 
-  var ret = _validate_config_file(config)
-  if (ret.isValid)
-  {
-    Asset.findOne({AssetID: assetid},(err,data) => {
-      if (err) {
-        shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+  // var ret = _validate_config_file(config)
+  // if (ret.isValid)
+  // {
+  Asset.findOne({AssetID: assetid},(err,data) => {
+    if (err) {
+      shareUtil.SendInternalErr(res, JSON.stringify(err, null, 2));
+    } else {
+      if (data) {
+        console.log("update asset");
+        
+        var prev_config = JSON.parse(JSON.stringify(data.Config));
+
+        _reconfig_device(assetid, prev_config, config)
+        .then(
+          ret => {
+            console.log("reconfigure device done");
+            return _reconfig_equation(assetid, prev_config, config);
+          }
+        )
+        .then(
+          ret => {
+            console.log("reconfigure equation done");
+            data.Config = config;
+            data.save();
+            shareUtil.SendSuccessWithData(res, ret);
+          }
+        )
+        .catch(
+          err => {
+            shareUtil.SendInternalErr(res, "cannot update config " + JSON.stringify(err, null, 2));
+          }
+        )
+
+
+        // trigger recalculation
+        // 1. delete all calculated data for assetid
+        // 2. start recalculation
+        
+        // dataManage._recalculateAsset(assetid, prev_config, config);
+        
       } else {
-        if (data) {
-          console.log("update asset");
-          
-          var prev_config = JSON.parse(JSON.stringify(data.Config));
-
-          _reconfig_device(assetid, prev_config, config)
-          .then(
-            ret => {
-              console.log("reconfigure device done");
-              return _reconfig_equation(assetid, prev_config, config);
-            }
-          )
-          .then(
-            ret => {
-              console.log("reconfigure equation done");
-              data.Config = config;
-              data.save();
-              shareUtil.SendSuccessWithData(res, ret);
-            }
-          )
-          .catch(
-            err => {
-              shareUtil.SendInternalErr(res, "cannot update config " + JSON.stringify(err, null, 2));
-            }
-          )
-
-
-          // trigger recalculation
-          // 1. delete all calculated data for assetid
-          // 2. start recalculation
-          
-          // dataManage._recalculateAsset(assetid, prev_config, config);
-          
-        } else {
-          shareUtil.SendInvalidInput(res, "asset not found");
-        }
+        shareUtil.SendInvalidInput(res, "asset not found");
       }
-    });
-  }
-  else {
-    shareUtil.SendInvalidInput(res, ret.msg);
-  }
+    }
+  });
+  // }
+  // else {
+  //   shareUtil.SendInvalidInput(res, ret.msg);
+  // }
 
 
 }

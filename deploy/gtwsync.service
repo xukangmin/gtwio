@@ -1,0 +1,17 @@
+[Unit]
+# Human readable name of the unit
+Description=Core Module Sync Service
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/gtwio/daq_script
+ExecStart=/usr/bin/python3 /opt/gtwio/daq_script/daq_main.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gtwio
+User=root
+Group=root
+
+[Install]
+WantedBy=default.target

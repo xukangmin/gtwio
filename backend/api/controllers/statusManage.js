@@ -26,20 +26,17 @@ function getCurrentStatus(req, res){
     .then(
         ret1 => {
 
-            if (ret1.free)
+            if (ret1.free && ret1.size)
             {
-                if (typeof ret1.free === 'number') {
-                    var freeGB = ret1.free / 1024 / 1024 / 1024;
-                    ret.FreeSpace = freeGB.toFixed(2) + " GB";
-                }
-            }
+                var freeGB = ret1.free / 1024 / 1024 / 1024;
+                ret.FreeSpace = freeGB.toFixed(2) + " GB";
 
-            if (ret1.size)
-            {
-                if (typeof ret1.size === 'number') {
-                    var totalGB = ret1.size / 1024 / 1024 / 1024;
-                    ret.TotalSpace = totalGB.toFixed(2) + " GB";
-                }
+                var totalGB = ret1.size / 1024 / 1024 / 1024;
+                ret.TotalSpace = totalGB.toFixed(2) + " GB";
+
+                var percentage = ret1.free / ret1.size * 100;
+                ret.FreePercentage = percentage.toFixed(2);
+
             }
 
             shareUtil.SendSuccessWithData(res, ret);

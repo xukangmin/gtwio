@@ -11,22 +11,32 @@ SERVICE_UUID = '00004754-1212-efde-1523-785fef13d123'
 READ_UUID = '00004755-1212-efde-1523-785fef13d123'
 WRITE_UUID = '00004756-1212-efde-1523-785fef13d123'
 
-CMD_READ_CURRENT_TIME               =   b'\xDB\x01'
-CMD_WRITE_CURRENT_TIME              =   b'\xDB\x02'
-CMD_READ_DAQ_INTERVAL               =   b'\xDB\x03'
-CMD_UPDATE_DAQ_INTERVAL             =   b'\xDD\x04'
-CMD_ADD_DAQ_SENSOR                  =   b'\xDB\x05'
-CMD_RM_DAQ_SENSOR                   =   b'\xDB\x06'
-CMD_GET_ALL_DAQ_SENSOR              =   b'\xDB\x07'
-CMD_READ_BATTERY_VOLTAGE            =   b'\xDB\x08'
-CMD_READ_DC_VOLTAGE                 =   b'\xDB\x09'
-CMD_READ_DB_INFO                    =   b'\xDB\x10'
-CMD_READ_SINGLE_DATA_BY_REC_NO      =   b'\xDB\x11'
-CMD_READ_SINGLE_DATA_BY_TIMESTAMP   =   b'\xDB\x12'
-CMD_READ_RECENT_DATA                =   b'\xDB\x13'
-CMD_READ_BULK_DATA_BY_REC_NO        =   b'\xDB\x14'
-CMD_READ_BULK_DATA_BY_TIMESTAMP     =   b'\xDB\x15'
-CMD_TRUNCATE_DATA                   =   b'\xDB\x16'
+CMD_LIST = []
+CMD_LENGTH = [1] * 16  # 1 means 1 packet, 0 means depends
+
+CMD_READ_CURRENT_TIME               =   0
+CMD_WRITE_CURRENT_TIME              =   1
+CMD_READ_DAQ_INTERVAL               =   2
+CMD_UPDATE_DAQ_INTERVAL             =   3
+CMD_ADD_DAQ_SENSOR                  =   4
+CMD_RM_DAQ_SENSOR                   =   5
+CMD_GET_ALL_DAQ_SENSOR              =   6
+CMD_READ_BATTERY_VOLTAGE            =   7
+CMD_READ_DC_VOLTAGE                 =   8
+CMD_READ_DB_INFO                    =   9
+CMD_READ_SINGLE_DATA_BY_REC_NO      =   10
+CMD_READ_SINGLE_DATA_BY_TIMESTAMP   =   11
+CMD_READ_RECENT_DATA                =   12
+CMD_READ_BULK_DATA_BY_REC_NO        =   13
+CMD_READ_BULK_DATA_BY_TIMESTAMP     =   14
+CMD_TRUNCATE_DATA                   =   15
+
+for i in range(1,17):
+    CMD_LIST.append(b'\xDB' + bytes([i]))
+
+CMD_LENGTH[CMD_GET_ALL_DAQ_SENSOR] = 0
+CMD_LENGTH[CMD_READ_BULK_DATA_BY_REC_NO] = 0
+CMD_LENGTH[CMD_READ_BULK_DATA_BY_TIMESTAMP] = 0
 
 data_post_q = queue.Queue()
 
@@ -53,6 +63,9 @@ class CMDelegate(btle.DefaultDelegate):
     def handleNotification(self, cHandle, data):
         if (self.handle == cHandle):
             self.recv.append(data)
+
+    def get_length(self):
+        return len(self.recv)
 
     def clear(self):
         self.recv = []
@@ -87,18 +100,30 @@ class CoreModule:
     def cm_disconnect(self):
         self.cm_p.disconnect()
 
-    def SendCmdWithResponse(self, cmd):
+    def SendCmdWithResponse(self, cmd_index, aux = b''):
         # ch_write[0].write(b'\xdb\x24')
+
+        time_out_count = 0
+        MAX_TIME_OUT_COUNT = 600
+        expected_length = 99999
         self.cm_p.delegate.clear()
 
-        self.ch_write[0].write(cmd)
+        self.ch_write[0].write(CMD_LIST[cmd_index] + aux)
+        if CMD_LENGTH[cmd_index] == 1:
+            while self.cm_p.waitForNotifications(30) and self.cm_p.delegate.get_length() < CMD_LENGTH[cmd_index]:
+                continue
+        elif CMD_LENGTH[cmd_index] == 0:
+            while self.cm_p.waitForNotifications(30) and self.cm_p.delegate.get_length() < expected_length:
+                expected_length = struct.unpack('<L', self.cm_p.delegate.recv[0][2:])[0]
+                expected_length = expected_length + 1
+                continue
+        
 
-        while self.cm_p.waitForNotifications(1):
-            continue
 
         return self.cm_p.delegate.recv
 
     def sync_time(self):
+        print('sync time')
         data = self.SendCmdWithResponse(CMD_READ_CURRENT_TIME)
         
         if len(data) == 1 and len(data[0]) == 6:
@@ -108,8 +133,7 @@ class CoreModule:
             # if timestamp difference > 10 seconds, synchronize
             if abs(cm_ts - ep_time) > 10:
                 new_ts_raw = struct.pack('<L', ep_time) # unsigned long https://docs.python.org/2/library/struct.html
-                new_ts_cmd = CMD_WRITE_CURRENT_TIME + new_ts_raw
-                ret = self.SendCmdWithResponse(new_ts_cmd)
+                ret = self.SendCmdWithResponse(CMD_WRITE_CURRENT_TIME, new_ts_raw)
                 print("timestamp sync done")
     
     def sync_interval(self, daq_interval):
@@ -159,12 +183,12 @@ class CoreModule:
         print(rm_list)
 
         for d in add_list:
-            add_cmd = CMD_ADD_DAQ_SENSOR + bytes([len(d)]) + d.encode()
-            ret = self.SendCmdWithResponse(add_cmd)
+            add_cmd = bytes([len(d)]) + d.encode()
+            ret = self.SendCmdWithResponse(CMD_ADD_DAQ_SENSOR, add_cmd)
 
         for d in rm_list:
-            rm_cmd = CMD_RM_DAQ_SENSOR + bytes([len(d)]) + d.encode()
-            ret = self.SendCmdWithResponse(rm_cmd)
+            rm_cmd = bytes([len(d)]) + d.encode()
+            ret = self.SendCmdWithResponse(CMD_RM_DAQ_SENSOR, rm_cmd)
 
     def sync_single_device(self, device_def, endpoint):
         
@@ -198,9 +222,9 @@ class CoreModule:
 
                 print("db_ts=" + str(db_ts))
 
-                cm_cmd = CMD_READ_RECENT_DATA + bytes([len(query_str)]) + query_str.encode()
+                cm_cmd = bytes([len(query_str)]) + query_str.encode()
 
-                ret = self.SendCmdWithResponse(cm_cmd)
+                ret = self.SendCmdWithResponse(CMD_READ_RECENT_DATA, cm_cmd)
 
                 if len(ret) == 1 and len(ret[0]) == 14:
                     cm_ts = struct.unpack('<L',ret[0][6:10])[0]
@@ -208,9 +232,9 @@ class CoreModule:
             
                 if db_ts < cm_ts:
                     # potential data for update, read data from core module
-                    cm_cmd = CMD_READ_BULK_DATA_BY_TIMESTAMP + bytes([len(query_str)]) + query_str.encode() + struct.pack('<L', db_ts + 1) + struct.pack('<L', cm_ts)
+                    cm_cmd = bytes([len(query_str)]) + query_str.encode() + struct.pack('<L', db_ts + 1) + struct.pack('<L', cm_ts)
                     print(cm_cmd.hex())
-                    ret = self.SendCmdWithResponse(cm_cmd)
+                    ret = self.SendCmdWithResponse(CMD_READ_BULK_DATA_BY_TIMESTAMP, cm_cmd)
                     print('data_size=' + str(len(ret) - 1))
                     if len(ret) - 1 > 0:
 
@@ -262,11 +286,18 @@ def post_data(q, endpoint):
         push_params = json.dumps(single_post_data).encode('utf8')
         push_url = endpoint + '/data/addDataBySerialNumber'
         req = urllib.request.Request(push_url,data=push_params,headers={'content-type': 'application/json'})
+
         try:
-            with urllib.request.urlopen(req,timeout=500) as f:
-                buf = f.read().decode('utf-8')
-        except:
-            print('push error happened, skip')
+            res = urllib.request.urlopen(req)
+        except urllib.error.HTTPError as e:
+            print('HTTPerror=' + str(e.code))
+        except urllib.error.URLError as e:
+            print('URLError=' + str(e.code))
+        except Exception as ex:
+            print(ex)
+        # with urllib.request.urlopen(req,timeout=500) as f:
+        #     buf = f.read().decode('utf-8')
+
 
 def build_query_list(device_data):
 
@@ -287,6 +318,8 @@ with open('daq_config.json') as data_file:
 local_end_point = config_data['LocalEndPoint']
 cloud_end_point = config_data['CloudEndPoint']
 core_modules = config_data['CoreModules']
+
+
 
 t1 = threading.Thread(target=post_data, args=(data_post_q,cloud_end_point,))
 

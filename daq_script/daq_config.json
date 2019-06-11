@@ -3,7 +3,7 @@
   "CloudEndPoint": "https://api.hxmonitor.com",
   "CoreModules": [
     {
-      "MacAddress": "E7:3F:11:E7:AC:2C",
+      "MacAddress": "CA:59:2D:1F:B4:7A",
       "BLEName": "GTW01A001",
       "Devices": [
         {

@@ -300,6 +300,11 @@ function get_start_ts(ts) {
 
 function trigger_single_parameter_calculation(paraid, dataobj) {
   //console.log("trigger paraid=" + paraid);
+  var debug = 0;
+  // if (paraid === "P-xoPLc8U0Wp")
+  // {
+  //   debug = 1;
+  // }
 
   Parameter.findOne({ParameterID: paraid}, function(err,data){
       if (!err) {
@@ -327,70 +332,6 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                       rawdataobj[paraid][timesp].push(dataobj);
                     }
 
-                    var all_match = true;
-                    var datareqobj = data.Require.toObject();
-                    for (var i in datareqobj) {
-                      var check = false;
-                      for (var j in rawdataobj[paraid][timesp]) {
-                          if (rawdataobj[paraid][timesp][j].ParameterID === datareqobj[i]) {
-                            check = true;
-                          }
-                      }
-    
-                      if (!check) {
-                        all_match = false;
-                      }
-                    }
-
-                    if (all_match) {
-                      // console.log("trigger calculation");
-  
-                      var equation;
-                      if (data.ActiveEquation) {
-                        equation = data.ActiveEquation;
-                      } else if (data.Equation) {
-                        equation = data.Equation;
-                      } else {
-                        equation = "undefined";
-                      }
-                      // console.log(equation);
-                      _perform_calculation(rawdataobj[paraid][timesp], equation, timesp)
-                        .then(
-                          ret => {
-                            delete rawdataobj[paraid][timesp];
-                            // console.log(rawdataobj);
-                            // console.log(ret);
-                            if (typeof ret.Result === 'number')
-                            {
-                              if (isNaN(ret.Result) === false){
-                                _addDataByParameterID(paraid, ret.Result, timesp, err => 
-                                  {
-                                    if(err) 
-                                    {
-                                      console.log("calculated value save error:");
-                                      
-                                      console.error(err);
-                                    }
-                                  });
-                                //_addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
-                              }
-                            }
-                           
-                          }
-                        )
-                        .catch(
-                          err => {
-                            parameterManage._updateParameter({ParameterID: paraid, StreamingStatus: err})
-                              .then()
-                              .catch(
-                                err => {
-                                  console.log(err);
-                                }
-                              )
-                          }
-                        )
-                    }
-
                   } else {
                     rawdataobj[paraid][timesp] = [];
                     rawdataobj[paraid][timesp].push(dataobj)
@@ -401,6 +342,93 @@ function trigger_single_parameter_calculation(paraid, dataobj) {
                   rawdataobj[paraid][timesp] = [];
                   rawdataobj[paraid][timesp].push(dataobj);
 
+                }
+
+                var all_match = true;
+                var datareqobj = data.Require.toObject();
+                if (debug === 1) {
+                  console.log(datareqobj);
+                }
+                for (var i in datareqobj) {
+                  var check = false;
+                  for (var j in rawdataobj[paraid][timesp]) {
+                      if (rawdataobj[paraid][timesp][j].ParameterID === datareqobj[i]) {
+                        check = true;
+                      }
+                  }
+
+                  if (!check) {
+                    all_match = false;
+                  }
+                }
+
+                if (all_match) {
+                  if (debug === 1)
+                  {
+                    console.log("trigger calculation");
+                  }
+                  
+
+                  var equation;
+                  if (data.ActiveEquation) {
+                    equation = data.ActiveEquation;
+                  } else if (data.Equation) {
+                    equation = data.Equation;
+                  } else {
+                    equation = "undefined";
+                  }
+                  if (debug === 1)
+                  {
+                    console.log(equation);
+                  }
+                  
+                  _perform_calculation(rawdataobj[paraid][timesp], equation, timesp)
+                    .then(
+                      ret => {
+                        delete rawdataobj[paraid][timesp];
+                        // console.log(rawdataobj);
+                        if (debug === 1)
+                        {
+                          console.log(ret);
+                        }
+                        if (typeof ret.Result === 'number')
+                        {
+                          if (isNaN(ret.Result) === false){
+                            if (debug === 1)
+                            {
+                              console.log("timestamp=" + timesp);
+                            }
+                            _addDataByParameterID(paraid, ret.Result, timesp, err => 
+                              {
+                                if(err) 
+                                {
+                                  console.log("calculated value save error:");
+                                  
+                                  console.error(err);
+                                }
+                              });
+                            //_addEquationHistory(paraid, ret.ResolvedEquation, ret.Result, max_timestamp);
+                          }
+                        }
+                        
+                      }
+                    )
+                    .catch(
+                      err => {
+                        parameterManage._updateParameter({ParameterID: paraid, StreamingStatus: err})
+                          .then()
+                          .catch(
+                            err => {
+                              console.log(err);
+                            }
+                          )
+                      }
+                    )
+                }
+
+                if (debug === 1)
+                {
+                  console.log(JSON.stringify(rawdataobj[paraid],null,2));
                 }
                 // console.log(JSON.stringify(rawdataobj,null,2));
 

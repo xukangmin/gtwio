@@ -138,11 +138,10 @@ const updateAssetConfig = (assetID, data) => {
       AssetID: assetID,
       Config: data
     };
-    console.log(body);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'
-                 },
+                },
         body: JSON.stringify(body)
     };
 
@@ -407,8 +406,7 @@ const updateBaseline = (assetID, data) => {
     console.log(body);
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'
-                 },
+        headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     };
 

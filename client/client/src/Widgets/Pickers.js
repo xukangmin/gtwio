@@ -247,6 +247,7 @@ class Pickers extends React.Component {
       }
       
       function disabledDateTime(current) {
+        console.log(current)
         if(current.format('L') == moment(MaxTimeRange).format('L')){
           return {
             disabledHours: () => range(0, 24).splice(moment(MaxTimeRange).hour(), 24)

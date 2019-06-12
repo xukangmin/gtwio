@@ -53,6 +53,23 @@ export const asset = (state = {}, action) => {
             error: action.error
         };
     //
+    case gConstants.UPDATE_ASSET_CONFIG_REQUEST:
+        return {
+            ...state,
+            updatingAssetConfig: true
+        };
+    case gConstants.UPDATE_ASSET_CONFIG_SUCCESS:
+        return {
+            ...state,
+            gotData: true,
+            config: action.data
+        };
+    case gConstants.UPDATE_ASSET_CONFIG_FAILURE:
+        return {
+            ...state,
+            error: action.error
+        };
+    //
     case gConstants.GET_ASSET_TAG_SUCCESS:
         return {
           ...state,

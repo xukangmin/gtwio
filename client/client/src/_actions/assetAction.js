@@ -75,6 +75,7 @@ const getAssetConfig = (asset) => {
 }
 
 const updateAssetConfig = (asset, data) => {
+    console.log(asset,data)
     return dispatch => {
           dispatch(request());
           assetServices.updateAssetConfig(asset, data)
@@ -84,6 +85,8 @@ const updateAssetConfig = (asset, data) => {
                       dispatch(success(info));
                   },
                   error => {
+                      console.log(error);
+                      
                       dispatch(failure(error));
                   }
               );

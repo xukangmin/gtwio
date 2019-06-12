@@ -166,12 +166,13 @@ class Configurations extends React.Component {
   }
 
   editToggle(config, device, equation) {
-    let result = { ...config };
-    result.Devices = device;
-    result.Equations = equation;
+    // let result = config;
+    // console.log(config)
+    // result.Devices = device;
+    // result.Equations = equation;
 
     if (this.state.editMode) {
-      this.props.dispatch(assetActions.updateAssetConfig(this.asset, result));
+      this.props.dispatch(assetActions.updateAssetConfig(this.asset, config));
     }
     this.setState({ editMode: !this.state.editMode });
   }
@@ -214,8 +215,8 @@ class Configurations extends React.Component {
     let device, parameter = [];
 
     if (data) {
-      device = [...data.Devices];
-      parameter = [...data.Equations];
+      device = data.Devices;
+      parameter = data.Equations;
     }
 
     const cellEditProp = {
@@ -440,7 +441,7 @@ class Configurations extends React.Component {
     function linkFormatter(cell, row, enumObject) {
       const assetID = enumObject;
       const deviceOrParameter = row.SerialNumber ? "/device/" : "/parameter/";
-      return <Button title="Go to Data Page" onClick={() => location.href = '/asset/' + assetID + deviceOrParameter + cell}><Icon type="table" /></Button>
+      return <Button title="Go to Data Page" onClick={() => location.href = '/asset/' + assetID + deviceOrParameter + cell.split(':')[0]}><Icon type="table" /></Button>
     }
 
     function parameterFormatter(cell, row) {

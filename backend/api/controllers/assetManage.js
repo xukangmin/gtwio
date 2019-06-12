@@ -1610,7 +1610,7 @@ function updateAssetConfig(req, res) {
             console.log("reconfigure equation done");
             data.Config = config;
             data.save();
-            shareUtil.SendSuccessWithData(res, ret);
+            shareUtil.SendSuccess(res);
           }
         )
         .catch(

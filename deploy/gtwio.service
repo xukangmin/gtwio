@@ -1,0 +1,17 @@
+[Unit]
+Description=GTW HX IO Hosting
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/gtwio/
+ExecStart=/usr/bin/npm start
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gtwio
+User=root
+Group=root
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

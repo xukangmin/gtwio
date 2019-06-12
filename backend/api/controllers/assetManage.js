@@ -1632,7 +1632,7 @@ function updateAssetConfig(req, res) {
     }
   });
   // }
-  // else {
+  // else { 
   //   shareUtil.SendInvalidInput(res, ret.msg);
   // }
 

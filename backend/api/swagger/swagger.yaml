@@ -19,6 +19,8 @@ produces:
   - application/json
 
 tags:
+- name: status
+  description: Status about the system
 - name: asset
   description: Get Asset Info
   externalDocs:
@@ -50,6 +52,40 @@ tags:
  # - UserSecurity: []
 
 paths:
+  /status/getCurrentStatus:
+    x-swagger-router-controller: statusManage
+    get:
+      tags:
+      - status
+      summary: Retrieve status 
+      description: Return status
+      # used as the method name of the controller
+      operationId: getCurrentStatus
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              Items:
+                type: array
+                items:
+                  $ref: "#/definitions/AssetModel"
+              Count:
+                type: integer
+        # responses may fall through to errors
+        400:
+          description: Invalid Input
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: Item not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /asset/getAssetByUser:
     # binds a127 app logic to a route
     x-swagger-router-controller: assetManage

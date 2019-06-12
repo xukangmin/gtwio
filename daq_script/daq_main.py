@@ -250,8 +250,8 @@ class CoreModule:
                     # print('data_size=' + str(len(ret) - 1))
                     if len(ret) - 1 > 0:
 
-                    # header_size = struct.unpack('<L',ret[0][2:])[0]
-                    # print('header_size=' + str(header_size))
+                        # header_size = struct.unpack('<L',ret[0][2:])[0]
+                        # print('header_size=' + str(header_size))
                     # if len(ret) - 1 == header_size: # check size if match
                         # print('size match')
                         for data in ret:
@@ -278,8 +278,9 @@ class CoreModule:
                                     push_data = {"SerialNumber": device_info['SerialNumber'], "Value": data_value, "DataType": p['Type'], "TimeStamp": data_ts}
                                 
                                 # better to do synchronize pushing for consistancy
-                                # print(push_data)
-                                self.post_data(endpoint, push_data)
+                                if data_value > 0:
+                                    # print(push_data)
+                                    self.post_data(endpoint, push_data)
                             
         # except:
         #     print("no sensor found or other error")
@@ -336,7 +337,6 @@ core_modules = config_data['CoreModules']
 sync_cm_count = 0
 
 while True:
-    sync_cm_count = sync_cm_count + 1
     for single_cm in core_modules:
         devices = single_cm['Devices']
         query_list = build_query_list(devices)
@@ -345,8 +345,7 @@ while True:
         cm = CoreModule(mac_address)
 
         if cm.cm_connect():
-            if sync_cm_count == 180:
-                sync_cm_count = 0
+            if sync_cm_count == 0:
                 if internet():
                     # sync time stamp
                     cm.sync_time()    
@@ -368,5 +367,8 @@ while True:
         
         # print("core module done: " + str(mac_address))
     time.sleep(20)
+    sync_cm_count = sync_cm_count + 1
+    if sync_cm_count >= 180:
+        sync_cm_count = 0
 
 

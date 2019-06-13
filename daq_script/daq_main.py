@@ -105,15 +105,20 @@ class CoreModule:
         MAX_TIME_OUT_COUNT = 600
         expected_length = 99999
         self.cm_p.delegate.clear()
-
+        # print((CMD_LIST[cmd_index] + aux).hex())
         self.ch_write[0].write(CMD_LIST[cmd_index] + aux)
         if CMD_LENGTH[cmd_index] == 1:
-            while self.cm_p.waitForNotifications(30) and self.cm_p.delegate.get_length() < CMD_LENGTH[cmd_index]:
+            while self.cm_p.waitForNotifications(15) and self.cm_p.delegate.get_length() < CMD_LENGTH[cmd_index]:
                 continue
         elif CMD_LENGTH[cmd_index] == 0:
-            while self.cm_p.waitForNotifications(30) and self.cm_p.delegate.get_length() < expected_length:
-                expected_length = struct.unpack('<L', self.cm_p.delegate.recv[0][2:])[0]
-                expected_length = expected_length + 1
+            while self.cm_p.waitForNotifications(15) and self.cm_p.delegate.get_length() < expected_length:
+                # print(self.cm_p.delegate.get_length())
+                if self.cm_p.delegate.get_length() == 1:
+                    # print('len=' + str(len(self.cm_p.delegate.recv[0])))
+                    if len(self.cm_p.delegate.recv[0]) == 6:
+                        expected_length = struct.unpack('<L', self.cm_p.delegate.recv[0][2:])[0]
+                        expected_length = expected_length + 1
+                        # print('expected_length=' + str(expected_length))
                 continue
         
 

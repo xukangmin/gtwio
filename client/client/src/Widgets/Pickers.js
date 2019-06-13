@@ -20,7 +20,6 @@ const queryString = require('query-string');
 class Pickers extends React.Component {
     constructor(props) {
       super(props);
-
       this.range = JSON.parse(localStorage.getItem('range'));
       this.user = JSON.parse(localStorage.getItem('user'));
 
@@ -136,7 +135,7 @@ class Pickers extends React.Component {
       }
 
       let liveDispatchInterval = 60*1000;
-      if (asset && !m_res[item].match.url.includes("gauge")) {
+      if (asset && this.props.assets.find(x=>x.AssetID===asset).AssetType!=="SensorShow") {
         this.props.dispatch(assetActions.getTimeRangeByAsset(asset));      
         this.props.dispatch(assetActions.getTimeIntervals(asset));        
       }
@@ -194,7 +193,7 @@ class Pickers extends React.Component {
         }
       }
 
-      else if (asset && (m_res[item].match.url.includes("dashboard") || m_res[item].match.url.includes("gauge"))){
+      else if (asset && m_res[item].match.url.includes("dashboard")){
         if (this.range.live){
           this.props.dispatch(assetActions.getAsset(this.user, asset));
           setInterval(() => {
@@ -218,10 +217,6 @@ class Pickers extends React.Component {
 
       else if (asset && m_res[item].match.url.includes("configurations")){
         this.props.dispatch(assetActions.getAssetConfig(asset));
-      }
-
-      if(m_res[item].match.url.includes("gauge") || queryString.parse(location.search).SensorShow){
-        this.inGauge = true;
       }
     }
 
@@ -269,7 +264,7 @@ class Pickers extends React.Component {
             }
             <i className="fas fa-angle-down ml-3"></i>
           </Button>          
-          {this.props.assetData && this.props.assetTimeIntervals && this.props.assetTimeRange && !this.inGauge &&
+          {this.props.assetData && this.props.assetTimeIntervals && this.props.assetTimeRange &&
             <div style={{display: 'inline-block'}}>
               <BaselinePicker data={this.props.assetData} range={this.props.assetTimeRange}/>
               <IntervalPicker asset={this.props.assetData} data={this.props.assetTimeIntervals} range={this.props.assetTimeRange}/>

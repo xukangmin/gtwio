@@ -37,7 +37,7 @@ const ParameterInfo = (props) => {
             </tr>
             <tr>
               <th>Current Value</th>
-              <td>{parameter.CurrentValue && parameter.CurrentValue.toFixed(2)}{parameter.Unit && parameter.Unit}</td>
+              <td>{parameter.CurrentValue && parameter.CurrentValue.toFixed(2)}{" "}{parameter.Unit && parameter.Unit === "N/A" ? " " : parameter.Unit}</td>
             </tr>
             <tr>
               <th>Current Time Stamp</th>
@@ -53,6 +53,7 @@ const ParameterInfo = (props) => {
                 <tr>
                   <th>LowerLimit</th>
                   <td>
+                  <div style={{ display: "flex" }}>
                     <InlineEdit
                       value={parameter.Range ? parameter.Range.LowerLimit : "N/A"}
                       tag="span"
@@ -63,11 +64,15 @@ const ParameterInfo = (props) => {
                       cancelColor="#6c757d"
                       onSave={value => props.updateLimit(parameter, "LowerLimit", value)}
                     />
+                    <span className="ml-1">{parameter.Unit === "N/A" ? " " : parameter.Unit}</span>
+                  </div>
                   </td>
+                  
                 </tr>
                 <tr>
                   <th>UpperLimit</th>
                   <td>
+                  <div style={{ display: "flex" }}>
                   <InlineEdit
                     value={parameter.Range ? parameter.Range.UpperLimit : "N/A"}
                     tag="span"
@@ -78,6 +83,8 @@ const ParameterInfo = (props) => {
                     cancelColor="#6c757d"
                     onSave={value => props.updateLimit(parameter, "UpperLimit", value)}
                   />
+                  <span className="ml-1">{parameter.Unit === "N/A" ? " " : parameter.Unit}</span>
+                  </div>
                   </td>
                 </tr>
             </tbody>
@@ -107,8 +114,8 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item,i) =>
               <tr key = {i}>
-                <td style={{padding: 0}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-                <td style = {{textAlign:"center", fontWeight: "bold", padding: 0}}>{parseFloat(item.Value).toFixed(2)}{item.Unit && item.Unit}</td>
+                <td style={{padding: "0 5px", fontSize: "0.8em"}}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+                <td style = {{textAlign:"center", fontWeight: "bold", padding: "0 5px"}}>{parseFloat(item.Value).toFixed(2)}{item.Unit && item.Unit}</td>
               </tr>
           )}
         </tbody>

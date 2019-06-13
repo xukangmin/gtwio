@@ -19,11 +19,12 @@ const ParameterTable = (props) => {
   const parameter = props.data;
   const device = props.device;
   return (
-    <div>
-      <Table
+    <div className="tableResponsive">
+      <table className="table"
         style={{
           display: "block",
           height: "50vh",
+          width: "100%",
           overflowY: "scroll"
         }}>
         <thead>
@@ -35,12 +36,12 @@ const ParameterTable = (props) => {
         <tbody>
           {parameter.map((item, i) =>
             <tr key={i} >
-              <td style={{ padding: 0 }}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
-              <td style={{ textAlign: "center", fontWeight: "bold", padding: 0 }}>{item.Value.toFixed(2) + props.unit}</td>
+              <td style={{ padding: "0 5px", fontSize: "0.8em" }}>{moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm')}</td>
+              <td style={{ textAlign: "center", fontWeight: "bold", padding: "0 5px" }}>{item.Value.toFixed(2) + props.unit}</td>
             </tr>
           )}
         </tbody>
-      </Table>
+      </table>
     </div>
   );
 };
@@ -203,7 +204,7 @@ class Device extends React.Component {
                                   {x.hasOwnProperty('CurrentValue') &&
                                     <tr>
                                       <th>Current Value</th>
-                                      <td>{x.CurrentValue.toFixed(2) + ' ' + x.Unit}</td>
+                                      <td>{x.CurrentValue.toFixed(2) + ' ' + (x.Unit === "N/A" ? " " : x.Unit)}</td>
                                     </tr>
                                   }
                                   {x.hasOwnProperty('CurrentTimeStamp') &&
@@ -233,7 +234,7 @@ class Device extends React.Component {
                                           cancelColor="#6c757d"
                                           onSave={value => this.updateLimit(x.ParameterID, x.Range, "LowerLimit", Number(value))}
                                         />
-                                        <span>{x.Unit}</span>
+                                        <span className="ml-1">{x.Unit}</span>
                                       </div>
                                     </td>
                                   </tr>
@@ -253,7 +254,7 @@ class Device extends React.Component {
                                           cancelColor="#6c757d"
                                           onSave={value => this.updateLimit(x.ParameterID, x.Range, "UpperLimit", Number(value))}
                                         />
-                                        {x.Unit}
+                                        <span className="ml-1">{x.Unit}</span>
                                       </div>
                                     </td>
                                   </tr>
@@ -273,7 +274,7 @@ class Device extends React.Component {
                                           cancelColor="#6c757d"
                                           onSave={value => this.updateStability(x.ParameterID, "WindowSize", value, x.StabilityCriteria)}
                                         />
-                                        {" seconds"}
+                                        <span className="ml-1">seconds</span>
                                       </div>
                                     </td>
                                   </tr>
@@ -293,7 +294,7 @@ class Device extends React.Component {
                                           cancelColor="#6c757d"
                                           onSave={value => this.updateStability(x.ParameterID, "UpperLimit", value, x.StabilityCriteria)}
                                         />
-                                        {x.Unit}
+                                        <span className="ml-1">{x.Unit}</span>
                                       </div>
                                     </td>
                                   </tr>

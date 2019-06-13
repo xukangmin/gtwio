@@ -37,7 +37,7 @@ class List extends React.Component {
     function linkFormatter(cell, row){
       console.log(row)
       return <div>
-      <Button title="Go to Asset's Dashboard Page" onClick={()=>location.href='/asset/'+ cell + (row.AssetType !== "SensorShow" ? '/dashboard' : '/gauge')}><Icon type="dashboard" /></Button>
+      <Button title="Go to Asset's Dashboard Page" onClick={()=>location.href='/asset/'+ cell + '/dashboard'}><Icon type="dashboard" /></Button>
       <Button title="Go to Asset's Data Page" className="ml-1" onClick={()=>location.href='/asset/'+ cell + '/data'}><Icon type="table" /></Button>
       <Button title="Go to Asset's Configuration Page" className="ml-1" onClick={()=>location.href='/asset/'+ cell + '/configurations'}><Icon type="setting" /></Button></div>
     }

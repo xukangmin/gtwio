@@ -87,7 +87,7 @@ class RootLayout extends Component {
               <SubMenu
                 key="sub-1"
                 title={<span><Icon type="bars" /><span>Assets</span></span>}>
-                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID+index}><a href={"/asset/" + asset.AssetID + (asset.AssetType == "HeatExchanger" ? "/dashboard" : "/gauge")}>{asset.DisplayName}</a></Menu.Item>)
+                {assets_display ? assets_display.map((asset,index) => <Menu.Item key={asset.AssetID+index}><a href={"/asset/" + asset.AssetID + "/dashboard"}>{asset.DisplayName}</a></Menu.Item>)
                 :<Loader/>}
               </SubMenu>
               
@@ -112,7 +112,7 @@ class RootLayout extends Component {
               
                 <Menu defaultSelectedKeys={[this.activeNav]} mode="inline">
                   <Menu.Item key="dashboard">
-                    <a href={"/asset/" + this.asset + (assets_display.find(i => i.AssetID === this.asset).AssetType == "HeatExchanger" ? "/dashboard" : "/gauge")}>
+                    <a href={"/asset/" + this.asset + "/dashboard"}>
                       <Icon type="dashboard" />
                       <span>Dashboard</span>
                     </a>

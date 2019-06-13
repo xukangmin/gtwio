@@ -19,7 +19,7 @@ module.exports = [
     // The configuration for the server-side rendering
     name: 'server',
     target: 'node',
-    entry: './server/routes/server.js',
+    entry: './server/srcServer.js',
     output: {
         path: path.join(__dirname, './server/bin'),
         publicPath: path.join(__dirname, './server/bin'),

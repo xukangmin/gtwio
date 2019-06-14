@@ -1,30 +1,26 @@
 import express from 'express';
-import webpack from 'webpack';
-import path from 'path';
-import config from '../webpack.config.dev';
-import open from 'open';
+var path = require('path');
+// import React from 'react';
+// import { renderToString } from 'react-dom/server';
 
-/* eslint-disable no-console */
+const server = express();
 
-const port = 4000;
-const app = express();
-const compiler = webpack(config);
+var root_path = process.cwd().replace(/\\/g, '/');
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}));
+var public_path = root_path + "/server/public/";
+// set the view engine to ejs
+server.use(express.static(public_path));
+// use res.render to load up an ejs view file
 
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.get('*', function(req, res) {
-  res.sendFile(path.join( __dirname, '../client/src/index.html'));
+var path_index = path.join(public_path, 'index.html');
+// index page
+server.get('/*', (req, res) => {
+//  const html = renderToString(<App />);
+  // To Do: Server side render
+  res.sendFile(path_index);
+  //res.render('index',{});
 });
 
-app.listen(port, function(err) {
-  if (err) {
-    console.log(err);
-  } else {
-    open(`http://localhost:${port}`);
-  }
+server.listen(8001, () => {
+  console.log('Sever listening on port ' + 8001);
 });

@@ -19,32 +19,32 @@ module.exports = [
     // The configuration for the server-side rendering
     name: 'server',
     target: 'node',
-    entry: './server/routes/server.js',
+    entry: './server/srcServer.js',
     output: {
         path: path.join(__dirname, './server/bin'),
         publicPath: path.join(__dirname, './server/bin'),
         filename: 'server.js'
     },
-    externals: nodeModules,
     plugins: [
       new Dotenv()
     ],
     module: {
         rules: [
-            { test : /\.jsx?/,
-
-                loaders: [
-                    'babel-loader'
-                    //,'jsx-loader'
-                ]
-            },
-            {test: /\.css$/, use: [
-                'style-loader',
-                'css-loader'
-                ]
-              },
-            {test:  /\.json$/, loader: 'json-loader' },
-            {test: /(\.eot|\.woff2|\.jpg|\.ttf|\.svg)/, loader: 'file-loader'},
+          {
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader"
+            }
+          },
+          {test: /(\.css)$/, loaders: ['style-loader', 'css-loader']},
+          {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
+          {test: /\.(woff|woff2)$/, loader: "url-loader?prefix=font/&limit=5000"},
+          {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=application/octet-stream"},
+          {
+            test: /\.(png|jpg|gif)$/,
+            loader: 'url-loader'
+          },
         ]
     }
 },

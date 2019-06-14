@@ -23,18 +23,21 @@ class Settings extends React.Component {
       asset: "Illinois_Cooling_Tower-1",
       parameter: "Cleaniess Factor",
       limit: "1",
+      contact: "John, Mylee",
       status: true
     },
     {
       asset: "Illinois_Cooling_Tower-2",
-      parameter: "Cleaniess Factor",
+      parameter: "Uncertainty",
       limit: "1",
+      contact: "John",
       status: true
     },
     {
       asset: "Illinois_Cooling_Tower-3",
       parameter: "Cleaniess Factor",
       limit: "1",
+      contact: "John, Mylee, Fred",
       status: true
     }];
 
@@ -46,16 +49,16 @@ class Settings extends React.Component {
       phoneAlert: true
     },{
       name: "Mylee Betts",
-      email: "j@gtw.com",
+      email: "m@gtw.com",
       emailAlert: true,
-      phone: "220-399-2131",
+      phone: "220-231-8874",
       phoneAlert: true
     },
     {
       name: "Fred Blackwell",
-      email: "j@gtw.com",
+      email: "f@gtw.com",
       emailAlert: true,
-      phone: "220-399-2131",
+      phone: "220-390-5498",
       phoneAlert: true
     }];
 
@@ -119,7 +122,15 @@ class Settings extends React.Component {
             dataAlign='center'
             dataField='limit'
             editable={false}>
-            Limit
+            Criteria
+                  </TableHeaderColumn>
+
+          <TableHeaderColumn
+            headerAlign='center'
+            dataAlign='center'
+            dataField='contact'
+            editable={false}>
+            Contacts
                   </TableHeaderColumn>
 
           <TableHeaderColumn

@@ -46,9 +46,17 @@ export const data = (state = {}, action) => {
             gettingData: true
         };
     case gConstants.GET_ASSET_DATA_SUCCESS:
+        let prevData = state.data ? state.data.AssetData : [];
+        let currData = action.data.AssetData;
+        let columns = action.data.AssetColumnInfo;
+
+        let result = {
+            AssetColumnInfo: columns,
+            AssetData: prevData.concat(currData.sort((a,b)=>b.TimeStamp-a.TimeStamp))
+        }
         return {
             gotData: true,
-            data: action.data
+            data: result
         };
     case gConstants.GET_ASSET_DATA_FAILURE:
         return {

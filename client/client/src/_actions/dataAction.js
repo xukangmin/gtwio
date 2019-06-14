@@ -40,8 +40,13 @@ const getSingleParameterData = (parameter, t1, t2) => {
 const getDataByAssetID = (asset, t1, t2) => {
     return dispatch => {
         dispatch(request());
+        
+        
+
+            
         dataServices.getDataByAssetID(asset, t1, t2)
-            .then(
+
+        .then(
                 data => {
                     dispatch(success(data));
                 },

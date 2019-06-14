@@ -205,13 +205,33 @@ class Pickers extends React.Component {
       }
 
       else if (asset && m_res[item].match.url.includes("data")){
+
+        let dispatch = function(t1,t2){
+          let maxDispatchInterval = 3600000; //1hr
+          if(t2-t1>=maxDispatchInterval){
+              let batchNum = (t2-t1)/maxDispatchInterval+1;
+              let end = t2;
+              for (let i=0; i<batchNum; i++){
+                  this.props.dispatch(dataActions.getDataByAssetID(asset, end-maxDispatchInterval, end));
+                  end-=maxDispatchInterval;
+              }
+          } else {
+            this.props.dispatch(dataActions.getDataByAssetID(asset, t1, t2));
+          }
+        }.bind(this);
+            
+
+
         if (this.range.live){
-          this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+          dispatch(new Date().getTime()-this.range.interval*60*1000, new Date().getTime());
+          // this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           setInterval(() => {
-            this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
+            dispatch(new Date().getTime()-this.range.interval*60*1000, new Date().getTime());
+            // this.props.dispatch(dataActions.getDataByAssetID(asset, new Date().getTime()-this.range.interval*60*1000, new Date().getTime()));
           }, liveDispatchInterval);
         } else{
-          this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
+          dispatch(this.range.start*1000, this.range.end*1000);
+          // this.props.dispatch(dataActions.getDataByAssetID(asset, this.range.start*1000, this.range.end*1000));
         }
       }
 
@@ -283,9 +303,9 @@ class Pickers extends React.Component {
               <Input type="select" value={this.state.interval} onChange={(e)=>this.handleIntervalChange(e)}  style={{width: "130px", display: "inline-block", borderRadius: "4px", border: "1px #d9d9d9 solid", marginRight: "15px", padding: "0 5"}}>
                 <option value={10}>10 Minutes</option>
                 <option value={30}>30 Minutes</option>
-                <option value={60}>1 Hours</option>
+                <option value={60}>1 Hour</option>
                 <option value={300}>5 Hours</option>
-                <option value={600}>10 Hour</option>
+                <option value={600}>10 Hours</option>
                 <option value={1440}>1 Day</option>
                 <option value={10080}>1 Week</option>
                 <option value={302400}>30 Days</option>

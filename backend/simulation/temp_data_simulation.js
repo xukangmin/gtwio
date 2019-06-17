@@ -66,7 +66,7 @@ function generate_simulation_data(sn, type, ch, lowRange, highRange) {
       });
 }
 
-module.exports.simualte = (interval) => {
+module.exports.simulate = (interval) => {
   function myFunc(arg) {
     // console.log(`arg was => ${arg}`);
     //console.log("generate simulation data");

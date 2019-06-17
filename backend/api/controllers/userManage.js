@@ -566,7 +566,7 @@ function sendForgotPasswordEmail(emailid, VerificationCode) {
 function completeRegistrationEmail(emailid, userid, verificationCode) {
   const sgMail = require('@sendgrid/mail');
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  var link =  require('../../config/constants.js').CLIENT_HOST + "/activate?id=" + userid + "&code=" + verificationCode;
+  var link =  process.env.CLOUD_HOST + "/activate?id=" + userid + "&code=" + verificationCode;
   const msg = {
     to: emailid,
     from: 'no-reply@graftel.com',

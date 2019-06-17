@@ -26,15 +26,15 @@ class Data extends React.Component {
       fontWeight: "normal", 
       fontSize: "0.8em",
       backgroundColor: "#f6f6f6"
-    }
+    };
 
     let unitFormat = {
       fontSize: "0.8em"
-    }
+    };
 
     return (
       <div style={bodyFormat}>
-        {data && data.AssetColumnInfo && data.AssetData ?
+        {data ?
           <table style={tableFormat} border="1" cellPadding="5" bordercolor="#d3d3d3">
             <tbody>
               <tr>
@@ -56,8 +56,8 @@ class Data extends React.Component {
               )}
             </tbody>
           </table>
-
-        :<Loader />}
+        :
+        <Loader />}
       </div>
     );
   }

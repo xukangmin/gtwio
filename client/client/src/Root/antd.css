@@ -6161,6 +6161,7 @@ span.ant-radio + * {
   outline: none;
   -webkit-transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  height: 48px;
 }
 .ant-tabs-nav-container {
   position: relative;

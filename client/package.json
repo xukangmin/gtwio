@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open --config ./webpack.config.dev.js",
     "build": "webpack --mode production --progress --config ./webpack.config.prod.js",
-    "server": "pm2 \"./server/bin/server.js\"",
+    "server": "pm2 start \"./server/bin/server.js\" --name \"frontend\"",
     "open:src": "babel-node server/srcServer.js",
     "watch:build": "webpack --watch"
   },

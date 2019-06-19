@@ -13,7 +13,8 @@ class Data extends React.Component {
     let { data } = this.props;
 
     let bodyFormat = {
-      overflowX: "auto"
+      overflowX: "auto",
+      height: "calc(100vh - 75px)"
     };
     
     let tableFormat = {
@@ -46,7 +47,7 @@ class Data extends React.Component {
               </tr>
 
               {data.AssetData.map((t, idx) =>
-                <tr key={idx}>
+                <tr key={idx} style={{display: !t.Data.length ? "none" : "table-row"}}>
                   <td style={{...tableHeaderFormat, whiteSpace: "nowrap"}}>{moment(new Date(t.TimeStamp)).format('MMMM Do, H:mm')}</td>
                   {t.Data.map((x, i) => 
                     <td style={{ whiteSpace: "nowrap", color: x.Valid ? "green" : "red" }} key={i}>

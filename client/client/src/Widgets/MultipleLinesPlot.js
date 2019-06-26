@@ -20,7 +20,7 @@ class MultipleLinesPlot extends React.Component {
       let newBaseline = [{
         TimeStamp: moment(x.toString(),"MMMM Do, H:mm").format('x'),
         Active: 1
-      }]
+      }];
 
       let confirmBaseline = confirm (`update baseline to ${x}?`);
       if (confirmBaseline){
@@ -43,8 +43,6 @@ class MultipleLinesPlot extends React.Component {
     const { unit } = this.props;
     const { type } =this.props;
 
-    console.log(type)
-
     let isRangeBiggerThanADay = false;
     let formattedData = [];
     let allData = [];
@@ -52,7 +50,6 @@ class MultipleLinesPlot extends React.Component {
     let baseline = undefined;
     let dataDone = false;
 
-    console.log('DATA',data)
     if(this.props.assetData && this.props.assetData.Settings){
       baseline = this.props.assetData.Settings.Baselines.length ? this.props.assetData.Settings.Baselines[0].TimeStamp : undefined ;
     }    
@@ -63,22 +60,13 @@ class MultipleLinesPlot extends React.Component {
       } else if (!JSON.parse(localStorage.getItem('range')).live && parseInt(JSON.parse(localStorage.getItem('range')).end) - parseInt(JSON.parse(localStorage.getItem('range')).start)>=86400){
         isRangeBiggerThanADay = true;
       }   
-  
-      console.log('DAY',isRangeBiggerThanADay);
-      console.log('CREATE'+type)
-      console.log('SENSHOW',this.props.SensorShow)
-      if(this.props.SensorShow){
-        console.log("IF")
-        // data = data.length == 1 ? data[0].Parameters : data.Parameters;
-        console.log('SENDATA',data)
 
+      if(this.props.SensorShow){
         if(data.length == 1){
-          console.log('CHANNELS')
           data = data[0].Parameters;
           for (var i = 0; i < data.length; i++){
           
             let toAdd = data[i];
-            // console.log(toAdd)
             if(toAdd!==undefined && toAdd.Type == type){
               console.log('TOADD',toAdd)
               console.log('TIMESTAMP', toAdd.Data.TimeStamp)
@@ -94,11 +82,7 @@ class MultipleLinesPlot extends React.Component {
           }
         } else {
           for (var i = 0; i < data.length; i++){
-            
-
             let toAdd = data[i].Parameters.find(x=>x.Type == type);
-            console.log('DEVICES', toAdd.Type, type)
-            // console.log(toAdd)
             if(toAdd!==undefined && toAdd.Type == type){
               console.log('TOADD',toAdd)
               formattedData.push({
@@ -108,19 +92,13 @@ class MultipleLinesPlot extends React.Component {
                 name: data[i].SerialNumber
               });
               allData.push(toAdd.Data.map((item,i) => item.Value));
-            }
-            
+            }            
           }
-        }
-        
+        }        
       } else {
-        console.log('ELSE')
         for (var i = 0; i < data.length; i++){
-          
           let toAdd = data[i].Parameters.filter(p=>p.Type===type)[0];
-          // console.log(toAdd)
           if(toAdd!==undefined){
-            console.log('TOADD',toAdd)
             formattedData.push({
               x: toAdd.Data.map((item,i) => isRangeBiggerThanADay ? moment(new Date(item.TimeStamp)).format('MMMM Do YYYY, H:mm') : moment(new Date(item.TimeStamp)).format("H:mm")),
               y: toAdd.Data.map((item,i) => item.Value.toFixed(2)),
@@ -128,15 +106,11 @@ class MultipleLinesPlot extends React.Component {
               name: data[i].SerialNumber
             });
             allData.push(toAdd.Data.map((item,i) => item.Value));
-          }
-          
+          }          
         }
-      }
-      
-
-      
+      }  
+     
       dataDone = true;
-      console.log('FORMATTED',formattedData)
       layout = {
         title: 'Line Chart',
         yaxis: {
@@ -178,8 +152,7 @@ class MultipleLinesPlot extends React.Component {
         });
       }
       dataDone = true;
-    }();
-      
+    }();     
 
       layout = {
         yaxis: {
@@ -233,14 +206,8 @@ class MultipleLinesPlot extends React.Component {
         }
       }      
     }
-      
-    // for (let i in formatterData){
-    //   formattedData[i].x.map((i)=>"?")
-    // }
-    
 
     return(
-      
       <div>
         <h4 style={{textAlign: "center", display: this.props.for ==='baseline' ? 'block' : 'none'}}>Baseline: {baseline ? moment(new Date(baseline)).format('YYYY MMMM Do, H:mm') : "N/A"}</h4>
         {formattedData ?

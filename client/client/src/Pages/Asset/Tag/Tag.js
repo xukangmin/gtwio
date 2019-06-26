@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { assetActions } from '../../../_actions/assetAction';
-import { TabContent, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
-import classnames from 'classnames';
+import { Row, Col } from 'reactstrap';
 import { Radar } from '../../../Widgets/Radar';
 import { MultipleLinesPlot } from '../../../Widgets/MultipleLinesPlot';
 import { SingleLinePlot } from '../../../Widgets/SingleLinePlot';
@@ -40,7 +39,7 @@ class Tag extends React.Component {
     if(queryString.parse(location.search).Type){
       Type = queryString.parse(location.search).Type;
     }
-    console.log(DeviceData)
+    
     return(
       <div>
         {AssetData && DeviceData ?
@@ -68,13 +67,13 @@ class Tag extends React.Component {
               </Row>
               <Row>
                 <Col>
-                {DeviceData[0].Parameters[0].DataStatistics?
+                {DeviceData[0].Parameters[0].DataStatistics &&
                     <Table 
                     data={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature")} 
                     asset={AssetData.AssetID} 
                     unit={DeviceData.filter(item=>item.Parameters[0].Type=="Temperature").map(item=>item.Parameters[0].Unit)[0]}
                   />
-                  :<div></div>}
+                }
                   
                 </Col>
                 <Col>

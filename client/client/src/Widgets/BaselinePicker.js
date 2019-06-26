@@ -164,15 +164,10 @@ class BaselinePicker extends React.Component {
             <Modal isOpen={this.state.baselineModalOpen} toggle={this.baselineModalToggle} backdrop={false} style={{maxWidth: '1200'}}>
             <ModalHeader toggle={this.baselineModalToggle}>Baseline Setting</ModalHeader>
             <ModalBody>
-              
-              
-                
-                  {this.props.baselineSel?
-                  <MultipleLinesPlot data={this.props.baselineSel} for={'baseline'} asset={this.asset} user={this.user}/>
-                  :<Loader/>}  
-
-                
-            
+              {this.props.baselineSel?
+                <MultipleLinesPlot data={this.props.baselineSel} for={'baseline'} asset={this.asset} user={this.user}/>
+                :<Loader/>
+              }         
             <Form style={{display: "none"}}>
               <FormGroup>
                 <div className = "table-responsive">
@@ -219,8 +214,7 @@ class BaselinePicker extends React.Component {
               <Button color="secondary" name="cancel" onClick={e=>this.handleBaselineApply(e)}>Close</Button>
             </ModalFooter>
           </Modal>        
-          }
-          
+          }          
         </div>
       );
     }

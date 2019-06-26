@@ -4,10 +4,8 @@ import { LoginMain } from '../UserManagement/LoginMain';
 import { Home } from '../Pages/Home';
 import { Settings } from '../Pages/Settings';
 import { Dashboard } from '../Pages/Asset/Dashboard';
-import { TempGauge } from '../Pages/Asset/TempGauge';
 import { Data } from '../Pages/Asset/Data';
 import { Configurations } from '../Pages/Asset/Configurations';
-import { Configurationsb } from '../Pages/Asset/Configurationsb';
 
 import { Device } from '../Pages/Asset/Device/Device';
 import { Parameter } from '../Pages/Asset/Parameter/Parameter';
@@ -47,20 +45,12 @@ const routes = [
           component: Dashboard
         },
         {
-          path: '/asset/:assetID/gauge',
-          component: TempGauge
-        },
-        {
           path: '/asset/:assetID/data',
           component: Data
         },
         {
           path: '/asset/:assetID/configurations',
           component: Configurations
-        },
-        {
-          path: '/asset/:assetID/configurationsb',
-          component: Configurationsb
         },
         {
           path: '/asset/:assetID/device/:deviceID',

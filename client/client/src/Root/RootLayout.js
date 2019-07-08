@@ -44,8 +44,8 @@ class RootLayout extends Component {
         this.activeNav = "data";
       } else if (m_res[item].match.url.includes("configurations")){
         this.activeNav = "configurations";
-      } else if (m_res[item].match.url.includes("settings")){
-        this.activeNav = "settings";
+      } else if (m_res[item].match.url.includes("alerts")){
+        this.activeNav = "alerts";
       }
     } 
     this.onCollapse = this.onCollapse.bind(this)
@@ -91,10 +91,10 @@ class RootLayout extends Component {
                 :<Loader/>}
               </SubMenu>
               
-              <Menu.Item key="settings">
-                <a href="/settings">
-                  <Icon type="setting" />
-                  <span>Settings</span>
+              <Menu.Item key="alerts">
+                <a href="/alerts">
+                  <Icon type="alert" />
+                  <span>Alerts</span>
                 </a>
               </Menu.Item>
             </Menu>

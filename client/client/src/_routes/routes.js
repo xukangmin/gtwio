@@ -2,7 +2,7 @@ import { RootLayout } from '../Root/RootLayout';
 import { LoginMain } from '../UserManagement/LoginMain';
 
 import { Home } from '../Pages/Home';
-import { Settings } from '../Pages/Settings';
+import { Alerts } from '../Pages/Alerts';
 import { Dashboard } from '../Pages/Asset/Dashboard';
 import { Data } from '../Pages/Asset/Data';
 import { Configurations } from '../Pages/Asset/Configurations';
@@ -36,9 +36,9 @@ const routes = [
         component: Home
       },
         {
-          path: '/settings',
+          path: '/alerts',
           exact: true,
-          component: Settings
+          component: Alerts
         },
         {
           path: '/asset/:assetID/dashboard',

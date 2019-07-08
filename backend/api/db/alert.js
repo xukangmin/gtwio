@@ -7,10 +7,15 @@ const AlertSchema = new Schema(
   {
     AlertID: {type: String, index: true, unique: true},
     AlertType: String,
-    DeviceID: String,
     ParameterID: String,
-    AssetID: String,
-    Message: String
+    ActiveMinutes: Number, // minutes
+    Trigger: String,
+    Message: String,
+    Action: String,
+    Emails: String,
+    SMS: String,
+    WebHooks: String,
+    OnOff: Number
   },
   { timestamps: true }
 );

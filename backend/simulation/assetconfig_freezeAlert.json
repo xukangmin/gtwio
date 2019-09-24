@@ -1,0 +1,85 @@
+[
+    {
+      "AssetName" : "Freezing Alert Demo",
+      "AssetType" : "FreezeAlert",
+      "Equations" :
+      [
+      ],
+      "Devices":
+      [
+        {
+          "Name": "Temperature Sensor 1",
+          "SerialNumber": "07A050",
+          "Tag": "07A050",
+          "Alias": "T1",
+          "Angle": 0,
+          "Parameters": ["Temperature"]
+        },
+        {
+          "Name": "Temperature Sensor 2",
+          "SerialNumber": "07A051",
+          "Tag": "07A051",
+          "Alias": "T2",
+          "Angle": 0,
+          "Parameters": ["Temperature"]
+        },
+        {
+          "Name": "Temperature Sensor 3",
+          "SerialNumber": "07A052",
+          "Tag": "07A052",
+          "Alias": "T3",
+          "Angle": 0,
+          "Parameters": ["Temperature"]
+        },
+        {
+          "Name": "Temperature Sensor 4",
+          "SerialNumber": "07A053",
+          "Tag": "07A053",
+          "Alias": "T4",
+          "Angle": 0,
+          "Parameters": ["Temperature"]
+        }
+      ],
+      "DisplayTags": 
+      [
+        {
+          "TagName": "ShellInlet",
+          "Data": [
+            {
+              "Name": "Temperature",
+              "AssignedTag": "07A050/Temperature"
+            }
+          ]
+        },
+        {
+          "TagName": "ShellOutlet",
+          "Data": [
+            {
+              "Name": "Temperature",
+              "AssignedTag": "07A051/Temperature"
+            }
+          ]
+        },
+        {
+          "TagName": "TubeInlet",
+          "Data": [
+            {
+              "Name": "Temperature",
+              "AssignedTag": "07A052/Temperature"
+            }
+          ]
+        },
+        {
+          "TagName": "TubeOutlet",
+          "Data": [
+            {
+              "Name": "Temperature",
+              "AssignedTag": "07A053/Temperature"
+            }
+          ]
+        }
+      ],
+      "TimeInterval": []
+    }
+  ]
+  

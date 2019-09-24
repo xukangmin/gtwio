@@ -85,8 +85,13 @@ module.exports.simulate = (interval) => {
       for(var i = j + 62; i <= j + 65; i++) {
         generate_simulation_data('02A0' + i.toString(), "Temperature", null, 88.0, 88.2);
       }
+
     }
 
+    for(var i = 50; i <= 53; i++) {
+      generate_simulation_data('07A0' + i.toString(), "Temperature", null, 30.0, 100.0);
+    }
+    
     generate_simulation_data('05A001', "FlowRate", null, 85.0, 85.2);
     generate_simulation_data('05A002', "FlowRate", null, 85.0, 85.2);
     generate_simulation_data('05A003', "FlowRate", null, 55.0, 55.2);

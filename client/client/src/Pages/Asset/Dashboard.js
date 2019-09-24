@@ -27,10 +27,67 @@ class Dashboard extends React.Component {
       return (<Hx assetData={assetData} assetTags={assetTags} user={this.user} asset={this.asset}/>);
     } else if (assetData && assetTags && assetData.AssetType === "SensorShow"){
       return (<SensorShow assetData={assetData} assetTags={assetTags} user={this.user} asset={this.asset}/>);
-    } else {
+    } else if (assetData && assetTags && assetData.AssetType === "FreezeAlert") 
+    {
+      return (<FreezeAlert assetData={assetData} assetTags={assetTags} user={this.user} asset={this.asset}/>);
+    }
+    else {
       return (<Loader/>);
     }
   }  
+}
+class FreezeAlert extends React.Component {
+  constructor(props) {
+    super(props);
+    this.user = props.user;
+    this.asset = props.asset;
+
+    this.HandleText = this.HandleText.bind(this);  
+    this.HandleTitle = this.HandleTitle.bind(this);  
+  }
+
+  HandleTitle(assetData){
+    document.getElementById("asset_name").innerHTML = assetData.DisplayName;
+  }
+
+  HandleText(elem, tag){
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature").ParameterList.find(active=>active.Active==1);
+    var flow_obj = tag.Data.find(item => item.Name === "FlowRate") && tag.Data.find(item => item.Name === "FlowRate").ParameterList.find(active=>active.Active==1);
+
+    if (tag.Data.length === 1) {
+      if (tag.Data[0].AssignedTag.includes("/")) {
+        elem.setAttribute('href', "/asset/" + this.asset + "/device/" + tag.Data[0].AssignedTag.split("/")[0]);
+      }
+    }
+    // if (tag) {
+    //   elem.setAttribute('href', "/asset/" + this.asset + "/tag/" + tag.TagName + "?tab=1");
+    // }
+
+    if (temp_obj && typeof temp_obj.Value === 'number') {
+      elem.children[0].innerHTML = temp_obj.Value.toFixed(2);
+    }  
+
+    if (flow_obj && typeof flow_obj.Value === 'number') {   
+        document.getElementById("Rect_" + elem.id + '_flow').style.display = "block";
+        document.getElementById(elem.id + '_flow').setAttribute('href', "/asset/" + this.asset + "/tag/" + tag.TagName + "?tab=2");
+        document.getElementById(elem.id + '_flow').children[0].innerHTML = flow_obj.Value.toFixed(2) +' gpm';
+    }
+  }
+
+  render() {
+    const { assetData, assetTags } = this.props;
+
+   
+    return (
+
+      <Samy svgXML={HxSvg}>
+          {assetTags.map((item,i) => <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item))} />)}
+          <SvgProxy selector={"#asset_name"} onElementSelected={elem => this.HandleTitle(assetData)} />
+      </Samy>
+    )
+
+
+  }
 }
 
 class Hx extends React.Component {

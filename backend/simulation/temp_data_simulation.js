@@ -90,8 +90,8 @@ module.exports.simulate = (interval) => {
 
     generate_simulation_data('07A050', "Temperature", null, 29, 31);
     generate_simulation_data('07A051', "Temperature", null, 35, 36);
-    generate_simulation_data('07A052', "Temperature", null, 150, 158);
-    generate_simulation_data('07A053', "Temperature", null, 212, 215);
+    generate_simulation_data('07A052', "Temperature", null, 212, 215);
+    generate_simulation_data('07A053', "Temperature", null, 150, 158);
     
     generate_simulation_data('05A001', "FlowRate", null, 85.0, 85.2);
     generate_simulation_data('05A002', "FlowRate", null, 85.0, 85.2);

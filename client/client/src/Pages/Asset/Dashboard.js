@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { Row } from 'reactstrap';
 import { Samy, SvgProxy } from 'react-samy-svg';
 import HxSvg from 'raw-loader!../../Images/Hx.svg';
+import AlertSvg from 'raw-loader!../../Images/TempAlert.svg';
 import Loader from '../../Widgets/Loader';
 import { Gauge } from '../../Widgets/Gauge';
 import { Progress, Icon, Button } from 'antd';
@@ -44,10 +45,49 @@ class FreezeAlert extends React.Component {
 
     this.HandleText = this.HandleText.bind(this);  
     this.HandleTitle = this.HandleTitle.bind(this);  
+    this.HandleAlertHot = this.HandleAlertHot.bind(this);
+    this.HandleAlertCold= this.HandleAlertCold.bind(this);
+    this.HandleAlertOK= this.HandleAlertOK.bind(this);
   }
 
   HandleTitle(assetData){
     document.getElementById("asset_name").innerHTML = assetData.DisplayName;
+  }
+
+  HandleAlertHot(elem, tag) {
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature").ParameterList.find(active=>active.Active==1);
+
+    if (temp_obj && typeof temp_obj.Value === 'number') {
+      if (temp_obj.Value > 212) {
+        elem.setAttribute('style', 'opacity:1');
+      } else {
+        elem.setAttribute('style', 'opacity:0');
+      }
+    }  
+  }
+
+  HandleAlertCold(elem, tag) {
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature").ParameterList.find(active=>active.Active==1);
+
+    if (temp_obj && typeof temp_obj.Value === 'number') {
+      if (temp_obj.Value < 32) {
+        elem.setAttribute('style', 'opacity:1');
+      } else {
+        elem.setAttribute('style', 'opacity:0');
+      }
+    }  
+  }
+
+  HandleAlertOK(elem, tag) {
+    var temp_obj = tag.Data.find(item => item.Name === "Temperature").ParameterList.find(active=>active.Active==1);
+
+    if (temp_obj && typeof temp_obj.Value === 'number') {
+      if (temp_obj.Value >= 32 && temp_obj.Value < 212) {
+        elem.setAttribute('style', 'opacity:1');
+      } else {
+        elem.setAttribute('style', 'opacity:0');
+      }
+    }  
   }
 
   HandleText(elem, tag){
@@ -80,8 +120,11 @@ class FreezeAlert extends React.Component {
    
     return (
 
-      <Samy svgXML={HxSvg}>
+      <Samy svgXML={AlertSvg}>
           {assetTags.map((item,i) => <SvgProxy selector={"#" + item.TagName} key={i} onElementSelected={(elem => this.HandleText(elem, item))} />)}
+          {assetTags.map((item,i) => <SvgProxy selector={"#fireIcon" + item.TagName} key={i} onElementSelected={(elem => this.HandleAlertHot(elem, item))} />)}
+          {assetTags.map((item,i) => <SvgProxy selector={"#freezeIcon" + item.TagName} key={i} onElementSelected={(elem => this.HandleAlertCold(elem, item))} />)}
+          {assetTags.map((item,i) => <SvgProxy selector={"#check" + item.TagName} key={i} onElementSelected={(elem => this.HandleAlertOK(elem, item))} />)}
           <SvgProxy selector={"#asset_name"} onElementSelected={elem => this.HandleTitle(assetData)} />
       </Samy>
     )
